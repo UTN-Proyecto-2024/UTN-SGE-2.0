@@ -4,6 +4,7 @@ import EquiposTableContainer from "./(listado)/equipos-table-container";
 import { Suspense, useMemo } from "react";
 import LoadingEquiposTable from "./(listado)/loading-equipos-table";
 import { inputGetEquipos } from "@/shared/filters/equipos-filter.schema";
+import { TienePermiso } from "../biblioteca/tienePermiso";
 
 type PageProps = {
   searchParams: ReadonlyURLSearchParams;
@@ -16,11 +17,19 @@ export default async function Page({ searchParams }: PageProps) {
 
   return (
     <>
-      <h3 className="text-5xl font-extrabold tracking-tight sm:text-[3rem]">Listado de equipos</h3>
-      <ActionButtons filters={filters} />
-      <Suspense key={filter_as_key} fallback={<LoadingEquiposTable />}>
-        <EquiposTableContainer filters={filters} />
-      </Suspense>
+      <TienePermiso
+        fallback={
+          <h3 className="text-5xl font-extrabold tracking-tight sm:text-[3rem]">
+            No tenes permiso para ver esta pagina.
+          </h3>
+        }
+      >
+        <h3 className="text-5xl font-extrabold tracking-tight sm:text-[3rem]">Listado de equipos</h3>
+        <ActionButtons filters={filters} />
+        <Suspense key={filter_as_key} fallback={<LoadingEquiposTable />}>
+          <EquiposTableContainer filters={filters} />
+        </Suspense>
+      </TienePermiso>
     </>
   );
 }
