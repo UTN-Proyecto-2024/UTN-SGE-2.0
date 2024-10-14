@@ -8,6 +8,7 @@ import { Separator } from "@radix-ui/react-separator";
 import { LibroFormPrestarORenovar } from "./form-prestar";
 import { HandHelping } from "lucide-react";
 import { api } from "@/trpc/react";
+import { useTienePermisos } from "@/app/_hooks/use-tiene-permisos";
 
 type PrestarLibroModalProps = {
   libroId: number;
@@ -20,6 +21,12 @@ export default function PrestarLibroModal({ libroId }: PrestarLibroModalProps) {
 
   const handleSubmit = () => setOpen(false);
   const handleCancel = () => setOpen(false);
+
+  const tienePermisos = useTienePermisos();
+
+  if (!tienePermisos) {
+    return null;
+  }
 
   if (isError) {
     return <div>Error al cargar información del libro...</div>;
