@@ -1970,11 +1970,11 @@ COPY public."Division" (id, nombre, anio, "fechaCreacion", "usuarioCreadorId", "
 --
 
 COPY public."DocumentoTipo" (id, nombre) FROM stdin;
-1	L.C.
-2	D.N.I
+1	Libreta Civica
+2	Documento Unico de Identidad
 3	Pasaporte
 4	C.I.
-5	L.E.
+5	Libreta de Enrolamiento
 \.
 
 
