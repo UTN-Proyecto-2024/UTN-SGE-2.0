@@ -19,7 +19,7 @@ services:
       - sge2
 
   app:
-    image: registry.frba.utn.edu.ar/tst/sge2
+    image: registry.frba.utn.edu.ar/ext/sge2
     hostname: app
     networks:
       - sge2
