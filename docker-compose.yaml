@@ -20,8 +20,17 @@ services:
 
   app:
     image: registry.frba.utn.edu.ar/ext/sge2
-    env_file:
-      - /opt/sge2/.env
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/sge2
+      NEXTAUTH_SECRET: Pg4sUUBSEgcfKcuLU824guy+kSQjdrJz4jc+bC8IhBM=
+      NEXTAUTH_URL: https://sge-tst.frba.utn.edu.ar
+      DISCORD_CLIENT_ID: 1269340993493401693
+      DISCORD_CLIENT_SECRET: EEiD__s-MgqrEuEPB6fxzwwlR85RWOjX
+      KEYCLOAK_CLIENT_ID: sge-client
+      KEYCLOAK_CLIENT_SECRET: SJ0Ewg3mRstvBBPZbCYLizII1DvyXnfc
+      KEYCLOAK_ISSUER: https://auth-tst.frba.utn.edu.ar/realms/externo
+      SMTP_EMAIL_USER: testutn88@gmail.com
+      SMTP_EMAIL_PASSWORD: 'aapr jaox ryrr efjs'
     hostname: app
     networks:
       - sge2
