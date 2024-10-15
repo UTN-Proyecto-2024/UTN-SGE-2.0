@@ -21,7 +21,7 @@ services:
   app:
     image: registry.frba.utn.edu.ar/ext/sge2
     env_file:
-      - .env
+      - /opt/sge2/.env
     hostname: app
     networks:
       - sge2
