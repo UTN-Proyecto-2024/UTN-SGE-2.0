@@ -20,6 +20,20 @@ COPY . .
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED=1
+ENV DATABASE_URL=postgres://postgres:postgres@db:5432/sge2
+
+ENV NEXTAUTH_SECRET=Pg4sUUBSEgcfKcuLU824guy+kSQjdrJz4jc+bC8IhBM=
+ENV NEXTAUTH_URL=http://localhost:8000/
+
+ENV DISCORD_CLIENT_ID=1269340993493401693
+ENV DISCORD_CLIENT_SECRET=EEiD__s-MgqrEuEPB6fxzwwlR85RWOjX
+
+ENV KEYCLOAK_CLIENT_ID=sge-client
+ENV KEYCLOAK_CLIENT_SECRET=Bd95qHTM34FAZdcdjWuXUlOTAW6TfQrl
+ENV KEYCLOAK_ISSUER=http://localhost:8080/realms/sge2
+
+ENV SMTP_EMAIL_USER=testutn88@gmail.com
+ENV SMTP_EMAIL_PASSWORD=aapr jaox ryrr efjs
 
 RUN npx prisma generate && npm run build
 
