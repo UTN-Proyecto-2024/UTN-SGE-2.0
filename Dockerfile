@@ -33,7 +33,7 @@ ENV KEYCLOAK_CLIENT_SECRET=Bd95qHTM34FAZdcdjWuXUlOTAW6TfQrl
 ENV KEYCLOAK_ISSUER=http://localhost:8080/realms/sge2
 
 ENV SMTP_EMAIL_USER=testutn88@gmail.com
-ENV SMTP_EMAIL_PASSWORD=aapr jaox ryrr efjs
+ENV SMTP_EMAIL_PASSWORD='aapr jaox ryrr efjs'
 
 RUN npx prisma generate && npm run build
 
