@@ -13,8 +13,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - sge2-db-data:/var/lib/postgresql/data
-      - ./pg_dump.sql:/docker-entrypoint-initdb.d/pg_dump.sql
+      - /opt/sge2/data:/var/lib/postgresql/data
+      - /opt/sge2/pg_dump.sql:/docker-entrypoint-initdb.d/pg_dump.sql
     networks:
       - sge2
 
@@ -30,7 +30,7 @@ services:
   proxy:
     image: nginx:1.27-alpine
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - /opt/sge2/nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "8000:80"
     networks:
