@@ -197,6 +197,7 @@ export const editarUsuario = async (ctx: { db: PrismaClient }, input: InputEdita
             especialidad: "",
             sede: "",
             usuarioCreadorId: userId,
+            activo: true,
           },
           update: {},
         });

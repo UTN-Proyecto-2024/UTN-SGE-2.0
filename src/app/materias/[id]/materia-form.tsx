@@ -13,6 +13,11 @@ import {
 } from "@/app/_components/select-usuario";
 import { EstatusCorrelativa, MateriaDuracion, MateriaTipo } from "@prisma/client";
 import { FormSelect } from "@/components/ui/autocomplete";
+import {
+  getUserLabelNameForSelect,
+  SelectMultipleUsuarioForm,
+  SelectUsuarioForm,
+} from "@/app/_components/select-usuario";
 
 type Props = {
   id?: string;
