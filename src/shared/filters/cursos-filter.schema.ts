@@ -1,4 +1,5 @@
-import { CursoDia } from "@prisma/client";
+import { CursoDia, Prisma, TurnoCurso } from "@prisma/client";
+
 import { z } from "zod";
 
 export const inputAgregarCurso = z.object({
@@ -34,7 +35,7 @@ export const inputAgregarCurso = z.object({
   sedeId: z.string().min(1, { message: "Requerido" }),
   materiaId: z.string().min(1, { message: "Requerido" }),
   divisionId: z.string().min(1, { message: "Requerido" }),
-  turnoId: z.string().min(1, { message: "Requerido" }),
+  turno: z.enum([TurnoCurso.MANANA, TurnoCurso.NOCHE, TurnoCurso.TARDE]),
 });
 
 export const inputGetCursos = z.object({

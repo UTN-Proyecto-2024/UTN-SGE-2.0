@@ -1,17 +1,18 @@
 "use client";
 
-import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { api } from "@/trpc/react";
 import { Button, toast } from "@/components/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { inputEditarCurso } from "@/shared/filters/cursos-filter.schema";
 import { FormSelect } from "@/components/ui/autocomplete";
 import { turnosValues } from "@/app/_components/turno-text";
 import { SelectMateriasForm } from "@/app/cursos/_components/select-materia";
 import { SelectDivisionesForm } from "../../_components/select-division";
-import { AyudantesSelectorComponent } from "../../_components/ayudante-selector";
+import { SelectSedeForm } from "@/app/_components/select-ubicacion/select-sede";
+import { DiaAdicionalForm } from "../../_components/cursos-dias-handler";
 
 type Props = {
   id?: string;
@@ -28,6 +29,14 @@ const dias = [
   { id: "JUEVES", label: "Jueves" },
   { id: "VIERNES", label: "Viernes" },
   { id: "SABADO", label: "Sábado" },
+];
+
+const aniosDeCarrera = [
+  { id: "1", label: "1" },
+  { id: "2", label: "2" },
+  { id: "3", label: "3" },
+  { id: "4", label: "4" },
+  { id: "5", label: "5" },
 ];
 
 const horas = ["0", "1", "2", "3", "4", "5", "6"].map((item) => ({
@@ -48,6 +57,27 @@ const ac = [
 export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
   const { data: profesoresData } = api.admin.usuarios.getAllProfesores.useQuery();
   const profesores = useMemo(() => {
+    return (
+      profesoresData?.map((item) => {
+        return { id: item.id, label: item.apellido + " " + item.nombre };
+      }) ?? []
+    );
+  }, [profesoresData]);
+
+  const [mostrarDia2, setMostrarDia2] = useState(false);
+
+  const handleAddDia2 = () => {
+    setMostrarDia2(true);
+  };
+
+  const handleRemoveDia2 = () => {
+    formHook.setValue("dia2", undefined);
+    formHook.setValue("horaInicio2", "");
+    formHook.setValue("duracion2", "");
+    setMostrarDia2(false);
+  };
+
+  const ayudantes = useMemo(() => {
     return (
       profesoresData?.map((item) => {
         return { id: item.id, label: item.apellido + " " + item.nombre };
@@ -79,12 +109,18 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
       sedeId: curso?.sedeId?.toString() ?? "",
       materiaId: curso?.materiaId.toString() ?? "",
       divisionId: curso?.division.id.toString() ?? "",
-      turnoId: curso?.turno ?? "",
+      turno: curso?.turno ?? undefined,
     },
     resolver: zodResolver(inputEditarCurso),
   });
 
-  const { handleSubmit, control, setValue } = formHook;
+  const { handleSubmit, control } = formHook;
+
+  useEffect(() => {
+    if (curso?.dia2) {
+      setMostrarDia2(true);
+    }
+  }, [curso]);
 
   console.log(formHook.formState.errors);
 
@@ -107,7 +143,7 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
         sedeId: curso.sedeId?.toString(),
         materiaId: curso.materiaId.toString(),
         divisionId: curso.division?.id.toString(),
-        turnoId: curso.turno,
+        turno: curso.turno,
       });
     }
   }, [formHook, curso]);
@@ -127,6 +163,8 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
   }
 
   const onFormSubmit = (formData: FormEditarCursoType) => {
+    formData.anioDeCarrera = Number(formData.anioDeCarrera);
+
     if (esNuevo) {
       agregarCurso.mutate(formData, {
         onSuccess: () => {
@@ -169,6 +207,40 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
                   placeholder={"Seleccione una materia"}
                 />
               </div>
+              <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
+                <div className="mt-4 w-full md:basis-2/3">
+                  <SelectSedeForm label={"Sede"} control={control} name="sedeId" placeholder={"Seleccione una sede"} />
+                </div>
+              </div>
+            </div>
+            <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
+              <div className="mt-4 w-full md:basis-2/3">
+                <FormSelect label={"Duración"} control={control} name="ac" className="mt-2" items={ac} />
+              </div>
+
+              <div className="mt-4 w-full md:basis-2/3">
+                <FormSelect label={"Turno"} control={control} name="turno" className="mt-2" items={turnosValues} />
+              </div>
+
+              <div className="mt-4 w-full md:basis-2/3">
+                <select
+                  {...formHook.register("anioDeCarrera", {
+                    required: "Debes seleccionar un año",
+                    valueAsNumber: true,
+                    validate: (value) =>
+                      typeof value === "number" && value >= 1 && value <= 6 ? true : "Selecciona un año válido",
+                  })}
+                  className="mt-2 block w-full rounded-md border-gray-300 bg-white text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                >
+                  <option value="">Seleccionar año</option>
+                  <option value={1}>1</option>
+                  <option value={2}>2</option>
+                  <option value={3}>3</option>
+                  <option value={4}>4</option>
+                  <option value={5}>5</option>
+                  <option value={6}>6</option>
+                </select>
+              </div>
               <div className="mt-4 w-full md:basis-1/3">
                 <SelectDivisionesForm
                   label={"División"}
@@ -176,15 +248,6 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
                   name="divisionId"
                   placeholder={"Seleccione una división"}
                 />
-              </div>
-            </div>
-            <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-              <div className="mt-4 basis-1/3">
-                <FormSelect label={"Duración"} control={control} name="ac" className="mt-2" items={ac} />
-              </div>
-
-              <div className="mt-4 basis-1/3">
-                <FormSelect label={"Turno"} control={control} name="turnoId" className="mt-2" items={turnosValues} />
               </div>
 
               <div className="mt-4 basis-1/3">
@@ -213,23 +276,19 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
             </div>
 
             <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-              <div className="mt-4 basis-1/3">
-                <FormSelect label={"Día 2"} control={control} name="dia2" className="mt-2" items={dias} />
-              </div>
-
-              <div className="mt-4 basis-1/3">
-                <FormSelect
-                  label={"Hora inicio 2"}
+              {mostrarDia2 ? (
+                <DiaAdicionalForm
                   control={control}
-                  name="horaInicio2"
-                  className="mt-2"
-                  items={horas}
+                  dias={dias}
+                  horas={horas}
+                  duracion={duracion}
+                  onRemove={handleRemoveDia2}
                 />
-              </div>
-
-              <div className="mt-4 basis-1/3">
-                <FormSelect label={"Duración 2"} control={control} name="duracion2" items={duracion} className="mt-2" />
-              </div>
+              ) : (
+                <button type="button" className="mt-4 text-blue-600" onClick={handleAddDia2}>
+                  + Agregar Día 2
+                </button>
+              )}
             </div>
 
             <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
@@ -244,10 +303,12 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
               </div>
 
               <div className="mt-4 basis-1/2">
-                <AyudantesSelectorComponent
-                  cursoId={cursoId}
-                  initialAyudantes={curso?.ayudantes?.map((a) => a.usuario.id) ?? []}
-                  onChange={(ayudantes: string[]) => setValue("ayudanteUsersIds", ayudantes)}
+                <FormSelect
+                  label={"Ayudante"}
+                  control={control}
+                  name="ayudanteUsersIds"
+                  className="mt-2"
+                  items={ayudantes}
                 />
               </div>
             </div>
