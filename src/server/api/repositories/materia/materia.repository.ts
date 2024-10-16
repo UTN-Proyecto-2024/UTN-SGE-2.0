@@ -1,4 +1,4 @@
-import { type PrismaClient } from "@prisma/client";
+import { EstatusCorrelativa, type Prisma, type PrismaClient } from "@prisma/client";
 import { type z } from "zod";
 import {
   type inputEliminarMateria,
@@ -6,6 +6,7 @@ import {
   type inputEditarMateria,
   type inputGetMateria,
 } from "@/shared/filters/materia-filter.schema";
+import { informacionUsuario } from "../usuario-helper";
 
 export const getAllMaterias = async (ctx: { db: PrismaClient }) => {
   const materias = await ctx.db.materia.findMany({
@@ -42,6 +43,29 @@ export const getMateriaById = async (ctx: { db: PrismaClient }, input: InputGetM
       anio: true,
       duracion: true,
       tipo: true,
+      directorUsuarioId: true,
+      directorUsuario: {
+        select: informacionUsuario,
+      },
+      jefeTrabajoPracticos: {
+        select: {
+          userId: true,
+          usuario: {
+            select: informacionUsuario,
+          },
+        },
+      },
+      correlativa: {
+        select: {
+          materiaPrerequisito: {
+            select: {
+              nombre: true,
+            },
+          },
+          materiaPrerequisitoId: true,
+          estatusCorrelativa: true,
+        },
+      },
     },
     where: {
       id,
@@ -82,16 +106,34 @@ export const agregarMateria = async (ctx: { db: PrismaClient }, input: InputAgre
     throw new Error("El código de la materia ya existe");
   }
 
-  const materia = await ctx.db.materia.create({
-    data: {
-      nombre: input.nombre,
-      codigo: input.codigo,
-      anio: input.anio,
-      duracion: input.duracion,
-      tipo: input.tipo,
-      usuarioCreadorId: userId,
-      usuarioModificadorId: userId,
-    },
+  const materia = await ctx.db.$transaction(async (tx) => {
+    const materia = await ctx.db.materia.create({
+      data: {
+        nombre: input.nombre,
+        codigo: input.codigo,
+        anio: Number(input.anio),
+        duracion: input.duracion,
+        tipo: input.tipo,
+        jefeTrabajoPracticos: {
+          createMany: {
+            data:
+              input.jefesTrabajoPracticoUserId?.map((userId) => ({
+                userId: userId,
+              })) ?? [],
+          },
+        },
+
+        usuarioCreadorId: userId,
+        usuarioModificadorId: userId,
+      },
+    });
+
+    const correlativas = construirCorrelativas(input, userId, materia.id);
+    await tx.materiaCorrelativa.createMany({
+      data: correlativas,
+    });
+
+    return materia;
   });
 
   return materia;
@@ -112,19 +154,81 @@ export const editarMateria = async (ctx: { db: PrismaClient }, input: InputEdita
     throw new Error("El código de la materia ya existe");
   }
 
-  const materia = await ctx.db.materia.update({
-    data: {
-      nombre: input.nombre,
-      codigo: input.codigo,
-      anio: input.anio,
-      duracion: input.duracion,
-      tipo: input.tipo,
-      usuarioModificadorId: userId,
-    },
-    where: {
-      id: input.id,
-    },
+  const materia = await ctx.db.$transaction(async (tx) => {
+    const materia = await ctx.db.materia.update({
+      data: {
+        nombre: input.nombre,
+        codigo: input.codigo,
+        anio: Number(input.anio),
+        duracion: input.duracion,
+        tipo: input.tipo,
+        directorUsuarioId: input.directorUserId,
+        jefeTrabajoPracticos: {
+          deleteMany: {},
+          createMany: {
+            data:
+              input.jefesTrabajoPracticoUserId?.map((userId) => ({
+                userId: userId,
+              })) ?? [],
+          },
+        },
+
+        usuarioModificadorId: userId,
+      },
+      where: {
+        id: input.id,
+      },
+    });
+
+    await tx.materiaCorrelativa.deleteMany({
+      where: {
+        correlativaId: materia.id,
+      },
+    });
+
+    const correlativas = construirCorrelativas(input, userId, materia.id);
+    await tx.materiaCorrelativa.createMany({
+      data: correlativas,
+    });
+
+    return materia;
   });
 
   return materia;
+};
+
+const construirCorrelativas = (
+  input: InputEditarMateria | InputAgregarMateria,
+  userId: string,
+  correlativaId: number,
+): Prisma.MateriaCorrelativaCreateManyInput[] => {
+  const materiasRegularizadas: Prisma.MateriaCorrelativaCreateManyInput[] = input.regularizadas.map((materiaId) => ({
+    materiaPrerequisitoId: Number(materiaId),
+    correlativaId: correlativaId,
+    estatusCorrelativa: EstatusCorrelativa.CURSAR_REGULARIZADA,
+    usuarioCreadorId: userId,
+    usuarioModificadorId: userId,
+  }));
+
+  const materiasAprobadasParaCursar: Prisma.MateriaCorrelativaCreateManyInput[] = input.aprobadasParaCursar.map(
+    (materiaId) => ({
+      materiaPrerequisitoId: Number(materiaId),
+      correlativaId: correlativaId,
+      estatusCorrelativa: EstatusCorrelativa.CURSAR_APROBADA,
+      usuarioCreadorId: userId,
+      usuarioModificadorId: userId,
+    }),
+  );
+
+  const materiasAprobadasParaRendir: Prisma.MateriaCorrelativaCreateManyInput[] = input.aprobadasParaRendir.map(
+    (materiaId) => ({
+      materiaPrerequisitoId: Number(materiaId),
+      correlativaId: correlativaId,
+      estatusCorrelativa: EstatusCorrelativa.RENDIR_APROBADA,
+      usuarioCreadorId: userId,
+      usuarioModificadorId: userId,
+    }),
+  );
+
+  return [...materiasRegularizadas, ...materiasAprobadasParaCursar, ...materiasAprobadasParaRendir];
 };
