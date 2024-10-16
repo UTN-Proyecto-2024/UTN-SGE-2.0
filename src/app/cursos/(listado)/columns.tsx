@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { DatoUsuarioReserva } from "@/app/_components/datos-usuario";
 import { CursoTurno } from "@/app/_components/turno-text";
 import { type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
@@ -108,7 +109,7 @@ export const getColumns = () => {
     colHelper.display({
       header: "Profesor",
       cell: (info) => {
-        return `${info.row.original.profesor.apellido} ${info.row.original.profesor.nombre}`;
+        return <DatoUsuarioReserva usuario={info.row.original.profesor} />;
       },
     }),
     colHelper.display({
@@ -118,7 +119,7 @@ export const getColumns = () => {
 
         if (!ayudantes.length) return <span className="hidden">Sin ayudantes</span>;
 
-        return ayudantes.map((ayudante) => `${ayudante.usuario.apellido} ${ayudante.usuario.nombre}`).join(", ");
+        return ayudantes.map((ayudante) => <DatoUsuarioReserva usuario={ayudante.usuario} key={ayudante.userId} />);
       },
       meta: {
         header: {

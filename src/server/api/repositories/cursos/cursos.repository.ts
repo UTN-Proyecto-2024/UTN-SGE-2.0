@@ -163,19 +163,12 @@ export const getCursoPorId = async (ctx: { db: PrismaClient }, input: InputGetCu
       ayudantes: {
         select: {
           usuario: {
-            select: {
-              id: true,
-              apellido: true,
-              nombre: true,
-            },
+            select: informacionUsuario,
           },
         },
       },
       profesor: {
-        select: {
-          apellido: true,
-          nombre: true,
-        },
+        select: informacionUsuario,
       },
     },
     where: {
@@ -207,7 +200,16 @@ export const agregarCurso = async (ctx: { db: PrismaClient }, input: InputAgrega
         profesorId: input.profesorUserId,
         usuarioCreadorId: userId,
         usuarioModificadorId: userId,
-        // TODO ayudantes
+        ayudantes: {
+          createMany: {
+            data:
+              input.ayudanteUsersIds?.map((ayudanteId) => ({
+                usuarioCreadorId: userId,
+                usuarioModificadorId: userId,
+                userId: ayudanteId,
+              })) ?? [],
+          },
+        },
       },
     });
 
@@ -258,7 +260,18 @@ export const editarCurso = async (ctx: { db: PrismaClient }, input: InputEditarC
         divisionId: parseInt(input.divisionId),
         profesorId: input.profesorUserId,
         usuarioModificadorId: userId,
-        // TODO ayudantes
+
+        ayudantes: {
+          deleteMany: {},
+          createMany: {
+            data:
+              input.ayudanteUsersIds?.map((ayudanteId) => ({
+                usuarioCreadorId: userId,
+                usuarioModificadorId: userId,
+                userId: ayudanteId,
+              })) ?? [],
+          },
+        },
       },
       where: {
         id: input.id,

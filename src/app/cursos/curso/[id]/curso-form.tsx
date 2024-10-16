@@ -11,6 +11,11 @@ import { SelectMateriasForm } from "@/app/cursos/_components/select-materia";
 import { SelectDivisionesForm } from "../../_components/select-division";
 import { SelectSedeForm } from "@/app/_components/select-ubicacion/select-sede";
 import { DiaAdicionalForm } from "../../_components/cursos-dias-handler";
+import {
+  getUserLabelNameForSelect,
+  SelectMultipleUsuarioForm,
+  SelectUsuarioForm,
+} from "@/app/_components/select-usuario";
 
 type Props = {
   id?: string;
@@ -18,7 +23,11 @@ type Props = {
   onCancel: () => void;
 };
 
-type FormEditarCursoType = z.infer<typeof inputEditarCurso>;
+type FormHelperType = {
+  profesorUser: { id: string; label: string };
+};
+
+export type FormEditarCursoType = z.infer<typeof inputEditarCurso> & FormHelperType;
 
 const dias = [
   { id: "LUNES", label: "Lunes" },
@@ -53,15 +62,6 @@ const ac = [
 ];
 
 export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
-  const { data: profesoresData } = api.admin.usuarios.getAllProfesores.useQuery();
-  const profesores = useMemo(() => {
-    return (
-      profesoresData?.map((item) => {
-        return { id: item.id, label: item.apellido + " " + item.nombre };
-      }) ?? []
-    );
-  }, [profesoresData]);
-
   const [mostrarDia2, setMostrarDia2] = useState(false);
 
   const handleAddDia2 = () => {
@@ -75,40 +75,41 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
     setMostrarDia2(false);
   };
 
-  const ayudantes = useMemo(() => {
-    return (
-      profesoresData?.map((item) => {
-        return { id: item.id, label: item.apellido + " " + item.nombre };
-      }) ?? []
-    );
-  }, [profesoresData]);
-
   const cursoId = parseInt(id ?? "");
   const { data: curso, isLoading, isError } = api.cursos.cursoPorId.useQuery({ id: cursoId }, { enabled: !!id });
 
   const editarCurso = api.cursos.editarCurso.useMutation(); // Se llama si existe cursoId
   const agregarCurso = api.cursos.nuevoCurso.useMutation(); // Se llama si no existe cursoId
 
+  const cursoBase = useMemo((): FormEditarCursoType => {
+    if (!curso) return {} as FormEditarCursoType;
+    return {
+      id: curso.id,
+      horaInicio1: curso.horaInicio1,
+      duracion1: curso.duracion1,
+      horaInicio2: curso.horaInicio2 ?? "",
+      duracion2: curso.duracion2 ?? "",
+      dia1: curso.dia1,
+      dia2: curso.dia2 ?? undefined,
+      profesorUser: {
+        id: curso.profesorId ?? "",
+        label: curso.profesor ? getUserLabelNameForSelect(curso.profesor) : "",
+      },
+      profesorUserId: curso.profesorId,
+      ayudanteUsersIds: curso.ayudantes?.map((a) => a.usuario.id) ?? [],
+      anioDeCarrera: curso.anioDeCarrera ? String(curso.anioDeCarrera) : "",
+      activo: curso.activo,
+      ac: curso.ac,
+      sedeId: curso.sedeId?.toString(),
+      materiaId: curso.materiaId.toString(),
+      divisionId: curso.division?.id.toString(),
+      turno: curso.turno,
+    };
+  }, [curso]);
+
   const formHook = useForm<FormEditarCursoType>({
     mode: "onChange",
-    defaultValues: {
-      id: curso?.id ?? undefined,
-      horaInicio1: curso?.horaInicio1 ?? "",
-      duracion1: curso?.duracion1 ?? "",
-      horaInicio2: curso?.horaInicio2 ?? "",
-      duracion2: curso?.duracion2 ?? "",
-      dia1: curso?.dia1 ?? undefined,
-      dia2: curso?.dia2 ?? undefined,
-      profesorUserId: curso?.profesorId ?? "",
-      ayudanteUsersIds: curso?.ayudantes?.map((a) => a.usuario.id) ?? [],
-      anioDeCarrera: curso?.anioDeCarrera ? String(curso?.anioDeCarrera) : "",
-      activo: curso?.activo ?? true,
-      ac: curso?.ac ?? "",
-      sedeId: curso?.sedeId?.toString() ?? "",
-      materiaId: curso?.materiaId.toString() ?? "",
-      divisionId: curso?.division.id.toString() ?? "",
-      turno: curso?.turno ?? undefined,
-    },
+    defaultValues: cursoBase,
     resolver: zodResolver(inputEditarCurso),
   });
 
@@ -122,28 +123,10 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
 
   console.log(formHook.formState.errors);
 
-  useEffect(() => {
-    if (curso) {
-      formHook.reset({
-        id: curso.id,
-        horaInicio1: curso.horaInicio1,
-        duracion1: curso.duracion1,
-        horaInicio2: curso.horaInicio2 ?? "",
-        duracion2: curso.duracion2 ?? "",
-        dia1: curso.dia1,
-        dia2: curso.dia2 ?? undefined,
-        profesorUserId: curso.profesorId,
-        ayudanteUsersIds: curso.ayudantes?.map((a) => a.usuario.id) ?? [],
-        anioDeCarrera: curso.anioDeCarrera ? String(curso.anioDeCarrera) : "",
-        activo: curso.activo,
-        ac: curso.ac,
-        sedeId: curso.sedeId?.toString(),
-        materiaId: curso.materiaId.toString(),
-        divisionId: curso.division?.id.toString(),
-        turno: curso.turno,
-      });
-    }
-  }, [formHook, curso]);
+  useEffect(() => formHook.reset(cursoBase), [formHook, curso, cursoBase]);
+
+  const [profesorUser] = formHook.watch(["profesorUser"]);
+  useEffect(() => formHook.setValue("profesorUserId", profesorUser?.id), [formHook, profesorUser]);
 
   const esNuevo = id === undefined;
 
@@ -160,7 +143,7 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
   }
 
   const onFormSubmit = (formData: FormEditarCursoType) => {
-    formData.anioDeCarrera = Number(formData.anioDeCarrera);
+    formData.anioDeCarrera = String(formData.anioDeCarrera);
 
     if (esNuevo) {
       agregarCurso.mutate(formData, {
@@ -283,23 +266,20 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
 
               <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
                 <div className="mt-4 basis-1/2">
-                  <FormSelect
+                  <SelectUsuarioForm
                     label={"Profesor"}
                     control={control}
-                    name="profesorUserId"
-                    className="mt-2"
-                    items={profesores}
+                    name="profesorUser"
+                    realNameId="profesorUserId"
+                    className="mt-2 bg-white text-gray-900 dark:bg-gray-700 dark:text-gray-300"
                   />
                 </div>
 
                 <div className="mt-4 basis-1/2">
-                  <FormSelect
-                    label={"Ayudante"}
-                    control={control}
-                    name="ayudanteUsersIds"
-                    className="mt-2"
-                    items={ayudantes}
-                  />
+                  <label htmlFor="jefesTrabajoPracticoUserId">
+                    Ayudantes:
+                    <SelectMultipleUsuarioForm label={"Ayudantes"} control={control} name="ayudanteUsersIds" />
+                  </label>
                 </div>
               </div>
             </div>

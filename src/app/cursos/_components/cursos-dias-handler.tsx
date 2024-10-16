@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui";
 import { FormSelect } from "@/components/ui/autocomplete";
+import { type Control } from "react-hook-form";
+import { type FormEditarCursoType } from "../curso/[id]/curso-form";
 
 type Props = {
-  control: any;
+  control: Control<FormEditarCursoType, unknown>;
   dias: { id: string; label: string }[];
   horas: { id: string; label: string }[];
   duracion: { id: string; label: string }[];
