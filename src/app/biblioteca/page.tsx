@@ -4,7 +4,6 @@ import BibliotecaTableContainer from "./(listado)/biblioteca-table-container";
 import { inputGetBooks } from "@/shared/filters/biblioteca-filter.schema";
 import { Suspense, useMemo } from "react";
 import LoadingBibliotecaTable from "./(listado)/loading-biblioteca-table";
-import { TienePermiso } from "@/app/biblioteca/tienePermiso";
 
 type PageProps = {
   searchParams: ReadonlyURLSearchParams;
@@ -17,21 +16,13 @@ export default async function Page({ searchParams }: PageProps) {
 
   return (
     <>
-      <TienePermiso
-        fallback={
-          <h3 className="text-5xl font-extrabold tracking-tight sm:text-[3rem]">
-            No tenes permiso para ver esta pagina.
-          </h3>
-        }
-      >
-        <h3 className="text-5xl font-extrabold tracking-tight sm:text-[3rem]">Listado de libros</h3>
+      <h3 className="text-5xl font-extrabold tracking-tight sm:text-[3rem]">Listado de libros</h3>
 
-        <ActionButtons filters={filters} />
+      <ActionButtons filters={filters} />
 
-        <Suspense key={filter_as_key} fallback={<LoadingBibliotecaTable />}>
-          <BibliotecaTableContainer filters={filters} />
-        </Suspense>
-      </TienePermiso>
+      <Suspense key={filter_as_key} fallback={<LoadingBibliotecaTable />}>
+        <BibliotecaTableContainer filters={filters} />
+      </Suspense>
     </>
   );
 }

@@ -1,18 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { api } from "@/trpc/react";
 
-export const useTienePermisos = () => {
-  const [tienePermisos, setTienePermisos] = useState<boolean>(false);
+export const useTienePermisos = (permisos: string[]) => {
+  const {
+    data: tienePermisosResponse,
+    isLoading,
+    error,
+  } = api.permisos.usuarioTienePermisos.useQuery(
+    {
+      permisos,
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
-  const { data: tienePermisosResponse } = api.permisos.usuarioTienePermisos.useQuery();
-
-  useEffect(() => {
-    if (tienePermisosResponse !== undefined) {
-      setTienePermisos(tienePermisosResponse);
-    }
-  }, [tienePermisosResponse]);
-
-  return tienePermisos;
+  return {
+    tienePermisos: tienePermisosResponse ?? false,
+    isLoading,
+    error,
+  };
 };

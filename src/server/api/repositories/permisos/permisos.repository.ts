@@ -32,3 +32,43 @@ export const getUsuarioYPermisos = async (ctx: { db: PrismaClient }, input: Inpu
 
   return usuario;
 };
+
+export const verificarPermisoUsuario = async (ctx: { db: PrismaClient }, usuarioId: string, permisos: string[]) => {
+  const usuarioConPermisos = await ctx.db.user.findFirst({
+    where: {
+      id: usuarioId,
+      OR: [
+        {
+          usuarioRol: {
+            some: {
+              rol: {
+                nombre: {
+                  in: permisos,
+                },
+              },
+            },
+          },
+        },
+        {
+          usuarioRol: {
+            some: {
+              rol: {
+                rolPermiso: {
+                  some: {
+                    permiso: {
+                      nombre: {
+                        in: permisos,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
+  });
+
+  return !!usuarioConPermisos; // Retorna true si el usuario tiene algún permiso
+};
