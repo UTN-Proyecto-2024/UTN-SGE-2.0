@@ -51,3 +51,7 @@ export const inputEditarEquipos = z
 export const inputGetArmarios = z.object({
   laboratorioId: z.number(),
 });
+
+export const inputAgregarMarca = z.object({
+  nombre: z.string().min(1, { message: "Requerido" }),
+});

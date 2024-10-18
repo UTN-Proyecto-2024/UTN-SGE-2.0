@@ -7,6 +7,7 @@ import {
 } from "@/shared/filters/equipos-tipos-filter.schema";
 import {
   agregarEquipo,
+  agregarMarca,
   editarEquipo,
   eliminarEquipo,
   getAllArmarios,
@@ -20,6 +21,7 @@ import { protectedProcedure } from "../../trpc";
 import { validarInput } from "../helper";
 import {
   inputAgregarEquipo,
+  inputAgregarMarca,
   inputEditarEquipos,
   inputEliminarEquipo,
   inputGetArmarios,
@@ -148,4 +150,14 @@ export const getTodosLosModelosProcedure = protectedProcedure.query(async ({ ctx
   const modelos = await getAllModelos(ctx);
 
   return modelos;
+});
+
+export const nuevaMarcaProcedure = protectedProcedure.input(inputAgregarMarca).mutation(async ({ ctx, input }) => {
+  validarInput(inputAgregarMarca, input);
+
+  const userId = ctx.session.user.id;
+
+  const marca = await agregarMarca(ctx, input, userId);
+
+  return marca;
 });
