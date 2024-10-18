@@ -2,13 +2,13 @@
 
 import { useTienePermisos } from "@/app/_hooks/use-tiene-permisos";
 
-type TienePermisoProps = {
+type TienePermisosProps = {
   permisos: string[];
   fallback?: React.ReactNode;
   children: React.ReactNode;
 };
 
-export const TienePermiso = ({ permisos, fallback = null, children }: TienePermisoProps) => {
+export const TienePermiso = ({ permisos, fallback = null, children }: TienePermisosProps) => {
   const { tienePermisos, isLoading, error } = useTienePermisos(permisos);
 
   if (isLoading) {

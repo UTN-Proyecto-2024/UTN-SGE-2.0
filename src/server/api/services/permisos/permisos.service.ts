@@ -20,7 +20,7 @@ export const usuarioTienePermisos = protectedProcedure.input(permisosSchema).que
     return true;
   }
 
-  const tienePermiso = await verificarPermisoUsuario(ctx, userId, permisos);
+  const tienePermisos = await verificarPermisoUsuario(ctx, userId, permisos);
 
-  return tienePermiso;
+  return tienePermisos;
 });
