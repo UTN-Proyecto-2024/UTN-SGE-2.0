@@ -16,6 +16,10 @@ export const usuarioTienePermisos = protectedProcedure.input(permisosSchema).que
   const userId = ctx.session.user.id;
   const permisos = input.permisos;
 
+  if (permisos.length === 0) {
+    return true;
+  }
+
   const tienePermiso = await verificarPermisoUsuario(ctx, userId, permisos);
 
   return tienePermiso;
