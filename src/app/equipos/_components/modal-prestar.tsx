@@ -8,6 +8,7 @@ import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { Separator } from "@radix-ui/react-separator";
 import { EquipoInformacionBasica } from "../equipo/_components/info-basica-equipo";
 import { EquipoFormPrestarORenovar } from "./form-prestar";
+import { HandHelping } from "lucide-react";
 
 type PrestarEquipoModalProps = {
   equipoId: number;
@@ -17,7 +18,6 @@ export default function PrestarEquipoModal({ equipoId }: PrestarEquipoModalProps
   const [open, setOpen] = useState(false);
 
   const handleSubmit = () => setOpen(false);
-
   const handleCancel = () => setOpen(false);
 
   return (
@@ -26,11 +26,12 @@ export default function PrestarEquipoModal({ equipoId }: PrestarEquipoModalProps
         <Button
           title="Prestar"
           variant="default"
-          color="secondary"
+          color="primary"
           size="sm"
           className="mt-2 w-full rounded-full border-none"
         >
           Prestar
+          <HandHelping size={16} className="ml-2" />
         </Button>
       }
       titulo={`Prestar Equipo`}
