@@ -22,6 +22,7 @@ import {
   inputAgregarEquipo,
   inputEditarEquipos,
   inputEliminarEquipo,
+  inputGetArmarios,
   inputGetEquipo,
   inputGetEquipos,
 } from "@/shared/filters/equipos-filter.schema";
@@ -135,8 +136,10 @@ export const getTodosLosEstadosProcedure = protectedProcedure.query(async ({ ctx
   return estados;
 });
 
-export const getTodosLosArmariosProcedure = protectedProcedure.query(async ({ ctx }) => {
-  const armarios = await getAllArmarios(ctx);
+export const getTodosLosArmariosProcedure = protectedProcedure.input(inputGetArmarios).query(async ({ ctx, input }) => {
+  validarInput(inputGetArmarios, input);
+
+  const armarios = await getAllArmarios(ctx, input);
 
   return armarios;
 });

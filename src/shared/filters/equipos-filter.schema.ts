@@ -47,3 +47,7 @@ export const inputEditarEquipos = z
     id: z.number().optional(), // Si viene significa que se va a usar para editar, si no significa que se va a usar para crear
   })
   .merge(inputAgregarEquipo);
+
+export const inputGetArmarios = z.object({
+  laboratorioId: z.number(),
+});

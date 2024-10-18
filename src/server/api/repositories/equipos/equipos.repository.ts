@@ -4,6 +4,7 @@ import {
   type inputAgregarEquipo,
   type inputGetEquipo,
   type inputGetEquipos,
+  type inputGetArmarios,
 } from "@/shared/filters/equipos-filter.schema";
 import { Prisma, type PrismaClient } from "@prisma/client";
 import { type z } from "zod";
@@ -254,15 +255,21 @@ export const getAllEstados = async (ctx: { db: PrismaClient }) => {
   return estados;
 };
 
-export const getAllArmarios = async (ctx: { db: PrismaClient }) => {
+type InputGetAllArmarios = z.infer<typeof inputGetArmarios>;
+export const getAllArmarios = async (ctx: { db: PrismaClient }, input: InputGetAllArmarios) => {
+  const { laboratorioId } = input;
+
   const armarios = await ctx.db.armario.findMany({
-    orderBy: {
-      nombre: "asc",
-    },
     select: {
       id: true,
       nombre: true,
       laboratorio: true,
+    },
+    where: {
+      laboratorioId: laboratorioId,
+    },
+    orderBy: {
+      nombre: "asc",
     },
   });
 
