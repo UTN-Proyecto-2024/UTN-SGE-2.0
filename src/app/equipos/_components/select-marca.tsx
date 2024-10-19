@@ -40,15 +40,14 @@ export const SelectMarcasForm = <T extends FieldValues, TType extends string>({
       .filter((item) => !query || estaDentroDe(query, item.label));
   }, [data, query]);
 
-  const [item, setItem] = useState<{ id: number; label: string }>();
-
   const onCreateMarca = () => {
     agregarMarca.mutate(
       { nombre: query },
       {
         onSuccess: (item) => {
           toast.success("Marca agregada con éxito.");
-          setItem({ id: item.id, label: item.nombre });
+          if (marcas) marcas.push({ id: item.id, label: item.nombre });
+          if (data) data.push(item);
         },
         onError: (error) => {
           toast.error(error?.message ?? "Error al agregar la marca");
@@ -84,7 +83,7 @@ export const SelectMarcasForm = <T extends FieldValues, TType extends string>({
   return (
     <FormAutocomplete
       async
-      items={item ? [...marcas, item] : marcas}
+      items={marcas}
       noOptionsComponent={
         <div className="flex flex-col items-center justify-center gap-2 px-4 py-6 text-sm text-white">
           <span>No se encontró la marca</span>

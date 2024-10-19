@@ -5,7 +5,7 @@ import {
   type inputGetEquipo,
   type inputGetEquipos,
   type inputGetArmarios,
-  inputAgregarMarca,
+  type inputAgregarMarca,
 } from "@/shared/filters/equipos-filter.schema";
 import { Prisma, type PrismaClient } from "@prisma/client";
 import { type z } from "zod";
@@ -319,8 +319,6 @@ export const agregarMarca = async (ctx: { db: PrismaClient }, input: InputAgrega
 
       return marca;
     });
-
-    console.info("NUEVA MARCA: ", nuevaMarca);
 
     return nuevaMarca;
   } catch (error) {
