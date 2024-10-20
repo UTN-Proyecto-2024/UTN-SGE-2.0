@@ -3,10 +3,10 @@
 import React from "react";
 import { type z } from "zod";
 import { useAdminUsuariosQueryParam } from "../../_hooks/use-admin-usuarios-query-param";
-import { type inputGetRoles } from "@/shared/filters/admin-roles-filter.schema";
 import { RolesSelector } from "./roles-selector";
+import { type inputGetUsuarios } from "@/shared/filters/admin-usuarios-filter.schema";
 
-type AdminUsuariosFilters = z.infer<typeof inputGetRoles>;
+type AdminUsuariosFilters = z.infer<typeof inputGetUsuarios>;
 
 type Props = {
   filters: AdminUsuariosFilters;
