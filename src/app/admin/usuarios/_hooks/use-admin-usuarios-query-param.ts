@@ -9,7 +9,11 @@ type OrderByType = z.infer<typeof inputGetUsuarios>["orderBy"];
 type PageSizeType = z.infer<typeof inputGetUsuarios>["pageSize"];
 
 const createQueryString = (filters: AdminUsuariosFilters) => {
-  const params = new URLSearchParams(filters);
+  // TODO @ALEX: FIX THIS- Crear nuevo endpoint para obtener profesores que no se mezcle con el de obtener todos los usuarios para la tabla
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { soloProfesores: _ignore, ...rest } = filters;
+
+  const params = new URLSearchParams(rest);
 
   return params.toString();
 };
