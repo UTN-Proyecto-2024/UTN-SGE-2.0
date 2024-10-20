@@ -25,10 +25,11 @@ export const SelectUsuarioForm = <T extends FieldValues, TType extends string>({
   control,
   className,
   ...props
-}: Omit<FormSelectProps<T, TType>, "items"> & { realNameId?: Path<T> }): ReactElement => {
+}: Omit<FormSelectProps<T, TType>, "items"> & { realNameId?: Path<T>; soloProfesores?: boolean }): ReactElement => {
   const [query, setQuery] = useState("");
   const { data, isLoading, isError } = api.admin.usuarios.getAll.useQuery({
     searchText: query,
+    soloProfesores: props.soloProfesores,
   });
 
   const usuarios = useMemo(() => {
@@ -51,7 +52,7 @@ export const SelectUsuarioForm = <T extends FieldValues, TType extends string>({
           <SelectTrigger
             disabled
             id="selectUsuario"
-            className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+            className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
           >
             <SelectValue placeholder="Error cargando usuarios" />
           </SelectTrigger>
@@ -82,7 +83,13 @@ export const SelectUsuarioForm = <T extends FieldValues, TType extends string>({
   );
 };
 
-export const SelectMultipleUsuarioForm = <T extends FieldValues, TType extends string>({
+export const SelectProfesorForm = <T extends FieldValues, TType extends string>(
+  props: Omit<FormSelectProps<T, TType>, "items"> & { realNameId?: Path<T> },
+): ReactElement => {
+  return <SelectUsuarioForm {...props} soloProfesores />;
+};
+
+export const SelectMultipleProfesorForm = <T extends FieldValues, TType extends string>({
   ...props
 }: Omit<FormSelectProps<T, TType>, "items">): ReactElement => {
   const { className, name, control } = props;
@@ -90,10 +97,10 @@ export const SelectMultipleUsuarioForm = <T extends FieldValues, TType extends s
 
   const error = get(formState.errors, name, undefined) as FieldError | undefined;
 
-  const { data, isLoading, isError } = api.admin.usuarios.getAll.useQuery({});
+  const { data, isLoading, isError } = api.admin.usuarios.getAllProfesores.useQuery();
 
   const usuarios = useMemo(() => {
-    if (!data || data.usuarios.length === 0) return [];
+    if (!data?.usuarios || data.usuarios.length === 0) return [];
 
     return data.usuarios.map((usuario) => {
       const { id, nombre, name, apellido, legajo } = usuario;
@@ -120,7 +127,7 @@ export const SelectMultipleUsuarioForm = <T extends FieldValues, TType extends s
           <SelectTrigger
             disabled
             id="selectMateria"
-            className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+            className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
           >
             <SelectValue placeholder="Error cargando materias" />
           </SelectTrigger>
