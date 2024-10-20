@@ -15,6 +15,7 @@ export const inputGetUsuarios = z.object({
     .optional()
     .refine((value) => value && parseInt(value) >= 0, { message: "Debe ser mayor o igual a 0" })
     .catch(""),
+  soloProfesores: z.boolean().optional().default(false).catch(false),
 });
 
 export const inputEliminarUsuario = z.object({ id: z.string() });

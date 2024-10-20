@@ -13,8 +13,8 @@ import { SelectSedeForm } from "@/app/_components/select-ubicacion/select-sede";
 import { DiaAdicionalForm } from "../../_components/cursos-dias-handler";
 import {
   getUserLabelNameForSelect,
-  SelectMultipleUsuarioForm,
-  SelectUsuarioForm,
+  SelectMultipleProfesorForm,
+  SelectProfesorForm,
 } from "@/app/_components/select-usuario";
 
 type Props = {
@@ -266,7 +266,7 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
 
               <div className="flex w-full flex-col gap-x-4 md:flex-row lg:flex-row lg:justify-between">
                 <div className="mt-4 basis-1/2">
-                  <SelectUsuarioForm
+                  <SelectProfesorForm
                     label={"Profesor"}
                     control={control}
                     name="profesorUser"
@@ -278,7 +278,7 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
                 <div className="mb-3 mt-4 basis-1/2 md:mb-0 lg:mb-0">
                   <label htmlFor="jefesTrabajoPracticoUserId">
                     Ayudantes:
-                    <SelectMultipleUsuarioForm label={"Ayudantes"} control={control} name="ayudanteUsersIds" />
+                    <SelectMultipleProfesorForm label={"Ayudantes"} control={control} name="ayudanteUsersIds" />
                   </label>
                 </div>
               </div>
