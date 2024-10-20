@@ -11,7 +11,7 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: cn("px-2.5 py-0.5 rounded-[13px]"),
+        default: cn("rounded-full p-2 w-8 h-8"),
         icon: cn("p-2 rounded-full"),
       },
       color: {

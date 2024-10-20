@@ -69,7 +69,6 @@ model Tutor {
     usuario User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     diasHorarios String
-    sede         String?
     activo       Boolean
 
     especialidad String
