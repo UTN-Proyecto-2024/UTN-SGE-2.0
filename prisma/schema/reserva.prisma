@@ -48,6 +48,8 @@ model Reserva {
     fechaCreacion        DateTime @default(now())
     fechaModificacion    DateTime @updatedAt
 
+    mostrarEnPantalla Boolean @default(true)
+
     @@index([estatus])
     @@index([fechaHoraInicio(sort: Asc)])
     @@index([fechaHoraFin(sort: Asc)])
@@ -180,6 +182,22 @@ model ReservaLaboratorioAbiertoEquipo {
     fechaModificacion    DateTime @default(now()) @updatedAt
     usuarioCreadorId     String
     usuarioModificadorId String
+}
+
+model Pantalla {
+    id Int @id @default(autoincrement())
+
+    sedeId Int
+    sede   Sede @relation(fields: [sedeId], references: [id], onDelete: Cascade)
+
+    docente         String
+    materia         String?
+    laboratorio     String?
+    fechaHoraInicio DateTime
+    fechaHoraFin    DateTime
+
+    usuarioCreadorId String
+    fechaCreacion    DateTime @default(now())
 }
 
 enum ReservaEstatus {

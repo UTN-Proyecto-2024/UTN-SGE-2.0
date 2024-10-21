@@ -4,7 +4,7 @@ import LoadingPantallaTable from "./_components/loading-pantalla";
 import PageLayout from "@/components/ui/page-template";
 import { LABORATORIO_ROUTE } from "@/shared/server-routes";
 import ReservaDiscrecionalModal from "../_components/reserva-discrecional-form";
-import { AgregarAPantallaModal } from "./_components/actions/software-nuevo";
+import { AgregarAPantallaModal } from "./_components/actions/agregar-pantalla";
 
 export default async function Page() {
   return (

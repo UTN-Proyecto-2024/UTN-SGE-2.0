@@ -1,57 +1,210 @@
 import type {
   inputAgregarReservaPantalla,
   inputEliminarReservaPantallas,
+  inputGetReservasEnPntallaActivas,
 } from "@/shared/filters/reserva-pantalla-filter.schema";
-import type { PrismaClient } from "@prisma/client";
+import { armarFechaReserva, getDateISOString } from "@/shared/get-date";
+import { ReservaEstatus, ReservaTipo, type PrismaClient } from "@prisma/client";
 import { type z } from "zod";
 
-export const getReservasEnPantalla = async (_ctx: { db: PrismaClient }) => {
-  return [
-    {
-      id: 1,
-      docente: "Juan Pérez",
-      materia: "Ingeniería Electrónica",
-      laboratorio: "UTN-FRBA",
-      horaInicio: "10:00",
+export const HelperReserva = {
+  RESERVA: "RESERVA_LABORATORIO",
+  PANTALLA: "PANTALLA",
+};
+type HelperReservaTipo = (typeof HelperReserva)[keyof typeof HelperReserva];
+
+type ReservaEnPantalla = {
+  id: string;
+  materia: string | null;
+  docente: string;
+  laboratorio: string | null;
+  fechaHoraInicio: Date;
+  fechaHoraFin: Date;
+  sede: string | null;
+  tipo: HelperReservaTipo;
+};
+
+type InputGetReservasEnPntallaActivas = z.infer<typeof inputGetReservasEnPntallaActivas>;
+export const getReservasEnPantalla = async (ctx: { db: PrismaClient }, input: InputGetReservasEnPntallaActivas) => {
+  const { sedeId } = input;
+  const fechaHoy = new Date();
+
+  // Puede ser discrecional y no tener curso asignado
+  const reservasLaboratorioCerradoPromise = ctx.db.reserva.findMany({
+    where: {
+      estatus: ReservaEstatus.FINALIZADA,
+      tipo: ReservaTipo.LABORATORIO_CERRADO,
+      fechaHoraInicio: {
+        lte: fechaHoy,
+      },
+      fechaHoraFin: {
+        gte: fechaHoy,
+      },
+      mostrarEnPantalla: true,
+      reservaLaboratorioCerrado: {
+        // Si existe la sede buscamos cualquiera la tenga asignada, caso contrario cualquiera con laboratorio asignado alcanza
+        ...(sedeId ? { laboratorio: { sedeId: sedeId } } : { laboratorioId: { not: null } }),
+      },
     },
-    {
-      id: 2,
-      docente: "Alexander Armua",
-      materia: "Física",
-      laboratorio: "ALU-FRBA",
-      horaInicio: "11:00",
+    select: {
+      id: true,
+      fechaHoraInicio: true,
+      fechaHoraFin: true,
+      reservaLaboratorioCerrado: {
+        select: {
+          curso: {
+            select: {
+              id: true,
+              materia: {
+                select: {
+                  nombre: true,
+                },
+              },
+              profesor: {
+                select: {
+                  nombre: true,
+                  apellido: true,
+                },
+              },
+            },
+          },
+          laboratorio: {
+            select: {
+              nombre: true,
+            },
+          },
+          sede: {
+            select: {
+              nombre: true,
+            },
+          },
+        },
+      },
     },
-  ];
+  });
+
+  const pantallasActivasPromise = ctx.db.pantalla.findMany({
+    where: {
+      fechaHoraInicio: {
+        lte: fechaHoy,
+      },
+      fechaHoraFin: {
+        gte: fechaHoy,
+      },
+      sedeId: sedeId ? { equals: sedeId } : undefined,
+    },
+    select: {
+      id: true,
+      docente: true,
+      materia: true,
+      laboratorio: true,
+      fechaHoraInicio: true,
+      fechaHoraFin: true,
+      sede: true,
+    },
+  });
+
+  const [reservasLaboratorio, reservasPantalla] = await Promise.all([
+    reservasLaboratorioCerradoPromise,
+    pantallasActivasPromise,
+  ]);
+
+  const reservaLaboratorioComoPantalla: ReservaEnPantalla[] = reservasLaboratorio.map((reserva) => {
+    const reservaLaboratorioCerrado = reserva.reservaLaboratorioCerrado;
+    const curso = reservaLaboratorioCerrado?.curso ?? null;
+
+    const docenteNombre = curso?.profesor.nombre ?? "";
+    const docenteApellido = curso?.profesor.apellido ?? "";
+
+    const materia = curso?.materia.nombre ?? "";
+
+    const laboratorio = reservaLaboratorioCerrado?.laboratorio?.nombre ?? "";
+
+    return {
+      id: `${HelperReserva.RESERVA}_${reserva.id}`,
+      docente: docenteNombre + " " + docenteApellido,
+      materia: materia,
+      laboratorio: laboratorio,
+      fechaHoraInicio: reserva.fechaHoraInicio,
+      fechaHoraFin: reserva.fechaHoraFin,
+      sede: reservaLaboratorioCerrado?.sede?.nombre ?? "",
+      tipo: HelperReserva.RESERVA,
+    };
+  });
+
+  const reservasPantallaMap = reservasPantalla.map((reservaPantalla) => {
+    return {
+      ...reservaPantalla,
+      id: `${HelperReserva.PANTALLA}_${reservaPantalla.id}`,
+      sede: reservaPantalla.sede.nombre ?? "",
+      tipo: HelperReserva.PANTALLA,
+    };
+  });
+
+  const reservasParaPantalla: ReservaEnPantalla[] = [...reservaLaboratorioComoPantalla, ...reservasPantallaMap];
+
+  return reservasParaPantalla;
 };
 
 type InputEliminarReservaPantalla = z.infer<typeof inputEliminarReservaPantallas>;
-export const removerReservaPantalla = async (_ctx: { db: PrismaClient }, _input: InputEliminarReservaPantalla) => {
-  // const reservasPantallaEliminadas = await _ctx.db.reserva.deleteMany({
-  //   where: {
-  //     id: {
-  //       in: ids,
-  //     },
-  //   },
-  // });
+export const removerReservaPantalla = async (ctx: { db: PrismaClient }, input: InputEliminarReservaPantalla) => {
+  const { ids } = input;
 
-  // return reservasPantallaEliminadas;
+  const reservaABorrarPromise = ids.map((id) => {
+    const reserva = id.split("_");
 
-  return [];
+    if (reserva[0] === HelperReserva.RESERVA) {
+      return ctx.db.reserva.update({
+        data: {
+          mostrarEnPantalla: false,
+        },
+        where: {
+          id: Number(reserva[1]),
+        },
+      });
+    }
+
+    if (reserva[0] === HelperReserva.PANTALLA) {
+      return ctx.db.pantalla.delete({
+        where: {
+          id: Number(reserva[1]),
+        },
+      });
+    }
+  });
+
+  await Promise.all(reservaABorrarPromise);
+
+  return;
 };
 
 type InputCrearReservaPantalla = z.infer<typeof inputAgregarReservaPantalla>;
-export const crearReservaPantalla = async (_ctx: { db: PrismaClient }, _input: InputCrearReservaPantalla) => {
-  // const reservaPantallaCreada = await _ctx.db.reserva.create({
-  //   data: {
-  //     docente: input.docente,
-  //     materiaId: input.materiaId,
-  //     materia: input.materia,
-  //     laboratorio: input.laboratorio,
-  //     horaInicio: input.horaInicio,
-  //   },
-  // });
+export const crearReservaPantalla = async (
+  ctx: { db: PrismaClient },
+  input: InputCrearReservaPantalla,
+  userId: string,
+) => {
+  const hoy = getDateISOString(new Date());
 
-  // return reservaPantallaCreada;
+  const { docente, materia, laboratorio, horaInicio, horaFin, sedeId } = input;
 
-  return [];
+  const fechaHoraInicio = armarFechaReserva(hoy, horaInicio);
+  const fechaHoraFin = armarFechaReserva(hoy, horaFin);
+
+  console.log({ horaInicio, horaFin, fechaHoraInicio, fechaHoraFin });
+
+  const reservaPantallaCreada = await ctx.db.pantalla.create({
+    data: {
+      docente,
+      materia,
+      laboratorio,
+      fechaHoraInicio,
+      fechaHoraFin,
+      sedeId: Number(sedeId),
+
+      usuarioCreadorId: userId,
+    },
+  });
+
+  return reservaPantallaCreada;
 };
