@@ -10,8 +10,8 @@ import { EstatusCorrelativa, MateriaDuracion, MateriaTipo } from "@prisma/client
 import { FormSelect } from "@/components/ui/autocomplete";
 import {
   getUserLabelNameForSelect,
-  SelectMultipleUsuarioForm,
-  SelectUsuarioForm,
+  SelectMultipleProfesorForm,
+  SelectProfesorForm,
 } from "@/app/_components/select-usuario";
 
 type Props = {
@@ -218,7 +218,7 @@ export const MateriaForm = ({ id, onSubmit, onCancel }: Props) => {
               <div className="flex flex-row gap-4">
                 {/* Director de la materia */}
                 <div className="mt-4 basis-1/2">
-                  <SelectUsuarioForm
+                  <SelectProfesorForm
                     label={"Director"}
                     control={control}
                     name="director"
@@ -231,7 +231,7 @@ export const MateriaForm = ({ id, onSubmit, onCancel }: Props) => {
                 <div className="mt-4 basis-1/2">
                   <label htmlFor="jefesTrabajoPracticoUserId">
                     Jefes de Trabajos Prácticos:
-                    <SelectMultipleUsuarioForm
+                    <SelectMultipleProfesorForm
                       label={"Jefes de Trabajos Prácticos"}
                       control={control}
                       name="jefesTrabajoPracticoUserId"

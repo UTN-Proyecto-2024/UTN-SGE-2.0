@@ -76,7 +76,7 @@ export function TutorCard({ className, ...props }: CardProps & TutorData) {
           {}
           <button
             onClick={handleEditClick}
-            className="flex items-center justify-center rounded bg-blue-500 p-2 text-white hover:bg-blue-600"
+            className="flex h-8 w-8 items-center justify-center rounded bg-blue-500 p-2 px-2 py-2 text-white hover:bg-blue-600"
             title="Editar"
           >
             <EditIcon /> {}

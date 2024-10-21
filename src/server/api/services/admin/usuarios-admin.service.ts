@@ -103,5 +103,7 @@ export const eliminarTutorProcedure = protectedProcedure
   });
 
 export const getAllProfesoresProcedure = protectedProcedure.query(async ({ ctx }) => {
-  return await getAllProfesores(ctx);
+  const profesores = await getAllProfesores(ctx);
+
+  return profesores;
 });
