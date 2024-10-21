@@ -16,42 +16,38 @@ type UsuarioReserva = {
 
 const rutaUsuario = "/perfil";
 
-export const DatoUsuarioReserva = ({ usuario }: { usuario: UsuarioReserva | null }) => {
+export const DatoUsuarioReserva = ({ usuario, profesor }: { usuario: UsuarioReserva | null; profesor?: boolean }) => {
   if (!usuario) {
     return <span className="text-center">Sin información</span>;
   }
 
+  if (profesor === undefined) profesor = true;
   const { nombre, name, apellido, legajo, email, image } = usuario;
-
-  const firstName = nombre ?? "";
-  const lastName = apellido ?? "";
-  const fullName = `${firstName}, ${lastName}`;
+  const fullName = `${nombre} ${apellido}`;
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button color="ghost" className="flex flex-row gap-x-2 border-none">
-          <div>
-            <Avatar className="h-6 w-6">
-              <AvatarImage src={image ?? ""} alt={`Imagen de perfil de ${fullName}`} />
-              <AvatarFallback>{fullName.slice(0, 2)}</AvatarFallback>
-            </Avatar>
-          </div>
-          <div>{fullName}</div>
-        </Button>
+        <button className="flex items-center space-x-2">
+          <Avatar className="inline-block h-7 w-7 rounded-full ring-2 ring-white">
+            <AvatarImage src={image ?? ""} alt={`Imagen de perfil de ${fullName}`} />
+            <AvatarFallback>{fullName.slice(0, 2)}</AvatarFallback>
+          </Avatar>
+          {profesor && <span className="text-left">{fullName}</span>}
+        </button>
       </PopoverTrigger>
-      <PopoverContent className="py-0 pl-0">
+      <PopoverContent className="space-y-4 p-4">
         <div title={`${fullName} - ${email}`} className="flex flex-row space-x-2 text-center">
           <div className="basis-1/3">
-            <div className="h-32 w-32">
+            <div className="flex items-center justify-center">
               <Image
                 src={image ?? ""}
                 className="rounded-l-md"
                 alt="Imagen de perfil"
                 objectFit="cover"
                 priority={false}
-                height={160}
-                width={160}
+                height={64}
+                width={64}
               />
             </div>
           </div>
@@ -67,14 +63,14 @@ export const DatoUsuarioReserva = ({ usuario }: { usuario: UsuarioReserva | null
                 <code>{legajo}</code>
               </div>
             </div>
-            <div>
-              <Link href={`${rutaUsuario}/${usuario.id}`} passHref>
-                <Button variant="default" color="outline" size="sm" className="w-full">
-                  Ver perfil
-                </Button>
-              </Link>
-            </div>
           </div>
+        </div>
+        <div>
+          <Link href={`${rutaUsuario}/${usuario.id}`} passHref>
+            <Button variant="default" color="outline" size="sm" className="w-full">
+              Ver perfil
+            </Button>
+          </Link>
         </div>
       </PopoverContent>
     </Popover>
