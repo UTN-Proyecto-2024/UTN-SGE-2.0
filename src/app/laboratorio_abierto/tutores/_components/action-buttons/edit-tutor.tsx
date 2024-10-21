@@ -1,4 +1,4 @@
-import { Dialog } from "@headlessui/react";
+import { Dialog, DialogPanel } from "@headlessui/react";
 import { Button } from "@/components/ui";
 import { FormProvider, useForm } from "react-hook-form";
 import { api } from "@/trpc/react";
@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { inputEditarTutor } from "@/shared/filters/admin-usuarios-filter.schema";
 import { type z } from "zod";
 import { useEffect, useMemo } from "react";
-import { SelectSedeForm } from "@/app/_components/select-ubicacion/select-sede";
 import { useRouter } from "next/navigation";
 import { type TutorType } from "../table/constants";
 
@@ -37,7 +36,6 @@ export const EditTutorModal = ({ isOpen, onClose, tutor }: Props) => {
       id: tutor.usuario.id,
       nombre: tutor.usuario.nombre ?? "",
       especialidad: tutor.especialidad ?? "",
-      sede: tutor.sede ?? undefined,
       diasHorarios: tutor.diasHorarios || [],
     };
   }, [tutor]);
@@ -73,7 +71,7 @@ export const EditTutorModal = ({ isOpen, onClose, tutor }: Props) => {
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
       <div className="fixed inset-0 flex items-center justify-center p-4">
-        <Dialog.Panel className="mx-auto max-w-md rounded-lg bg-white p-6">
+        <DialogPanel className="mx-auto max-w-md rounded-lg bg-white p-6">
           <button onClick={onClose} className="absolute right-2 top-2 text-gray-500">
             &times;
           </button>
@@ -112,22 +110,10 @@ export const EditTutorModal = ({ isOpen, onClose, tutor }: Props) => {
                         />
                       </div>
                     </div>
-
-                    <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-                      <div className="mt-4 basis-1/2">
-                        <SelectSedeForm
-                          name="sede"
-                          control={control}
-                          className="mt-2"
-                          label={"Sede"}
-                          placeholder={"Selecciona una sede"}
-                        />
-                      </div>
-                    </div>
                   </div>
                 </div>
               </ScrollArea>
-              <div className="flex w-full flex-row items-end justify-end space-x-4">
+              <div className="mt-6 flex w-full flex-row items-end justify-end space-x-4">
                 <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={onClose}>
                   Cancelar
                 </Button>
@@ -137,7 +123,7 @@ export const EditTutorModal = ({ isOpen, onClose, tutor }: Props) => {
               </div>
             </form>
           </FormProvider>
-        </Dialog.Panel>
+        </DialogPanel>
       </div>
     </Dialog>
   );
