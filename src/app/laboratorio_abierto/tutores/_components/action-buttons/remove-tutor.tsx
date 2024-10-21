@@ -47,7 +47,7 @@ export default function RemoveTutorModal({ tutorId, nombre, onSubmit }: RemoveTu
       }
       titulo={`Eliminar tutor ${nombre ?? ""}`}
       cancelText="Cancelar"
-      submitText="Si, eliminar"
+      submitText="Sí, eliminar"
       open={open}
       onOpenChange={setOpen}
       onCancel={handleCancel}
@@ -55,7 +55,7 @@ export default function RemoveTutorModal({ tutorId, nombre, onSubmit }: RemoveTu
       isAlertDialog
     >
       <div>
-        Está seguro que desea eliminar <span className="font-bold">{nombre ?? "este tutor"}</span>?
+        ¿Está seguro que desea eliminar <span className="font-bold">{nombre ?? "este tutor"}</span>?
       </div>
     </ModalDrawer>
   );

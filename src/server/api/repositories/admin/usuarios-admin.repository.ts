@@ -195,7 +195,6 @@ export const editarUsuario = async (ctx: { db: PrismaClient }, input: InputEdita
             userId: input.id,
             diasHorarios: "",
             especialidad: "",
-            sede: "",
             usuarioCreadorId: userId,
             activo: true,
           },
@@ -229,7 +228,6 @@ export const editarTutor = async (ctx: { db: PrismaClient }, input: InputEditarT
     const tutorActualizado = await ctx.db.tutor.update({
       data: {
         diasHorarios: input.diasHorarios,
-        sede: input.sede,
         especialidad: input.especialidad,
       },
       where: {
