@@ -5,7 +5,7 @@ import LoadingCursosTable from "../_components/table/loading-curso-table";
 import PageLayout from "@/components/ui/page-template";
 import { LABORATORIO_ROUTE } from "@/shared/server-routes";
 import ReservaDiscrecionalModal from "../_components/reserva-discrecional-form";
-import { AgregarAPantallaModal } from "../pantalla/_components/actions/software-nuevo";
+import { AgregarAPantallaModal } from "../pantalla/_components/actions/agregar-pantalla";
 
 export default async function Page() {
   return (

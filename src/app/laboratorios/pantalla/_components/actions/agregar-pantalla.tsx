@@ -21,7 +21,7 @@ export const AgregarAPantallaModal = () => {
 
   return (
     <ModalDrawer
-      titulo={"Agregar a pantalla - En construcción 👷🏻👷🏻‍♂️👷🏻‍♂️👷🏻‍♂️👷🏻‍♂️"}
+      titulo={"Agregar a pantalla"}
       description={"Agregar curso a pantalla"}
       open={open}
       onOpenChange={setOpen}
