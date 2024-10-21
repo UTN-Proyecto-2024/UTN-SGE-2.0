@@ -53,6 +53,7 @@ export default function CustomDatePicker<T extends FieldValues>({
                 }
               }}
               dateFormat="dd/MM/yyyy"
+              placeholderText="Seleccione o ingrese fecha"
               filterDate={isDateDisabled}
               locale={es}
               customInput={
