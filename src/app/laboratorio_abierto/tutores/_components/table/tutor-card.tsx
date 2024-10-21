@@ -8,6 +8,7 @@ import Image from "next/image";
 import RemoveTutorModal from "../action-buttons/remove-tutor";
 import { EditTutorModal } from "../action-buttons/edit-tutor";
 import { EditIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 type CardProps = React.ComponentProps<typeof Card>;
 
@@ -31,10 +32,7 @@ export function TutorCard({ className, ...props }: CardProps & TutorData) {
 
   return (
     <Card
-      className={cn(
-        "flex flex-col justify-between text-center hover:border-primary/50 hover:bg-[#75757533]/[.2]",
-        className,
-      )}
+      className={cn("flex flex-col justify-between text-center hover:border-primary/50 hover:bg-slate-50", className)}
       {...props}
     >
       <CardHeader>
@@ -73,14 +71,9 @@ export function TutorCard({ className, ...props }: CardProps & TutorData) {
           </CardDescription>
         </div>
         <div className="mt-4 flex justify-between">
-          {}
-          <button
-            onClick={handleEditClick}
-            className="flex h-8 w-8 items-center justify-center rounded bg-blue-500 p-2 px-2 py-2 text-white hover:bg-blue-600"
-            title="Editar"
-          >
-            <EditIcon /> {}
-          </button>
+          <Button onClick={handleEditClick} title="Editar" color={"outline"} className="h-8 w-8 px-1 py-1">
+            <EditIcon size={16} />
+          </Button>
           <RemoveTutorModal
             tutorId={tutor.usuario.id}
             nombre={`${nombre} ${apellido}`}
