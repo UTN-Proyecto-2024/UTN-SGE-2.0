@@ -88,8 +88,8 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
     };
     const allDays = [0, 1, 2, 3, 4, 5, 6];
     if (!curso) return allDays;
-    if (curso.dia1 && !curso.dia2) return allDays.filter((day) => day == mapDias[curso.dia1]);
-    return allDays.filter((day) => day == mapDias[curso.dia1] || (curso.dia2 ? day == mapDias[curso.dia2] : true));
+    if (curso.dia1 && !curso.dia2) return allDays.filter((day) => day !== mapDias[curso.dia1]);
+    return allDays.filter((day) => day !== mapDias[curso.dia1] && (curso.dia2 ? day !== mapDias[curso.dia2] : true));
   }, [curso]);
 
   if (reservaId && esReservaPasada) {
