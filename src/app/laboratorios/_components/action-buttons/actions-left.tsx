@@ -1,4 +1,4 @@
-import { AgregarAPantallaModal } from "../../pantalla/_components/actions/software-nuevo";
+import { AgregarAPantallaModal } from "../../pantalla/_components/actions/agregar-pantalla";
 import ReservaDiscrecionalModal from "../reserva-discrecional-form";
 
 export const LaboratorioActionButtonsLeft = () => {

@@ -39,6 +39,8 @@ interface DataTableProps<TData> {
     classNames?: string;
     cell?: (row: Row<TData>) => ReactNode;
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getRowId?: (row: TData) => any;
 }
 
 const getAlignment = (align?: string) => {
@@ -92,6 +94,7 @@ export function DataTable<T>({
   pageSize,
   pageIndex,
   rowCount,
+  getRowId,
   ...props
 }: DataTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -119,6 +122,7 @@ export function DataTable<T>({
   }, [props.columns, action]);
 
   const table = useReactTable({
+    getRowId: getRowId ?? undefined,
     data,
     columns,
     enableRowSelection: true,
