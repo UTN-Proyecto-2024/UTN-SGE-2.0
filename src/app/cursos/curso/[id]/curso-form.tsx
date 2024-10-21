@@ -222,12 +222,12 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
                 </div>
               </div>
 
-              <div className="flex w-full flex-col gap-x-4 lg:flex-row lg:justify-between">
-                <div className="mt-4 basis-1/3">
+              <div className="flex w-full flex-col gap-x-4 lg:flex-row lg:pr-11">
+                <div className="mt-4 basis-1/4">
                   <FormSelect label={"Día 1"} control={control} name="dia1" className="mt-2" items={dias} />
                 </div>
 
-                <div className="mt-4 basis-1/3">
+                <div className="mt-4 basis-1/4">
                   <FormSelect
                     label={"Hora inicio 1"}
                     control={control}
@@ -237,7 +237,7 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
                   />
                 </div>
 
-                <div className="mt-4 basis-1/3">
+                <div className="mt-4 basis-1/4">
                   <FormSelect
                     label={"Duración 1"}
                     control={control}
@@ -248,7 +248,7 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
                 </div>
               </div>
 
-              <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
+              <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between lg:pr-11">
                 {mostrarDia2 ? (
                   <DiaAdicionalForm
                     control={control}

@@ -13,16 +13,16 @@ type Props = {
 
 export const DiaAdicionalForm = ({ control, dias, horas, duracion, onRemove }: Props) => {
   return (
-    <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-      <div className="mt-4 w-full">
+    <div className="flex w-full flex-row gap-x-4 lg:flex-row">
+      <div className="mt-4 basis-1/4">
         <FormSelect label={"Día 2"} control={control} name="dia2" className="mt-2" items={dias} />
       </div>
 
-      <div className="mt-4 w-full">
+      <div className="mt-4 basis-1/4">
         <FormSelect label={"Hora inicio 2"} control={control} name="horaInicio2" className="mt-2" items={horas} />
       </div>
 
-      <div className="mt-4 w-full">
+      <div className="mt-4 basis-1/4">
         <FormSelect label={"Duración 2"} control={control} name="duracion2" className="mt-2" items={duracion} />
       </div>
 

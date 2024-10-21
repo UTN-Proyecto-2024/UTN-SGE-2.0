@@ -32,7 +32,7 @@ const buttonVariants = cva(
           "bg-danger border-none hover:bg-danger/90 text-white focus-visible:bg-danger/80 active:shadow-[inset_0px_4px_4px_0px_#0000004D,0px_1px_3px_0px_#00000040]",
         ),
         outline: cn(
-          "bg-transparent text-white hover:text-secondary-foreground focus-visible:text-secondary-foreground active:bg-[#393A3B] shadow-none active:shadow-[inset_0px_4px_4px_0px_#0000004D] border border-input",
+          "bg-transparent hover:bg-slate-100 focus-visible:text-secondary-foreground active:bg-slate-200 shadow-none active:shadow-[inset_0px_4px_4px_0px_#0000004D] border border-gray-900",
         ),
       },
       size: {
