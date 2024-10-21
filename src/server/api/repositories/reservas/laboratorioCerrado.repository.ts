@@ -347,8 +347,8 @@ export const cancelarReserva = async (ctx: { db: PrismaClient }, input: InputRec
         throw new Error("Reserva no encontrada");
       }
 
-      if (reserva.estatus === "RECHAZADA" || reserva.estatus === "CANCELADA") {
-        throw new Error("La reserva ya fue rechazada o cancelada");
+      if (reserva.estatus === "CANCELADA") {
+        throw new Error("La reserva ya fue cancelada");
       }
 
       if (reserva.usuarioCreadorId === userId || reserva.usuarioSolicitoId === userId) {
@@ -396,6 +396,25 @@ export const crearReservaLaboratorioCerrado = async (
     }
 
     const { fechaHoraInicio, fechaHoraFin } = obtenerFechaHoraInicio(curso, input);
+
+    // buscar reserva con misma fechaHoraInicio y fechaHoraFin. Si existe devolver error.
+    const reservaExistente = await ctx.db.reservaLaboratorioCerrado.findFirst({
+      where: {
+        reserva: {
+          fechaHoraInicio: fechaHoraInicio,
+          fechaHoraFin: fechaHoraFin,
+          estatus: {
+            in: ["PENDIENTE", "FINALIZADA"],
+          },
+        },
+        cursoId: input.cursoId,
+      },
+    });
+
+    if (reservaExistente) {
+      throw new Error(`Ya existe una reserva para el laboratorio en el rango de fechas seleccionado`);
+    }
+
     // Crear la reserva
     const reserva = await ctx.db.$transaction(async (tx) => {
       const reserva = await tx.reserva.create({

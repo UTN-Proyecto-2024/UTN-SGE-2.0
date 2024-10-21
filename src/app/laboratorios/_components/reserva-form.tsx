@@ -19,6 +19,7 @@ import { esFechaPasada, getDateISOString } from "@/shared/get-date";
 import { ReservaEstatus, TurnoCurso } from "@prisma/client";
 import { ReservaDetalle } from "./info-basica-reserva";
 import { SelectSedeForm } from "@/app/_components/select-ubicacion/select-sede";
+import CustomDatePicker from "@/components/date-picker";
 
 type Props = {
   cursoId?: string | null | number;
@@ -74,6 +75,26 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
       sedeId: esDiscrecional ? String(reservaData?.sedeId) : undefined,
     } as FormReservarLaboratorioType;
   }, [cursoId, esDiscrecional, esNuevo, reservaData, reservaId]);
+
+  const diasDeshabilitados = useMemo(() => {
+    const mapDias = {
+      DOMINGO: 0,
+      LUNES: 1,
+      MARTES: 2,
+      MIERCOLES: 3,
+      JUEVES: 4,
+      VIERNES: 5,
+      SABADO: 6,
+    };
+    const allDays = [0, 1, 2, 3, 4, 5, 6];
+    if (!curso) return allDays;
+
+    return allDays.filter((day) => day == mapDias[curso.dia1] || (curso.dia2 ? day == mapDias[curso.dia2] : true));
+  }, [curso]);
+
+  if (reservaId && esReservaPasada) {
+    return <ReservaDetalle reservaId={reservaId} mostrarCompleto />;
+  }
 
   const formHook = useForm<FormReservarLaboratorioType>({
     mode: "onChange",
@@ -169,10 +190,6 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
   };
 
   const caracteresEnObservaciones = formHook.watch("observaciones")?.length ?? 0;
-
-  if (reservaId && esReservaPasada) {
-    return <ReservaDetalle reservaId={reservaId} mostrarCompleto />;
-  }
 
   return (
     <FormProvider {...formHook}>
@@ -274,13 +291,12 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
               )} */}
 
                 <div className="mt-4 basis-1/2">
-                  {/* TODO: Habilitar fecha de reserva a los días de curso */}
-                  <FormInput
-                    label={"Fecha de reserva"}
+                  <CustomDatePicker
+                    label="Fecha de reserva"
                     control={control}
                     name="fechaReserva"
                     className="mt-2"
-                    type={"date"}
+                    disabledDays={diasDeshabilitados}
                   />
                 </div>
               </div>

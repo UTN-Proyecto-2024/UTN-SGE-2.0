@@ -12,6 +12,7 @@ import { getColumnasReservasLaboratorioCerrado } from "./reserva-labo-cerrado-co
 import { useReservasLaboratorioCerradoQueryParam } from "../../_hooks/use-reserva-laboratorio-cerrado-query-param";
 import { VerReservaModal } from "../ver-reserva";
 import EditarReservaModal from "../editar-reserva-modal";
+import { CancelarReservaLaboratorio } from "../cancelar-reserva";
 
 type LaboratorioCerradoReservaData = RouterOutputs["reservas"]["reservarLaboratorioCerrado"]["getAll"];
 type reservaFilters = z.infer<typeof inputGetAllSolicitudesReservaLaboratorioCerrado>;
@@ -23,7 +24,8 @@ type LaboratorioCerradoTableProps = {
 };
 
 export const LaboratorioCerradoReservaTable = ({ data, filters, filterByUser }: LaboratorioCerradoTableProps) => {
-  const { pagination, sorting, onSortingChange, onPaginationChange } = useReservasLaboratorioCerradoQueryParam(filters);
+  const { pagination, sorting, onSortingChange, onPaginationChange, refresh } =
+    useReservasLaboratorioCerradoQueryParam(filters);
 
   const columns = getColumnasReservasLaboratorioCerrado({ filterByUser });
 
@@ -59,6 +61,10 @@ export const LaboratorioCerradoReservaTable = ({ data, filters, filterByUser }: 
                   icon={PrinterIcon}
                   onClick={() => window.print()}
                 />
+
+                {filterByUser && !estaCancelada && (
+                  <CancelarReservaLaboratorio reservaId={original.reserva.id} refresh={refresh} />
+                )}
 
                 {/* TODO CREAR COMPONENTE CON ALERT DIALOG */}
                 {/* {filterByUser && <Button title="Cancelar reserva" variant="icon" color="danger" icon={TrashIcon} />} */}
