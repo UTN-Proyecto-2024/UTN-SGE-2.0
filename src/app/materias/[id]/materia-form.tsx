@@ -26,6 +26,18 @@ type FormHelperType = {
 
 type FormEditarMateriaType = z.infer<typeof inputEditarMateria> & FormHelperType;
 
+const materiaDuracion: { id: MateriaDuracion; label: string }[] = [
+  { id: MateriaDuracion.ANUAL, label: "Anual" },
+  { id: MateriaDuracion.CUATRIMESTRAL, label: "Cuatrimestral" },
+  { id: MateriaDuracion.AMBOS, label: "Ambos" },
+];
+
+const materiaTipo: { id: MateriaTipo; label: string }[] = [
+  { id: MateriaTipo.INTEGRADORA, label: "Integradora" },
+  { id: MateriaTipo.OBLIGATORIA, label: "Obligatoria" },
+  { id: MateriaTipo.ELECTIVA, label: "Electiva" },
+];
+
 export const MateriaForm = ({ id, onSubmit, onCancel }: Props) => {
   const esNueva = id === undefined;
   const materiaId = parseInt(id ?? "");
@@ -130,18 +142,6 @@ export const MateriaForm = ({ id, onSubmit, onCancel }: Props) => {
     return <div>Error al cargar...</div>;
   }
 
-  const materiaDuracion: { id: MateriaDuracion; label: string }[] = [
-    { id: MateriaDuracion.ANUAL, label: "Anual" },
-    { id: MateriaDuracion.CUATRIMESTRAL, label: "Cuatrimestral" },
-    { id: MateriaDuracion.AMBOS, label: "Ambos" },
-  ];
-
-  const materiaTipo: { id: MateriaTipo; label: string }[] = [
-    { id: MateriaTipo.INTEGRADORA, label: "Integradora" },
-    { id: MateriaTipo.OBLIGATORIA, label: "Obligatoria" },
-    { id: MateriaTipo.ELECTIVA, label: "Electiva" },
-  ];
-
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
@@ -214,7 +214,6 @@ export const MateriaForm = ({ id, onSubmit, onCancel }: Props) => {
                   </div>
                 </div>
               </div>
-
               <div className="flex flex-row gap-4">
                 {/* Director de la materia */}
                 <div className="mt-4 basis-1/2">
