@@ -14,12 +14,6 @@ import { informacionUsuario } from "../usuario-helper";
 
 type InputGetAll = z.infer<typeof inputGetUsuarios>;
 export const getAllUsuarios = async (ctx: { db: PrismaClient }, input: InputGetAll) => {
-  if (input.soloProfesores) {
-    const profesores = await getAllProfesores(ctx);
-
-    return profesores;
-  }
-
   const { pageIndex, pageSize, searchText, orderDirection, orderBy } = input ?? {};
 
   const ordenUsuario: Prisma.UserOrderByWithRelationInput = construirOrderByDinamico(
@@ -297,13 +291,6 @@ export const eliminarTutor = async (ctx: { db: PrismaClient }, input: InputElimi
 
 export const getAllProfesores = async (ctx: { db: PrismaClient }) => {
   const profesores = await ctx.db.user.findMany({
-    include: {
-      usuarioRol: {
-        include: {
-          rol: true,
-        },
-      },
-    },
     where: {
       esDocente: true,
     },
