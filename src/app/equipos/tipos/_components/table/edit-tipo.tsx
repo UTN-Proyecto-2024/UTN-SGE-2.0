@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { EQUIPOS_ROUTE } from "@/shared/server-routes";
 import { EditIcon } from "lucide-react";
 import Link from "next/link";
@@ -11,7 +12,9 @@ const rutaEquipos = EQUIPOS_ROUTE;
 export const EditarTipoModal = (props: EditTipoModalProps) => {
   return (
     <Link key={props.tipoId} href={`${rutaEquipos.href}/tipos/${props.tipoId}`} passHref prefetch={false}>
-      <EditIcon />
+      <Button color={"outline"} className="h-8 w-8 px-1 py-1">
+        <EditIcon size={16} />
+      </Button>
     </Link>
   );
 };
