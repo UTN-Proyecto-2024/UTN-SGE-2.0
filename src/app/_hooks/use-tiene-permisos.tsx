@@ -3,19 +3,7 @@
 import { api } from "@/trpc/react";
 
 export const useTienePermisos = (permisos: string[] = []) => {
-  // Validamos que permisos sea siempre un array
-  if (!Array.isArray(permisos)) {
-    permisos = [];
-  }
-
-  // Si el array de permisos está vacío, retornamos true de inmediato
-  if (permisos.length === 0) {
-    return {
-      tienePermisos: true,
-      isLoading: false,
-      error: null,
-    };
-  }
+  const esValido = Array.isArray(permisos) && permisos.length > 0;
 
   const {
     data: tienePermisosResponse,
@@ -27,8 +15,17 @@ export const useTienePermisos = (permisos: string[] = []) => {
     },
     {
       refetchOnWindowFocus: false,
+      enabled: esValido,
     },
   );
+
+  if (!esValido) {
+    return {
+      tienePermisos: true,
+      isLoading: false,
+      error: null,
+    };
+  }
 
   return {
     tienePermisos: tienePermisosResponse ?? false,
