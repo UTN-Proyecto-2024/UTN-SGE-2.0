@@ -19,6 +19,7 @@ export const SelectMarcasForm = <T extends FieldValues, TType extends string>({
   className,
   ...props
 }: Omit<FormAutocompleteProps<T, TType>, "items"> & { realNameId?: Path<T> }): ReactElement => {
+  const utils = api.useUtils();
   const { data, isLoading, isError } = api.equipos.getAllMarcas.useQuery();
 
   const agregarMarca = api.equipos.nuevaMarca.useMutation();
@@ -45,9 +46,10 @@ export const SelectMarcasForm = <T extends FieldValues, TType extends string>({
       { nombre: query },
       {
         onSuccess: (item) => {
-          toast.success("Marca agregada con éxito.");
-          if (marcas) marcas.push({ id: item.id, label: item.nombre });
-          if (data) data.push(item);
+          toast.success(`Marca ${item.nombre} agregada con éxito.`);
+          utils.equipos.getAllMarcas.invalidate().catch((err) => {
+            console.error(err);
+          });
         },
         onError: (error) => {
           toast.error(error?.message ?? "Error al agregar la marca");
@@ -71,7 +73,7 @@ export const SelectMarcasForm = <T extends FieldValues, TType extends string>({
           <SelectTrigger
             disabled
             id="selectMarca"
-            className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+            className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
           >
             <SelectValue placeholder="Error cargando marcas" />
           </SelectTrigger>
@@ -87,9 +89,11 @@ export const SelectMarcasForm = <T extends FieldValues, TType extends string>({
       noOptionsComponent={
         <div className="flex flex-col items-center justify-center gap-2 px-4 py-6 text-sm">
           <span>No se encontró la marca</span>
-          <Link href={""} className="text-primary" onClick={onCreateMarca}>
-            Crear nueva marca
-          </Link>
+          {query && (
+            <Link href={""} className="text-primary" onClick={onCreateMarca}>
+              Crear nueva marca
+            </Link>
+          )}
         </div>
       }
       className={className}

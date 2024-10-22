@@ -23,32 +23,32 @@ export const SelectModelosForm = <T extends FieldValues, TType extends string>({
 
   const [query, setQuery] = useState("");
 
-  const [items, setItems] = useState<{ id: number; label: string }[]>([]);
+  const [nuevoModelo, setNuevoModelo] = useState<string | undefined>(undefined);
+
+  const modelosConNuevo = useMemo(() => {
+    if (!data) return [];
+    if (!nuevoModelo) return data;
+
+    return [nuevoModelo, ...data];
+  }, [data, nuevoModelo]);
 
   const modelos = useMemo(() => {
     if (!data) return [];
 
-    return data
+    return modelosConNuevo
       .map((modelo) => {
-        const { id, modelo: label } = modelo;
-
         return {
-          label: label ?? "Sin informar",
-          id,
+          label: modelo,
+          id: modelo,
         };
       })
       .filter((item) => !query || estaDentroDe(query, item.label));
-  }, [data, query]);
+  }, [data, modelosConNuevo, query]);
 
   const onCreateModelo = () => {
-    toast.success("Modelo agregada con éxito.");
-    const ids = data?.map((d) => d.id);
-    if (ids) {
-      const maxId = Math.max(...ids);
-      setItems([...items, { id: maxId + 1, label: query }]);
-      if (modelos) modelos.push({ id: maxId + 1, label: query });
-      if (data) data.push({ id: maxId + 1, modelo: query });
-    }
+    setNuevoModelo(query);
+
+    toast.success(`Modelo ${query} agregado con éxito.`);
   };
 
   if (isLoading) {
@@ -66,7 +66,7 @@ export const SelectModelosForm = <T extends FieldValues, TType extends string>({
           <SelectTrigger
             disabled
             id="selectModelo"
-            className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+            className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
           >
             <SelectValue placeholder="Error cargando modelos" />
           </SelectTrigger>
@@ -82,9 +82,11 @@ export const SelectModelosForm = <T extends FieldValues, TType extends string>({
       noOptionsComponent={
         <div className="flex flex-col items-center justify-center gap-2 px-4 py-6 text-sm">
           <span>No se encontró el modelo</span>
-          <Link href={""} className="text-primary" onClick={onCreateModelo}>
-            Crear nuevo modelo
-          </Link>
+          {query && (
+            <Link href={""} className="text-primary" onClick={onCreateModelo}>
+              Crear nuevo modelo
+            </Link>
+          )}
         </div>
       }
       className={className}
