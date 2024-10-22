@@ -278,19 +278,17 @@ export const getAllArmarios = async (ctx: { db: PrismaClient }, input: InputGetA
 };
 
 export const getAllModelos = async (ctx: { db: PrismaClient }) => {
-  //TODO: normalizar modelos y usar esa tabla??
-  const modelos = await ctx.db.equipo.findMany({
+  const equipos = await ctx.db.equipo.findMany({
     orderBy: {
       modelo: "asc",
     },
     select: {
-      id: true,
       modelo: true,
     },
     distinct: ["modelo"],
   });
 
-  return modelos;
+  return equipos.filter((equipo) => equipo.modelo !== null).map((equipo) => equipo.modelo) as string[];
 };
 
 type InputAgregarMarca = z.infer<typeof inputAgregarMarca>;
