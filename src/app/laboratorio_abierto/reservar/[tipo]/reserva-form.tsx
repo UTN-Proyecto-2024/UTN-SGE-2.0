@@ -1,6 +1,6 @@
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { api } from "@/trpc/react";
-import { Button, FormInput, toast } from "@/components/ui";
+import { Button, FormInput, ScrollArea, toast } from "@/components/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
 import { useEffect } from "react";
@@ -165,144 +165,151 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
-        <div className="flex w-full flex-col items-center justify-center">
-          <div className="flex flex-col space-y-4 px-0">
-            <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-              <div className="mt-4 basis-1/2">
-                <FormInput
-                  label={"Tipo de laboratorio"}
-                  control={control}
-                  name="tipo"
-                  className="mt-2"
-                  type={"text"}
-                  readOnly
-                />
+        <ScrollArea className="max-h-[calc(100vh_-_20%)] w-full pr-4 md:max-h-[calc(100vh_-_20%)] lg:max-h-[calc(100vh_-_25%)]">
+          <div className="flex w-full flex-col items-center justify-center">
+            <div className="flex flex-col space-y-4 px-0">
+              <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
+                <div className="mt-4 basis-1/2">
+                  <FormInput
+                    label={"Tipo de laboratorio"}
+                    control={control}
+                    name="tipo"
+                    className="mt-2"
+                    type={"text"}
+                    readOnly
+                  />
+                </div>
+                <div className="mt-4 basis-1/2">
+                  <FormInput
+                    label={"Fecha de reserva"}
+                    control={control}
+                    name="fechaReserva"
+                    className="mt-2"
+                    type={"date"}
+                  />
+                </div>
               </div>
-              <div className="mt-4 basis-1/2">
-                <FormInput
-                  label={"Fecha de reserva"}
-                  control={control}
-                  name="fechaReserva"
-                  className="mt-2"
-                  type={"date"}
-                />
-              </div>
-            </div>
 
-            <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-              <div className="mt-4 basis-1/2">
-                <FormInput
-                  label={"Hora de inicio"}
-                  control={control}
-                  name="horaInicio"
-                  className="mt-2"
-                  type={"time"}
-                />
+              <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
+                <div className="mt-4 basis-1/2">
+                  <FormInput
+                    label={"Hora de inicio"}
+                    control={control}
+                    name="horaInicio"
+                    className="mt-2"
+                    type={"time"}
+                  />
+                </div>
+                <div className="mt-4 basis-1/2">
+                  <FormInput label={"Hora de fin"} control={control} name="horaFin" className="mt-2" type={"time"} />
+                </div>
               </div>
-              <div className="mt-4 basis-1/2">
-                <FormInput label={"Hora de fin"} control={control} name="horaFin" className="mt-2" type={"time"} />
-              </div>
-            </div>
 
-            <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-              <div className="mt-4 w-full">
-                <label htmlFor="concurrentes">¿Cuántas personas concurrirán al Laboratorio?</label>
-                <Controller
-                  control={control}
-                  name="concurrentes"
-                  render={({ field }) => (
-                    <Slider
-                      id="concurrentes"
-                      value={[field.value]}
-                      min={1}
-                      max={8}
-                      step={1}
-                      className={"w-full"}
-                      onValueChange={(value) => field.onChange(value[0] ?? 1)}
-                    />
-                  )}
-                />
-                <p className="mt-2">Cantidad de personas: {concurrentes}</p>
-              </div>
-            </div>
-
-            <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-              {esTLA && (
+              <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
                 <div className="mt-4 w-full">
-                  <SelectEspecialidadForm
-                    name="especialidad"
-                    label={"Especialidad"}
+                  <label htmlFor="concurrentes">¿Cuántas personas concurrirán al Laboratorio?</label>
+                  <Controller
+                    control={control}
+                    name="concurrentes"
+                    render={({ field }) => (
+                      <Slider
+                        id="concurrentes"
+                        value={[field.value]}
+                        min={1}
+                        max={8}
+                        step={1}
+                        className={"w-full"}
+                        onValueChange={(value) => field.onChange(value[0] ?? 1)}
+                      />
+                    )}
+                  />
+                  <p className="mt-2">Cantidad de personas: {concurrentes}</p>
+                </div>
+              </div>
+
+              <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
+                {esTLA && (
+                  <div className="mt-4 w-full">
+                    <SelectEspecialidadForm
+                      name="especialidad"
+                      label={"Especialidad"}
+                      control={control}
+                      className="mt-2"
+                      placeholder={"Selecciona una especialidad"}
+                    />
+                  </div>
+                )}
+                <div className="mt-4 w-full">
+                  <SelectSedeForm
+                    name="sedeId"
+                    label={"Sede"}
                     control={control}
                     className="mt-2"
-                    placeholder={"Selecciona una especialidad"}
+                    placeholder={"Selecciona una sede"}
                   />
+                </div>
+              </div>
+
+              <div className="flex w-full flex-col justify-end gap-y-4 lg:justify-between">
+                <FormEquipoTipoSelector name="equipoReservado" />
+              </div>
+
+              <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
+                <div className="mt-4 w-full">
+                  <FormTextarea
+                    label={"Observaciones"}
+                    control={control}
+                    name="observaciones"
+                    className="mt-2 w-full"
+                  />
+                </div>
+              </div>
+
+              {haSidoRechazada && (
+                <div className="flex w-full flex-col justify-end gap-y-4 lg:justify-between">
+                  <div className="mt-4 w-full">
+                    <Textarea
+                      label={"Motivo de rechazo"}
+                      className="max-h-10 w-full"
+                      placeholder="Escribí el motivo de rechazo"
+                      readOnly
+                      value={reservaData?.reserva.motivoRechazo ?? ""}
+                    />
+                  </div>
                 </div>
               )}
-              <div className="mt-4 w-full">
-                <SelectSedeForm
-                  name="sedeId"
-                  label={"Sede"}
-                  control={control}
-                  className="mt-2"
-                  placeholder={"Selecciona una sede"}
-                />
-              </div>
-            </div>
 
-            <div className="flex w-full flex-col justify-end gap-y-4 lg:justify-between">
-              <FormEquipoTipoSelector name="equipoReservado" />
-            </div>
-
-            <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-              <div className="mt-4 w-full">
-                <FormTextarea label={"Observaciones"} control={control} name="observaciones" className="mt-2 w-full" />
-              </div>
-            </div>
-
-            {haSidoRechazada && (
-              <div className="flex w-full flex-col justify-end gap-y-4 lg:justify-between">
-                <div className="mt-4 w-full">
-                  <Textarea
-                    label={"Motivo de rechazo"}
-                    className="max-h-10 w-full"
-                    placeholder="Escribí el motivo de rechazo"
-                    readOnly
-                    value={reservaData?.reserva.motivoRechazo ?? ""}
-                  />
-                </div>
-              </div>
-            )}
-
-            <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-              <div className="mt-4">
-                <div className="items-top flex space-x-2">
-                  <FormInputPoliticas name="aceptoTerminos" control={control} />
+              <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
+                <div className="mt-4">
+                  <div className="items-top flex space-x-2">
+                    <FormInputPoliticas name="aceptoTerminos" control={control} />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="flex w-full flex-row items-end justify-end space-x-4">
-          <Button title="Cerrar" type="button" variant="default" color="secondary" onClick={handleClickClose}>
-            Cerrar
-          </Button>
-          {!esNuevo && !estaEstatusCancelada && !esReservaPasada && (
-            <Button
-              title="Cancelar Reserva"
-              type="button"
-              variant="default"
-              color="danger"
-              onClick={handleCancelReserva}
-            >
-              Cancelar Reserva
+          <div className="flex w-full flex-row items-end justify-end space-x-4">
+            <Button title="Cerrar" type="button" variant="default" color="secondary" onClick={handleClickClose}>
+              Cerrar
             </Button>
-          )}
-          {!estaEstatusCancelada && !esReservaPasada && (
-            <Button title="Guardar" type="submit" variant="default" color="primary">
-              {estaEstatusAprobada ? "Modificar" : "Guardar"}
-            </Button>
-          )}
-        </div>
+            {!esNuevo && !estaEstatusCancelada && !esReservaPasada && (
+              <Button
+                title="Cancelar Reserva"
+                type="button"
+                variant="default"
+                color="danger"
+                onClick={handleCancelReserva}
+              >
+                Cancelar Reserva
+              </Button>
+            )}
+            {!estaEstatusCancelada && !esReservaPasada && (
+              <Button title="Guardar" type="submit" variant="default" color="primary">
+                {estaEstatusAprobada ? "Modificar" : "Guardar"}
+              </Button>
+            )}
+          </div>
+        </ScrollArea>
       </form>
     </FormProvider>
   );
