@@ -20,6 +20,7 @@ import { ReservaEstatus, TurnoCurso } from "@prisma/client";
 import { ReservaDetalle } from "./info-basica-reserva";
 import { SelectSedeForm } from "@/app/_components/select-ubicacion/select-sede";
 import CustomDatePicker from "@/components/date-picker";
+import { MotivoRechazo } from "./rechazo-alert";
 
 type Props = {
   cursoId?: string | null | number;
@@ -196,6 +197,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
         <ScrollArea className="max-h-[calc(100vh_-_30%)]">
           <div className="flex w-full flex-col items-center justify-center">
+            {haSidoRechazada && <MotivoRechazo motivoRechazo={reservaData?.reserva.motivoRechazo ?? ""} />}
             <div className="flex flex-col space-y-4 px-0 md:px-6">
               {!esDiscrecional && (
                 <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
@@ -376,21 +378,6 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
                   </small>
                 </div>
               </div>
-
-              {haSidoRechazada && (
-                <div className="flex w-full flex-col justify-end gap-y-4 lg:justify-between">
-                  <div className="mt-4 w-full">
-                    <Textarea
-                      label={"Motivo de rechazo"}
-                      className="max-h-10 w-full"
-                      placeholder="Escribí el motivo de rechazo"
-                      readOnly
-                      value={reservaData?.reserva.motivoRechazo ?? ""}
-                    />
-                  </div>
-                </div>
-              )}
-
               <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
                 <div className="mt-4">
                   <div className="items-top flex space-x-2">
@@ -415,7 +402,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
           )}
           {!estaEstatusCancelada && !esReservaPasada && (
             <Button title="Guardar" type="submit" variant="default" color="primary">
-              {estaEstatusAprobada ? "Modificar" : "Guardar"}
+              {estaEstatusAprobada ? "Modificar" : haSidoRechazada ? "Modificar y solicitar" : "Guardar"}
             </Button>
           )}
         </div>

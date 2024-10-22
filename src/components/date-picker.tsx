@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Controller, type Control, type Path, type FieldValues } from "react-hook-form";
 import { DayPicker } from "react-day-picker";
-import { format } from "date-fns";
+import { format, isBefore, startOfToday } from "date-fns";
 import { es } from "date-fns/locale";
 import { cn } from "@/components/utils";
 import { Calendar } from "lucide-react";
@@ -27,9 +27,10 @@ export default function CustomDatePicker<T extends FieldValues>({
 }: CustomDatePickerProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const calendarRef = useRef<HTMLDivElement>(null);
+  const today = startOfToday();
 
   const isDateDisabled = (date: Date) => {
-    return disabledDays.includes(date.getDay());
+    return isBefore(date, today) || disabledDays.includes(date.getDay());
   };
 
   useEffect(() => {
