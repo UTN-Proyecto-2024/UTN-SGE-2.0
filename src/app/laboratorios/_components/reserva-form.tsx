@@ -92,10 +92,6 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
     return allDays.filter((day) => day !== mapDias[curso.dia1] && (curso.dia2 ? day !== mapDias[curso.dia2] : true));
   }, [curso]);
 
-  if (reservaId && esReservaPasada) {
-    return <ReservaDetalle reservaId={reservaId} mostrarCompleto />;
-  }
-
   const formHook = useForm<FormReservarLaboratorioType>({
     mode: "onChange",
     defaultValues: reservaBase,
@@ -111,6 +107,10 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
   useEffect(() => {
     formHook.reset(reservaBase);
   }, [formHook, reservaBase]);
+
+  if (reservaId && esReservaPasada) {
+    return <ReservaDetalle reservaId={reservaId} mostrarCompleto />;
+  }
 
   const { handleSubmit, control } = formHook;
 
@@ -204,6 +204,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
                       label={"Materia"}
                       name="materia"
                       type={"text"}
+                      disabled
                       className="mt-2"
                       value={curso?.materia.nombre ?? ""}
                       readOnly
@@ -213,6 +214,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
                     <Input
                       label={"División"}
                       name="division"
+                      disabled
                       type={"text"}
                       className="mt-2"
                       value={curso?.division.nombre ?? ""}
@@ -229,6 +231,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
                       label={"Turno"}
                       name="turno"
                       type={"text"}
+                      disabled
                       className="mt-2"
                       value={CursoTurno({ turno: curso?.turno })}
                       readOnly
@@ -238,6 +241,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
                     <Input
                       label={"Sede"}
                       name="sede"
+                      disabled
                       type={"text"}
                       className="mt-2"
                       value={curso?.sede.nombre ?? ""}
@@ -254,6 +258,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
                       label={"Profesor"}
                       name="profesor"
                       type={"text"}
+                      disabled
                       className="mt-2"
                       value={`${curso?.profesor.nombre} ${curso?.profesor.apellido}`}
                       readOnly
@@ -263,6 +268,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
                     <Input
                       label={"Ayudante/s"}
                       name="ayudante"
+                      disabled
                       type={"text"}
                       className="mt-2"
                       value={curso?.ayudantes.map((ayudante) => ayudante.usuario.apellido).join(", ") ?? ""}

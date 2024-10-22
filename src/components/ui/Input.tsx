@@ -20,14 +20,14 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
 export const inputBaseStyle = cn(
   "shadow-none outline-none focus:!ring-0 transition-colors min-w-[90px] w-auto min-h-[41px] max-h-[41px]",
   "px-4 py-[9px] bg-input focus:border-input-active border border-input rounded-md focus:rounded-md hover:border-input-hover placeholder:text-sm",
-  "disabled:!text-disabled disabled:!border-disabled disabled:focus:!border-disabled",
+  "disabled:bg-neutral-400 disabled:border-gray-400 disabled:text-gray-300 disabled:cursor-text",
 );
 
 const calendarIconStyle = cn("h-5 absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer");
 
 export const Input = memo(
   forwardRef<HTMLInputElement, InputProps>(
-    ({ label, error, className, isDirty: _isDirty, unit, placeholder, ...props }, ref): ReactElement => {
+    ({ label, error, className, isDirty: _isDirty, unit, placeholder, disabled, ...props }, ref): ReactElement => {
       const id = useId();
       const isDate = ["date", "datetime-local", "week", "month"].includes(props.type ?? "text");
       const isTime = props.type === "time";
@@ -54,7 +54,7 @@ export const Input = memo(
           )}
           <div
             className={cn("relative w-full", {
-              "!text-disabled": props.disabled,
+              "!text-disabled": disabled,
             })}
           >
             {props.prefix ? (
@@ -65,6 +65,7 @@ export const Input = memo(
               placeholder={placeholder ?? undefined}
               ref={ref}
               id={id}
+              disabled={disabled}
               className={cn(inputBaseStyle, "!w-full", {
                 "!pr-10": hasRightIcon,
                 "!pl-8": props.prefix,
