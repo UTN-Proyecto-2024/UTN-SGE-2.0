@@ -104,7 +104,7 @@ export const getColumns = () => {
       header: "Profesor",
       cell: (info) => {
         const profesor = info.row.original.profesor;
-        return <DatoUsuarioReserva profesor={true} usuario={profesor} key={profesor.id} />;
+        return <DatoUsuarioReserva usuario={profesor} key={profesor.id} />;
       },
       meta: {
         header: {
@@ -122,7 +122,7 @@ export const getColumns = () => {
         return (
           <div className="flex -space-x-2 overflow-hidden">
             {ayudantes.map((ayudante) => (
-              <DatoUsuarioReserva profesor={false} usuario={ayudante.usuario} key={ayudante.userId} />
+              <DatoUsuarioReserva mostrarNombre={false} usuario={ayudante.usuario} key={ayudante.userId} />
             ))}
           </div>
         );
