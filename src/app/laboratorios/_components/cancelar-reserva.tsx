@@ -51,7 +51,7 @@ export const CancelarReservaLaboratorio = ({ reservaId, refresh }: Props) => {
             Cerrar
           </Button>
           <Button title="Cancelar" type="submit" variant="default" color="danger" onClick={handleSave}>
-            Cancelar
+            Cancelar Reserva
           </Button>
         </div>
       </div>
