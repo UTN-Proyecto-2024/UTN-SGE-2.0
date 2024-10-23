@@ -1,14 +1,22 @@
-export const emailTemplate = (usuarioSolicitante: string, libroNombre: string) => {
+export const emailTemplate = ({
+  usuario,
+  textoMail,
+  hipervinculo,
+}: {
+  usuario: string;
+  hipervinculo: string;
+  textoMail: string;
+}) => {
   return `
     <!doctype html>
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
     <head>
-        <title></title>
+        <title>${textoMail}</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style type="text/css">
-            body { margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+            body { margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; line-height: 1.5; }
             table, td { border-collapse: collapse; }
             img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
             p { display: block; margin: 13px 0; }
@@ -25,21 +33,22 @@ export const emailTemplate = (usuarioSolicitante: string, libroNombre: string) =
                                     <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
                                         <tr>
                                             <td align="center" style="padding-bottom: 20px;">
-                                                <img src='https://i.postimg.cc/sgRzwG1Z/img-test.jpg' alt="Logo" style="max-width: 100%; height: 150px;"/>
+                                                <img src='https://i.postimg.cc/sgRzwG1Z/img-test.jpg' alt="Logo de UTN" style="max-width: 100%; height: 150px;"/>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:28px;font-weight:bold;line-height:1;text-align:center;color:#555;">
-                                                    ¡Hola, ${usuarioSolicitante}!
+                                                    ¡Hola${usuario?.length > 1 ? ", " + usuario : ""}!
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                                 <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:16px;line-height:22px;text-align:center;color:#555;margin-top:10px;">
-                                                    <strong>Has reservado el libro:</strong> <br/> <em>${libroNombre}</em>
-                                                    <br/>Gracias por usar nuestro sistema de reservas de la biblioteca.
+                                                    ${textoMail}
+                                                    <br/>
+                                                    Gracias por usar nuestros sistemas.
                                                 </div>
                                             </td>
                                         </tr>
@@ -48,12 +57,17 @@ export const emailTemplate = (usuarioSolicitante: string, libroNombre: string) =
                                                 <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                                                     <tr>
                                                         <td align="center" bgcolor="#2F67F6" role="presentation" style="border:none;border-radius:3px;color:#ffffff;cursor:auto;padding:15px 25px;" valign="middle">
-                                                            <a href="https://sge-2.vercel.app/" style="background:#2F67F6;color:#ffffff;font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:normal;line-height:120%;Margin:0;text-decoration:none;text-transform:none;">
+                                                            <a href="${hipervinculo}" role="button" style="background:#2F67F6;color:#ffffff;font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:normal;line-height:120%;Margin:0;text-decoration:none;text-transform:none;">
                                                                 <strong>Ver más detalles</strong>
                                                             </a>
                                                         </td>
                                                     </tr>
                                                 </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center" style="font-size:12px;color:#888888;padding:20px;">
+                                                Este correo fue generado automáticamente por el Sistema de Gestión Electrónica de UTN-FRBA.
                                             </td>
                                         </tr>
                                     </table>

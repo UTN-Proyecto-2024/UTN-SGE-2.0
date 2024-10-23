@@ -11,7 +11,6 @@ import { getDate } from "@/shared/get-date";
 
 type Props = {
   libroId: number;
-  libroNombre: string;
   onSubmit: () => void;
   onCancel: () => void;
   renovar?: boolean;
@@ -23,7 +22,7 @@ type FormHelperType = {
 
 type FormPrestarLibroType = z.infer<typeof inputPrestarLibro> & FormHelperType;
 
-export const LibroFormPrestarORenovar = ({ libroId, libroNombre, onSubmit, onCancel, renovar }: Props) => {
+export const LibroFormPrestarORenovar = ({ libroId, onSubmit, onCancel, renovar }: Props) => {
   const prestarLibro = api.reservas.reservaBiblioteca.crearReserva.useMutation(); // Se usa por efecto si `renovar=false`
   const renovarLibro = api.reservas.reservaBiblioteca.renovarLibro.useMutation(); // Se usa por efecto si `renovar=true`
 
@@ -51,31 +50,12 @@ export const LibroFormPrestarORenovar = ({ libroId, libroNombre, onSubmit, onCan
     ),
   });
 
-  const sendEmailMutation = api.email.sendEmail.useMutation({
-    onSuccess: (data) => {
-      console.log("Email sent successfully:", data);
-    },
-    onError: (error) => {
-      console.error("Error sending email:", error);
-    },
-  });
-
-  const sendEmail = () => {
-    const usuarioSolicitante = formHook.watch("usuarioSolicitante").label;
-    sendEmailMutation.mutate({
-      to: "alexanderarmua1@gmail.com",
-      subject: "Notificación Reserva",
-      usuarioSolicitante: usuarioSolicitante,
-      libroNombre: libroNombre,
-    });
-  };
   const { handleSubmit, control, watch, trigger } = formHook;
 
   const onFormSubmit = async (formData: FormPrestarLibroType) => {
     if (renovar) {
       await handleRenovarLibro(formData);
     } else {
-      sendEmail();
       await handlePrestarLibro(formData);
     }
   };
@@ -120,29 +100,15 @@ export const LibroFormPrestarORenovar = ({ libroId, libroNombre, onSubmit, onCan
 
   return (
     <FormProvider {...formHook}>
-      <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
+      <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-y-4">
         <div className="flex w-full flex-col items-center justify-center">
-          <div className="flex flex-col space-y-4 px-0 md:px-6">
-            <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
-              <div className="mt-4 basis-1/2">
-                <FormInput
-                  label={"Desde el día"}
-                  control={control}
-                  name="fechaInicio"
-                  className="mt-2"
-                  type={"date"}
-                  required
-                />
+          <div className="flex flex-col space-y-4 px-0 ">
+            <div className="flex w-full flex-col gap-x-4 lg:flex-row">
+              <div className="mt-4 w-full">
+                <FormInput label={"Desde el día"} control={control} name="fechaInicio" type={"date"} required />
               </div>
-              <div className="mt-4 basis-1/2">
-                <FormInput
-                  label={"Hasta el día"}
-                  control={control}
-                  name="fechaFin"
-                  className="mt-2"
-                  type={"date"}
-                  required
-                />
+              <div className="mt-4 w-full">
+                <FormInput label={"Hasta el día"} control={control} name="fechaFin" type={"date"} required />
               </div>
             </div>
 
@@ -162,11 +128,24 @@ export const LibroFormPrestarORenovar = ({ libroId, libroNombre, onSubmit, onCan
             )}
           </div>
         </div>
-        <div className="flex w-full flex-row items-end justify-end space-x-4">
-          <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
+        <div className="flex w-full flex-row items-end space-x-4 md:justify-end">
+          <Button
+            title="Cancelar"
+            type="button"
+            variant="default"
+            color="secondary"
+            onClick={handleCancel}
+            className="w-full"
+          >
             Cancelar
           </Button>
-          <Button title={renovar ? "Renovar" : "Prestar"} type="submit" variant="default" color="primary">
+          <Button
+            title={renovar ? "Renovar" : "Prestar"}
+            type="submit"
+            variant="default"
+            color="primary"
+            className="w-full"
+          >
             {renovar ? "Renovar" : "Prestar"}
           </Button>
         </div>

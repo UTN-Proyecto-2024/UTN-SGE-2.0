@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui";
+import { Button, ScrollArea } from "@/components/ui";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { LibroInformacionBasica } from "../libros/_components/info-basica-libro";
 import { Separator } from "@radix-ui/react-separator";
@@ -44,17 +44,14 @@ export default function PrestarLibroModal({ libroId }: PrestarLibroModalProps) {
       onOpenChange={setOpen}
     >
       <div className="flex flex-col">
-        <LibroInformacionBasica libroId={libroId} />
+        <ScrollArea className="max-h-72">
+          <LibroInformacionBasica libroId={libroId} />
+        </ScrollArea>
 
         <Separator className="my-8 border-2" />
 
         {!isLoading && libro && (
-          <LibroFormPrestarORenovar
-            libroId={libroId}
-            libroNombre={libro.titulo}
-            onCancel={handleCancel}
-            onSubmit={handleSubmit}
-          />
+          <LibroFormPrestarORenovar libroId={libroId} onCancel={handleCancel} onSubmit={handleSubmit} />
         )}
       </div>
     </ModalDrawer>
