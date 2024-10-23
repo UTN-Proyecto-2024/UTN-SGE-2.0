@@ -221,7 +221,7 @@ export const agregarCurso = async (ctx: { db: PrismaClient }, input: InputAgrega
       }
     }
 
-    throw new Error("Error agregando libro");
+    throw new Error("Error agregando curso");
   }
 };
 

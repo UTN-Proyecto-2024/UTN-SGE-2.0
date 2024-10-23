@@ -1,21 +1,25 @@
 import React from "react";
-import { NuevaDivision } from "./division-new-division";
-import { CURSOS_ROUTE } from "@/shared/server-routes";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-const rutaCurso = CURSOS_ROUTE;
-const misCursosRuta = rutaCurso?.subRutas?.[0];
+import type { inputGetDivisiones } from "@/shared/filters/divisiones-filter.schema";
+import type { z } from "zod";
+import { DivisionesFilterText } from "./filter-divisiones-text";
+import { DivisionesFilterAño } from "./filter-divisiones-anio";
 
-export const ActionButtons = () => {
+type DivisionesFilters = z.infer<typeof inputGetDivisiones>;
+
+type ActionButtonsProps = {
+  filters: DivisionesFilters;
+};
+
+export const ActionButtons = ({ filters }: ActionButtonsProps) => {
   return (
-    <div className="relative flex w-full items-center justify-between space-y-3 md:flex-row md:justify-end md:space-x-3 md:space-y-0">
-      <div className="flex space-x-2">
-        <NuevaDivision />
-        <Button color={"ghost"}>
-          <Link href={misCursosRuta?.href ?? "/"} passHref>
-            Ir a cursos
-          </Link>
-        </Button>
+    <div className="relative flex w-full flex-col items-center justify-between space-y-3 md:flex-row-reverse md:space-x-1.5 md:space-y-0">
+      <div className="mr-auto w-full space-y-3 sm:flex sm:basis-3/4 sm:flex-row sm:space-x-3 sm:space-y-0">
+        <div className="md:basis-2/5">
+          <DivisionesFilterText filters={filters} />
+        </div>
+        <div className="md:basis-1/5">
+          <DivisionesFilterAño filters={filters} />
+        </div>
       </div>
     </div>
   );

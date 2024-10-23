@@ -16,12 +16,17 @@ type UsuarioReserva = {
 
 const rutaUsuario = "/perfil";
 
-export const DatoUsuarioReserva = ({ usuario, profesor }: { usuario: UsuarioReserva | null; profesor?: boolean }) => {
+export const DatoUsuarioReserva = ({
+  usuario,
+  mostrarNombre = true,
+}: {
+  usuario: UsuarioReserva | null;
+  mostrarNombre?: boolean;
+}) => {
   if (!usuario) {
     return <span className="text-center">Sin información</span>;
   }
 
-  if (profesor === undefined) profesor = true;
   const { nombre, name, apellido, legajo, email, image } = usuario;
   const fullName = `${nombre} ${apellido}`;
 
@@ -33,7 +38,7 @@ export const DatoUsuarioReserva = ({ usuario, profesor }: { usuario: UsuarioRese
             <AvatarImage src={image ?? ""} alt={`Imagen de perfil de ${fullName}`} />
             <AvatarFallback>{fullName.slice(0, 2)}</AvatarFallback>
           </Avatar>
-          {profesor && <span className="text-left">{fullName}</span>}
+          {mostrarNombre && <span className="text-left">{fullName}</span>}
         </button>
       </PopoverTrigger>
       <PopoverContent className="space-y-4 p-4">

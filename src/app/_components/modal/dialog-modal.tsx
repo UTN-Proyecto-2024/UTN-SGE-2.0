@@ -35,20 +35,22 @@ export const DialogModalDrawer = ({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         {children}
-        <DialogFooter>
-          {onCancel && (
-            <DialogClose asChild>
-              <Button variant={"default"} color={"ghost"} onClick={onCancel}>
-                {cancelText ?? "Cancelar"}
+        {(onCancel ?? onSubmit) && (
+          <DialogFooter>
+            {onCancel && (
+              <DialogClose asChild>
+                <Button variant={"default"} color={"ghost"} onClick={onCancel}>
+                  {cancelText ?? "Cancelar"}
+                </Button>
+              </DialogClose>
+            )}
+            {onsubmit && (
+              <Button variant={"default"} color={"danger"} onClick={onSubmit}>
+                {submitText ?? "Aceptar"}
               </Button>
-            </DialogClose>
-          )}
-          {onsubmit && (
-            <Button variant={"default"} color={"danger"} onClick={onSubmit}>
-              {submitText ?? "Aceptar"}
-            </Button>
-          )}
-        </DialogFooter>
+            )}
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );

@@ -20,6 +20,7 @@ export const inputGetDivisiones = z.object({
   orderBy: z.enum(["nombre"]).default("nombre").catch("nombre"),
   orderDirection: z.enum(["asc", "desc"]).default("asc").catch("asc"),
   searchText: z.string().default(""),
+  anio: z.string().optional(),
 });
 
 export const inputGetDivision = z.object({
