@@ -412,7 +412,7 @@ export const crearReservaLaboratorioCerrado = async (
     });
 
     if (reservaExistente) {
-      throw new Error(`Ya existe una reserva para el laboratorio en el rango de fechas seleccionado`);
+      throw new Error(`Ya existe una reserva de laboratorio para el mismo curso en el rango de fechas seleccionado`);
     }
 
     // Crear la reserva
