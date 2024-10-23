@@ -358,3 +358,42 @@ export const renovarLibro = async (ctx: { db: PrismaClient }, input: InputRenova
     throw new Error(`Error renovando libro`);
   }
 };
+
+export const getReservaParaEmail = async (ctx: { db: PrismaClient }, input: { id: number }) => {
+  const { id } = input;
+
+  const datos = await ctx.db.reserva.findUnique({
+    where: {
+      id: id,
+    },
+    select: {
+      reservaLibro: {
+        select: {
+          libro: {
+            select: {
+              titulo: true,
+            },
+          },
+        },
+      },
+      usuarioSolicito: {
+        select: {
+          nombre: true,
+          apellido: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  const reserva = {
+    libroNombre: datos?.reservaLibro?.libro?.titulo,
+    usuarioSolicitante: {
+      nombre: datos?.usuarioSolicito.nombre,
+      apellido: datos?.usuarioSolicito.apellido,
+      email: datos?.usuarioSolicito.email,
+    },
+  };
+
+  return reserva;
+};

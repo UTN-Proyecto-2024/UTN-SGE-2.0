@@ -14,6 +14,7 @@ import {
   inputGetReservasLibroPorLibroId,
   inputPrestarLibro,
 } from "@/shared/filters/reservas-filter.schema";
+import { enviarMailReservaLibroProcedure } from "../mails/email.service";
 
 export const getTodasLasReservasProcedure = protectedProcedure
   .input(inputGetAllPrestamosLibros)
@@ -45,6 +46,8 @@ export const crearPrestamoLibroProcedure = protectedProcedure
     const userId = ctx.session.user.id;
 
     const reserva = await crearPrestamoLibro(ctx, input, userId);
+
+    void enviarMailReservaLibroProcedure(ctx, { reservaId: reserva.id });
 
     return reserva;
   });
