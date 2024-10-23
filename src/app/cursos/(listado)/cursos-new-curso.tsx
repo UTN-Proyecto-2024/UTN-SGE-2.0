@@ -33,9 +33,7 @@ export const CursosNuevoCurso = () => {
       }
       className={"max-h-[calc(100vh_-_10%)]"}
     >
-      <div className="flex max-h-max w-full flex-col  gap-4">
-        <CursoForm onCancel={handleCancel} onSubmit={handleSave} />
-      </div>
+      <CursoForm onCancel={handleCancel} onSubmit={handleSave} />
     </ModalDrawer>
   );
 };
