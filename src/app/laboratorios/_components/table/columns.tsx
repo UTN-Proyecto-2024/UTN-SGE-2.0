@@ -180,7 +180,7 @@ const HoraDia = ({ dia1, dia2, horaInicio1, horaInicio2, duracion1, duracion2, d
     <div className="flex flex-row space-x-0">
       {horas.map((hora) => {
         if (esHoyDia1) {
-          if (horaInicio1 >= hora || hora < finClase1) {
+          if (esHoyDia1 && hora >= horaInicio1 && hora < finClase1) {
             return (
               <div key={hora} className="flex h-5 w-5  justify-center rounded-full bg-primary">
                 {hora}
@@ -189,14 +189,12 @@ const HoraDia = ({ dia1, dia2, horaInicio1, horaInicio2, duracion1, duracion2, d
           }
         }
 
-        if (esHoyDia2) {
-          if (horaInicio2 >= hora || hora < finClase2) {
-            return (
-              <div key={hora} className="flex h-5 w-5 justify-center rounded-full bg-primary">
-                {hora}
-              </div>
-            );
-          }
+        if (esHoyDia2 && hora >= horaInicio2 && hora < finClase2) {
+          return (
+            <div key={`hora2-${hora}`} className="flex h-5 w-5 justify-center rounded-full bg-primary">
+              {hora}
+            </div>
+          );
         }
 
         return (
