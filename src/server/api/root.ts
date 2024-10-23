@@ -7,7 +7,6 @@ import { adminRouter } from "./routers/admin";
 import { reservasRouter } from "@/server/api/routers/reservas";
 import { divisionRouter } from "./routers/division";
 import { softwareRouter } from "./routers/software";
-import { emailRouter } from "./routers/emails";
 import { notificacionRouter } from "./routers/notificaciones";
 import { usuarioPermiso } from "./routers/permisos";
 
@@ -25,7 +24,6 @@ export const appRouter = createTRPCRouter({
   reservas: reservasRouter,
   division: divisionRouter,
   software: softwareRouter,
-  email: emailRouter,
   notificacion: notificacionRouter,
   permisos: usuarioPermiso,
 });

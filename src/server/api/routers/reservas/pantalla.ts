@@ -1,12 +1,12 @@
 import {
   agregarReservaPantallaProcedure,
-  getReservasEnPantallaProcedure,
+  getReservasEnPntallaActivasProcedure,
   removerReservaPantallaProcedure,
 } from "../../services/reservas/pantalla.service";
 import { createTRPCRouter } from "../../trpc";
 
 export const pantallaRouter = createTRPCRouter({
-  getReservaPorUser: getReservasEnPantallaProcedure,
+  getAllActivas: getReservasEnPntallaActivasProcedure,
   eliminarReservaPantalla: removerReservaPantallaProcedure,
   agregarReservaPantalla: agregarReservaPantallaProcedure,
 });

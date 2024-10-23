@@ -2,7 +2,14 @@ import { useMemo, useState, type ReactElement } from "react";
 import { type Path, type FieldValues } from "react-hook-form";
 import { api } from "@/trpc/react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FormAutocomplete, type FormAutocompleteProps, Select, SelectTrigger, SelectValue } from "@/components/ui";
+import {
+  FormAutocomplete,
+  type FormAutocompleteProps,
+  Select,
+  SelectTrigger,
+  SelectValue,
+  toast,
+} from "@/components/ui";
 import { estaDentroDe } from "@/shared/string-compare";
 import Link from "next/link";
 
@@ -16,20 +23,33 @@ export const SelectModelosForm = <T extends FieldValues, TType extends string>({
 
   const [query, setQuery] = useState("");
 
+  const [nuevoModelo, setNuevoModelo] = useState<string | undefined>(undefined);
+
+  const modelosConNuevo = useMemo(() => {
+    if (!data) return [];
+    if (!nuevoModelo) return data;
+
+    return [nuevoModelo, ...data];
+  }, [data, nuevoModelo]);
+
   const modelos = useMemo(() => {
     if (!data) return [];
 
-    return data
+    return modelosConNuevo
       .map((modelo) => {
-        const { id, modelo: label } = modelo;
-
         return {
-          label: label ?? "Sin informar",
-          id,
+          label: modelo,
+          id: modelo,
         };
       })
       .filter((item) => !query || estaDentroDe(query, item.label));
-  }, [data, query]);
+  }, [data, modelosConNuevo, query]);
+
+  const onCreateModelo = () => {
+    setNuevoModelo(query);
+
+    toast.success(`Modelo ${query} agregado con éxito.`);
+  };
 
   if (isLoading) {
     return (
@@ -46,7 +66,7 @@ export const SelectModelosForm = <T extends FieldValues, TType extends string>({
           <SelectTrigger
             disabled
             id="selectModelo"
-            className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+            className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
           >
             <SelectValue placeholder="Error cargando modelos" />
           </SelectTrigger>
@@ -62,9 +82,11 @@ export const SelectModelosForm = <T extends FieldValues, TType extends string>({
       noOptionsComponent={
         <div className="flex flex-col items-center justify-center gap-2 px-4 py-6 text-sm">
           <span>No se encontró el modelo</span>
-          <Link href="href" className="text-primary">
-            Crear nuevo modelo
-          </Link>
+          {query && (
+            <Link href={""} className="text-primary" onClick={onCreateModelo}>
+              Crear nuevo modelo
+            </Link>
+          )}
         </div>
       }
       className={className}

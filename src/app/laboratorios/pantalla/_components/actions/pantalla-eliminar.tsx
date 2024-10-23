@@ -1,14 +1,16 @@
 import { useState } from "react";
-import { TrashIcon } from "lucide-react";
+import { EyeOffIcon } from "lucide-react";
 
 import { Button } from "@/components/ui";
 
 import { toast } from "@/components/ui";
-import { api } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 
+type IdsEliminar = RouterOutputs["reservas"]["pantalla"]["getAllActivas"][number]["id"];
+
 type RemoveSoftwareModalProps = {
-  ids: number[];
+  ids: IdsEliminar[];
   onSubmit: () => void;
 };
 
@@ -45,7 +47,7 @@ export default function EliminarReservaPantallaModal({ ids, onSubmit }: RemoveSo
           variant="icon"
           color="danger"
           className="h-8 w-8 px-2 py-2"
-          icon={TrashIcon}
+          icon={EyeOffIcon}
         />
       }
       titulo={`Eliminar ${texto} en pantalla`}

@@ -20,7 +20,7 @@ const buttonVariants = cva(
           "bg-primary text-primary-foreground border-[#3b82f6] hover:bg-[#3b82f6] focus-visible:bg-primary/80 active:shadow-[inset_0px_4px_4px_0px_#0000004D,0px_1px_3px_0px_#00000040]",
         ),
         secondary: cn(
-          "bg-transparent text-secondary-foreground border-border/50 hover:bg-secondary/20 focus-visible:bg-secondary/80 disabled:border-border-secondary active:shadow-[inset_0px_4px_4px_0px_#0000004D,0px_1px_3px_0px_#00000040]",
+          "bg-transparent text-gray-900 border-border/50 hover:bg-secondary/20 focus-visible:bg-secondary/80 disabled:border-border-secondary active:shadow-[inset_0px_4px_4px_0px_#0000004D,0px_1px_3px_0px_#00000040]",
         ),
         white: cn(
           "bg-secondary text-white border-border/50 hover:bg-secondary/20 focus-visible:bg-secondary/80 disabled:border-border-secondary active:shadow-[inset_0px_4px_4px_0px_#0000004D,0px_1px_3px_0px_#00000040]",
@@ -32,7 +32,7 @@ const buttonVariants = cva(
           "bg-danger border-none hover:bg-danger/90 text-white focus-visible:bg-danger/80 active:shadow-[inset_0px_4px_4px_0px_#0000004D,0px_1px_3px_0px_#00000040]",
         ),
         outline: cn(
-          "bg-transparent text-white hover:text-secondary-foreground focus-visible:text-secondary-foreground active:bg-[#393A3B] shadow-none active:shadow-[inset_0px_4px_4px_0px_#0000004D] border border-input",
+          "bg-transparent hover:bg-slate-100 focus-visible:text-secondary-foreground active:bg-slate-200 shadow-none active:shadow-[inset_0px_4px_4px_0px_#0000004D] border border-gray-900",
         ),
       },
       size: {

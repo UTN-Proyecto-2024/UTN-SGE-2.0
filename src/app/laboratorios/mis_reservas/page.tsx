@@ -6,13 +6,13 @@ import LoadingBibliotecaPrestamosTable from "@/app/biblioteca/(listado)/loading-
 import PageLayout from "@/components/ui/page-template";
 import { LABORATORIO_ROUTE } from "@/shared/server-routes";
 import ReservaDiscrecionalModal from "../_components/reserva-discrecional-form";
-import { AgregarAPantallaModal } from "../pantalla/_components/actions/software-nuevo";
+import { AgregarAPantallaModal } from "../pantalla/_components/actions/agregar-pantalla";
 
 type PageProps = {
   searchParams: ReadonlyURLSearchParams;
 };
 
-export default async function Page({ searchParams }: PageProps) {
+export default function Page({ searchParams }: PageProps) {
   const filters = inputGetAllSolicitudesReservaLaboratorioCerrado.parse(searchParams);
 
   const filter_as_key = useMemo(() => JSON.stringify(filters), [filters]);

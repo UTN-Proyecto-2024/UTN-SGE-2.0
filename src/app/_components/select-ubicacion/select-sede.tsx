@@ -4,6 +4,7 @@ import { api } from "@/trpc/react";
 import { FormSelect, type FormSelectProps } from "@/components/ui/autocomplete";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectTrigger, SelectValue } from "@/components/ui";
+import { Label } from "@radix-ui/react-label";
 
 export const SelectSedeForm = <T extends FieldValues, TType extends string>({
   name,
@@ -29,6 +30,7 @@ export const SelectSedeForm = <T extends FieldValues, TType extends string>({
   if (isLoading) {
     return (
       <div className="flex flex-row items-center space-x-2">
+        {props.label && <Label className="mb-3 block text-sm">{props.label}</Label>}
         <Skeleton className="h-10 w-full" />
       </div>
     );
@@ -38,10 +40,11 @@ export const SelectSedeForm = <T extends FieldValues, TType extends string>({
     return (
       <Select>
         <div className="flex flex-row items-center space-x-2">
+          {props.label && <Label className="mb-3 block text-sm">{props.label}</Label>}
           <SelectTrigger
             disabled
             id="selectSede"
-            className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+            className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
           >
             <SelectValue placeholder="Error cargando sedes" />
           </SelectTrigger>

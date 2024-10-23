@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { EyeIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -8,7 +9,9 @@ type EditLibroModalProps = {
 export const DetallesUsuarioPage = (props: EditLibroModalProps) => {
   return (
     <Link key={props.usuarioId} href={`/perfil/${props.usuarioId}`} passHref prefetch={false}>
-      <EyeIcon />
+      <Button color={"outline"} className="h-8 w-8 px-1 py-1">
+        <EyeIcon size={16} />
+      </Button>
     </Link>
   );
 };

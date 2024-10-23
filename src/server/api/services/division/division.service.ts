@@ -3,6 +3,7 @@ import {
   inputEditarDivision,
   inputAgregarDivision,
   inputGetDivision,
+  inputGetDivisiones,
 } from "./../../../../shared/filters/divisiones-filter.schema";
 import {
   getAllDivisiones,
@@ -19,23 +20,22 @@ export const getTodasLasDivisiones = protectedProcedure.query(async ({ ctx }) =>
   return await getAllDivisiones(ctx);
 });
 
+export const getDivisionesFiltradas = protectedProcedure.input(inputGetDivisiones).query(async ({ ctx, input }) => {
+  const divisiones = await getAllDivisiones(ctx, input);
+  return divisiones;
+});
+
 export const eliminarDivisionProcedure = protectedProcedure
   .input(inputEliminarDivision)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputEliminarDivision, input);
-
-    const division = await eliminarDivision(ctx, input);
-
-    return division;
+    return await eliminarDivision(ctx, input);
   });
 
 // Obtener una división por ID
 export const getDivisionByIdProcedure = protectedProcedure.input(inputGetDivision).query(async ({ ctx, input }) => {
   validarInput(inputGetDivision, input);
-
-  const division = await getDivisionById(ctx, input);
-
-  return division;
+  return await getDivisionById(ctx, input);
 });
 
 // Editar una división
@@ -43,13 +43,9 @@ export const editarDivisionProcedure = protectedProcedure
   .input(inputEditarDivision)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputEditarDivision, input);
-
     const userId = ctx.session.user.id;
-
     try {
-      const division = await editarDivision(ctx, input, userId);
-
-      return division;
+      return await editarDivision(ctx, input, userId);
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === "P2002") {
@@ -75,9 +71,7 @@ export const nuevaDivisionProcedure = protectedProcedure
     const userId = ctx.session.user.id;
 
     try {
-      const division = await agregarDivision(ctx, input, userId);
-
-      return division;
+      return await agregarDivision(ctx, input, userId);
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === "P2002") {

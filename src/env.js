@@ -19,8 +19,18 @@ export const env = createEnv({
     ),
     DISCORD_CLIENT_ID: z.string(),
     DISCORD_CLIENT_SECRET: z.string(),
-    SMTP_EMAIL_USER: z.string(),
-    SMTP_EMAIL_PASSWORD: z.string(),
+
+    SMTP_MAIL_EMISOR: z.string(),
+    SMTP_HOST: z.string(),
+    SMTP_PORT: z.string(),
+    SMTP_SECURE: z.enum(["false", "true"]),
+
+    SMTP_TESTING: z.enum(["false", "true"]).optional(),
+    SMTP_TESTING_EMAIL_RECEPTOR: z.string().optional(),
+    SMTP_TESTING_EMAIL_USER: z.string().optional(),
+    SMTP_TESTING_EMAIL_PASSWORD: z.string().optional(),
+
+    RUTA_ACTUAL: z.string().url(),
   },
 
   /**
@@ -43,8 +53,18 @@ export const env = createEnv({
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
     DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
-    SMTP_EMAIL_USER: process.env.SMTP_EMAIL_USER,
-    SMTP_EMAIL_PASSWORD: process.env.SMTP_EMAIL_PASSWORD,
+
+    SMTP_MAIL_EMISOR: process.env.SMTP_MAIL_EMISOR,
+    SMTP_HOST: process.env.SMTP_HOST,
+    SMTP_PORT: process.env.SMTP_PORT,
+    SMTP_SECURE: process.env.SMTP_SECURE,
+
+    SMTP_TESTING: process.env.SMTP_TESTING,
+    SMTP_TESTING_EMAIL_RECEPTOR: process.env.SMTP_TESTING_EMAIL_RECEPTOR,
+    SMTP_TESTING_EMAIL_USER: process.env.SMTP_TESTING_EMAIL_USER,
+    SMTP_TESTING_EMAIL_PASSWORD: process.env.SMTP_TESTING_EMAIL_PASSWORD,
+
+    RUTA_ACTUAL: process.env.RUTA_ACTUAL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

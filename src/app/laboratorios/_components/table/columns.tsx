@@ -119,9 +119,13 @@ export const getColumns = () => {
 
         if (!ayudantes.length) return <span className="hidden">Sin ayudantes</span>;
 
-        return ayudantes.map((ayudante) => {
-          return <DatoUsuarioReserva usuario={ayudante.usuario} key={ayudante.userId} />;
-        });
+        return (
+          <div className="flex -space-x-2 overflow-hidden">
+            {ayudantes.map((ayudante) => (
+              <DatoUsuarioReserva mostrarNombre={false} usuario={ayudante.usuario} key={ayudante.userId} />
+            ))}
+          </div>
+        );
       },
       meta: {
         header: {

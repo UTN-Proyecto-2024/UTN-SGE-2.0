@@ -1,34 +1,21 @@
-import nodemailer from "nodemailer";
-import { emailTemplate } from "@/server/api/utils/emailTemplate";
+import { sendEmail } from "./email";
+import { getReservaParaEmail } from "../../repositories/reservas/biblioteca.repository";
+import { BIBLIOTECA_ROUTE } from "@/shared/server-routes";
+import { type PrismaClient } from "@prisma/client";
 
-export const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.SMTP_EMAIL_USER,
-    pass: process.env.SMTP_EMAIL_PASSWORD,
-  },
-});
+export const enviarMailReservaLibroProcedure = async (ctx: { db: PrismaClient }, input: { reservaId: number }) => {
+  const { reservaId } = input;
 
-export const sendEmail = async (to: string, subject: string, usuarioSolicitante: string, libroNombre: string) => {
-  const mailOptions = {
-    from: '"Sistema UTN" <testutn88@gmail.com>',
-    to,
-    subject,
-    html: emailTemplate(usuarioSolicitante, libroNombre),
-  };
+  const reservaData = await getReservaParaEmail(ctx, { id: reservaId });
 
-  try {
-    if (!transporter) {
-      throw new Error("No se pudo crear el transporte de correo");
-    }
-
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Correo enviado: %s", info.messageId);
-    return info;
-  } catch (error) {
-    console.error("Error al enviar correo: ", error);
-    throw new Error("No se pudo enviar el correo.");
-  }
+  await sendEmail(ctx, {
+    asunto: "Reserva de libro creada",
+    to: reservaData.usuarioSolicitante.email ?? "",
+    usuario: {
+      nombre: reservaData.usuarioSolicitante.nombre ?? "",
+      apellido: reservaData.usuarioSolicitante.apellido ?? "",
+    },
+    textoMail: `<strong>Has reservado el libro</strong> <br/> <em>${reservaData.libroNombre}</em>`,
+    hipervinculo: BIBLIOTECA_ROUTE.misPrestamosRuta,
+  });
 };

@@ -1,17 +1,18 @@
 import { FormProvider, useForm } from "react-hook-form";
-import { api } from "@/trpc/react";
+import { api, type RouterInputs } from "@/trpc/react";
 import { Button, FormInput, ScrollArea, toast } from "@/components/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo } from "react";
-import { type z } from "zod";
 import { inputAgregarReservaPantalla } from "@/shared/filters/reserva-pantalla-filter.schema";
+import { SelectSedeForm } from "@/app/_components/select-ubicacion/select-sede";
+import { z } from "zod";
 
 type Props = {
   onSubmit: () => void;
   onCancel: () => void;
 };
 
-type FormAgregarReservaPantalla = z.infer<typeof inputAgregarReservaPantalla>;
+type FormAgregarReservaPantalla = RouterInputs["reservas"]["pantalla"]["agregarReservaPantalla"];
 
 export const AgregarCursoPantallaForm = ({ onSubmit, onCancel }: Props) => {
   const agregarReservaPantalla = api.reservas.pantalla.agregarReservaPantalla.useMutation();
@@ -19,17 +20,33 @@ export const AgregarCursoPantallaForm = ({ onSubmit, onCancel }: Props) => {
   const cursoBase: FormAgregarReservaPantalla = useMemo(() => {
     return {
       docente: "",
-      materiaId: undefined,
       materia: "",
       laboratorio: "",
       horaInicio: "",
+      horaFin: "",
+      sedeId: "",
     };
   }, []);
 
   const formHook = useForm<FormAgregarReservaPantalla>({
     mode: "onChange",
     defaultValues: cursoBase,
-    resolver: zodResolver(inputAgregarReservaPantalla),
+    resolver: zodResolver(
+      inputAgregarReservaPantalla.superRefine(({ horaInicio, horaFin }, ctx) => {
+        const date1 = new Date(horaInicio);
+        const date2 = new Date(horaFin);
+
+        if (date1 > date2) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.invalid_date,
+            message: "La hora de inicio debe ser menor a la de fin",
+            path: ["horaInicio"],
+          });
+
+          return z.NEVER;
+        }
+      }),
+    ),
   });
 
   const { handleSubmit, control } = formHook;
@@ -73,6 +90,15 @@ export const AgregarCursoPantallaForm = ({ onSubmit, onCancel }: Props) => {
 
               <div className="flex w-full flex-col gap-x-4 md:flex-row">
                 <div className="mt-4 w-full">
+                  <SelectSedeForm
+                    name="sedeId"
+                    control={control}
+                    className="mt-2 text-sm"
+                    label={"Sede"}
+                    placeholder={"Selecciona una sede"}
+                  />
+                </div>
+                <div className="mt-4 w-full">
                   <FormInput
                     label={"Laboratorio"}
                     control={control}
@@ -81,14 +107,20 @@ export const AgregarCursoPantallaForm = ({ onSubmit, onCancel }: Props) => {
                     className="mt-2"
                   />
                 </div>
+              </div>
+
+              <div className="flex w-full flex-col gap-x-4 md:flex-row">
                 <div className="mt-4 w-full">
                   <FormInput
                     label={"Hora de Inicio"}
                     control={control}
                     name="horaInicio"
-                    type={"text"}
+                    type={"time"}
                     className="mt-2"
                   />
+                </div>
+                <div className="mt-4 w-full">
+                  <FormInput label={"Hora de Fin"} control={control} name="horaFin" type={"time"} className="mt-2" />
                 </div>
               </div>
             </div>

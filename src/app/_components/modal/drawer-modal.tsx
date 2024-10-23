@@ -34,21 +34,23 @@ export const DrawerModalDrawer = ({
           <DrawerTitle>{titulo}</DrawerTitle>
           <DrawerDescription>{description}</DrawerDescription>
         </DrawerHeader>
-        <div className="flex px-4">{children}</div>
-        <DrawerFooter>
-          {onCancel && (
-            <DrawerClose asChild>
-              <Button variant={"default"} color={"ghost"} onClick={onCancel}>
-                {cancelText ?? "Cancelar"}
+        <div className="flex p-4">{children}</div>
+        {(onCancel ?? onSubmit) && (
+          <DrawerFooter>
+            {onCancel && (
+              <DrawerClose asChild>
+                <Button variant={"default"} color={"ghost"} onClick={onCancel}>
+                  {cancelText ?? "Cancelar"}
+                </Button>
+              </DrawerClose>
+            )}
+            {onSubmit && (
+              <Button variant={"default"} color={"danger"} onClick={onSubmit}>
+                {submitText ?? "Aceptar"}
               </Button>
-            </DrawerClose>
-          )}
-          {onSubmit && (
-            <Button variant={"default"} color={"danger"} onClick={onSubmit}>
-              {submitText ?? "Aceptar"}
-            </Button>
-          )}
-        </DrawerFooter>
+            )}
+          </DrawerFooter>
+        )}
       </DrawerContent>
     </Drawer>
   );
