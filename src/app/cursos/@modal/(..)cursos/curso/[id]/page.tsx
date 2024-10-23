@@ -37,9 +37,7 @@ export default function PageDetails({ params: { id } }: PageProps) {
       trigger={<></>}
       className={"max-h-[calc(100vh_-_10%)]"}
     >
-      <div className="flex max-h-max w-full flex-col  gap-4">
-        <CursoForm id={id} onCancel={handleClickCancel} onSubmit={handleClickSave} />
-      </div>
+      <CursoForm id={id} onCancel={handleClickCancel} onSubmit={handleClickSave} />
     </ModalDrawer>
   );
 }

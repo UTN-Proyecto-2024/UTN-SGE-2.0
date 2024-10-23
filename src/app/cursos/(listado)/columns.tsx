@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { DatoUsuarioReserva } from "@/app/_components/datos-usuario";
 import { CursoTurno } from "@/app/_components/turno-text";
 import { type RouterOutputs } from "@/trpc/react";
@@ -82,7 +81,42 @@ const dayMapper = {
   SABADO: "Sábado",
 };
 
+const hourMapper = {
+  MANANA: {
+    0: "7:45",
+    1: "8:30",
+    2: "9:15",
+    3: "10:15",
+    4: "11:00",
+    5: "11:45",
+    6: "12:30",
+    7: "13:15",
+  },
+  TARDE: {
+    0: "13:30",
+    1: "14:15",
+    2: "15:00",
+    3: "16:00",
+    4: "16:45",
+    5: "17:30",
+    6: "18:15",
+    7: "19:00",
+  },
+  NOCHE: {
+    0: "18:15",
+    1: "19:00",
+    2: "19:45",
+    3: "20:45",
+    4: "21:30",
+    5: "22:15",
+    6: "23:00",
+    7: "23:45",
+  },
+};
+
 type dayKey = keyof typeof dayMapper;
+type turnoKey = keyof typeof hourMapper;
+
 const horas = [0, 1, 2, 3, 4, 5, 6];
 
 const Schedule = (curso: CursosData) => {
@@ -90,12 +124,18 @@ const Schedule = (curso: CursosData) => {
   const inicio2 = parseInt(curso.horaInicio2 ?? "-1");
   const fin1 = inicio1 >= 0 ? inicio1 + parseInt(curso.duracion1 ?? "0") - 1 : 7;
   const fin2 = inicio2 >= 0 ? inicio2 + parseInt(curso.duracion2 ?? "0") - 1 : 7;
+
+  const turno = hourMapper[curso.turno as turnoKey];
+  type hourKey = keyof typeof turno;
+
   return (
     <Root>
       <Trigger className="inline-flex w-full gap-x-1.5 rounded-md text-left text-sm text-gray-900">
-        {`${dayMapper[curso.dia1 as dayKey].slice(0, 3).toUpperCase()} [${inicio1} a ${fin1}]`}
+        {`${dayMapper[curso.dia1 as dayKey].slice(0, 3).toUpperCase()} [${turno[inicio1 as hourKey]}-${turno[(fin1 + 1) as hourKey]}]`}
         <br />
-        {curso.dia2 && `${dayMapper[curso.dia2 as dayKey].slice(0, 3).toUpperCase()} [${inicio2} a ${fin2}]`}
+        {curso.dia2 &&
+          curso.dia1 !== curso.dia2 &&
+          `${dayMapper[curso.dia2 as dayKey].slice(0, 3).toUpperCase()} [${turno[inicio2 as hourKey]}-${turno[(fin2 + 1) as hourKey]}]`}
       </Trigger>
 
       <Portal>
