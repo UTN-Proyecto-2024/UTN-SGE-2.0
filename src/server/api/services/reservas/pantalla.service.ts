@@ -7,14 +7,19 @@ import { protectedProcedure } from "../../trpc";
 import {
   inputAgregarReservaPantalla,
   inputEliminarReservaPantallas,
+  inputGetReservasEnPntallaActivas,
 } from "@/shared/filters/reserva-pantalla-filter.schema";
 import { validarInput } from "../helper";
 
-export const getReservasEnPantallaProcedure = protectedProcedure.query(async ({ ctx }) => {
-  const reservas = await getReservasEnPantalla(ctx);
+export const getReservasEnPntallaActivasProcedure = protectedProcedure
+  .input(inputGetReservasEnPntallaActivas)
+  .query(async ({ ctx, input }) => {
+    validarInput(inputGetReservasEnPntallaActivas, input);
 
-  return reservas;
-});
+    const reservas = await getReservasEnPantalla(ctx, input);
+
+    return reservas;
+  });
 
 export const removerReservaPantallaProcedure = protectedProcedure
   .input(inputEliminarReservaPantallas)
@@ -31,7 +36,9 @@ export const agregarReservaPantallaProcedure = protectedProcedure
   .mutation(async ({ ctx, input }) => {
     validarInput(inputAgregarReservaPantalla, input);
 
-    const reservaPantallaCreada = await crearReservaPantalla(ctx, input);
+    const userId = ctx.session.user.id;
+
+    const reservaPantallaCreada = await crearReservaPantalla(ctx, input, userId);
 
     return reservaPantallaCreada;
   });

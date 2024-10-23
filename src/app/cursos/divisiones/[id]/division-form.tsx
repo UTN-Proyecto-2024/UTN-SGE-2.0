@@ -12,6 +12,11 @@ type Props = {
   onCancel: () => void;
 };
 
+// const anios = ["1", "2", "3", "4", "5", "6"].map((item) => ({
+//   id: item,
+//   label: item,
+// }));
+
 type FormEditarDivisionType = z.infer<typeof inputEditarDivision>;
 
 export const DivisionForm = ({ id, onSubmit, onCancel }: Props) => {
@@ -90,50 +95,42 @@ export const DivisionForm = ({ id, onSubmit, onCancel }: Props) => {
 
   return (
     <FormProvider {...formHook}>
-      <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
-        <ScrollArea className="max-h-[calc(100vh_-_20%)] w-full pr-4 md:max-h-[calc(100vh_-_30%)] lg:max-h-[calc(100vh_-_30%)]">
-          <div className="flex w-full flex-col items-center justify-center">
-            <div className="flex flex-col space-y-4 px-0 md:px-6">
-              <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
-                <div className="mt-4 w-full">
-                  <FormInput
-                    label={"Nombre"}
-                    control={control}
-                    name="nombre"
-                    type={"text"}
-                    className="me-1 mt-2 bg-white text-gray-900"
-                  />
-                </div>
-                <div className="mt-4 w-full">
-                  <label className="block text-sm font-medium text-gray-700">Año</label>
-                  <select
-                    {...formHook.register("anio", {
-                      required: "Debes seleccionar un año",
-                      valueAsNumber: true,
-                      validate: (value) =>
-                        typeof value === "number" && value >= 1 && value <= 6 ? true : "Selecciona un año válido", // Valida que sea entre 1 y 6
-                    })}
-                    className="mt-5 block w-full rounded-md border-gray-300 bg-white px-4 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" // Ajuste del color para modo oscuro
-                  >
-                    <option value="">Seleccionar año</option>
-                    <option value={1}>1</option>
-                    <option value={2}>2</option>
-                    <option value={3}>3</option>
-                    <option value={4}>4</option>
-                    <option value={5}>5</option>
-                    <option value={6}>6</option>
-                  </select>
-                  {formHook.formState.errors.anio && (
-                    <span className="text-red-500">
-                      {formHook.formState.errors.anio.message ?? "El año es requerido"}
-                    </span>
-                  )}
-                </div>
-              </div>
+      <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-8 md:px-4">
+        <ScrollArea className="max-h-[calc(100vh_-_20%)] w-full md:max-h-[calc(100vh_-_30%)] lg:max-h-[calc(100vh_-_30%)]">
+          <div className="space-y-4">
+            <FormInput
+              label={"Nombre"}
+              control={control}
+              name="nombre"
+              type={"text"}
+              className="bg-white text-gray-900"
+            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Año</label>
+              <select
+                {...formHook.register("anio", {
+                  required: "Debes seleccionar un año",
+                  valueAsNumber: true,
+                  validate: (value) =>
+                    typeof value === "number" && value >= 1 && value <= 6 ? true : "Selecciona un año válido",
+                })}
+                className="mt-3 block h-10 w-full rounded-md border-gray-300 bg-white px-4 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              >
+                <option value="">Seleccionar año</option>
+                <option value={1}>1</option>
+                <option value={2}>2</option>
+                <option value={3}>3</option>
+                <option value={4}>4</option>
+                <option value={5}>5</option>
+                <option value={6}>6</option>
+              </select>
+              {formHook.formState.errors.anio && (
+                <span className="text-red-500">{formHook.formState.errors.anio.message ?? "El año es requerido"}</span>
+              )}
             </div>
           </div>
         </ScrollArea>
-        <div className="mb-3 flex w-full flex-row items-end justify-center space-x-4 md:justify-end lg:justify-end">
+        <div className="flex w-full flex-row items-end justify-end space-x-4">
           <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
             Cancelar
           </Button>

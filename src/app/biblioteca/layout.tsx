@@ -1,8 +1,8 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { getServerAuthSession } from "@/server/auth";
 import { INICIO_ROUTE } from "@/shared/server-routes";
+import { estaLogueadoYConPermiso } from "@/server/permisos";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -10,9 +10,9 @@ type LayoutProps = {
 };
 
 export default async function RootLayout({ children, modal }: LayoutProps) {
-  const session = await getServerAuthSession();
+  const puedeEstarAca = await estaLogueadoYConPermiso([]);
 
-  if (!session) {
+  if (!puedeEstarAca) {
     redirect(INICIO_ROUTE.href);
     return null;
   }

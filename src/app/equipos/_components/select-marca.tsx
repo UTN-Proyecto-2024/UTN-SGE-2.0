@@ -2,7 +2,14 @@ import { useMemo, useState, type ReactElement } from "react";
 import { type Path, type FieldValues } from "react-hook-form";
 import { api } from "@/trpc/react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FormAutocomplete, type FormAutocompleteProps, Select, SelectTrigger, SelectValue } from "@/components/ui";
+import {
+  FormAutocomplete,
+  type FormAutocompleteProps,
+  Select,
+  SelectTrigger,
+  SelectValue,
+  toast,
+} from "@/components/ui";
 import { estaDentroDe } from "@/shared/string-compare";
 import Link from "next/link";
 
@@ -12,7 +19,10 @@ export const SelectMarcasForm = <T extends FieldValues, TType extends string>({
   className,
   ...props
 }: Omit<FormAutocompleteProps<T, TType>, "items"> & { realNameId?: Path<T> }): ReactElement => {
+  const utils = api.useUtils();
   const { data, isLoading, isError } = api.equipos.getAllMarcas.useQuery();
+
+  const agregarMarca = api.equipos.nuevaMarca.useMutation();
 
   const [query, setQuery] = useState("");
 
@@ -31,6 +41,23 @@ export const SelectMarcasForm = <T extends FieldValues, TType extends string>({
       .filter((item) => !query || estaDentroDe(query, item.label));
   }, [data, query]);
 
+  const onCreateMarca = () => {
+    agregarMarca.mutate(
+      { nombre: query },
+      {
+        onSuccess: (item) => {
+          toast.success(`Marca ${item.nombre} agregada con éxito.`);
+          utils.equipos.getAllMarcas.invalidate().catch((err) => {
+            console.error(err);
+          });
+        },
+        onError: (error) => {
+          toast.error(error?.message ?? "Error al agregar la marca");
+        },
+      },
+    );
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-row items-center space-x-2">
@@ -46,7 +73,7 @@ export const SelectMarcasForm = <T extends FieldValues, TType extends string>({
           <SelectTrigger
             disabled
             id="selectMarca"
-            className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+            className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
           >
             <SelectValue placeholder="Error cargando marcas" />
           </SelectTrigger>
@@ -62,9 +89,11 @@ export const SelectMarcasForm = <T extends FieldValues, TType extends string>({
       noOptionsComponent={
         <div className="flex flex-col items-center justify-center gap-2 px-4 py-6 text-sm">
           <span>No se encontró la marca</span>
-          <Link href="href" className="text-primary">
-            Crear nueva marca
-          </Link>
+          {query && (
+            <Link href={""} className="text-primary" onClick={onCreateMarca}>
+              Crear nueva marca
+            </Link>
+          )}
         </div>
       }
       className={className}

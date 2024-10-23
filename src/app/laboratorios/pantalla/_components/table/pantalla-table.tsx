@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import React, { useState, type HTMLProps } from "react";
 import { type ColumnDef } from "@tanstack/react-table";
 
-type PantallaData = RouterOutputs["reservas"]["pantalla"]["getReservaPorUser"];
+type PantallaData = RouterOutputs["reservas"]["pantalla"]["getAllActivas"];
 
 type BibliotecaTableProps = {
   data: PantallaData;
@@ -18,7 +18,7 @@ export const PantallaTable = ({ data }: BibliotecaTableProps) => {
   const router = useRouter();
 
   const [rowSelection, setRowSelection] = useState<Record<number, boolean>>({});
-  const cursosAEliminar = Object.keys(rowSelection).map((n) => Number(n));
+  const cursosAEliminar = Object.keys(rowSelection);
 
   const columnsBase = getColumns();
 
@@ -58,7 +58,6 @@ export const PantallaTable = ({ data }: BibliotecaTableProps) => {
     [columnsBase],
   );
 
-  // TODO: Implement resizing
   return (
     <>
       <DataTable
@@ -68,6 +67,7 @@ export const PantallaTable = ({ data }: BibliotecaTableProps) => {
           onRowSelectionChange: setRowSelection,
           rowSelection,
         }}
+        getRowId={(row) => row.id}
         action={{
           header: "Acciones",
           cell({ original }) {

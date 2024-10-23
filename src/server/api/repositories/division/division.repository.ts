@@ -1,13 +1,15 @@
-import {
-  type inputEliminarDivision,
-  type inputAgregarDivision,
-  type inputEditarDivision,
-  type inputGetDivision,
+import type {
+  inputEliminarDivision,
+  inputAgregarDivision,
+  inputEditarDivision,
+  inputGetDivision,
+  inputGetDivisiones,
 } from "@/shared/filters/divisiones-filter.schema";
 import { type PrismaClient } from "@prisma/client";
 import { type z } from "zod";
 
-export const getAllDivisiones = async (ctx: { db: PrismaClient }) => {
+type InputGetAll = z.infer<typeof inputGetDivisiones>;
+export const getAllDivisiones = async (ctx: { db: PrismaClient }, input?: InputGetAll) => {
   return await ctx.db.division.findMany({
     select: {
       id: true,
@@ -16,6 +18,13 @@ export const getAllDivisiones = async (ctx: { db: PrismaClient }) => {
     },
     orderBy: {
       nombre: "asc",
+    },
+    where: {
+      anio: input?.anio ? parseInt(input.anio) : undefined,
+      nombre: {
+        contains: input?.searchText,
+        mode: "insensitive",
+      },
     },
   });
 };

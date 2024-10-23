@@ -16,6 +16,7 @@ export const BIBLIOTECA_ROUTE = {
   href: "/biblioteca",
   label: "Biblioteca",
   isPublic: false,
+  misPrestamosRuta: "/biblioteca/mis_prestamos",
   subRutas: [
     {
       href: "/biblioteca",
@@ -57,7 +58,7 @@ export const LABORATORIO_ROUTE = {
     },
     {
       href: "/laboratorios/pantalla",
-      label: "Pantalla 👷🏻‍♂️",
+      label: "Pantalla",
       isPublic: false,
     },
     {

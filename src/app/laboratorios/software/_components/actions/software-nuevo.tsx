@@ -32,7 +32,7 @@ export const SoftwareNuevoEditar = ({ softwareId }: SoftwareFormProps) => {
       trigger={
         <Button
           type="button"
-          className={softwareId ? "h-8 w-8 px-2 py-2 text-black" : ""}
+          className={softwareId ? "h-8 w-8 px-1 py-1 text-black" : ""}
           color={softwareId ? "outline" : "primary"}
         >
           <ButtonSoftware softwareId={softwareId} />
@@ -49,7 +49,7 @@ export const SoftwareNuevoEditar = ({ softwareId }: SoftwareFormProps) => {
 
 const ButtonSoftware = ({ softwareId }: SoftwareFormProps) => {
   if (softwareId) {
-    return <EditIcon />;
+    return <EditIcon size={16} />;
   }
 
   return (

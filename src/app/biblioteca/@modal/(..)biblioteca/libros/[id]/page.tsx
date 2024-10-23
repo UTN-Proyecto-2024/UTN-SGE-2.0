@@ -25,8 +25,8 @@ export default function PageDetails({ params: { id } }: PageProps) {
   };
 
   const handleClickSave = () => {
-    // void utils.biblioteca.getAll.refetch();
     router.refresh();
+    setTimeout(() => router.back(), 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
   };
 
   const handleClickCancel = () => handleOpenChange(false);
