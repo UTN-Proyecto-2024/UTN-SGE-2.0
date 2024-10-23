@@ -42,13 +42,7 @@ export default function RenovarPrestamoLibroModal({ libroId }: RenovarPrestamoLi
 
         <Separator className="my-8 border-2" />
 
-        <LibroFormPrestarORenovar
-          libroId={libroId}
-          onCancel={handleCancel}
-          onSubmit={handleSubmit}
-          renovar
-          libroNombre={"TODO: NOMBRE DE LIBRO"} // TODO @Alex: Hacer petición a la API para obtener el nombre del libro
-        />
+        <LibroFormPrestarORenovar libroId={libroId} onCancel={handleCancel} onSubmit={handleSubmit} renovar />
       </div>
     </ModalDrawer>
   );
