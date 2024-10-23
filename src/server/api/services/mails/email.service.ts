@@ -20,8 +20,7 @@ export const enviarMailReservaLibroProcedure = async (
       nombre: reservaData.usuarioSolicitante.nombre ?? "",
       apellido: reservaData.usuarioSolicitante.apellido ?? "",
     },
-    textoMail: "Has reservado el libro",
-    palabraClave: reservaData.libroNombre ?? "",
+    textoMail: `<strong>Has reservado el libro</strong> <br/> <em>${reservaData.libroNombre}</em>`,
     hipervinculo: BIBLIOTECA_ROUTE.misPrestamosRuta,
   });
 };

@@ -37,7 +37,6 @@ type EmailParams = {
     apellido: string;
   };
   textoMail: string;
-  palabraClave: string;
   hipervinculo: string;
 };
 
@@ -50,7 +49,6 @@ export const sendEmail = async (props: EmailParams) => {
     subject: props.asunto,
     html: emailTemplate({
       usuario,
-      palabraClave: props.palabraClave,
       hipervinculo: `${baseRuta}/${props.hipervinculo}`,
       textoMail: props.textoMail,
     }),
