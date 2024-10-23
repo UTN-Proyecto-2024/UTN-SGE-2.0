@@ -43,7 +43,7 @@ export default function PrestarLibroModal({ libroId }: PrestarLibroModalProps) {
       open={open}
       onOpenChange={setOpen}
     >
-      <div className="flex flex-col" id="aaaaa">
+      <div className="flex flex-col">
         <ScrollArea className="max-h-72">
           <LibroInformacionBasica libroId={libroId} />
         </ScrollArea>

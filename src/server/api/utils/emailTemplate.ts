@@ -1,19 +1,17 @@
 export const emailTemplate = ({
   usuario,
   textoMail,
-  palabraClave,
   hipervinculo,
 }: {
   usuario: string;
   hipervinculo: string;
-  palabraClave: string;
   textoMail: string;
 }) => {
   return `
     <!doctype html>
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
     <head>
-        <title>${textoMail} ${palabraClave}</title>
+        <title>${textoMail}</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -48,8 +46,9 @@ export const emailTemplate = ({
                                         <tr>
                                             <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                                 <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:16px;line-height:22px;text-align:center;color:#555;margin-top:10px;">
-                                                    <strong>${textoMail}</strong> <br/> <em>${palabraClave}</em>
-                                                    <br/>Gracias por usar nuestros sistemas.
+                                                    ${textoMail}
+                                                    <br/>
+                                                    Gracias por usar nuestros sistemas.
                                                 </div>
                                             </td>
                                         </tr>
