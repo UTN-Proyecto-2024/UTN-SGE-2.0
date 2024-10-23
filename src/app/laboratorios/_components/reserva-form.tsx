@@ -10,7 +10,7 @@ import {
   inputReservaLaboratorioCerrado,
   inputReservaLaboratorioDiscrecional,
 } from "@/shared/filters/reserva-laboratorio-filter.schema";
-import { FormTextarea, Textarea } from "@/components/ui/textarea";
+import { FormTextarea } from "@/components/ui/textarea";
 import { FormEquipoTipoSelector } from "./filtros/equipo-tipo-selector";
 import { CursoTurno } from "@/app/_components/turno-text";
 import { Switch } from "@/components/ui/switch";
