@@ -79,7 +79,7 @@ export default function CustomDatePicker<T extends FieldValues>({
                     }
                   }}
                   placeholder="Seleccione o ingrese fecha"
-                  className="w-full bg-transparent outline-none"
+                  className="w-full border-none bg-transparent p-0 outline-none focus:shadow-none focus:outline-none"
                   readOnly
                 />
                 <Calendar className="h-5 cursor-pointer" />
