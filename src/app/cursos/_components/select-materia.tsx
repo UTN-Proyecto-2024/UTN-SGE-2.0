@@ -1,5 +1,5 @@
 import { useMemo, type ReactElement } from "react";
-import { type FieldValues } from "react-hook-form";
+import { useFormContext, type FieldValues } from "react-hook-form";
 import { api } from "@/trpc/react";
 import { FormSelect, type FormSelectProps } from "@/components/ui/autocomplete";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -12,19 +12,28 @@ export const SelectMateriasForm = <T extends FieldValues, TType extends string>(
   ...props
 }: Omit<FormSelectProps<T, TType>, "items">): ReactElement => {
   const { data, isLoading, isError } = api.materia.getAll.useQuery();
+  const { setValue } = useFormContext();
 
   const materias = useMemo(() => {
     if (!data) return [];
 
     return data.map((materia) => {
-      const { id, nombre: label } = materia;
+      const { id, nombre: label, anio } = materia;
 
       return {
         label,
         id: String(id),
+        anio,
       };
     });
   }, [data]);
+
+  const onMateriaChange = (value: string | null | undefined) => {
+    const selectedMateria = materias.find((d) => d.id === value);
+    if (selectedMateria) {
+      setValue("anioDeCarrera", selectedMateria.anio.toString());
+    }
+  };
 
   if (isLoading) {
     return (
@@ -41,7 +50,7 @@ export const SelectMateriasForm = <T extends FieldValues, TType extends string>(
           <SelectTrigger
             disabled
             id="selectMaterias"
-            className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+            className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
           >
             <SelectValue placeholder="Error cargando materias" />
           </SelectTrigger>
@@ -50,5 +59,14 @@ export const SelectMateriasForm = <T extends FieldValues, TType extends string>(
     );
   }
 
-  return <FormSelect className={className} name={name} control={control} items={materias} {...props} />;
+  return (
+    <FormSelect
+      className={className}
+      name={name}
+      control={control}
+      items={materias}
+      onChange={onMateriaChange}
+      {...props}
+    />
+  );
 };

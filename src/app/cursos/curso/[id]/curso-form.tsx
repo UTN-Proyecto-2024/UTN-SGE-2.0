@@ -10,12 +10,12 @@ import { turnosValues } from "@/app/_components/turno-text";
 import { SelectMateriasForm } from "@/app/cursos/_components/select-materia";
 import { SelectDivisionesForm } from "../../_components/select-division";
 import { SelectSedeForm } from "@/app/_components/select-ubicacion/select-sede";
-import { DiaAdicionalForm } from "../../_components/cursos-dias-handler";
 import {
   getUserLabelNameForSelect,
   SelectMultipleProfesorForm,
   SelectProfesorForm,
 } from "@/app/_components/select-usuario";
+import { CheckboxActivo } from "../../_components/checkbox";
 
 type Props = {
   id?: string;
@@ -38,14 +38,6 @@ const dias = [
   { id: "SABADO", label: "Sábado" },
 ];
 
-const aniosDeCarrera = [
-  { id: "1", label: "1" },
-  { id: "2", label: "2" },
-  { id: "3", label: "3" },
-  { id: "4", label: "4" },
-  { id: "5", label: "5" },
-];
-
 const horas = ["0", "1", "2", "3", "4", "5", "6"].map((item) => ({
   id: item,
   label: item,
@@ -57,8 +49,8 @@ const duracion = ["1", "2", "3", "4", "5", "6"].map((item) => ({
 }));
 
 const ac = [
-  { id: "ANUAL", label: "Anual" },
-  { id: "CUATRIMESTRAL", label: "Cuatrimestral" },
+  { id: "A", label: "Anual" },
+  { id: "C", label: "Cuatrimestral" },
 ];
 
 export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
@@ -69,9 +61,9 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
   };
 
   const handleRemoveDia2 = () => {
-    formHook.setValue("dia2", undefined);
-    formHook.setValue("horaInicio2", "");
-    formHook.setValue("duracion2", "");
+    setValue("dia2", undefined);
+    setValue("horaInicio2", undefined);
+    setValue("duracion2", undefined);
     setMostrarDia2(false);
   };
 
@@ -87,12 +79,12 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
       id: curso.id,
       horaInicio1: curso.horaInicio1,
       duracion1: curso.duracion1,
-      horaInicio2: curso.horaInicio2 ?? "",
-      duracion2: curso.duracion2 ?? "",
+      horaInicio2: curso.horaInicio2 ?? undefined,
+      duracion2: curso.duracion2 ?? undefined,
       dia1: curso.dia1,
       dia2: curso.dia2 ?? undefined,
       profesorUser: {
-        id: curso.profesorId ?? "",
+        id: curso.profesorId ?? undefined,
         label: curso.profesor ? getUserLabelNameForSelect(curso.profesor) : "",
       },
       profesorUserId: curso.profesorId,
@@ -113,7 +105,7 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
     resolver: zodResolver(inputEditarCurso),
   });
 
-  const { handleSubmit, control } = formHook;
+  const { handleSubmit, control, formState, reset, watch, setValue } = formHook;
 
   useEffect(() => {
     if (curso?.dia2) {
@@ -121,11 +113,11 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
     }
   }, [curso]);
 
-  console.log(formHook.formState.errors);
+  console.log(formState.errors);
 
   useEffect(() => formHook.reset(cursoBase), [formHook, curso, cursoBase]);
 
-  const [profesorUser] = formHook.watch(["profesorUser"]);
+  const [profesorUser] = watch(["profesorUser"]);
   useEffect(() => formHook.setValue("profesorUserId", profesorUser?.id), [formHook, profesorUser]);
 
   const esNuevo = id === undefined;
@@ -143,8 +135,6 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
   }
 
   const onFormSubmit = (formData: FormEditarCursoType) => {
-    formData.anioDeCarrera = String(formData.anioDeCarrera);
-
     if (esNuevo) {
       agregarCurso.mutate(formData, {
         onSuccess: () => {
@@ -169,123 +159,75 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
   };
 
   const handleCancel = () => {
-    formHook.reset();
+    reset();
     onCancel();
   };
 
   return (
     <FormProvider {...formHook}>
-      <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
-        <ScrollArea className="max-h-[calc(100vh_-_22%)] w-full pr-4 md:max-h-[calc(100vh_-_30%)] lg:max-h-[calc(100vh_-_45%)]">
-          <div className="flex w-full flex-col items-center justify-center">
-            <div className="flex w-full flex-col space-y-4 px-0 md:px-6">
-              <div className="flex w-full flex-col gap-x-4 md:flex-row lg:flex-row">
-                <div className="basis-1/2">
-                  <SelectMateriasForm
-                    label={"Materia"}
-                    control={control}
-                    name="materiaId"
-                    placeholder={"Seleccione una materia"}
-                  />
-                </div>
-                <div className="basis-1/2">
-                  <SelectSedeForm label={"Sede"} control={control} name="sedeId" placeholder={"Seleccione una sede"} />
-                </div>
+      <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col md:px-4">
+        <ScrollArea className="max-h-[calc(100vh_-_300px)] w-full">
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <SelectMateriasForm
+                label={"Materia"}
+                control={control}
+                name="materiaId"
+                placeholder={"Seleccione una materia"}
+              />
+              <SelectDivisionesForm
+                label={"División"}
+                control={control}
+                name="divisionId"
+                placeholder={"Seleccione una división"}
+              />
+              <SelectProfesorForm
+                label={"Profesor"}
+                control={control}
+                name="profesorUser"
+                realNameId="profesorUserId"
+                className="bg-white text-gray-900"
+              />
+              <SelectSedeForm label={"Sede"} control={control} name="sedeId" placeholder={"Seleccione una sede"} />
+              <FormSelect label={"Turno"} control={control} name="turno" items={turnosValues} />
+              <FormSelect label={"Duración"} control={control} name="ac" items={ac} />
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+              <FormSelect label={"Día 1"} control={control} name="dia1" items={dias} />
+              <FormSelect label={"Hora inicio 1"} control={control} name="horaInicio1" items={horas} />
+              <FormSelect label={"Duración 1"} control={control} name="duracion1" items={duracion} />
+              {!mostrarDia2 && (
+                <button type="button" className="h-10 self-end text-left text-blue-600" onClick={handleAddDia2}>
+                  + Agregar día 2
+                </button>
+              )}
+            </div>
+            {mostrarDia2 && (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+                <FormSelect label={"Día 2"} control={control} name="dia2" items={dias} />
+                <FormSelect label={"Hora inicio 2"} control={control} name="horaInicio2" items={horas} />
+                <FormSelect label={"Duración 2"} control={control} name="duracion2" items={duracion} />
+                <Button
+                  type="button"
+                  className="h-10 self-end"
+                  onClick={handleRemoveDia2}
+                  variant={"default"}
+                  color={"danger"}
+                >
+                  Eliminar día 2
+                </Button>
               </div>
-
-              <div className="flex w-full flex-col gap-x-4 md:flex-row lg:flex-row">
-                <div className="mt-4 w-full">
-                  <FormSelect label={"Duración"} control={control} name="ac" className="mt-2" items={ac} />
-                </div>
-
-                <div className="mt-4 w-full">
-                  <FormSelect label={"Turno"} control={control} name="turno" className="mt-2" items={turnosValues} />
-                </div>
-
-                <div className="mt-4 w-full">
-                  <FormSelect
-                    label={"Año"}
-                    control={control}
-                    name="anioDeCarrera"
-                    className="mt-2"
-                    items={aniosDeCarrera}
-                  />
-                </div>
-                <div className="mt-4 w-full">
-                  <SelectDivisionesForm
-                    label={"División"}
-                    control={control}
-                    name="divisionId"
-                    placeholder={"Seleccione una división"}
-                    className="mt-2"
-                  />
-                </div>
-              </div>
-
-              <div className="flex w-full flex-col gap-x-4 lg:flex-row lg:pr-11">
-                <div className="mt-4 basis-1/4">
-                  <FormSelect label={"Día 1"} control={control} name="dia1" className="mt-2" items={dias} />
-                </div>
-
-                <div className="mt-4 basis-1/4">
-                  <FormSelect
-                    label={"Hora inicio 1"}
-                    control={control}
-                    name="horaInicio1"
-                    className="mt-2"
-                    items={horas}
-                  />
-                </div>
-
-                <div className="mt-4 basis-1/4">
-                  <FormSelect
-                    label={"Duración 1"}
-                    control={control}
-                    name="duracion1"
-                    items={duracion}
-                    className="mt-2"
-                  />
-                </div>
-              </div>
-
-              <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between lg:pr-11">
-                {mostrarDia2 ? (
-                  <DiaAdicionalForm
-                    control={control}
-                    dias={dias}
-                    horas={horas}
-                    duracion={duracion}
-                    onRemove={handleRemoveDia2}
-                  />
-                ) : (
-                  <button type="button" className="mt-4 text-blue-600" onClick={handleAddDia2}>
-                    + Agregar Día 2
-                  </button>
-                )}
-              </div>
-
-              <div className="flex w-full flex-col gap-x-4 md:flex-row lg:flex-row lg:justify-between">
-                <div className="mt-4 basis-1/2">
-                  <SelectProfesorForm
-                    label={"Profesor"}
-                    control={control}
-                    name="profesorUser"
-                    realNameId="profesorUserId"
-                    className="mt-2 bg-white text-gray-900"
-                  />
-                </div>
-
-                <div className="mb-3 mt-4 basis-1/2 md:mb-0 lg:mb-0">
-                  <label htmlFor="jefesTrabajoPracticoUserId">
-                    Ayudantes:
-                    <SelectMultipleProfesorForm label={"Ayudantes"} control={control} name="ayudanteUsersIds" />
-                  </label>
-                </div>
-              </div>
+            )}
+            <CheckboxActivo name="activo" className="h-8 w-8" control={control}></CheckboxActivo>
+            <div className="w-full">
+              <label className="text-sm" htmlFor="jefesTrabajoPracticoUserId">
+                Ayudantes:
+                <SelectMultipleProfesorForm label={"Ayudantes"} control={control} name="ayudanteUsersIds" />
+              </label>
             </div>
           </div>
         </ScrollArea>
-        <div className="flex w-full flex-row items-end justify-end space-x-4">
+        <div className="flex w-full flex-row items-end justify-end space-x-4 pt-4">
           <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
             Cancelar
           </Button>
