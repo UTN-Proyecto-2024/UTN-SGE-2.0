@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer";
 import { emailTemplate } from "../../utils/emailTemplate";
+import { cargarMailAuditoria } from "./auditoria";
+import { type PrismaClient } from "@prisma/client";
 
 const isTestingEmail = process.env.SMTP_TESTING === "true";
 const host = process.env.SMTP_HOST;
@@ -29,7 +31,7 @@ if (!transporter) {
   throw new Error("No se pudo crear el transporte de correo");
 }
 
-type EmailParams = {
+export type EmailParams = {
   to: string;
   asunto: string;
   usuario: {
@@ -40,7 +42,7 @@ type EmailParams = {
   hipervinculo: string;
 };
 
-export const sendEmail = async (props: EmailParams) => {
+export const sendEmail = async (ctx: { db: PrismaClient }, props: EmailParams) => {
   const usuario = props.usuario.nombre + " " + props.usuario.apellido;
 
   const mailOptions = {
@@ -54,14 +56,9 @@ export const sendEmail = async (props: EmailParams) => {
     }),
   };
 
-  try {
-    const info = await transporter.sendMail(mailOptions);
-    // TODO @Alex: Agregar mail para auditoria
-    console.log("Correo enviado: %s", info.messageId);
-    return info;
-  } catch (error) {
-    // TODO @Alex: Agregar mail para auditoria
-    console.error("Error al enviar correo: ", error);
-    throw new Error("No se pudo enviar el correo.");
-  }
+  const mailEnviado = await transporter.sendMail(mailOptions);
+
+  await cargarMailAuditoria(ctx, props);
+
+  return mailEnviado;
 };
