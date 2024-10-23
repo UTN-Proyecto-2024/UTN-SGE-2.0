@@ -42,7 +42,7 @@ export const getColumns = () => {
     }),
     colHelper.display({
       header: "Profesor",
-      cell: (info) => <DatoUsuarioReserva usuario={info.row.original.profesor} profesor={true} />,
+      cell: (info) => <DatoUsuarioReserva usuario={info.row.original.profesor} />,
     }),
     colHelper.display({
       header: "Ayudante/s",
@@ -54,7 +54,7 @@ export const getColumns = () => {
         return (
           <div className="flex -space-x-2 overflow-hidden">
             {ayudantes.map((ayudante) => (
-              <DatoUsuarioReserva usuario={ayudante.usuario} profesor={false} key={ayudante.userId} />
+              <DatoUsuarioReserva usuario={ayudante.usuario} mostrarNombre={false} key={ayudante.userId} />
             ))}
           </div>
         );
