@@ -48,7 +48,7 @@ export const CancelarReservaLaboratorio = ({ reservaId, refresh }: Props) => {
 
         <div className="flex w-full flex-row justify-end gap-x-4">
           <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
-            Cancelar
+            Cerrar
           </Button>
           <Button title="Cancelar" type="submit" variant="default" color="danger" onClick={handleSave}>
             Cancelar
