@@ -222,7 +222,12 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
             <div className="w-full">
               <label className="text-sm" htmlFor="jefesTrabajoPracticoUserId">
                 Ayudantes:
-                <SelectMultipleProfesorForm label={"Ayudantes"} control={control} name="ayudanteUsersIds" />
+                <SelectMultipleProfesorForm
+                  className="border-gray-900 bg-white text-gray-900 hover:bg-white"
+                  label={"Ayudantes"}
+                  control={control}
+                  name="ayudanteUsersIds"
+                />
               </label>
             </div>
           </div>

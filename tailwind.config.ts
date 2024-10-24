@@ -49,7 +49,7 @@ const sgePlugin = plugin(
     });
     addBase({
       ":root": {
-        "--popover": "220 5% 12%",
+        "--popover": "100 100% 100%",
       },
     });
   },
@@ -69,7 +69,7 @@ const sgePlugin = plugin(
           border: "hsl(var(--border))",
           input: "hsl(var(--input))",
           ring: "hsl(var(--ring))",
-          foreground: colors.white,
+          foreground: colors.black,
           transparent: colors.transparent,
           "gray-100": "hsl(var(--gray-100))",
           "gray-200": "hsl(var(--gray-200))",
@@ -114,7 +114,7 @@ const sgePlugin = plugin(
           },
           muted: {
             DEFAULT: "hsl(var(--muted))",
-            foreground: colors.white,
+            foreground: colors.black,
           },
           nocturne: {
             DEFAULT: "hsl(var(--nocturne))",
@@ -122,7 +122,7 @@ const sgePlugin = plugin(
           // components
           popover: {
             DEFAULT: "hsl(var(--popover))",
-            foreground: colors.white,
+            foreground: colors.black,
           },
           aqua: {
             DEFAULT: "hsl(var(--aqua))",
