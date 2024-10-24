@@ -102,12 +102,16 @@ export const FormInput = <T extends FieldValues>({
 
   const state = getFieldState(name);
 
+  const isTypeDate = props.type === "date";
+  const today = new Date().toJSON().slice(0, 10);
+
   return (
     <Input
       {...props}
       {...register(name, props.type === "number" ? { valueAsNumber: true } : {})}
       isDirty={state.isDirty}
       error={error?.message}
+      min={isTypeDate ? today : undefined}
     />
   );
 };
