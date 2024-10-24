@@ -98,8 +98,8 @@ const MultiSelectFormField = React.forwardRef<HTMLButtonElement, MultiSelectForm
             color={"secondary"}
           >
             {selectedValues.length > 0 ? (
-              <div className="flex w-full items-start justify-between">
-                <div className="flex flex-wrap items-center">
+              <div className="flex w-full items-center justify-between">
+                <div className="flex flex-wrap ">
                   {selectedValues.map((value) => {
                     const option = options.find((o) => o.value === value);
                     const IconComponent = option?.icon;
@@ -192,7 +192,7 @@ const MultiSelectFormField = React.forwardRef<HTMLButtonElement, MultiSelectForm
               <div>
                 <CommandSeparator />
                 <CommandGroup>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-1">
                     {selectedValues.length > 0 && (
                       <>
                         <CommandItem
@@ -205,7 +205,7 @@ const MultiSelectFormField = React.forwardRef<HTMLButtonElement, MultiSelectForm
                             pointerEvents: "auto",
                             opacity: 1,
                           }}
-                          className="w-48 cursor-pointer justify-center border-2 border-primary"
+                          className="w-full cursor-pointer justify-center border-2 border-slate-200"
                         >
                           Limpiar
                         </CommandItem>
@@ -219,7 +219,7 @@ const MultiSelectFormField = React.forwardRef<HTMLButtonElement, MultiSelectForm
                         pointerEvents: "auto",
                         opacity: 1,
                       }}
-                      className="w-48 cursor-pointer justify-center border-2 border-primary"
+                      className="w-full cursor-pointer justify-center border-2 border-slate-200"
                     >
                       Cerrar
                     </CommandItem>
