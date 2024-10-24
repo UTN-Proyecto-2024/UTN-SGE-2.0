@@ -45,7 +45,7 @@ export default function RemoverRolModal({ rolId, nombre, onSubmit }: RemoveRolMo
       }
       titulo={`Eliminar rol ${nombre ?? ""}`}
       cancelText="Cancelar"
-      submitText="Si, eliminar"
+      submitText="Sí, eliminar"
       open={open}
       onOpenChange={setOpen}
       onCancel={handleCancel}

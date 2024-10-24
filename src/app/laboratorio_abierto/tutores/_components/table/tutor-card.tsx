@@ -35,27 +35,22 @@ export function TutorCard({ className, ...props }: CardProps & TutorData) {
       className={cn("flex flex-col justify-between text-center hover:border-primary/50 hover:bg-slate-50", className)}
       {...props}
     >
-      <CardHeader>
-        <div className="w-full">
+      <CardHeader className="space-y-6">
+        <div className="mx-auto">
           <Image
             src={image ?? ""}
             alt="Imagen de tutor"
             className="rounded-lg"
             blurDataURL=""
-            sizes="100vw"
-            style={{
-              width: "100%",
-              height: "auto",
-            }}
-            width={500}
-            height={300}
+            width={200}
+            height={200}
           />
         </div>
-        <CardTitle className="py-4">
+        <CardTitle>
           {nombre} {apellido}
         </CardTitle>
       </CardHeader>
-      <CardContent className="grid gap-4">
+      <CardContent className="grid items-start gap-4">
         <div className="text-left">
           <CardDescription>
             <span className="font-bold">Nombre:</span> {nombre} {apellido}

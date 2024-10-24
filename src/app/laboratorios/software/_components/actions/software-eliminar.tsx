@@ -49,7 +49,7 @@ export default function EliminarSoftwareModal({ softwareId, nombre, onSubmit }: 
       }
       titulo={`Eliminar aplicación ${nombre ?? ""}`}
       cancelText="Cancelar"
-      submitText="Si, eliminar"
+      submitText="Sí, eliminar"
       open={open}
       onOpenChange={setOpen}
       onCancel={handleCancel}

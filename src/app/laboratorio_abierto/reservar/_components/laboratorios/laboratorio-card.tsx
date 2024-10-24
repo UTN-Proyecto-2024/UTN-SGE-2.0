@@ -16,10 +16,7 @@ export function LaboratorioCard({ className, ...props }: CardProps & Laboratorio
 
   return (
     <Card
-      className={cn(
-        "flex flex-col justify-between text-center hover:border-primary/50 hover:bg-[#75757533]/[.2]",
-        className,
-      )}
+      className={cn("flex flex-col justify-between text-center hover:border-primary/50 hover:bg-slate-100", className)}
       {...props}
     >
       <CardHeader>
