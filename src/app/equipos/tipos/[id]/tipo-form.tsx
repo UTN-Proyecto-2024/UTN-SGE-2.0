@@ -145,7 +145,7 @@ export const TipoForm = ({ id, onSubmit, onCancel }: Props) => {
 
                 <div className="mt-4 basis-1/2">
                   <Input
-                    label={!previewImgUrl ? "Agregar imágen" : "Cambiar imágen"}
+                    label={!previewImgUrl ? "Agregar imagen" : "Cambiar imagen"}
                     name="imagen"
                     type={"file"}
                     accept="image/*"
