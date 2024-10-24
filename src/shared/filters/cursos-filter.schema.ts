@@ -46,9 +46,9 @@ export const inputGetCursos = z.object({
     .refine((value) => parseInt(value) >= 0, { message: "Debe ser mayor o igual a 0" })
     .catch("0"),
   orderBy: z
-    .enum(["division_nombre", "ac", "turno", "sede_nombre"])
-    .default("division_nombre")
-    .catch("division_nombre"),
+    .enum(["anioDeCarrera", "materia_nombre", "division_nombre", "ac", "turno", "sede_nombre"])
+    .default("anioDeCarrera")
+    .catch("anioDeCarrera"),
   orderDirection: z.enum(["asc", "desc"]).default("asc").catch("asc"),
   searchText: z.string().default(""),
   materia: z
