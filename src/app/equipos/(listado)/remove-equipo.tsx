@@ -45,7 +45,7 @@ export default function RemoveEquipoModal({ equipoId, nombre, onSubmit }: Remove
       }
       titulo={`Eliminar equipo ${nombre ?? ""}`}
       cancelText="Cancelar"
-      submitText="Si, eliminar"
+      submitText="Sí, eliminar"
       open={open}
       onOpenChange={setOpen}
       onCancel={handleCancel}

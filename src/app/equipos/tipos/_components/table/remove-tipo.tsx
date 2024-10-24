@@ -53,7 +53,7 @@ export default function RemoverTipoModal({ tipoId, nombre, imagen, onSubmit }: R
       }
       titulo={`Eliminar tipo ${nombre ?? ""}`}
       cancelText="Cancelar"
-      submitText="Si, eliminar"
+      submitText="Sí, eliminar"
       open={open}
       onOpenChange={setOpen}
       onCancel={handleCancel}
