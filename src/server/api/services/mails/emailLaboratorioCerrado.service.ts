@@ -14,9 +14,7 @@ export const enviarMailReservaLaboratorioCerradoProcedure = async (ctx: { db: Pr
       apellido: reservaData.usuarioSolicitante.apellido ?? "",
     },
     textoMail: `<strong>Has reservado el laboratorio cerrado: </strong> <br/> <em>${reservaData.laboratorioNombre}</em>`,
-    hipervinculo:
-      LABORATORIO_ROUTE.subRutas.find((ruta) => ruta.label === "Mis reservas")?.href ??
-      "/laboratorio_abierto/mis_reservas",
+    hipervinculo: LABORATORIO_ROUTE.misReservasRuta,
   });
 };
 
@@ -31,9 +29,7 @@ export const enviarMailRechazoLaboratorioCerradoProcedure = async (ctx: { db: Pr
       apellido: rechazoData.usuarioSolicitante.apellido ?? "",
     },
     textoMail: `<strong>Se rechazó tu reserva de laboratorio cerrado</strong> <br/>`,
-    hipervinculo:
-      LABORATORIO_ROUTE.subRutas.find((ruta) => ruta.label === "Mis reservas")?.href ??
-      "/laboratorio_abierto/mis_reservas",
+    hipervinculo: LABORATORIO_ROUTE.misReservasRuta,
   });
 };
 
@@ -48,9 +44,7 @@ export const enviarMailAproboLaboratorioCerradoProcedure = async (ctx: { db: Pri
       apellido: aprobacionData.usuarioSolicitante.apellido ?? "",
     },
     textoMail: `<strong>Tu reserva de laboratorio ha sido aprobada</strong>`,
-    hipervinculo:
-      LABORATORIO_ROUTE.subRutas.find((ruta) => ruta.label === "Mis reservas")?.href ??
-      "/laboratorio_abierto/mis_reservas",
+    hipervinculo: LABORATORIO_ROUTE.misReservasRuta,
   });
 };
 
@@ -65,8 +59,6 @@ export const enviarMailCancelacionLaboratorioCerradoProcedure = async (ctx: { db
       apellido: cancelacionData.usuarioSolicitante.apellido ?? "",
     },
     textoMail: `<strong>Tu reserva de laboratorio: ${cancelacionData.laboratorioNombre} ha sido cancelada</strong>`,
-    hipervinculo:
-      LABORATORIO_ROUTE.subRutas.find((ruta) => ruta.label === "Mis reservas")?.href ??
-      "/laboratorio_abierto/mis_reservas",
+    hipervinculo: LABORATORIO_ROUTE.misReservasRuta,
   });
 };

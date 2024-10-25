@@ -14,13 +14,11 @@ export const enviarMailReservaLaboratorioAbiertoProcedure = async (ctx: { db: Pr
       apellido: reservaData.usuarioSolicitante.apellido ?? "",
     },
     textoMail: `<strong>Has reservado el laboratorio: </strong> <br/> <em>${reservaData.laboratorioNombre}</em>`,
-    hipervinculo:
-      LABORATORIO_ABIERTO_ROUTE.subRutas.find((ruta) => ruta.label === "Mis reservas")?.href ??
-      "/laboratorio_abierto/mis_reservas",
+    hipervinculo: LABORATORIO_ABIERTO_ROUTE.misReservaRuta,
   });
 };
 
-export const enviarMailRechazoLaboratorioCerradoProcedure = async (
+export const enviarMailRechazoLaboratorioAbiertoProcedure = async (
   ctx: { db: PrismaClient },
   id: number,
   motivo: string,
@@ -35,9 +33,7 @@ export const enviarMailRechazoLaboratorioCerradoProcedure = async (
       apellido: rechazoData.usuarioSolicitante.apellido ?? "",
     },
     textoMail: `<strong>Se rechazó tu reserva de laboratorio</strong> <br/> Motivo: ${motivo}`,
-    hipervinculo:
-      LABORATORIO_ABIERTO_ROUTE.subRutas.find((ruta) => ruta.label === "Mis reservas")?.href ??
-      "/laboratorio_abierto/mis_reservas",
+    hipervinculo: LABORATORIO_ABIERTO_ROUTE.misReservaRuta,
   });
 };
 
@@ -52,9 +48,7 @@ export const enviarMailAproboLaboratorioAbiertoProcedure = async (ctx: { db: Pri
       apellido: aprobacionData.usuarioSolicitante.apellido ?? "",
     },
     textoMail: `<strong>Tu reserva de laboratorio ha sido aprobada</strong>`,
-    hipervinculo:
-      LABORATORIO_ABIERTO_ROUTE.subRutas.find((ruta) => ruta.label === "Mis reservas")?.href ??
-      "/laboratorio_abierto/mis_reservas",
+    hipervinculo: LABORATORIO_ABIERTO_ROUTE.misReservaRuta,
   });
 };
 
@@ -69,8 +63,6 @@ export const enviarMailCancelacionLaboratorioAbiertoProcedure = async (ctx: { db
       apellido: cancelacionData.usuarioSolicitante.apellido ?? "",
     },
     textoMail: `<strong>Tu reserva de laboratorio: ${cancelacionData.laboratorioNombre} ha sido cancelada</strong>`,
-    hipervinculo:
-      LABORATORIO_ABIERTO_ROUTE.subRutas.find((ruta) => ruta.label === "Mis reservas")?.href ??
-      "/laboratorio_abierto/mis_reservas",
+    hipervinculo: LABORATORIO_ABIERTO_ROUTE.misReservaRuta,
   });
 };
