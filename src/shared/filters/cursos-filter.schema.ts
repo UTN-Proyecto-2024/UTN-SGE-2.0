@@ -38,6 +38,26 @@ export const inputAgregarCurso = z.object({
   turno: z.enum([TurnoCurso.MANANA, TurnoCurso.NOCHE, TurnoCurso.TARDE]),
 });
 
+export const inputAgregarCursoBulkInsert = z
+  .object({
+    sede: z.string().min(1, { message: "Requerido" }),
+    materia: z.string().min(1, { message: "Requerido" }),
+    division: z.string().min(1, { message: "Requerido" }),
+    profesor: z.string().min(1, { message: "Requerido" }),
+    activo: z.string().min(1, { message: "Requerido" }),
+  })
+  .merge(
+    inputAgregarCurso.omit({
+      sedeId: true,
+      materiaId: true,
+      divisionId: true,
+      profesorUserId: true,
+      ayudanteUsersIds: true,
+      anioDeCarrera: true,
+      activo: true,
+    }),
+  );
+
 export const inputGetCursos = z.object({
   pageSize: z.enum(["10", "20", "30", "40", "50"]).default("10").catch("10"),
   pageIndex: z
