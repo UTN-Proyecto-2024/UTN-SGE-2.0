@@ -20,7 +20,7 @@ export const enviarMailReservaLaboratorioAbiertoProcedure = async (ctx: { db: Pr
   });
 };
 
-export const enviarMailRechazoLaboratorioAbiertoProcedure = async (
+export const enviarMailRechazoLaboratorioCerradoProcedure = async (
   ctx: { db: PrismaClient },
   id: number,
   motivo: string,
