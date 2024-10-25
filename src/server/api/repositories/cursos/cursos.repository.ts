@@ -23,6 +23,7 @@ export const getAllCursos = async (ctx: { db: PrismaClient }, input: InputGetAll
     orderBy,
     orderDirection,
     searchText,
+    filtrByActivo,
   } = input;
 
   const ordenCursos: Prisma.CursoOrderByWithRelationInput | Prisma.CursoOrderByWithRelationInput[] = orderBy
@@ -39,6 +40,7 @@ export const getAllCursos = async (ctx: { db: PrismaClient }, input: InputGetAll
   const where: Prisma.CursoWhereInput = {
     materiaId: materia ? parseInt(materia) : undefined,
     anioDeCarrera: anioDeCarrera ? parseInt(anioDeCarrera) : undefined,
+    activo: filtrByActivo === "true" ? true : undefined,
     AND: [
       {
         ...(filtrByUserId === "true" && filtrByCatedraId !== "true"
