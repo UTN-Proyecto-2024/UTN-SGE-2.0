@@ -161,7 +161,7 @@ export default function FileUpload({ onSubmit, onCancel }: Props) {
             </div>
             <input
               type="file"
-              accept=".csv"
+              accept=".csv,text/csv"
               className="hidden"
               {...register("csvFile", { required: "CSV file is required" })}
               ref={fileInputRef}
