@@ -14,7 +14,11 @@ import {
   inputGetReservasLibroPorLibroId,
   inputPrestarLibro,
 } from "@/shared/filters/reservas-filter.schema";
-import { enviarMailReservaLibroProcedure } from "../mails/email.service";
+import {
+  enviarMailReservaLibroProcedure,
+  enviarMailRenovarLibroProcedure,
+  enviarMailDevolverLibroProcedure,
+} from "../mails/emailBiblioteca.service";
 
 export const getTodasLasReservasProcedure = protectedProcedure
   .input(inputGetAllPrestamosLibros)
@@ -71,6 +75,8 @@ export const devolverLibroProcedure = protectedProcedure
 
     const reserva = await devolverLibro(ctx, input, userId);
 
+    void enviarMailDevolverLibroProcedure(ctx, input, userId);
+
     return reserva;
   });
 
@@ -80,6 +86,8 @@ export const renovarLibroProcedure = protectedProcedure.input(inputPrestarLibro)
   const userId = ctx.session.user.id;
 
   const reserva = await renovarLibro(ctx, input, userId);
+
+  void enviarMailRenovarLibroProcedure(ctx, input, userId);
 
   return reserva;
 });

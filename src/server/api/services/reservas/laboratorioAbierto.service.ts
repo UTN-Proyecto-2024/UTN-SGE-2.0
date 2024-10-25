@@ -21,6 +21,12 @@ import {
   inputGetReservaLaboratorioPorId,
   inputCancelarReservaLaboratorioAbierto,
 } from "@/shared/filters/reserva-laboratorio-filter.schema";
+import {
+  enviarMailAproboLaboratorioAbiertoProcedure,
+  enviarMailCancelacionLaboratorioAbiertoProcedure,
+  enviarMailRechazoLaboratorioAbiertoProcedure,
+  enviarMailReservaLaboratorioAbiertoProcedure,
+} from "../mails/emailLaboratorioAbierto.service";
 
 export const getReservaLaboratorioAbiertoPorUserProcedure = protectedProcedure
   .input(inputGetReservaLaboratorioPorUsuarioId)
@@ -63,6 +69,8 @@ export const aprobarReservaProcedure = protectedProcedure
 
     const reserva = await aprobarReserva(ctx, input, userId);
 
+    void enviarMailAproboLaboratorioAbiertoProcedure(ctx, input.id, userId);
+
     return reserva;
   });
 
@@ -75,6 +83,8 @@ export const rechazarReservaProcedure = protectedProcedure
 
     const reserva = await rechazarReserva(ctx, input, userId);
 
+    void enviarMailRechazoLaboratorioAbiertoProcedure(ctx, input.id, input.motivo, userId);
+
     return reserva;
   });
 
@@ -86,6 +96,8 @@ export const cancelarReservaProcedure = protectedProcedure
     const userId = ctx.session.user.id;
 
     const reserva = await cancelarReserva(ctx, input, userId);
+
+    void enviarMailCancelacionLaboratorioAbiertoProcedure(ctx, input.id, userId);
 
     return reserva;
   });
@@ -114,6 +126,8 @@ export const inputCrearReservaLaboratorioAbiertoProcedure = protectedProcedure
     const reserva = await crearReservaLaboratorioAbierto(ctx, input, userId);
 
     revalidatePath("/");
+
+    void enviarMailReservaLaboratorioAbiertoProcedure(ctx, reserva.id);
 
     return reserva;
   });
