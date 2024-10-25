@@ -1,12 +1,7 @@
 import { sendEmail } from "./email";
 import { type PrismaClient } from "@prisma/client";
 import { LABORATORIO_ABIERTO_ROUTE } from "@/shared/server-routes";
-import {
-  aprobarReserva,
-  cancelarReserva,
-  getReservaLaboratorioAbiertoParaEmail,
-  rechazarReserva,
-} from "../../repositories/reservas/laboratorioAbierto.repository";
+import { getReservaLaboratorioAbiertoParaEmail } from "../../repositories/reservas/laboratorioAbierto.repository";
 
 export const enviarMailReservaLaboratorioAbiertoProcedure = async (ctx: { db: PrismaClient }, id: number) => {
   const reservaData = await getReservaLaboratorioAbiertoParaEmail(ctx, { id: id });
@@ -29,45 +24,25 @@ export const enviarMailRechazoLaboratorioAbiertoProcedure = async (
   ctx: { db: PrismaClient },
   id: number,
   motivo: string,
-  userId: string,
 ) => {
-  const rechazoData = await rechazarReserva(
-    ctx,
-    {
-      id,
-      motivo,
-    },
-    userId,
-  );
+  const rechazoData = await getReservaLaboratorioAbiertoParaEmail(ctx, { id });
 
   await sendEmail(ctx, {
-    asunto: "Reserva de laboratorio abierto confirmada",
+    asunto: "Reserva de laboratorio abierto rechazada",
     to: rechazoData.usuarioSolicitante.email ?? "",
     usuario: {
       nombre: rechazoData.usuarioSolicitante.nombre ?? "Usuario",
       apellido: rechazoData.usuarioSolicitante.apellido ?? "",
     },
-    textoMail: `<strong>Se rechazó tu reserva de laboratorio</strong>`,
+    textoMail: `<strong>Se rechazó tu reserva de laboratorio</strong> <br/> Motivo: ${motivo}`,
     hipervinculo:
       LABORATORIO_ABIERTO_ROUTE.subRutas.find((ruta) => ruta.label === "Mis reservas")?.href ??
       "/laboratorio_abierto/mis_reservas",
   });
 };
 
-export const enviarMailAproboLaboratorioAbiertoProcedure = async (
-  ctx: { db: PrismaClient },
-  id: number,
-  userId: string,
-) => {
-  const aprobacionData = await aprobarReserva(
-    ctx,
-    {
-      id,
-      equipoReservado: [],
-      inventarioRevisado: [],
-    },
-    userId,
-  );
+export const enviarMailAproboLaboratorioAbiertoProcedure = async (ctx: { db: PrismaClient }, id: number) => {
+  const aprobacionData = await getReservaLaboratorioAbiertoParaEmail(ctx, { id });
 
   await sendEmail(ctx, {
     asunto: "Reserva de laboratorio abierto confirmada",
@@ -83,12 +58,8 @@ export const enviarMailAproboLaboratorioAbiertoProcedure = async (
   });
 };
 
-export const enviarMailCancelacionLaboratorioAbiertoProcedure = async (
-  ctx: { db: PrismaClient },
-  id: number,
-  userId: string,
-) => {
-  const cancelacionData = await cancelarReserva(ctx, { id }, userId);
+export const enviarMailCancelacionLaboratorioAbiertoProcedure = async (ctx: { db: PrismaClient }, id: number) => {
+  const cancelacionData = await getReservaLaboratorioAbiertoParaEmail(ctx, { id });
 
   await sendEmail(ctx, {
     asunto: "Reserva de laboratorio abierto cancelada",
@@ -97,7 +68,7 @@ export const enviarMailCancelacionLaboratorioAbiertoProcedure = async (
       nombre: cancelacionData.usuarioSolicitante.nombre ?? "Usuario",
       apellido: cancelacionData.usuarioSolicitante.apellido ?? "",
     },
-    textoMail: `<strong>Tu reserva de laboratorio: ${cancelacionData.nombreLaboratorio} ha sido cancelada</strong>`,
+    textoMail: `<strong>Tu reserva de laboratorio: ${cancelacionData.laboratorioNombre} ha sido cancelada</strong>`,
     hipervinculo:
       LABORATORIO_ABIERTO_ROUTE.subRutas.find((ruta) => ruta.label === "Mis reservas")?.href ??
       "/laboratorio_abierto/mis_reservas",

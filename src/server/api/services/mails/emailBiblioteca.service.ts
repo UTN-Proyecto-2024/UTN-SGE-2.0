@@ -1,13 +1,7 @@
 import { sendEmail } from "./email";
-import {
-  getReservaParaEmail,
-  type InputRenovarPrestamoLibro,
-  type InputGetReservas,
-  renovarLibro,
-  devolverLibro,
-} from "../../repositories/reservas/biblioteca.repository";
 import { BIBLIOTECA_ROUTE } from "@/shared/server-routes";
 import { type PrismaClient } from "@prisma/client";
+import { getReservaParaEmail, getReservaDevolucionParaEmail } from "../../repositories/reservas/biblioteca.repository";
 
 export const enviarMailReservaLibroProcedure = async (ctx: { db: PrismaClient }, input: { reservaId: number }) => {
   const { reservaId } = input;
@@ -26,35 +20,27 @@ export const enviarMailReservaLibroProcedure = async (ctx: { db: PrismaClient },
   });
 };
 
-export const enviarMailRenovarLibroProcedure = async (
-  ctx: { db: PrismaClient },
-  input: InputRenovarPrestamoLibro,
-  userId: string,
-) => {
-  const { libroId, fechaInicio, fechaFin } = input;
+export const enviarMailRenovarLibroProcedure = async (ctx: { db: PrismaClient }, reservaId: number) => {
+  const reservaData = await getReservaParaEmail(ctx, { id: reservaId });
 
-  const renovacionData = await renovarLibro(ctx, { libroId, fechaInicio, fechaFin }, userId);
+  if (!reservaData) {
+    throw new Error("No se encontró la reserva para enviar el email.");
+  }
 
   await sendEmail(ctx, {
     asunto: "Reserva de libro renovada",
-    to: renovacionData.usuarioSolicitante.email ?? "",
+    to: reservaData.usuarioSolicitante.email ?? "",
     usuario: {
-      nombre: renovacionData.usuarioSolicitante?.nombre ?? "",
-      apellido: renovacionData.usuarioSolicitante?.apellido ?? "",
+      nombre: reservaData.usuarioSolicitante.nombre ?? "Usuario",
+      apellido: reservaData.usuarioSolicitante.apellido ?? "",
     },
-    textoMail: `<strong>Has renovado el préstamo del libro</strong> <br/> <em>${renovacionData.libroNombre}</em> <br> desde ${fechaInicio} hasta ${fechaFin}`,
+    textoMail: `<strong>Has renovado el préstamo del libro</strong> <br/> <em>${reservaData.libroNombre}</em>`,
     hipervinculo: BIBLIOTECA_ROUTE.misPrestamosRuta,
   });
 };
 
-export const enviarMailDevolverLibroProcedure = async (
-  ctx: { db: PrismaClient },
-  input: InputGetReservas,
-  userId: string,
-) => {
-  const { libroId } = input;
-
-  const reservaData = await devolverLibro(ctx, { libroId }, userId);
+export const enviarMailDevolverLibroProcedure = async (ctx: { db: PrismaClient }, input: { libroId: number }) => {
+  const reservaData = await getReservaDevolucionParaEmail(ctx, { libroId: input.libroId });
 
   await sendEmail(ctx, {
     asunto: "Devolución de libro confirmada",

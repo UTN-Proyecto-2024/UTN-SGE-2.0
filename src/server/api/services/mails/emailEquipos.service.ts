@@ -1,11 +1,8 @@
 import { sendEmail } from "./email";
 import { EQUIPOS_ROUTE } from "@/shared/server-routes";
 import {
-  devolverEquipo,
-  type InputRenovarPrestamoEquipo,
-  renovarEquipo,
-  type InputGetReservas,
   getReservaEquipoParaEmail,
+  getReservaRenovacionEquipoParaEmail,
 } from "../../repositories/reservas/equipo.repository";
 import { type PrismaClient } from "@prisma/client";
 
@@ -26,33 +23,26 @@ export const enviarMailReservaEquipoProcedure = async (ctx: { db: PrismaClient }
 
 export const enviarMailRenovarEquipoProcedure = async (
   ctx: { db: PrismaClient },
-  input: InputRenovarPrestamoEquipo,
-  userId: string,
+  input: { equipoId: number; fechaInicio: Date; fechaFin: Date },
 ) => {
-  const { equipoId, fechaInicio, fechaFin } = input;
-
-  const renovacionData = await renovarEquipo(ctx, { equipoId, fechaInicio, fechaFin }, userId);
+  const renovacionData = await getReservaRenovacionEquipoParaEmail(ctx, { equipoId: input.equipoId });
 
   await sendEmail(ctx, {
     asunto: "Reserva de equipo renovada",
     to: renovacionData.usuarioSolicitante.email ?? "",
     usuario: {
-      nombre: renovacionData.usuarioSolicitante?.nombre ?? "",
+      nombre: renovacionData.usuarioSolicitante?.nombre ?? "Usuario",
       apellido: renovacionData.usuarioSolicitante?.apellido ?? "",
     },
-    textoMail: `<strong>Has renovado el préstamo del equipo</strong> <br/> <em>${renovacionData.equipoModelo}</em> <br> desde ${fechaInicio} hasta ${fechaFin}`,
+
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    textoMail: `<strong>Has renovado el préstamo del equipo</strong> <br/> <em>${renovacionData.equipoModelo}</em> <br> desde ${input.fechaInicio} hasta ${input.fechaFin}`,
     hipervinculo: EQUIPOS_ROUTE.subRutas.find((ruta) => ruta.label === "Tipos")?.href ?? "/equipos/prestamos",
   });
 };
 
-export const enviarMailDevolverEquipoProcedure = async (
-  ctx: { db: PrismaClient },
-  input: InputGetReservas,
-  userId: string,
-) => {
-  const { equipoId } = input;
-
-  const reservaData = await devolverEquipo(ctx, { equipoId }, userId);
+export const enviarMailDevolverEquipoProcedure = async (ctx: { db: PrismaClient }, input: { equipoId: number }) => {
+  const reservaData = await getReservaEquipoParaEmail(ctx, { id: input.equipoId });
 
   await sendEmail(ctx, {
     asunto: "Devolución de equipo confirmada",

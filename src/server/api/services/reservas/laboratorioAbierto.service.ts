@@ -69,7 +69,7 @@ export const aprobarReservaProcedure = protectedProcedure
 
     const reserva = await aprobarReserva(ctx, input, userId);
 
-    void enviarMailAproboLaboratorioAbiertoProcedure(ctx, input.id, userId);
+    void enviarMailAproboLaboratorioAbiertoProcedure(ctx, input.id);
 
     return reserva;
   });
@@ -83,7 +83,7 @@ export const rechazarReservaProcedure = protectedProcedure
 
     const reserva = await rechazarReserva(ctx, input, userId);
 
-    void enviarMailRechazoLaboratorioAbiertoProcedure(ctx, input.id, input.motivo, userId);
+    void enviarMailRechazoLaboratorioAbiertoProcedure(ctx, input.id, input.motivo);
 
     return reserva;
   });
@@ -97,7 +97,7 @@ export const cancelarReservaProcedure = protectedProcedure
 
     const reserva = await cancelarReserva(ctx, input, userId);
 
-    void enviarMailCancelacionLaboratorioAbiertoProcedure(ctx, input.id, userId);
+    void enviarMailCancelacionLaboratorioAbiertoProcedure(ctx, input.id);
 
     return reserva;
   });
