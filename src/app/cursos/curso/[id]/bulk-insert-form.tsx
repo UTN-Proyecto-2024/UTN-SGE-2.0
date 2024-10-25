@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { FormProvider, useForm, type UseFormResetField } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { File, FolderUp } from "lucide-react";
 import { useRef, useState } from "react";
 import { api } from "@/trpc/react";
@@ -21,20 +21,24 @@ type Props = {
 export default function FileUpload({ onSubmit, onCancel }: Props) {
   const formHook = useForm<FormData>();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const { register, reset, handleSubmit, setError, formState, resetField, setValue } = formHook;
+  const { register, handleSubmit, setError, formState, resetField, setValue } = formHook;
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const agregarCurso = api.cursos.nuevoCursoBulkInsert.useMutation();
 
+  const resetFileInput = () => {
+    setUploadedFileName(null);
+    resetField("csvFile");
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
   const validateFile = (fileList: FileList) => {
     const file = fileList[0];
-
     if (file) {
       const fileExtension = file.name.split(".").pop();
       if (fileExtension !== "csv") {
-        resetField("csvFile");
-        setError("csvFile", { type: "manual", message: "Solo se permiten archivos CSV" });
-        setUploadedFileName(null);
+        resetFileInput();
+        setError("csvFile", { type: "manual", message: "Solo se permiten archivos .CSV" });
         return;
       }
       setError("csvFile", {});
@@ -44,51 +48,49 @@ export default function FileUpload({ onSubmit, onCancel }: Props) {
   };
 
   const onFormSubmit = ({ csvFile }: FormData) => {
+    if (!csvFile?.[0]) {
+      setError("csvFile", { type: "manual", message: "No file selected" });
+      return;
+    }
+
     const reader = new FileReader();
 
     reader.onload = (e) => {
-      const contents = e.target?.result as string;
-      const lines = contents.split("\n");
+      const lines = (e.target?.result as string).split("\n");
       const headers = lines[0]?.split(",");
 
-      lines.slice(1).forEach((line) => {
+      for (const line of lines.slice(1)) {
         const values = line.split(",").map((v) => v.replace(/"/g, "").trim());
 
-        const formData = headers?.reduce((acc, header, i) => {
-          acc[header] = values[i] === "" ? undefined : values[i];
-          return acc;
-        }, {} as CursoCsv);
+        const formData = headers?.reduce(
+          (acc, header, i) => ({ ...acc, [header]: values[i] === "" ? undefined : values[i] }),
+          {} as CursoCsv,
+        );
 
-        if (formData && !Object.values(formData).every((v) => v === undefined)) {
-          agregarCurso.mutate(formData, {
-            onSuccess: () => {
-              toast.success("Curso agregado con éxito.");
-              onSubmit();
-            },
-            onError: (error) => {
-              toast.error(error?.message ?? "Error al agregar el curso");
-            },
-          });
-        }
-      });
+        if (!formData || Object.values(formData).every((v) => v === undefined)) continue;
+
+        agregarCurso.mutate(formData, {
+          onError: (error) => {
+            toast.error(error?.message ?? "Error al agregar el curso");
+          },
+        });
+      }
     };
 
     reader.onerror = () => {
-      console.error("Error reading file");
       toast.error("Error cargando el archivo");
     };
 
-    if (csvFile?.[0]) {
-      reader.readAsText(csvFile[0]);
-      toast.success("Cursos agregados con éxito.");
-      onSubmit();
-    } else {
-      setError("csvFile", { type: "manual", message: "No file selected" });
-    }
+    reader.onloadend = () => {
+      toast.success("Cursos agregados con éxito");
+    };
+
+    reader.readAsText(csvFile[0]);
+    onSubmit();
   };
 
   const handleCancel = () => {
-    reset();
+    resetFileInput();
     onCancel();
   };
 
@@ -103,34 +105,6 @@ export default function FileUpload({ onSubmit, onCancel }: Props) {
     }
   };
 
-  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-
-    const files = e.dataTransfer.files;
-    if (files && files.length > 0) {
-      validateFile(files);
-    }
-  };
-
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col md:px-4">
@@ -138,10 +112,15 @@ export default function FileUpload({ onSubmit, onCancel }: Props) {
           <div
             className={`flex w-full flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 
               ${isDragging ? "border-blue-500 bg-blue-50" : "border-slate-300"}`}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
+            onDragEnter={() => setIsDragging(true)}
+            onDragLeave={() => setIsDragging(false)}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => {
+              e.preventDefault();
+              setIsDragging(false);
+              const files = e.dataTransfer.files;
+              if (files && files.length > 0) validateFile(files);
+            }}
           >
             <div className="flex flex-col items-center justify-center text-center">
               <FolderUp strokeWidth={1} size={80} className="mb-2 text-blue-500" />
@@ -163,7 +142,7 @@ export default function FileUpload({ onSubmit, onCancel }: Props) {
               type="file"
               accept=".csv,text/csv"
               className="hidden"
-              {...register("csvFile", { required: "CSV file is required" })}
+              {...register("csvFile", { required: "Ningún archivo cargado" })}
               ref={fileInputRef}
               onChange={handleFileChange}
             />
@@ -171,9 +150,7 @@ export default function FileUpload({ onSubmit, onCancel }: Props) {
               <span className="text-sm text-red-500">{formState.errors.csvFile.message}</span>
             )}
           </div>
-          {uploadedFileName && (
-            <FilePreview fileName={uploadedFileName} setFileName={setUploadedFileName} reset={resetField} />
-          )}
+          {uploadedFileName && <FilePreview fileName={uploadedFileName} resetFileInput={resetFileInput} />}
         </div>
 
         <div className="flex w-full flex-row items-end justify-end space-x-4 pt-4">
@@ -191,25 +168,17 @@ export default function FileUpload({ onSubmit, onCancel }: Props) {
 
 interface FilePreviewProps {
   fileName: string;
-  setFileName: (name: string | null) => void;
-  reset: UseFormResetField<FormData>;
+  resetFileInput: () => void;
 }
 
-function FilePreview({ fileName, setFileName, reset }: FilePreviewProps) {
+function FilePreview({ fileName, resetFileInput }: FilePreviewProps) {
   return (
     <div className="flex w-full items-center justify-between rounded-lg border border-slate-300 bg-slate-100 p-4">
       <div className="flex items-center space-x-2">
         <File strokeWidth={1} size={24} className="text-blue-500" />
         <p className="text-gray-700">{fileName}</p>
       </div>
-      <button
-        type="button"
-        className="text-sm font-semibold text-red-500 hover:underline"
-        onClick={() => {
-          setFileName(null);
-          reset("csvFile");
-        }}
-      >
+      <button type="button" className="text-sm font-semibold text-red-500 hover:underline" onClick={resetFileInput}>
         Eliminar
       </button>
     </div>
