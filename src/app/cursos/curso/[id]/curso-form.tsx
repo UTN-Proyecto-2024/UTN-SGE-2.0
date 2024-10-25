@@ -218,7 +218,7 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
                 </Button>
               </div>
             )}
-            <CheckboxActivo name="activo" className="h-8 w-8" control={control}></CheckboxActivo>
+            {!esNuevo && <CheckboxActivo name="activo" className="h-8 w-8" control={control}></CheckboxActivo>}
             <div className="w-full">
               <label className="text-sm" htmlFor="jefesTrabajoPracticoUserId">
                 Ayudantes:
