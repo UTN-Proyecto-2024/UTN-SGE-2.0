@@ -461,3 +461,38 @@ export const getReservaParaEmail = async (ctx: { db: PrismaClient }, input: { id
 
   return reserva;
 };
+
+export const getReservaDevolucionParaEmail = async (ctx: { db: PrismaClient }, input: { libroId: number }) => {
+  const datos = await ctx.db.reserva.findUnique({
+    where: {
+      id: input.libroId,
+    },
+    select: {
+      reservaLibro: {
+        select: {
+          libro: {
+            select: {
+              titulo: true,
+            },
+          },
+        },
+      },
+      usuarioSolicito: {
+        select: {
+          nombre: true,
+          apellido: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return {
+    libroNombre: datos?.reservaLibro?.libro?.titulo,
+    usuarioSolicitante: {
+      nombre: datos?.usuarioSolicito.nombre,
+      apellido: datos?.usuarioSolicito.apellido,
+      email: datos?.usuarioSolicito.email,
+    },
+  };
+};

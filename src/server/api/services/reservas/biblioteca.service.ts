@@ -75,11 +75,10 @@ export const devolverLibroProcedure = protectedProcedure
 
     const reserva = await devolverLibro(ctx, input, userId);
 
-    void enviarMailDevolverLibroProcedure(ctx, input, userId);
+    void enviarMailDevolverLibroProcedure(ctx, { libroId: input.libroId });
 
     return reserva;
   });
-
 export const renovarLibroProcedure = protectedProcedure.input(inputPrestarLibro).mutation(async ({ ctx, input }) => {
   validarInput(inputPrestarLibro, input);
 
@@ -87,7 +86,7 @@ export const renovarLibroProcedure = protectedProcedure.input(inputPrestarLibro)
 
   const reserva = await renovarLibro(ctx, input, userId);
 
-  void enviarMailRenovarLibroProcedure(ctx, input, userId);
+  void enviarMailRenovarLibroProcedure(ctx, reserva.id);
 
   return reserva;
 });

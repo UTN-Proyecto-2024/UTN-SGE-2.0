@@ -32,7 +32,7 @@ export const devolverEquipoProcedure = protectedProcedure
 
     const reserva = await devolverEquipo(ctx, input, userId);
 
-    void enviarMailDevolverEquipoProcedure(ctx, input, userId);
+    void enviarMailDevolverEquipoProcedure(ctx, { equipoId: input.equipoId });
 
     return reserva;
   });
@@ -44,7 +44,11 @@ export const renovarEquipoProcedure = protectedProcedure.input(inputPrestarEquip
 
   const reserva = await renovarEquipo(ctx, input, userId);
 
-  void enviarMailRenovarEquipoProcedure(ctx, input, userId);
+  void enviarMailRenovarEquipoProcedure(ctx, {
+    equipoId: input.equipoId,
+    fechaInicio: new Date(input.fechaInicio),
+    fechaFin: new Date(input.fechaFin),
+  });
 
   return reserva;
 });
