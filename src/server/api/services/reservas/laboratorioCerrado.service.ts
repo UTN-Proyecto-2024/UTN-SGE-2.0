@@ -136,6 +136,7 @@ export const inputCrearReservaLaboratorioCerradoDiscrecionalProcedure = protecte
     const userId = ctx.session.user.id;
 
     const reserva = await crearReservaLaboratorioCerradoDiscrecional(ctx, input, userId);
+    await enviarMailReservaLaboratorioCerradoProcedure(ctx, reserva.id);
 
     return reserva;
   });

@@ -24,8 +24,8 @@ import {
 import {
   enviarMailAproboLaboratorioAbiertoProcedure,
   enviarMailCancelacionLaboratorioAbiertoProcedure,
-  enviarMailRechazoLaboratorioAbiertoProcedure,
   enviarMailReservaLaboratorioAbiertoProcedure,
+  enviarMailRechazoLaboratorioAbiertoProcedure,
 } from "../mails/emailLaboratorioAbierto.service";
 
 export const getReservaLaboratorioAbiertoPorUserProcedure = protectedProcedure
