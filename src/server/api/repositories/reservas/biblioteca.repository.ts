@@ -195,7 +195,7 @@ export const crearPrestamoLibro = async (ctx: { db: PrismaClient }, input: Input
   }
 };
 
-type InputGetReservas = z.infer<typeof inputGetReservasLibroPorLibroId>;
+export type InputGetReservas = z.infer<typeof inputGetReservasLibroPorLibroId>;
 export const verReservasDeLibro = async (ctx: { db: PrismaClient }, input: InputGetReservas) => {
   try {
     const reservas = await ctx.db.reserva.findMany({
@@ -227,9 +227,14 @@ export const verReservasDeLibro = async (ctx: { db: PrismaClient }, input: Input
   }
 };
 
-export const devolverLibro = async (ctx: { db: PrismaClient }, input: InputGetReservas, userId: string) => {
+export const devolverLibro = async (
+  ctx: { db: PrismaClient },
+  input: InputGetReservas, // Esto incluye libroId
+  userId: string,
+) => {
   try {
     const reserva = await ctx.db.$transaction(async (tx) => {
+      // Verificar si el libro existe
       const libro = await tx.libro.findUnique({
         where: {
           id: input.libroId,
@@ -244,10 +249,12 @@ export const devolverLibro = async (ctx: { db: PrismaClient }, input: InputGetRe
         throw new Error("El libro no existe");
       }
 
+      // Si el libro ya está disponible, no se puede devolver
       if (libro.disponible) {
         throw new Error("El libro ya está disponible");
       }
 
+      // Actualizar el libro para marcarlo como disponible
       await tx.libro.update({
         where: {
           id: input.libroId,
@@ -257,6 +264,7 @@ export const devolverLibro = async (ctx: { db: PrismaClient }, input: InputGetRe
         },
       });
 
+      // Obtener la primera reserva pendiente para ese libro
       const reservas = await tx.reserva.findMany({
         where: {
           tipo: "LIBRO",
@@ -265,17 +273,38 @@ export const devolverLibro = async (ctx: { db: PrismaClient }, input: InputGetRe
           },
           estatus: "PENDIENTE",
         },
+        include: {
+          usuarioSolicito: {
+            // Incluir los datos del usuario solicitante
+            select: {
+              nombre: true,
+              apellido: true,
+              email: true,
+            },
+          },
+          reservaLibro: {
+            select: {
+              libro: {
+                select: {
+                  titulo: true, // Obtener el título del libro
+                },
+              },
+            },
+          },
+        },
       });
 
       if (reservas.length === 0) {
         throw new Error("No hay reservas para devolver");
       }
 
-      const reserva = reservas[0];
+      const reserva = reservas[0]; // Obtener la primera reserva pendiente
+
       if (!reserva) {
         throw new Error("No se pudo encontrar la reserva");
       }
 
+      // Actualizar la reserva para marcarla como finalizada
       await tx.reserva.update({
         where: {
           id: reserva.id,
@@ -283,19 +312,29 @@ export const devolverLibro = async (ctx: { db: PrismaClient }, input: InputGetRe
         data: {
           usuarioRecibioId: userId,
           estatus: "FINALIZADA",
-
           fechaRecibido: new Date(),
         },
       });
+
+      // Retornar la información necesaria para el correo
+      return {
+        id: reserva.id,
+        libroNombre: reserva.reservaLibro?.libro?.titulo ?? "Título no disponible",
+        usuarioSolicitante: {
+          nombre: reserva.usuarioSolicito?.nombre ?? "Nombre no disponible",
+          apellido: reserva.usuarioSolicito?.apellido ?? "Apellido no disponible",
+          email: reserva.usuarioSolicito?.email ?? "Email no disponible",
+        },
+      };
     });
 
     return reserva;
   } catch (error) {
-    throw new Error(`Error devolviendo libro`);
+    throw new Error("Error devolviendo libro.");
   }
 };
 
-type InputRenovarPrestamoLibro = z.infer<typeof inputPrestarLibro>;
+export type InputRenovarPrestamoLibro = z.infer<typeof inputPrestarLibro>;
 export const renovarLibro = async (ctx: { db: PrismaClient }, input: InputRenovarPrestamoLibro, userId: string) => {
   try {
     const reserva = await ctx.db.$transaction(async (tx) => {
@@ -313,7 +352,6 @@ export const renovarLibro = async (ctx: { db: PrismaClient }, input: InputRenova
         throw new Error("El libro no existe");
       }
 
-      // Si ya esta disponible, no se puede renovar
       if (libro.disponible) {
         throw new Error("El libro ya está disponible");
       }
@@ -326,6 +364,24 @@ export const renovarLibro = async (ctx: { db: PrismaClient }, input: InputRenova
           },
           estatus: "PENDIENTE",
         },
+        include: {
+          usuarioSolicito: {
+            select: {
+              nombre: true,
+              apellido: true,
+              email: true,
+            },
+          },
+          reservaLibro: {
+            select: {
+              libro: {
+                select: {
+                  titulo: true,
+                },
+              },
+            },
+          },
+        },
       });
 
       if (reservas.length === 0) {
@@ -333,6 +389,7 @@ export const renovarLibro = async (ctx: { db: PrismaClient }, input: InputRenova
       }
 
       const reserva = reservas[0];
+
       if (!reserva) {
         throw new Error("No se pudo encontrar la reserva");
       }
@@ -343,19 +400,26 @@ export const renovarLibro = async (ctx: { db: PrismaClient }, input: InputRenova
         },
         data: {
           usuarioRenovoId: userId,
-          estatus: "PENDIENTE", // Se mantiene el estatus original
-
+          estatus: "PENDIENTE",
           fechaHoraInicio: getDateISO(input.fechaInicio),
           fechaHoraFin: getDateISO(input.fechaFin),
-
           fechaRenovacion: new Date(),
         },
       });
+      return {
+        id: reserva.id,
+        libroNombre: reserva.reservaLibro?.libro?.titulo,
+        usuarioSolicitante: {
+          nombre: reserva.usuarioSolicito?.nombre,
+          apellido: reserva.usuarioSolicito?.apellido,
+          email: reserva.usuarioSolicito?.email,
+        },
+      };
     });
 
     return reserva;
   } catch (error) {
-    throw new Error(`Error renovando libro`);
+    throw new Error("Error renovando libro");
   }
 };
 

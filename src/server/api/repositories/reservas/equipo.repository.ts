@@ -201,7 +201,7 @@ export const crearPrestamoEquipo = async (
   }
 };
 
-type InputGetReservas = z.infer<typeof inputGetReservasEquiposPorEquipoId>;
+export type InputGetReservas = z.infer<typeof inputGetReservasEquiposPorEquipoId>;
 export const verReservasDeEquipo = async (ctx: { db: PrismaClient }, input: InputGetReservas) => {
   try {
     const reservas = await ctx.db.reserva.findMany({
@@ -271,6 +271,25 @@ export const devolverEquipo = async (ctx: { db: PrismaClient }, input: InputGetR
           },
           estatus: "PENDIENTE",
         },
+        select: {
+          id: true,
+          usuarioSolicito: {
+            select: {
+              nombre: true,
+              apellido: true,
+              email: true,
+            },
+          },
+          reservaEquipo: {
+            select: {
+              equipo: {
+                select: {
+                  modelo: true,
+                },
+              },
+            },
+          },
+        },
       });
 
       if (reservas.length === 0) {
@@ -289,10 +308,19 @@ export const devolverEquipo = async (ctx: { db: PrismaClient }, input: InputGetR
         data: {
           usuarioRecibioId: userId,
           estatus: "FINALIZADA",
-
           fechaRecibido: new Date(),
         },
       });
+
+      return {
+        id: reserva.id,
+        equipoModelo: reserva.reservaEquipo?.equipo?.modelo,
+        usuarioSolicitante: {
+          nombre: reserva.usuarioSolicito?.nombre,
+          apellido: reserva.usuarioSolicito?.apellido,
+          email: reserva.usuarioSolicito?.email,
+        },
+      };
     });
 
     return reserva;
@@ -301,7 +329,7 @@ export const devolverEquipo = async (ctx: { db: PrismaClient }, input: InputGetR
   }
 };
 
-type InputRenovarPrestamoEquipo = z.infer<typeof inputPrestarEquipo>;
+export type InputRenovarPrestamoEquipo = z.infer<typeof inputPrestarEquipo>;
 export const renovarEquipo = async (ctx: { db: PrismaClient }, input: InputRenovarPrestamoEquipo, userId: string) => {
   try {
     const reserva = await ctx.db.$transaction(async (tx) => {
@@ -319,7 +347,6 @@ export const renovarEquipo = async (ctx: { db: PrismaClient }, input: InputRenov
         throw new Error("El equipo no existe");
       }
 
-      // Si ya esta disponible, no se puede renovar
       if (equipo.disponible) {
         throw new Error("El equipo ya está disponible");
       }
@@ -331,6 +358,25 @@ export const renovarEquipo = async (ctx: { db: PrismaClient }, input: InputRenov
             equipoId: input.equipoId,
           },
           estatus: "PENDIENTE",
+        },
+        select: {
+          id: true,
+          usuarioSolicito: {
+            select: {
+              nombre: true,
+              apellido: true,
+              email: true,
+            },
+          },
+          reservaEquipo: {
+            select: {
+              equipo: {
+                select: {
+                  modelo: true,
+                },
+              },
+            },
+          },
         },
       });
 
@@ -349,18 +395,65 @@ export const renovarEquipo = async (ctx: { db: PrismaClient }, input: InputRenov
         },
         data: {
           usuarioRenovoId: userId,
-          estatus: "PENDIENTE", // Se mantiene el estatus original
-
+          estatus: "PENDIENTE",
           fechaHoraInicio: getDateISO(input.fechaInicio),
           fechaHoraFin: getDateISO(input.fechaFin),
-
           fechaRenovacion: new Date(),
         },
       });
+
+      return {
+        id: reserva.id,
+        equipoModelo: reserva.reservaEquipo?.equipo?.modelo,
+        usuarioSolicitante: {
+          nombre: reserva.usuarioSolicito?.nombre,
+          apellido: reserva.usuarioSolicito?.apellido,
+          email: reserva.usuarioSolicito?.email,
+        },
+      };
     });
 
     return reserva;
   } catch (error) {
     throw new Error(`Error renovando equipo`);
   }
+};
+
+export const getReservaEquipoParaEmail = async (ctx: { db: PrismaClient }, input: { id: number }) => {
+  const { id } = input;
+
+  const datos = await ctx.db.reserva.findUnique({
+    where: {
+      id: id,
+    },
+    select: {
+      reservaEquipo: {
+        select: {
+          equipo: {
+            select: {
+              modelo: true,
+            },
+          },
+        },
+      },
+      usuarioSolicito: {
+        select: {
+          nombre: true,
+          apellido: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  const reserva = {
+    equipoModelo: datos?.reservaEquipo?.equipo?.modelo,
+    usuarioSolicitante: {
+      nombre: datos?.usuarioSolicito.nombre,
+      apellido: datos?.usuarioSolicito.apellido,
+      email: datos?.usuarioSolicito.email,
+    },
+  };
+
+  return reserva;
 };
