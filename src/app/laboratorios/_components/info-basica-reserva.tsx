@@ -113,16 +113,9 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
                     <TextIcon className="mr-2 h-4 w-4" />
                     Observaciones
                   </Label>
-                  <p>{reserva.descripcion ?? "Sin informar"}</p>
-                </div>
-              )}
-              {reserva.reserva.motivoRechazo && (
-                <div className="col-span-3 space-y-2">
-                  <Label className="flex items-center font-semibold">
-                    <XIcon className="mr-2 h-4 w-4" />
-                    Motivo Rechazo
-                  </Label>
-                  <p>{reserva.reserva.motivoRechazo ?? "Sin informar"}</p>
+                  <div className="whitespace-pre-wrap rounded-md border border-gray-300 bg-gray-50 p-4">
+                    {reserva.descripcion ?? "Sin informar"}
+                  </div>
                 </div>
               )}
             </>
