@@ -123,7 +123,7 @@ export const inputCrearReservaLaboratorioCerradoProcedure = protectedProcedure
 
     const reserva = await crearReservaLaboratorioCerrado(ctx, input, userId);
 
-    await enviarMailReservaLaboratorioCerradoProcedure(ctx, reserva.id);
+    void enviarMailReservaLaboratorioCerradoProcedure(ctx, reserva.id);
 
     return reserva;
   });
