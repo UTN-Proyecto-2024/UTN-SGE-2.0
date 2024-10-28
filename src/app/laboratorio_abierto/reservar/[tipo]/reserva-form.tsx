@@ -45,7 +45,7 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
   const estaEstatusCancelada = reservaData?.reserva.estatus === ReservaEstatus.CANCELADA;
 
   const esTLA =
-    tipo === LaboratorioAbiertoTipo.LA || reservaData?.laboratorioAbiertoTipo === LaboratorioAbiertoTipo.TLA;
+    tipo === LaboratorioAbiertoTipo.TLA || reservaData?.laboratorioAbiertoTipo === LaboratorioAbiertoTipo.TLA;
 
   const formHook = useForm<FormReservarLaboratorioAbiertoType>({
     mode: "onChange",

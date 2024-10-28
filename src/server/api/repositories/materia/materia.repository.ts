@@ -20,10 +20,10 @@ export const getAllMaterias = async (ctx: { db: PrismaClient }) => {
     },
     orderBy: [
       {
-        nombre: "asc",
+        anio: "asc",
       },
       {
-        anio: "asc",
+        nombre: "asc",
       },
     ],
   });

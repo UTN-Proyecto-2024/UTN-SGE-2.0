@@ -40,6 +40,7 @@ export const LABORATORIO_ROUTE = {
   href: "/laboratorios",
   label: "Laboratorios",
   isPublic: false,
+  misReservasRuta: "/laboratorios/mis_reservas",
   subRutas: [
     {
       href: "/laboratorios/mis_cursos",
@@ -78,6 +79,7 @@ export const LABORATORIO_ABIERTO_ROUTE = {
   href: "/laboratorio_abierto",
   label: "Laboratorio abierto",
   isPublic: false,
+  misReservaRuta: "/laboratorio_abierto/mis_reservas",
   subRutas: [
     {
       href: "/laboratorio_abierto/reservar",
@@ -106,6 +108,7 @@ export const EQUIPOS_ROUTE = {
   href: "/equipos",
   label: "Equipos",
   isPublic: false,
+  misPrestamosRuta: "/equipos/mis_prestamos",
   subRutas: [
     {
       href: "/equipos",
@@ -191,13 +194,13 @@ export const ADMIN_ROUTE = {
 
 export const APP_ROUTES: AppRoute[] = [
   INICIO_ROUTE,
-  BIBLIOTECA_ROUTE,
-  CURSOS_ROUTE,
-  EQUIPOS_ROUTE,
   LABORATORIO_ROUTE,
   LABORATORIO_ABIERTO_ROUTE,
-  ADMIN_ROUTE,
   MATERIA_ROUTE,
+  CURSOS_ROUTE,
+  EQUIPOS_ROUTE,
+  BIBLIOTECA_ROUTE,
+  ADMIN_ROUTE,
 ];
 
 export const USER_ROUTES = (id: string): AppRoute[] => [

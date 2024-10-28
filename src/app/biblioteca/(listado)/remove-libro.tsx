@@ -45,7 +45,7 @@ export default function RemoveLibroModal({ libroId, nombre, onSubmit }: RemoveLi
       }
       titulo={`Eliminar libro ${nombre ?? ""}`}
       cancelText="Cancelar"
-      submitText="Si, eliminar"
+      submitText="Sí, eliminar"
       open={open}
       onOpenChange={setOpen}
       onCancel={handleCancel}

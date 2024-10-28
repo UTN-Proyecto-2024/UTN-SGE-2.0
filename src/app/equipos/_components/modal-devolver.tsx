@@ -56,7 +56,7 @@ export default function DevolverEquipoModal({ equipoId }: DevolverEquipoModalPro
       onSubmit={handleDevolverEquipo}
       isAlertDialog
       cancelText="Cancelar"
-      submitText="Si, devolver"
+      submitText="Sí, devolver"
     >
       <div>Está seguro que desea devolver el equipo?</div>
     </ModalDrawer>

@@ -3,7 +3,7 @@
 // https://authjs.dev/getting-started/adapters/prisma#naming-conventions
 model User {
     id            String   @id @default(cuid())
-    name          String // Viene con la cuenta
+    name          String   @unique
     email         String   @unique
     emailVerified Boolean?
     image         String   @default("/default-avatar.svg")

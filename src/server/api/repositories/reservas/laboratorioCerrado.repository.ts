@@ -484,6 +484,41 @@ export const crearReservaLaboratorioCerradoDiscrecional = async (
   }
 };
 
+export const getReservaLaboratorioCerradoParaEmail = async (ctx: { db: PrismaClient }, input: { id: number }) => {
+  const { id } = input;
+
+  const datos = await ctx.db.reservaLaboratorioCerrado.findUnique({
+    where: {
+      reservaId: id,
+    },
+    include: {
+      reserva: {
+        include: {
+          usuarioSolicito: {
+            select: {
+              nombre: true,
+              apellido: true,
+              email: true,
+            },
+          },
+        },
+      },
+      laboratorio: true,
+    },
+  });
+
+  const reserva = {
+    laboratorioNombre: datos?.laboratorio?.nombre,
+    usuarioSolicitante: {
+      nombre: datos?.reserva.usuarioSolicito.nombre,
+      apellido: datos?.reserva.usuarioSolicito.apellido,
+      email: datos?.reserva.usuarioSolicito.email,
+    },
+  };
+
+  return reserva;
+};
+
 const getReservaCerradaCreateArgs = (
   input: InputCrearReserva,
   userId: string,

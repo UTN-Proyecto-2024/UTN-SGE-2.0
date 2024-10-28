@@ -45,7 +45,7 @@ export default function RemoveCursoModal({ cursoId, nombre, onSubmit }: RemoveCu
       }
       titulo={`Eliminar curso ${nombre ?? ""}`}
       cancelText="Cancelar"
-      submitText="Si, eliminar"
+      submitText="Sí, eliminar"
       open={open}
       onOpenChange={setOpen}
       onCancel={handleCancel}
