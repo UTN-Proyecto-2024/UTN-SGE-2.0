@@ -102,7 +102,7 @@ const NotificationItem = ({ notificacion }: { notificacion: NotificaionType[numb
       href={notificacion.link ?? "#"}
       passHref
       prefetch
-      className="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-800 data-[focus]:bg-slate-100"
+      className="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-100 data-[focus]:bg-slate-100"
     >
       <p>
         <b>{notificacion.titulo}</b>

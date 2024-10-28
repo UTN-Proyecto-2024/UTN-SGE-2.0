@@ -51,7 +51,7 @@ export default function RemoverLaboratorioModal({ laboratorioId, nombre, onSubmi
       }
       titulo={`Eliminar laboratorio ${nombre ?? ""}`}
       cancelText="Cancelar"
-      submitText="Si, eliminar"
+      submitText="Sí, eliminar"
       open={open}
       onOpenChange={setOpen}
       onCancel={handleCancel}

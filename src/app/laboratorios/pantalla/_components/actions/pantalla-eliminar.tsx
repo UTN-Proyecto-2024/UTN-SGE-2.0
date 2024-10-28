@@ -52,7 +52,7 @@ export default function EliminarReservaPantallaModal({ ids, onSubmit }: RemoveSo
       }
       titulo={`Eliminar ${texto} en pantalla`}
       cancelText="Cancelar"
-      submitText="Si, eliminar"
+      submitText="Sí, eliminar"
       open={open}
       onOpenChange={setOpen}
       onCancel={handleCancel}

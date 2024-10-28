@@ -147,6 +147,7 @@ export const getReservaPorId = async (ctx: { db: PrismaClient }, input: InputGet
 };
 
 type InputAprobarORechazarReserva = z.infer<typeof inputAprobarReservaLaboratorioAbiertoSchema>;
+
 export const aprobarReserva = async (
   ctx: { db: PrismaClient },
   input: InputAprobarORechazarReserva,
@@ -213,12 +214,20 @@ export const aprobarReserva = async (
         },
       });
 
-      return reserva;
+      return {
+        reserva,
+        usuarioSolicitante: {
+          id: reserva.usuarioSolicito.id,
+          nombre: reserva.usuarioSolicito.nombre,
+          apellido: reserva.usuarioSolicito.apellido,
+          email: reserva.usuarioSolicito.email,
+        },
+      };
     });
 
     return reserva;
   } catch (error) {
-    throw new Error(`Error aprobando reserva. ${(error as Error).message ?? ""}`);
+    throw new Error("Error aprobando reserva.");
   }
 };
 
@@ -274,7 +283,8 @@ export const editarReserva = async (
   }
 };
 
-type InputRechazarReservaLaboratorioAbierto = z.infer<typeof inputRechazarReservaLaboratorioAbierto>;
+export type InputRechazarReservaLaboratorioAbierto = z.infer<typeof inputRechazarReservaLaboratorioAbierto>;
+
 export const rechazarReserva = async (
   ctx: { db: PrismaClient },
   input: InputRechazarReservaLaboratorioAbierto,
@@ -319,7 +329,26 @@ export const rechazarReserva = async (
         },
       });
 
-      return reserva;
+      const usuarioRechazado = await tx.user.findUnique({
+        where: {
+          id: userId,
+        },
+        select: {
+          nombre: true,
+          apellido: true,
+          email: true,
+        },
+      });
+
+      return {
+        reserva,
+        usuarioSolicitante: {
+          nombre: reserva.usuarioSolicito.nombre,
+          apellido: reserva.usuarioSolicito.apellido,
+          email: reserva.usuarioSolicito.email,
+        },
+        usuarioRechazado,
+      };
     });
 
     return reserva;
@@ -340,9 +369,17 @@ export const cancelarReserva = async (
         where: {
           id: input.id,
         },
-        select: {
-          usuarioCreadorId: true,
-          estatus: true,
+        include: {
+          usuarioSolicito: true,
+          reservaLaboratorioAbierto: {
+            include: {
+              laboratorio: {
+                select: {
+                  nombre: true,
+                },
+              },
+            },
+          },
         },
       });
 
@@ -368,7 +405,15 @@ export const cancelarReserva = async (
         },
       });
 
-      return reserva;
+      return {
+        ...reserva,
+        usuarioSolicitante: {
+          nombre: reserva.usuarioSolicito.nombre,
+          apellido: reserva.usuarioSolicito.apellido,
+          email: reserva.usuarioSolicito.email,
+        },
+        nombreLaboratorio: reserva.reservaLaboratorioAbierto?.laboratorio?.nombre,
+      };
     });
 
     return reserva;
@@ -428,4 +473,39 @@ const getReservaAbiertaCreateArgs = (input: InputCrearReservaLaboratorioAbierto,
       usuarioModificadorId: userId,
     },
   } as Prisma.ReservaCreateArgs;
+};
+
+export const getReservaLaboratorioAbiertoParaEmail = async (ctx: { db: PrismaClient }, input: { id: number }) => {
+  const { id } = input;
+
+  const datos = await ctx.db.reservaLaboratorioAbierto.findUnique({
+    where: {
+      reservaId: id,
+    },
+    include: {
+      reserva: {
+        include: {
+          usuarioSolicito: {
+            select: {
+              nombre: true,
+              apellido: true,
+              email: true,
+            },
+          },
+        },
+      },
+      laboratorio: true,
+    },
+  });
+
+  const reserva = {
+    laboratorioNombre: datos?.laboratorio?.nombre,
+    usuarioSolicitante: {
+      nombre: datos?.reserva.usuarioSolicito.nombre,
+      apellido: datos?.reserva.usuarioSolicito.apellido,
+      email: datos?.reserva.usuarioSolicito.email,
+    },
+  };
+
+  return reserva;
 };

@@ -38,6 +38,26 @@ export const inputAgregarCurso = z.object({
   turno: z.enum([TurnoCurso.MANANA, TurnoCurso.NOCHE, TurnoCurso.TARDE]),
 });
 
+export const inputAgregarCursoBulkInsert = z
+  .object({
+    sede: z.string().min(1, { message: "Requerido" }),
+    materia: z.string().min(1, { message: "Requerido" }),
+    division: z.string().min(1, { message: "Requerido" }),
+    profesor: z.string().min(1, { message: "Requerido" }),
+    activo: z.string().min(1, { message: "Requerido" }),
+  })
+  .merge(
+    inputAgregarCurso.omit({
+      sedeId: true,
+      materiaId: true,
+      divisionId: true,
+      profesorUserId: true,
+      ayudanteUsersIds: true,
+      anioDeCarrera: true,
+      activo: true,
+    }),
+  );
+
 export const inputGetCursos = z.object({
   pageSize: z.enum(["10", "20", "30", "40", "50"]).default("10").catch("10"),
   pageIndex: z
@@ -46,9 +66,9 @@ export const inputGetCursos = z.object({
     .refine((value) => parseInt(value) >= 0, { message: "Debe ser mayor o igual a 0" })
     .catch("0"),
   orderBy: z
-    .enum(["division_nombre", "ac", "turno", "sede_nombre"])
-    .default("division_nombre")
-    .catch("division_nombre"),
+    .enum(["anioDeCarrera", "materia_nombre", "division_nombre", "ac", "turno", "sede_nombre"])
+    .default("anioDeCarrera")
+    .catch("anioDeCarrera"),
   orderDirection: z.enum(["asc", "desc"]).default("asc").catch("asc"),
   searchText: z.string().default(""),
   materia: z
@@ -59,6 +79,7 @@ export const inputGetCursos = z.object({
   anioDeCarrera: z.string().optional(),
   filtrByUserId: z.enum(["true", "false"]).optional(),
   filtrByCatedraId: z.enum(["true", "false"]).optional(),
+  filtrByActivo: z.enum(["true", "false"]).optional(),
 });
 
 export const inputGetCursosParaReserva = z.object({});

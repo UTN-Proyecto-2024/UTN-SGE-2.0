@@ -58,7 +58,7 @@ export default function DevolverLibroModal({ libroId }: DevolverLibroModalProps)
       onSubmit={handleDevolverLibro}
       isAlertDialog
       cancelText="Cancelar"
-      submitText="Si, devolver"
+      submitText="Sí, devolver"
     >
       <div>Está seguro que desea devolver el libro?</div>
     </ModalDrawer>
