@@ -59,7 +59,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
     reservaData.reserva.motivoRechazo.length > 0
   );
 
-  const esReservaPasada = esFechaPasada(reservaData?.reserva?.fechaHoraInicio);
+  const esReservaPasada = esFechaPasada(reservaData?.reserva?.fechaHoraFin);
 
   const reservaBase = useMemo(() => {
     return {
@@ -88,7 +88,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
       SABADO: 6,
     };
     const allDays = [0, 1, 2, 3, 4, 5, 6];
-    if (!curso) return allDays;
+    if (!curso) return [];
     if (curso.dia1 && !curso.dia2) return allDays.filter((day) => day !== mapDias[curso.dia1]);
     return allDays.filter((day) => day !== mapDias[curso.dia1] && (curso.dia2 ? day !== mapDias[curso.dia2] : true));
   }, [curso]);
