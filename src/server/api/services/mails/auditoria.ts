@@ -6,8 +6,8 @@ export const cargarMailAuditoria = async (ctx: { db: PrismaClient }, emailParams
     data: {
       emisor: fromEmail,
       para: emailParams.to,
-      cc: "",
-      cco: "",
+      cc: emailParams.cc ?? "",
+      cco: emailParams.cco ?? "",
       contenido: emailParams,
       fechaEnvio: new Date(),
       asunto: emailParams.asunto,

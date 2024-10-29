@@ -156,7 +156,7 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
     reservaData.reserva.motivoRechazo.length > 0
   );
 
-  const esReservaPasada = esFechaPasada(reservaData?.reserva?.fechaHoraInicio);
+  const esReservaPasada = esFechaPasada(reservaData?.reserva?.fechaHoraFin);
 
   if (reservaId && esReservaPasada) {
     return <ReservaDetalle reservaId={reservaId} mostrarCompleto />;

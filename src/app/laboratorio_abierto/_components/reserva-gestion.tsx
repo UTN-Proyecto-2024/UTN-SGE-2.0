@@ -122,7 +122,7 @@ export const ReservaAprobacion = ({ reservaId, onAprobar, onCancel, onRechazar }
   const estaEstatusAprobada = reservaData?.reserva.estatus === ReservaEstatus.FINALIZADA;
   const estaCancelada = reservaData?.reserva.estatus === ReservaEstatus.CANCELADA;
 
-  const esReservaPasada = esFechaPasada(reservaData?.reserva?.fechaHoraInicio);
+  const esReservaPasada = esFechaPasada(reservaData?.reserva?.fechaHoraFin);
 
   return (
     <FormProvider {...formHook}>

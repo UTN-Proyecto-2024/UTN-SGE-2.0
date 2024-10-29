@@ -1,10 +1,11 @@
 import { construirOrderByDinamico } from "@/shared/dynamic-orderby";
-import {
-  type inputEditarCurso,
-  type inputEliminarCurso,
-  type inputAgregarCurso,
-  type inputGetCurso,
-  type inputGetCursos,
+import type {
+  inputEditarCurso,
+  inputEliminarCurso,
+  inputAgregarCurso,
+  inputGetCurso,
+  inputGetCursos,
+  inputAgregarCursoBulkInsert,
 } from "@/shared/filters/cursos-filter.schema";
 import { Prisma, type PrismaClient } from "@prisma/client";
 import { type z } from "zod";
@@ -23,6 +24,7 @@ export const getAllCursos = async (ctx: { db: PrismaClient }, input: InputGetAll
     orderBy,
     orderDirection,
     searchText,
+    filtrByActivo,
   } = input;
 
   const ordenCursos: Prisma.CursoOrderByWithRelationInput | Prisma.CursoOrderByWithRelationInput[] = orderBy
@@ -39,6 +41,7 @@ export const getAllCursos = async (ctx: { db: PrismaClient }, input: InputGetAll
   const where: Prisma.CursoWhereInput = {
     materiaId: materia ? parseInt(materia) : undefined,
     anioDeCarrera: anioDeCarrera ? parseInt(anioDeCarrera) : undefined,
+    activo: filtrByActivo === "true" ? true : undefined,
     AND: [
       {
         ...(filtrByUserId === "true" && filtrByCatedraId !== "true"
@@ -210,6 +213,81 @@ export const agregarCurso = async (ctx: { db: PrismaClient }, input: InputAgrega
               })) ?? [],
           },
         },
+      },
+    });
+
+    return curso;
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        throw new Error("El código de curso ya existe");
+      }
+    }
+
+    throw new Error("Error agregando curso");
+  }
+};
+
+type InputAgregarCursoBulkInsert = z.infer<typeof inputAgregarCursoBulkInsert>;
+export const agregarCursoBulkInsert = async (
+  ctx: { db: PrismaClient },
+  input: InputAgregarCursoBulkInsert,
+  userId: string,
+) => {
+  try {
+    const division = await ctx.db.division.findUnique({
+      where: {
+        nombre: input.division,
+      },
+    });
+    const materia = await ctx.db.materia.findUnique({
+      where: {
+        codigo: input.materia,
+      },
+    });
+    if (!materia) {
+      throw new Error("No se encontró la materia");
+    }
+    if (!division) {
+      throw new Error("No se encontró la división");
+    }
+    if (materia.anio !== division.anio) {
+      throw new Error("La materia y la división no pertenecen al mismo año");
+    }
+    const profesor = await ctx.db.user.findUnique({
+      where: {
+        name: input.profesor,
+      },
+    });
+    if (!profesor) {
+      throw new Error("No se encontró el profesor");
+    }
+    const sede = await ctx.db.sede.findUnique({
+      where: {
+        nombre: input.sede,
+      },
+    });
+    if (!sede) {
+      throw new Error("No se encontró la sede");
+    }
+    const curso = await ctx.db.curso.create({
+      data: {
+        materiaId: materia.id,
+        sedeId: sede.id,
+        ac: input.ac,
+        dia1: input.dia1,
+        dia2: input.dia2 ? input.dia2 : undefined,
+        duracion1: input.duracion1,
+        duracion2: input.duracion2 ? input.duracion2 : undefined,
+        horaInicio1: input.horaInicio1,
+        horaInicio2: input.horaInicio2 ? input.horaInicio2 : undefined,
+        turno: input.turno,
+        activo: input.activo === "true",
+        anioDeCarrera: division.anio,
+        divisionId: division.id,
+        profesorId: profesor.id,
+        usuarioCreadorId: userId,
+        usuarioModificadorId: userId,
       },
     });
 

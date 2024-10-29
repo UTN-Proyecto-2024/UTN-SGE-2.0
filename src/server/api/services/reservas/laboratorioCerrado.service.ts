@@ -21,6 +21,12 @@ import {
 } from "../../repositories/reservas/laboratorioCerrado.repository";
 import { protectedProcedure } from "../../trpc";
 import { validarInput } from "../helper";
+import {
+  enviarMailAproboLaboratorioCerradoProcedure,
+  enviarMailCancelacionLaboratorioCerradoProcedure,
+  enviarMailRechazoLaboratorioCerradoProcedure,
+  enviarMailReservaLaboratorioCerradoProcedure,
+} from "../mails/emailLaboratorioCerrado.service";
 
 export const getReservaLaboratorioCerradoPorUserProcedure = protectedProcedure
   .input(inputGetReservaLaboratorioPorUsuarioId)
@@ -63,6 +69,8 @@ export const aprobarReservaProcedure = protectedProcedure
 
     const reserva = await aprobarReserva(ctx, input, userId);
 
+    void enviarMailAproboLaboratorioCerradoProcedure(ctx, reserva.id);
+
     return reserva;
   });
 
@@ -75,6 +83,8 @@ export const rechazarReservaProcedure = protectedProcedure
 
     const reserva = await rechazarReserva(ctx, input, userId);
 
+    void enviarMailRechazoLaboratorioCerradoProcedure(ctx, reserva.id);
+
     return reserva;
   });
 
@@ -86,6 +96,8 @@ export const cancelarReservaProcedure = protectedProcedure
     const userId = ctx.session.user.id;
 
     const reserva = await cancelarReserva(ctx, input, userId);
+
+    void enviarMailCancelacionLaboratorioCerradoProcedure(ctx, input.id);
 
     return reserva;
   });
@@ -111,6 +123,8 @@ export const inputCrearReservaLaboratorioCerradoProcedure = protectedProcedure
 
     const reserva = await crearReservaLaboratorioCerrado(ctx, input, userId);
 
+    void enviarMailReservaLaboratorioCerradoProcedure(ctx, reserva.id);
+
     return reserva;
   });
 
@@ -122,6 +136,7 @@ export const inputCrearReservaLaboratorioCerradoDiscrecionalProcedure = protecte
     const userId = ctx.session.user.id;
 
     const reserva = await crearReservaLaboratorioCerradoDiscrecional(ctx, input, userId);
+    void enviarMailReservaLaboratorioCerradoProcedure(ctx, reserva.id);
 
     return reserva;
   });

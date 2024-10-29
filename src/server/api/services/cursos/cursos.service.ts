@@ -1,5 +1,6 @@
 import {
   agregarCurso,
+  agregarCursoBulkInsert,
   editarCurso,
   eliminarCurso,
   getAllCursos,
@@ -9,6 +10,7 @@ import { protectedProcedure } from "../../trpc";
 import { validarInput } from "../helper";
 import {
   inputAgregarCurso,
+  inputAgregarCursoBulkInsert,
   inputEditarCurso,
   inputEliminarCurso,
   inputGetCurso,
@@ -42,6 +44,15 @@ export const nuevoCursoProcedure = protectedProcedure.input(inputAgregarCurso).m
 
   return curso;
 });
+
+export const nuevoCursoBulkInsertProcedure = protectedProcedure
+  .input(inputAgregarCursoBulkInsert)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputAgregarCursoBulkInsert, input);
+    const userId = ctx.session.user.id;
+    const curso = await agregarCursoBulkInsert(ctx, input, userId);
+    return curso;
+  });
 
 export const editarCursoProcedure = protectedProcedure.input(inputEditarCurso).mutation(async ({ ctx, input }) => {
   validarInput(inputEditarCurso, input);

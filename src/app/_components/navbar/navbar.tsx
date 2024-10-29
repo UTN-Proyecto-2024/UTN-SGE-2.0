@@ -12,7 +12,7 @@ const UserIcon = ({ image, size }: { image: string | undefined | null; size: num
   <Image alt="" src={image ?? "/default-avatar.svg"} width={size} height={size} className="rounded-full" />
 );
 
-const UTNLogo = () => <Image src={"/utn-logo.svg"} alt={"Logo UTN"} width={32} height={32} />;
+const UTNLogo = () => <Image src={"/utn-logo.svg"} alt={"Logo UTN"} className="h-9 w-auto" width={32} height={32} />;
 
 const MobileMenuButton = () => (
   <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-black focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2">
