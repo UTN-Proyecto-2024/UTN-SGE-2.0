@@ -15,8 +15,8 @@ type InputGetAll = z.infer<typeof inputGetCursos>;
 
 export const getAllCursos = async (ctx: { db: PrismaClient }, input: InputGetAll, userId: string) => {
   const {
-    pageIndex,
-    pageSize,
+    // pageIndex,
+    // pageSize,
     materia,
     anioDeCarrera,
     filtrByUserId,
@@ -142,8 +142,8 @@ export const getAllCursos = async (ctx: { db: PrismaClient }, input: InputGetAll
       },
       where: where,
       orderBy: ordenCursos,
-      skip: parseInt(pageIndex) * parseInt(pageSize),
-      take: parseInt(pageSize),
+      // skip: parseInt(pageIndex) * parseInt(pageSize),
+      // take: parseInt(pageSize),
     }),
     ctx.db.curso.count({ where }),
   ]);

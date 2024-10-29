@@ -6,6 +6,7 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  type GroupingState,
   useReactTable,
   type Column,
   type ColumnDef,
@@ -15,8 +16,10 @@ import {
   type RowSelectionState,
   type SortingState,
   type TableState,
+  getGroupedRowModel,
+  getExpandedRowModel,
 } from "@tanstack/react-table";
-import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
+import { ChevronDown, ChevronRight, ChevronUp, Loader2 } from "lucide-react";
 
 import { cn } from "@/components/utils";
 import { DataTablePagination, type PaginationConfig } from "./table-pagination";
@@ -41,6 +44,8 @@ interface DataTableProps<TData> {
   };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getRowId?: (row: TData) => any;
+  grouping?: GroupingState;
+  setGrouping?: OnChangeFn<GroupingState>;
 }
 
 const getAlignment = (align?: string) => {
@@ -95,6 +100,8 @@ export function DataTable<T>({
   pageIndex,
   rowCount,
   getRowId,
+  grouping,
+  setGrouping,
   ...props
 }: DataTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -132,13 +139,20 @@ export function DataTable<T>({
     onRowSelectionChange: config?.onRowSelectionChange ?? setRowSelection,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: paginationConfig ? getPaginationRowModel() : undefined,
-    onSortingChange: config?.onSortingChange ?? setSorting,
+    getGroupedRowModel: grouping && getGroupedRowModel(),
+    getExpandedRowModel: grouping && getExpandedRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    onSortingChange: config?.onSortingChange ?? setSorting,
     onPaginationChange: config?.onPaginationChange ?? setPagination,
+    onGroupingChange: setGrouping,
     state: {
       rowSelection: config?.rowSelection ?? rowSelection,
       sorting: config?.sorting ?? sorting,
       pagination,
+      grouping,
+    },
+    initialState: {
+      expanded: true,
     },
   });
 
@@ -204,7 +218,38 @@ export function DataTable<T>({
                   const alignment = getAlignment(meta?.cell?.align);
                   return (
                     <TableCell key={cell.id} className={cn(alignment, meta?.cell?.className)}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {/* {flexRender(cell.column.columnDef.cell, cell.getContext())} */}
+                      {cell.getIsGrouped() ? (
+                        // If it's a grouped cell, add an expander and row count
+                        <>
+                          <button
+                            className="flex flex-row items-center gap-1 text-left"
+                            {...{
+                              onClick: row.getToggleExpandedHandler(),
+                              style: {
+                                cursor: row.getCanExpand() ? "pointer" : "normal",
+                              },
+                            }}
+                          >
+                            {row.getIsExpanded() ? (
+                              <ChevronDown className="flex-shrink-0" size={15} strokeWidth={2} />
+                            ) : (
+                              <ChevronRight className="flex-shrink-0" size={15} strokeWidth={2} />
+                            )}{" "}
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())} ({row.subRows.length})
+                          </button>
+                        </>
+                      ) : cell.getIsAggregated() ? (
+                        // If the cell is aggregated, use the Aggregated
+                        // renderer for cell
+                        flexRender(
+                          cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )
+                      ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
+                        // Otherwise, just render the regular cell
+                        flexRender(cell.column.columnDef.cell, cell.getContext())
+                      )}
                     </TableCell>
                   );
                 })}
