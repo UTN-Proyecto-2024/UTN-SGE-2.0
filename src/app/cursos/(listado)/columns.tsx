@@ -15,6 +15,7 @@ export const getColumns = () => {
       header: "Año",
     }),
     colHelper.accessor("materia.nombre", {
+      id: "materia",
       header: "Materia",
     }),
     colHelper.accessor("activo", {
