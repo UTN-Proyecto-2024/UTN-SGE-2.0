@@ -16,7 +16,7 @@ type PrestarLibroModalProps = {
 export default function PrestarLibroModal({ libroId }: PrestarLibroModalProps) {
   const [open, setOpen] = useState(false);
 
-  const { data: libro, isLoading, isError } = api.biblioteca.libroPorId.useQuery({ libroId });
+  const { data: libro, isLoading, isError } = api.biblioteca.libroPorId.useQuery({ libroId }, { enabled: open });
 
   const handleSubmit = () => setOpen(false);
   const handleCancel = () => setOpen(false);

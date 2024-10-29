@@ -17,7 +17,7 @@ export const ReservaViewAdmin = ({ reservaId, onCancel, onAprobar, onRechazar }:
     id: Number(reservaId),
   });
 
-  const esReservaPasada = esFechaPasada(reservaData?.reserva?.fechaHoraInicio);
+  const esReservaPasada = esFechaPasada(reservaData?.reserva?.fechaHoraFin);
 
   const estaCancelada = reservaData?.reserva.estatus === ReservaEstatus.CANCELADA;
 
