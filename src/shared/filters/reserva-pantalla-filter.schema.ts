@@ -12,5 +12,5 @@ export const inputAgregarReservaPantalla = z.object({
 });
 
 export const inputGetReservasEnPntallaActivas = z.object({
-  sedeId: z.number().optional(),
+  sedeId: z.string().optional(),
 });
