@@ -201,7 +201,7 @@ export function DataTable<T>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
+            table.getRowModel().rows.map((row, index) => (
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
@@ -212,6 +212,7 @@ export function DataTable<T>({
                       }
                     : undefined
                 }
+                className={cn({ "bg-slate-50": index % 2 === 0 })}
               >
                 {row.getVisibleCells().map((cell) => {
                   const meta = getMeta(cell.column);
