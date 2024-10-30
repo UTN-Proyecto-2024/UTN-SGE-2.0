@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import type { AppRoute } from "@/shared/server-routes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
+import { Tabs, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { cn } from "../utils";
 
 type PageLayoutProps = {
@@ -41,7 +41,10 @@ export default function PageLayout({ route, buttons, children }: PageLayoutProps
                   <TabsTrigger
                     value={subRuta.href}
                     key={subRuta.href}
-                    className={cn({ "rounded-lg bg-[#FFFFFF]": subRuta.href === pathname }, "px-3 py-1.5")}
+                    className={cn(
+                      { " bg-[#FFFFFF]": subRuta.href === pathname },
+                      "rounded-lg px-3 py-1.5 hover:bg-slate-200",
+                    )}
                   >
                     <Link href={subRuta.href}>{subRuta.label}</Link>
                   </TabsTrigger>

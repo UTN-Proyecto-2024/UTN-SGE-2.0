@@ -145,12 +145,17 @@ export const AdminLaboratorioForm = ({ id, onSubmit, onCancel }: Props) => {
   const agregarEstante = (armarioIndex: number) => {
     saveScrollPosition();
     const nuevosArmarios = [...armarios];
-    if (!nuevosArmarios[armarioIndex]) {
+    if (!nuevosArmarios || !nuevosArmarios[armarioIndex] || !nuevosArmarios[armarioIndex].estantes) {
       return;
     }
-    nuevosArmarios[armarioIndex].estantes.push({
-      nombre: `Estante ${nuevosArmarios[armarioIndex]?.estantes.length + 1}`,
+
+    // Asignamos a una variable después de las comprobaciones
+    const armario = nuevosArmarios[armarioIndex];
+
+    armario.estantes.push({
+      nombre: `Estante ${(armario?.estantes?.length ?? 0) + 1}`,
     });
+
     setArmarios(nuevosArmarios);
   };
 
