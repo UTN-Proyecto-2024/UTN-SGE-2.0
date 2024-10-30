@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import type { AppRoute } from "@/shared/server-routes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
+import { cn } from "../utils";
 
 type PageLayoutProps = {
   route: AppRoute;
@@ -33,19 +35,19 @@ export default function PageLayout({ route, buttons, children }: PageLayoutProps
             <h1 className="text-gray-90 truncate text-3xl font-bold tracking-tight lg:mr-8 lg:border-r lg:border-slate-200 lg:pr-8">
               {currentTitle}
             </h1>
-            <nav className="hidden space-x-8 lg:flex">
-              {route.subRutas?.map((subRuta) => (
-                <Link
-                  key={subRuta.href}
-                  href={subRuta.href}
-                  className={
-                    (subRuta.href === pathname ? "text-blue-700" : "text-gray-500") + " font-medium hover:text-blue-700"
-                  }
-                >
-                  {subRuta.label}
-                </Link>
-              ))}
-            </nav>
+            <Tabs defaultValue="" className="hidden space-x-8 rounded-lg bg-[#F1F5F9] p-2 text-sm lg:flex">
+              <TabsList className="flex w-full flex-row gap-x-4">
+                {route.subRutas?.map((subRuta) => (
+                  <TabsTrigger
+                    value={subRuta.href}
+                    key={subRuta.href}
+                    className={cn({ "rounded-lg bg-[#FFFFFF]": subRuta.href === pathname }, "px-3 py-1.5")}
+                  >
+                    <Link href={subRuta.href}>{subRuta.label}</Link>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
           </div>
           {buttons && <div className="mt-4 flex gap-x-2 lg:mt-0">{buttons}</div>}
         </div>
