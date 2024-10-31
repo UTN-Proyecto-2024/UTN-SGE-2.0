@@ -1,8 +1,15 @@
 import { api } from "@/trpc/server";
 import { SoftwareTable } from "./software-table";
+import { type inputGetSoftwareFilter } from "@/shared/filters/laboratorio-filter.schema";
+import { type z } from "zod";
 
-export default async function SoftwareTableContainer() {
-  const softwares = await api.software.getAll();
+type SoftwareFilters = z.infer<typeof inputGetSoftwareFilter>;
+type SoftwareTableContainerProps = {
+  filters: SoftwareFilters;
+};
 
-  return <SoftwareTable data={softwares} />;
+export default async function SoftwareTableContainer({ filters }: SoftwareTableContainerProps) {
+  const softwares = await api.software.getAll(filters);
+
+  return <SoftwareTable data={softwares} filters={filters} />;
 }
