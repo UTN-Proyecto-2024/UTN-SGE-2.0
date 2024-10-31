@@ -3,30 +3,67 @@ import type {
   inputEditarSoftware,
   inputEliminarSoftware,
   inputGetSoftware,
+  inputGetSoftwareFilter,
 } from "@/shared/filters/laboratorio-filter.schema";
-import { type PrismaClient } from "@prisma/client";
+import { type Prisma, type PrismaClient } from "@prisma/client";
 import { type z } from "zod";
 
-export const getAllSoftware = async (ctx: { db: PrismaClient }) => {
-  const softwares = await ctx.db.software.findMany({
-    include: {
-      laboratorios: {
-        include: {
-          laboratorio: {
-            select: {
-              id: true,
-              nombre: true,
+type InputGetAll = z.infer<typeof inputGetSoftwareFilter>;
+export const getAllSoftware = async (ctx: { db: PrismaClient }, input: InputGetAll) => {
+  const softwareWhereLibro: Prisma.SoftwareWhereInput = {
+    ...(input?.searchText
+      ? {
+          OR: [
+            {
+              nombre: {
+                contains: input?.searchText ?? undefined,
+                mode: "insensitive",
+              },
+            },
+            {
+              estado: {
+                contains: input?.searchText ?? undefined,
+                mode: "insensitive",
+              },
+            },
+            {
+              version: {
+                contains: input?.searchText ?? undefined,
+                mode: "insensitive",
+              },
+            },
+          ],
+        }
+      : {}),
+  };
+
+  const ordenSoftware: Prisma.SoftwareOrderByWithRelationInput = {
+    nombre: "asc",
+  };
+
+  const [count, software] = await ctx.db.$transaction([
+    ctx.db.software.count({
+      where: softwareWhereLibro,
+    }),
+    ctx.db.software.findMany({
+      where: softwareWhereLibro,
+      include: {
+        laboratorios: {
+          include: {
+            laboratorio: {
+              select: {
+                id: true,
+                nombre: true,
+              },
             },
           },
         },
       },
-    },
-    orderBy: {
-      nombre: "asc",
-    },
-  });
+      orderBy: ordenSoftware,
+    }),
+  ]);
 
-  return softwares;
+  return { count, software };
 };
 
 type InputGetSoftware = z.infer<typeof inputGetSoftware>;
