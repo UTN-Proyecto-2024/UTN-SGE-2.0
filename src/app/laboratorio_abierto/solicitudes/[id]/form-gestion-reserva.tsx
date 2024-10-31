@@ -24,7 +24,7 @@ export const ReservaViewAdmin = ({ reservaId, onCancel, onAprobar, onRechazar }:
   return (
     <ScrollArea className="max-h-[calc(100vh_-_300px)] w-full">
       <div className="mx-auto max-w-3xl space-y-6 pb-2">
-        <ReservaDetalle reservaId={reservaId} mostrarCompleto={true} />
+        <ReservaDetalle reservaId={reservaId} mostrarCompleto={esReservaPasada} />
         {!esReservaPasada && !estaCancelada && (
           <ReservaAprobacion reservaId={reservaId} onCancel={onCancel} onAprobar={onAprobar} onRechazar={onRechazar} />
         )}
