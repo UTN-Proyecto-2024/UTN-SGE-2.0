@@ -55,6 +55,7 @@ export default function EliminarSoftwareModal({ softwareId, nombre, onSubmit }: 
       onCancel={handleCancel}
       onSubmit={handleRemoveSoftware}
       isAlertDialog
+      esEliminar
     >
       <div>
         Está seguro que desea eliminar <span className="font-bold">{nombre ?? "esta aplicación"}</span>?

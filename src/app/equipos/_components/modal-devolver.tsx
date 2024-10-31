@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Button, toast } from "@/components/ui";
+import { toast } from "@/components/ui";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
-import { Handshake } from "lucide-react";
+import { DevolverButton } from "@/app/_components/prestar-devolver";
 
 type DevolverEquipoModalProps = {
   equipoId: number;
@@ -38,16 +38,9 @@ export default function DevolverEquipoModal({ equipoId }: DevolverEquipoModalPro
   return (
     <ModalDrawer
       trigger={
-        <Button
-          title="Devolver"
-          variant="default"
-          color="primary"
-          size="sm"
-          className="mt-2 w-full rounded-full border-none"
-        >
-          Devolver
-          <Handshake size={16} className="ml-2" />
-        </Button>
+        <span>
+          <DevolverButton />
+        </span>
       }
       titulo={`Devolver equipo`}
       open={open}

@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 
-import { Button } from "@/components/ui";
-
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { LibroInformacionBasica } from "../libros/_components/info-basica-libro";
 import { Separator } from "@radix-ui/react-separator";
 import { LibroFormPrestarORenovar } from "./form-prestar";
+import { RenovarButton } from "@/app/_components/prestar-devolver";
 
 type RenovarPrestamoLibroModalProps = {
   libroId: number;
@@ -23,15 +22,9 @@ export default function RenovarPrestamoLibroModal({ libroId }: RenovarPrestamoLi
   return (
     <ModalDrawer
       trigger={
-        <Button
-          title="Renovar"
-          variant="default"
-          color="secondary"
-          size="sm"
-          className="mt-2 w-full rounded-full border-none"
-        >
-          Renovar
-        </Button>
+        <span>
+          <RenovarButton />
+        </span>
       }
       titulo={`Renovar libro`}
       open={open}
