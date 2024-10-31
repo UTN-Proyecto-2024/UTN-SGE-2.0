@@ -16,7 +16,6 @@ import { BadgeEstatusReserva } from "@/app/_components/badge-estatus-reserva";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getDateISOString, getTimeISOString } from "@/shared/get-date";
 import { DatoUsuarioReserva } from "@/app/_components/datos-usuario";
-import { Fragment } from "react";
 
 type ReservaDetalleProps = {
   reservaId: number;
@@ -57,7 +56,7 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         <div className="grid auto-cols-max grid-cols-2 gap-4 md:grid-cols-3">
           {[
             ...[
@@ -118,15 +117,13 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
                         "No se requiere"
                       ),
                   },
-                  {
-                    icon: <TextIcon className="h-4 w-4" />,
-                    label: "Descripción de la actividad",
-                    value: reserva.descripcion ?? "Sin informar",
-                  },
                 ]
               : []),
           ].map(({ icon, label, value }, index, array) => (
-            <div key={index} className={`flex flex-row space-x-2 ${index === array.length - 1 ? "md:col-span-3" : ""}`}>
+            <div
+              key={index}
+              className={`flex flex-row space-x-2 ${index === array.length - 1 ? "col-span-2 md:col-span-1" : ""}`}
+            >
               <div className="flex items-start justify-center">{icon}</div>
               <div className="flex flex-col text-left">
                 <Label className="text-xs font-semibold">{label}</Label>
@@ -135,6 +132,28 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
             </div>
           ))}
         </div>
+        {mostrarCompleto && (
+          <div className={"flex flex-row space-x-2"}>
+            <div className="flex items-start justify-center">
+              <TextIcon className="h-4 w-4" />
+            </div>
+            <div className="flex flex-col text-left">
+              <Label className="text-xs font-semibold">Descripción de la actividad</Label>
+              <p className="text-sm">{reserva.descripcion?.length > 0 ? reserva.descripcion : "Sin informar"}</p>
+            </div>
+          </div>
+        )}
+        {reserva.reserva.motivoRechazo && (
+          <div className={"flex flex-row space-x-2"}>
+            <div className="flex items-start justify-center">
+              <XIcon className="h-4 w-4" />
+            </div>
+            <div className="flex flex-col text-left">
+              <Label className="text-xs font-semibold">Motivo rechazo</Label>
+              <p className="text-sm">{reserva.reserva.motivoRechazo}</p>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

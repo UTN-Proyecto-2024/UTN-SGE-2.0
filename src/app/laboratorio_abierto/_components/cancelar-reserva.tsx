@@ -40,19 +40,26 @@ export const CancelarReservaLaboratorioAbierto = ({ reservaId, refresh }: Props)
       open={open}
       onOpenChange={setOpen}
       trigger={
-        <Button title="Eliminar curso" variant="icon" color="danger" className="h-8 w-8 px-2 py-2" icon={TrashIcon} />
+        <Button
+          title="Cancelar reserva"
+          variant="icon"
+          color="danger"
+          className="h-8 w-8 px-2 py-2"
+          icon={TrashIcon}
+          isLoading={isPending}
+        />
       }
       className={"max-h-[calc(100vh_-_10%)]"}
       isAlertDialog
     >
       <div className="flex w-full flex-col gap-y-4">
-        <div className="flex max-h-max w-full flex-col gap-4">Está seguro que desea cancelar la solicitud?</div>
+        <div className="flex max-h-max w-full flex-col gap-4">¿Está seguro que desea cancelar la solicitud?</div>
 
         <div className="flex w-full flex-row justify-end gap-x-4">
           <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
             Cancelar
           </Button>
-          <Button title="Cancelar" type="submit" variant="default" color="danger" onClick={handleSave}>
+          <Button title="Guardar" type="submit" variant="default" color="danger" onClick={handleSave}>
             Guardar
           </Button>
         </div>
