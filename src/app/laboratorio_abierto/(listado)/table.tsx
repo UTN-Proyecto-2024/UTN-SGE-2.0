@@ -54,13 +54,9 @@ export const LaboratorioAbiertoReservaTable = ({ data, filters, filterByUser }: 
 
                 {filterByUser && !estaCancelada && <EditarReservaModal id={original.reserva.id} onSubmit={refresh} />}
 
-                <Button
-                  title="Imprimir"
-                  variant="icon"
-                  color="ghost"
-                  icon={PrinterIcon}
-                  onClick={() => window.print()}
-                />
+                <Button title="Imprimir" color="outline" className="h-8 w-8 px-1 py-1" onClick={() => window.print()}>
+                  <PrinterIcon size={16} />
+                </Button>
 
                 {filterByUser && !estaCancelada && (
                   <CancelarReservaLaboratorioAbierto reservaId={original.reserva.id} refresh={refresh} />

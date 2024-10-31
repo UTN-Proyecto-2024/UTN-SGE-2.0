@@ -39,12 +39,9 @@ export default function PageDetails({ params: { tipo } }: PageProps) {
       description={"Reservar laboratorio abierto"}
       open={open}
       onOpenChange={handleOpenChange}
-      trigger={<></>}
       className={"max-h-[calc(100vh_-_10%)]"}
     >
-      <div className="flex max-h-max w-full flex-col  gap-4">
-        <LaboratorioAbiertoForm tipo={tipo} onCancel={handleClickCancel} onSubmit={handleClickSave} />
-      </div>
+      <LaboratorioAbiertoForm tipo={tipo} onCancel={handleClickCancel} onSubmit={handleClickSave} />
     </ModalDrawer>
   );
 }

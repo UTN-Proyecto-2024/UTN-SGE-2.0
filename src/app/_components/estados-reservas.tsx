@@ -10,47 +10,20 @@ export const EstadoReservaToString = ({
   currentEstado: string;
 }) => {
   return (
-    <ToggleGroup type="single" className="flex flex-row">
-      <ToggleGroupItem
-        value={ReservaEstatus.CANCELADA}
-        aria-label="Cambiar a pendientes"
-        className={cn("basis-1/3 hover:bg-primary", { "bg-primary": currentEstado === ReservaEstatus.CANCELADA })}
-        onClick={() => handleEstadoChange(ReservaEstatus.CANCELADA)}
-      >
-        Canceladas
-      </ToggleGroupItem>
-      <ToggleGroupItem
-        value={ReservaEstatus.RECHAZADA}
-        aria-label="Cambiar a pendientes"
-        className={cn("basis-1/3 hover:bg-primary", { "bg-primary": currentEstado === ReservaEstatus.RECHAZADA })}
-        onClick={() => handleEstadoChange(ReservaEstatus.RECHAZADA)}
-      >
-        Rechazadas
-      </ToggleGroupItem>
-      <ToggleGroupItem
-        value={ReservaEstatus.PENDIENTE}
-        aria-label="Cambiar a pendientes"
-        className={cn("basis-1/3 hover:bg-primary", { "bg-primary": currentEstado === ReservaEstatus.PENDIENTE })}
-        onClick={() => handleEstadoChange(ReservaEstatus.PENDIENTE)}
-      >
-        Pendientes
-      </ToggleGroupItem>
-      <ToggleGroupItem
-        value={ReservaEstatus.FINALIZADA}
-        aria-label="Cambiar a finalizadas"
-        className={cn("basis-1/3 hover:bg-primary", { "bg-primary": currentEstado === ReservaEstatus.FINALIZADA })}
-        onClick={() => handleEstadoChange(ReservaEstatus.FINALIZADA)}
-      >
-        Finalizadas
-      </ToggleGroupItem>
-      <ToggleGroupItem
-        value={""}
-        aria-label="Cambiar a ambos"
-        className={cn("basis-1/3 hover:bg-primary", { "bg-primary": currentEstado === "" })}
-        onClick={() => handleEstadoChange("" as ReservaEstatus)}
-      >
-        Todas
-      </ToggleGroupItem>
+    <ToggleGroup type="single" className="flex flex-row justify-between overflow-auto rounded-lg bg-primary/20 p-1">
+      {[...Object.values(ReservaEstatus), ""].map((value) => (
+        <ToggleGroupItem
+          key={value || "all"}
+          value={value}
+          aria-label={`Cambiar a ${value.toLowerCase() || "todas"}`}
+          className={cn("h-9 w-full text-center hover:bg-transparent", {
+            "bg-primary/50 hover:bg-primary/50": currentEstado === value,
+          })}
+          onClick={() => handleEstadoChange(value as ReservaEstatus)}
+        >
+          {value.length > 0 ? value[0] + value.slice(1).toLowerCase() : "Todas"}
+        </ToggleGroupItem>
+      ))}
     </ToggleGroup>
   );
 };

@@ -39,7 +39,9 @@ export const CancelarReservaLaboratorioAbierto = ({ reservaId, refresh }: Props)
       description={"Confirmar cancelación de solicitud"}
       open={open}
       onOpenChange={setOpen}
-      trigger={<Button title="Cancelar reserva" variant="icon" color="danger" icon={TrashIcon} isLoading={isPending} />}
+      trigger={
+        <Button title="Eliminar curso" variant="icon" color="danger" className="h-8 w-8 px-2 py-2" icon={TrashIcon} />
+      }
       className={"max-h-[calc(100vh_-_10%)]"}
       isAlertDialog
     >
@@ -51,7 +53,7 @@ export const CancelarReservaLaboratorioAbierto = ({ reservaId, refresh }: Props)
             Cancelar
           </Button>
           <Button title="Cancelar" type="submit" variant="default" color="danger" onClick={handleSave}>
-            Cancelar
+            Guardar
           </Button>
         </div>
       </div>

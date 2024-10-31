@@ -10,24 +10,24 @@ export const FormInputPoliticas = <T extends FieldValues>({ name, control }: For
       name={name}
       render={({ field, fieldState }) => (
         <>
-          <div className="grid gap-1.5 leading-none">
-            <label
-              htmlFor="aceptoTerminos"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              <Checkbox
-                id="aceptoTerminos"
-                name="aceptoTerminos"
-                className="mt-2"
-                checked={field.value}
-                onCheckedChange={field.onChange}
-              />
-              <b> Declaro conocer las nuevas políticas de uso de laboratorio</b>
-            </label>
+          <div className="space-y-3 leading-none">
             <p className="text-sm text-black">
               La política de uso de laboratorio ha cambiado,{" "}
               <PoliticasPrivacidadModal triggerText="presione aquí para verla" />
             </p>
+            <label
+              htmlFor="aceptoTerminos"
+              className="flex items-center space-x-2 text-sm leading-none underline peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              <Checkbox
+                id="aceptoTerminos"
+                name="aceptoTerminos"
+                className="h-5 w-5"
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+              <span>Declaro conocer las nuevas políticas de uso de laboratorio</span>
+            </label>
             <div className="min-h-4 text-sm text-danger">{fieldState.error && fieldState.error.message}</div>
           </div>
         </>
