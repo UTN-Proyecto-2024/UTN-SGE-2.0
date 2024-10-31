@@ -4,6 +4,8 @@ import {
   type inputGetBooks,
   type inputGetLibro,
   type inputEditBooks,
+  type inputAgregarAutor,
+  type inputAgregarEditorial,
 } from "@/shared/filters/biblioteca-filter.schema";
 import { Prisma, type PrismaClient } from "@prisma/client";
 import { type z } from "zod";
@@ -340,4 +342,36 @@ export const getAllAutores = async (ctx: { db: PrismaClient }) => {
   });
 
   return autores;
+};
+
+type InputAgregarAutor = z.infer<typeof inputAgregarAutor>;
+export const agregarAutor = async (ctx: { db: PrismaClient }, input: InputAgregarAutor, userId: string) => {
+  try {
+    const autor = await ctx.db.libroAutor.create({
+      data: {
+        autorNombre: input.nombre,
+        usuarioCreadorId: userId,
+      },
+    });
+
+    return autor;
+  } catch (error) {
+    throw new Error(`Error agregando autor ${input.nombre}`);
+  }
+};
+
+type InputAgregarEditorial = z.infer<typeof inputAgregarEditorial>;
+export const agregarEditorial = async (ctx: { db: PrismaClient }, input: InputAgregarEditorial, userId: string) => {
+  try {
+    const editorial = await ctx.db.libroEditorial.create({
+      data: {
+        editorial: input.nombre,
+        usuarioCreadorId: userId,
+      },
+    });
+
+    return editorial;
+  } catch (error) {
+    throw new Error(`Error agregando editorial ${input.nombre}`);
+  }
 };

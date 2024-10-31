@@ -33,6 +33,8 @@ if (!transporter) {
 
 export type EmailParams = {
   to: string;
+  cc?: string;
+  cco?: string;
   asunto: string;
   usuario: {
     nombre: string;

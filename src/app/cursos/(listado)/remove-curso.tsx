@@ -51,6 +51,7 @@ export default function RemoveCursoModal({ cursoId, nombre, onSubmit }: RemoveCu
       onCancel={handleCancel}
       onSubmit={() => handleRemoveMachine(cursoId)}
       isAlertDialog
+      esEliminar
     >
       <div>
         Está seguro que desea eliminar <span className="font-bold">{nombre ?? "este curso"}</span>?

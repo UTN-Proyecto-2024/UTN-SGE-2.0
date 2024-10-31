@@ -8,6 +8,8 @@ import {
   getTodosLosEditorialProcedure,
   getTodosLosIdiomasProcedure,
   getTodosLosAutoresProcedure,
+  crearAutorProcedure,
+  crearEditorialProcedure,
 } from "../services/biblioteca/biblioteca.service";
 
 export const bibliotecaRouter = createTRPCRouter({
@@ -19,4 +21,6 @@ export const bibliotecaRouter = createTRPCRouter({
   nuevoLibro: nuevoLibroProcedure,
   editarLibro: editarLibroProcedure,
   eliminarLibro: eliminarLibroProcedure,
+  crearAutor: crearAutorProcedure,
+  crearEditorial: crearEditorialProcedure,
 });

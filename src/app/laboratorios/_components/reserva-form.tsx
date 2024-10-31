@@ -59,7 +59,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
     reservaData.reserva.motivoRechazo.length > 0
   );
 
-  const esReservaPasada = esFechaPasada(reservaData?.reserva?.fechaHoraInicio);
+  const esReservaPasada = esFechaPasada(reservaData?.reserva?.fechaHoraFin);
 
   const reservaBase = useMemo(() => {
     return {
@@ -88,7 +88,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
       SABADO: 6,
     };
     const allDays = [0, 1, 2, 3, 4, 5, 6];
-    if (!curso) return allDays;
+    if (!curso) return [];
     if (curso.dia1 && !curso.dia2) return allDays.filter((day) => day !== mapDias[curso.dia1]);
     return allDays.filter((day) => day !== mapDias[curso.dia1] && (curso.dia2 ? day !== mapDias[curso.dia2] : true));
   }, [curso]);
@@ -195,7 +195,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
-        <ScrollArea className="max-h-[calc(100vh_-_25%)]">
+        <ScrollArea className="max-h-[calc(100vh_-_35%)]">
           <div className="flex w-full flex-col items-center justify-center">
             {haSidoRechazada && <MotivoRechazo motivoRechazo={reservaData?.reserva.motivoRechazo ?? ""} />}
             <div className="flex flex-col space-y-4 px-0 md:px-6">
@@ -367,10 +367,10 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
               <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
                 <div className="mt-4 w-full">
                   <FormTextarea
-                    label={"Observaciones"}
+                    label={"Descripción de la actividad"}
                     control={control}
                     name="observaciones"
-                    className="mt-2 w-full"
+                    className="mt-2 max-h-[100px] w-full"
                     maxLength={250}
                   />
                   <small className="text-sm text-muted-foreground">

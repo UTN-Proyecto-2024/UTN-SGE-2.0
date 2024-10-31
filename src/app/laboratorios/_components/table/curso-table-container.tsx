@@ -15,6 +15,7 @@ export default async function LaboratorioReservaTableContainer({
     ...filters,
     filtrByUserId: filterByUserId ? "true" : "false",
     filtrByCatedraId: filterByCatedraId ? "true" : "false",
+    filtrByActivo: "true",
   });
 
   return <CursosTable data={data} />;

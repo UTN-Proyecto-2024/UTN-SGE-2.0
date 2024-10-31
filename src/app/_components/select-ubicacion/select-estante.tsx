@@ -13,7 +13,7 @@ export const SelectEstanteForm = <T extends FieldValues, TType extends string>({
 }: Omit<FormSelectProps<T, TType>, "items"> & { armarioId?: string | null }): ReactElement => {
   const { data, isLoading, isError } = api.admin.laboratorios.getAllEstantes.useQuery(
     { armarioId: Number(props.armarioId!) },
-    { enabled: !!props.armarioId && props.armarioId !== "" },
+    { enabled: !!props.armarioId && props.armarioId !== "" && !isNaN(Number(props.armarioId)) },
   );
 
   const estantes: { id: string | null; label: string }[] = useMemo(() => {
@@ -48,7 +48,7 @@ export const SelectEstanteForm = <T extends FieldValues, TType extends string>({
           <SelectTrigger
             disabled
             id="selectEstante"
-            className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+            className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
           >
             <SelectValue placeholder="Error cargando estantes" />
           </SelectTrigger>

@@ -12,18 +12,18 @@ const RUTA_RESERVA_ABIERTO = LABORATORIO_ABIERTO_ROUTE.subRutas[1]?.href ?? "";
 const RUTA_RESERVA_CERRADO = LABORATORIO_ROUTE.subRutas[5]?.href ?? "";
 
 type Props = RouterInputs["admin"]["laboratorios"]["getAll"];
-export const SelectLaboratorioForm = <T extends FieldValues, TType extends string>({
+export const SelectLaboratorioConArmariosForm = <T extends FieldValues, TType extends string>({
   name,
   control,
   className,
   ...props
 }: Omit<FormSelectProps<T, TType>, "items"> & Props): ReactElement => {
-  const { data, isLoading, isError } = api.admin.laboratorios.getAll.useQuery({ sedeId: props.sedeId });
+  const { data, isLoading, isError } = api.admin.laboratorios.getAllConArmarios.useQuery({ sedeId: props.sedeId });
 
   const laboratorios: ISelectItem[] = useMemo(() => {
     if (!data) return [];
 
-    return data.laboratorios.map((laboratorio) => {
+    return data.map((laboratorio) => {
       const { id, nombre: label } = laboratorio;
 
       return {
@@ -132,7 +132,7 @@ const SelectError = () => {
         <SelectTrigger
           disabled
           id="selectLaboratorio"
-          className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+          className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
         >
           <SelectValue placeholder="Error cargando laboratorios" />
         </SelectTrigger>

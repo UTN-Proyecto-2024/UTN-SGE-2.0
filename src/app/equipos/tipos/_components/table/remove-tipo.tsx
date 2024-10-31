@@ -59,6 +59,7 @@ export default function RemoverTipoModal({ tipoId, nombre, imagen, onSubmit }: R
       onCancel={handleCancel}
       onSubmit={() => handleRemoveTipo(tipoId, imagen)}
       isAlertDialog
+      esEliminar
     >
       <div>
         Está seguro que desea eliminar <span className="font-bold">{nombre ?? "este tipo"}</span>?

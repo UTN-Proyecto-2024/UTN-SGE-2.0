@@ -62,7 +62,7 @@ export const inputEditarReservaLaboratorioAbiertoSchema = z
   .merge(inputReservaLaboratorioAbierto);
 
 export const inputGetAllSolicitudesReservaLaboratorioAbierto = z.object({
-  pageSize: z.enum(["10", "20", "30", "40", "50"]).default("10").catch("10"),
+  pageSize: z.enum(["10", "20", "30", "40", "50"]).default("20").catch("20"),
   pageIndex: z
     .string()
     .default("0")
@@ -110,7 +110,7 @@ export const inputEditarReservaLaboratorioCerradoSchema = z
   .merge(inputReservaLaboratorioCerrado);
 
 export const inputGetAllSolicitudesReservaLaboratorioCerrado = z.object({
-  pageSize: z.enum(["10", "20", "30", "40", "50"]).default("10").catch("10"),
+  pageSize: z.enum(["10", "20", "30", "40", "50"]).default("20").catch("20"),
   pageIndex: z
     .string()
     .default("0")

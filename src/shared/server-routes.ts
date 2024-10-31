@@ -40,6 +40,7 @@ export const LABORATORIO_ROUTE = {
   href: "/laboratorios",
   label: "Laboratorios",
   isPublic: false,
+  misReservasRuta: "/laboratorios/mis_reservas",
   subRutas: [
     {
       href: "/laboratorios/mis_cursos",
@@ -78,6 +79,7 @@ export const LABORATORIO_ABIERTO_ROUTE = {
   href: "/laboratorio_abierto",
   label: "Laboratorio abierto",
   isPublic: false,
+  misReservaRuta: "/laboratorio_abierto/mis_reservas",
   subRutas: [
     {
       href: "/laboratorio_abierto/reservar",
@@ -106,6 +108,7 @@ export const EQUIPOS_ROUTE = {
   href: "/equipos",
   label: "Equipos",
   isPublic: false,
+  misPrestamosRuta: "/equipos/mis_prestamos",
   subRutas: [
     {
       href: "/equipos",

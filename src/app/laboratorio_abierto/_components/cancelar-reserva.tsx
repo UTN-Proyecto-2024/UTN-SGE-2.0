@@ -42,6 +42,7 @@ export const CancelarReservaLaboratorioAbierto = ({ reservaId, refresh }: Props)
       trigger={<Button title="Cancelar reserva" variant="icon" color="danger" icon={TrashIcon} isLoading={isPending} />}
       className={"max-h-[calc(100vh_-_10%)]"}
       isAlertDialog
+      esEliminar
     >
       <div className="flex w-full flex-col gap-y-4">
         <div className="flex max-h-max w-full flex-col gap-4">Está seguro que desea cancelar la solicitud?</div>

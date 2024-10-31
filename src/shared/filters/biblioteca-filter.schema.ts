@@ -21,7 +21,7 @@ export const inputAddBooks = z.object({
 });
 
 export const inputGetBooks = z.object({
-  pageSize: z.enum(["10", "20", "30", "40", "50"]).default("10").catch("10"),
+  pageSize: z.enum(["10", "20", "30", "40", "50"]).default("20").catch("20"),
   pageIndex: z
     .string()
     .default("0")
@@ -61,3 +61,11 @@ export const inputEditBooks = z
     id: z.number().optional(), // Si viene significa que se va a usar para editar, si no significa que se va a usar para crear
   })
   .merge(inputAddBooks);
+
+export const inputAgregarAutor = z.object({
+  nombre: z.string().min(1, { message: "Requerido" }),
+});
+
+export const inputAgregarEditorial = z.object({
+  nombre: z.string().min(1, { message: "Requerido" }),
+});

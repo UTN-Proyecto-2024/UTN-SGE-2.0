@@ -46,6 +46,7 @@ export default function RemoveMateriaModal({ materiaId, nombre, onSubmit }: Remo
       onCancel={handleCancel}
       onSubmit={() => handleRemoveMateria(materiaId)}
       isAlertDialog
+      esEliminar
     >
       <div>
         Está seguro que desea eliminar <span className="font-bold">{nombre ?? "esta materia"}</span>?

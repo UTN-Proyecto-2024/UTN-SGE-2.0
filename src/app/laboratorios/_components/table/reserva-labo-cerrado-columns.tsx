@@ -75,7 +75,8 @@ export const getColumnasReservasLaboratorioCerrado = ({ filterByUser }: { filter
           return <span className="text-center">Rechazada</span>;
         }
 
-        if (estatus === "PENDIENTE" && esFechaPasada(reserva.fechaHoraInicio)) {
+        // TODO @Santiago: No me parece correcto mostrar un estado incorrecto. Capaz sería pendiente y vencida o algo similar a charlar
+        if (estatus === "PENDIENTE" && esFechaPasada(reserva.fechaHoraFin)) {
           return <span className="text-center">Rechazada</span>;
         }
         if (!laboratorio) {

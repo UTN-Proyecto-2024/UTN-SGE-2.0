@@ -51,6 +51,7 @@ export default function RemoverRolModal({ rolId, nombre, onSubmit }: RemoveRolMo
       onCancel={handleCancel}
       onSubmit={() => handleRemoveMachine(rolId)}
       isAlertDialog
+      esEliminar
     >
       <div>
         Está seguro que desea eliminar <span className="font-bold">{nombre ?? "este rol"}</span>?

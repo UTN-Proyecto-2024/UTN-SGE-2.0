@@ -57,6 +57,7 @@ export default function RemoverLaboratorioModal({ laboratorioId, nombre, onSubmi
       onCancel={handleCancel}
       onSubmit={() => hanldeRemoveLaboratorio(laboratorioId)}
       isAlertDialog
+      esEliminar
     >
       <div>
         Está seguro que desea eliminar <span className="font-bold">{nombre ?? "este laboratorio"}</span>?

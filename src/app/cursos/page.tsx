@@ -8,6 +8,7 @@ import React from "react";
 import { CursosNuevoCurso } from "./(listado)/cursos-new-curso";
 import { CURSOS_ROUTE } from "@/shared/server-routes";
 import PageLayout from "@/components/ui/page-template";
+import { CargarCursos } from "./(listado)/cursos-bulk-insert";
 
 type PageProps = {
   searchParams: ReadonlyURLSearchParams;
@@ -17,7 +18,15 @@ export default function Page({ searchParams }: PageProps) {
   const filters = useMemo(() => inputGetCursos.parse(searchParams), [searchParams]);
   const filter_as_key = useMemo(() => JSON.stringify(filters), [filters]);
   return (
-    <PageLayout route={CURSOS_ROUTE} buttons={<CursosNuevoCurso />}>
+    <PageLayout
+      route={CURSOS_ROUTE}
+      buttons={
+        <>
+          <CursosNuevoCurso />
+          <CargarCursos />
+        </>
+      }
+    >
       <ActionButtons filters={filters} />
       <Suspense key={filter_as_key} fallback={<LoadingCursosTable />}>
         <CursoTableContainer filters={filters} filterByUser={false} />

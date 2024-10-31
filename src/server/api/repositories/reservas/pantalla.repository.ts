@@ -27,7 +27,10 @@ type ReservaEnPantalla = {
 type InputGetReservasEnPntallaActivas = z.infer<typeof inputGetReservasEnPntallaActivas>;
 export const getReservasEnPantalla = async (ctx: { db: PrismaClient }, input: InputGetReservasEnPntallaActivas) => {
   const { sedeId } = input;
+  const sedeNumber = sedeId ? Number(sedeId) : undefined;
   const fechaHoy = new Date();
+  const fechaHoyMas1Hora = new Date();
+  fechaHoyMas1Hora.setHours(fechaHoyMas1Hora.getHours() + 1);
 
   // Puede ser discrecional y no tener curso asignado
   const reservasLaboratorioCerradoPromise = ctx.db.reserva.findMany({
@@ -35,7 +38,7 @@ export const getReservasEnPantalla = async (ctx: { db: PrismaClient }, input: In
       estatus: ReservaEstatus.FINALIZADA,
       tipo: ReservaTipo.LABORATORIO_CERRADO,
       fechaHoraInicio: {
-        lte: fechaHoy,
+        lte: fechaHoyMas1Hora,
       },
       fechaHoraFin: {
         gte: fechaHoy,
@@ -43,7 +46,7 @@ export const getReservasEnPantalla = async (ctx: { db: PrismaClient }, input: In
       mostrarEnPantalla: true,
       reservaLaboratorioCerrado: {
         // Si existe la sede buscamos cualquiera la tenga asignada, caso contrario cualquiera con laboratorio asignado alcanza
-        ...(sedeId ? { laboratorio: { sedeId: sedeId } } : { laboratorioId: { not: null } }),
+        ...(sedeId ? { laboratorio: { sedeId: sedeNumber } } : { laboratorioId: { not: null } }),
       },
     },
     select: {
@@ -86,12 +89,12 @@ export const getReservasEnPantalla = async (ctx: { db: PrismaClient }, input: In
   const pantallasActivasPromise = ctx.db.pantalla.findMany({
     where: {
       fechaHoraInicio: {
-        lte: fechaHoy,
+        lte: fechaHoyMas1Hora,
       },
       fechaHoraFin: {
         gte: fechaHoy,
       },
-      sedeId: sedeId ? { equals: sedeId } : undefined,
+      sedeId: sedeId ? { equals: sedeNumber } : undefined,
     },
     select: {
       id: true,

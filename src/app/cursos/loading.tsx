@@ -2,10 +2,22 @@ import { Button } from "@/components/ui";
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadingCursosTable from "./(listado)/loading-curso-table";
 import React from "react";
+import PageLayout from "@/components/ui/page-template";
+import { CURSOS_ROUTE } from "@/shared/server-routes";
+import { CursosNuevoCurso } from "./(listado)/cursos-new-curso";
+import { CargarCursos } from "./(listado)/cursos-bulk-insert";
 
 export default function CursoLoading() {
   return (
-    <>
+    <PageLayout
+      route={CURSOS_ROUTE}
+      buttons={
+        <>
+          <CursosNuevoCurso />
+          <CargarCursos />
+        </>
+      }
+    >
       <div className="relative flex w-full flex-col items-center justify-between space-y-2 md:flex-row-reverse  md:space-x-1.5 md:space-y-0">
         <div className="relative flex w-full flex-row justify-end md:w-auto md:basis-1/3">
           <Button color={"primary"} isLoading>
@@ -19,6 +31,6 @@ export default function CursoLoading() {
       </div>
 
       <LoadingCursosTable />
-    </>
+    </PageLayout>
   );
 }
