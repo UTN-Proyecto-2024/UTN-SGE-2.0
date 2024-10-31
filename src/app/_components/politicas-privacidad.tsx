@@ -13,8 +13,8 @@ export const PoliticasPrivacidadModal = ({ triggerText }: { triggerText: string 
       open={open}
       onOpenChange={setOpen}
       trigger={
-        <button title="Ver políticas de asignación de Laboratorios">
-          <u>{triggerText}</u>
+        <button title="Ver políticas de asignación de Laboratorios" className="text-primary">
+          {triggerText}.
         </button>
       }
     >

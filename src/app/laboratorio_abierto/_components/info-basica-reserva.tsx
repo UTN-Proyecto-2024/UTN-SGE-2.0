@@ -45,7 +45,7 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
 
   return (
     <Card className="w-full">
-      <CardHeader className="pb-2">
+      <CardHeader>
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
           <div className="flex-grow text-center sm:text-left">
             <CardTitle className="mb-1 text-2xl">Reserva #{reserva.id}</CardTitle>
@@ -56,95 +56,104 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div className="space-y-2">
-            <Label className="flex items-center font-semibold">
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              Fecha
-            </Label>
-            <p>{getDateISOString(reserva.reserva.fechaHoraInicio)}</p>
-          </div>
-          <div className="space-y-2">
-            <Label className="flex items-center font-semibold">
-              <ClockIcon className="mr-2 h-4 w-4" />
-              Hora de Inicio
-            </Label>
-            <p>{getTimeISOString(reserva.reserva.fechaHoraInicio)}</p>
-          </div>
-          <div className="space-y-2">
-            <Label className="flex items-center font-semibold">
-              <ClockIcon className="mr-2 h-4 w-4" />
-              Hora de Fin
-            </Label>
-            <p>{getTimeISOString(reserva.reserva.fechaHoraFin)}</p>
-          </div>
-
-          <div className="space-y-2">
-            <Label className="flex items-center font-semibold">
-              <MapPinIcon className="mr-2 h-4 w-4" />
-              Sede
-            </Label>
-            <p>{reserva.sede.nombre ?? "Sin asignar"}</p>
-          </div>
-          <div className="space-y-2">
-            <Label className="flex items-center font-semibold">
-              <MapPinIcon className="mr-2 h-4 w-4" />
-              Laboratorio
-            </Label>
-            <p>{reserva?.laboratorio?.nombre ?? "Sin asignar"}</p>
-          </div>
-          <div className="space-y-2">
-            <Label className="flex items-center font-semibold">
-              <SearchIcon className="mr-2 h-4 w-4" />
-              Especialidad
-            </Label>
-            <p>{reserva?.especialidad ?? "Sin asignar"}</p>
-          </div>
-
-          {mostrarCompleto && (
-            <>
-              <div className="space-y-2">
-                <Label className="flex items-center font-semibold">
-                  <PersonStandingIcon className="mr-2 h-4 w-4" />
-                  Tutor
-                </Label>
-                <DatoUsuarioReserva usuario={reserva?.reserva.usuarioTutor} />
+      <CardContent className="space-y-4">
+        <div className="grid auto-cols-max grid-cols-2 gap-4 md:grid-cols-3">
+          {[
+            ...[
+              {
+                icon: <CalendarIcon className="h-4 w-4" />,
+                label: "Fecha",
+                value: getDateISOString(reserva.reserva.fechaHoraInicio),
+              },
+              {
+                icon: <ClockIcon className="h-4 w-4" />,
+                label: "Hora de Inicio",
+                value: getTimeISOString(reserva.reserva.fechaHoraInicio),
+              },
+              {
+                icon: <ClockIcon className="h-4 w-4" />,
+                label: "Hora de Fin",
+                value: getTimeISOString(reserva.reserva.fechaHoraFin),
+              },
+              { icon: <MapPinIcon className="h-4 w-4" />, label: "Sede", value: reserva.sede.nombre ?? "Sin asignar" },
+              {
+                icon: <MapPinIcon className="h-4 w-4" />,
+                label: "Laboratorio",
+                value: reserva?.laboratorio?.nombre ?? "Sin asignar",
+              },
+              {
+                icon: <SearchIcon className="h-4 w-4" />,
+                label: "Especialidad",
+                value: reserva?.especialidad ?? "Sin asignar",
+              },
+              {
+                icon: <PersonStandingIcon className="h-4 w-4" />,
+                label: "Solicitante",
+                value: reserva?.reserva.usuarioSolicito
+                  ? `${reserva.reserva.usuarioSolicito.nombre} ${reserva.reserva.usuarioSolicito.apellido}`
+                  : "Sin asignar",
+              },
+            ],
+            ...(mostrarCompleto
+              ? [
+                  {
+                    icon: <PersonStandingIcon className="h-4 w-4" />,
+                    label: "Tutor",
+                    value: <DatoUsuarioReserva usuario={reserva?.reserva.usuarioTutor} />,
+                  },
+                  {
+                    icon: <WrenchIcon className="h-4 w-4" />,
+                    label: "Equipo",
+                    value:
+                      reserva.equipoReservado.length > 0 ? (
+                        <ul className="list-disc">
+                          {reserva.equipoReservado.map((equipo) => (
+                            <li key={equipo.equipoId} className="flex flex-row space-x-2 text-sm">
+                              {equipo.equipoTipo.nombre} x {equipo.cantidad}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        "No se requiere"
+                      ),
+                  },
+                ]
+              : []),
+          ].map(({ icon, label, value }, index, array) => (
+            <div
+              key={index}
+              className={`flex flex-row space-x-2 ${index === array.length - 1 ? "col-span-2 md:col-span-1" : ""}`}
+            >
+              <div className="flex items-start justify-center">{icon}</div>
+              <div className="flex flex-col text-left">
+                <Label className="text-xs font-semibold">{label}</Label>
+                <p className="text-sm">{value}</p>
               </div>
-              <div className="space-y-2">
-                <Label className="flex items-center font-semibold">
-                  <WrenchIcon className="mr-2 h-4 w-4" />
-                  Equipo
-                </Label>
-                <ul className="list-disc pl-2">
-                  {reserva.equipoReservado.map((equipo) => {
-                    return (
-                      <li key={equipo.equipoId} className="flex flex-row space-x-2">
-                        {equipo.equipoTipo.nombre} x {equipo.cantidad}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-              <div className="col-span-3 space-y-2">
-                <Label className="flex items-center font-semibold">
-                  <TextIcon className="mr-2 h-4 w-4" />
-                  Observaciones
-                </Label>
-                <p>{reserva.descripcion ?? "Sin informar"}</p>
-              </div>
-              {reserva.reserva.motivoRechazo && (
-                <div className="col-span-3 space-y-2">
-                  <Label className="flex items-center font-semibold">
-                    <XIcon className="mr-2 h-4 w-4" />
-                    Motivo Rechazo
-                  </Label>
-                  <p>{reserva.reserva.motivoRechazo ?? "Sin informar"}</p>
-                </div>
-              )}
-            </>
-          )}
+            </div>
+          ))}
         </div>
+        {mostrarCompleto && (
+          <div className={"flex flex-row space-x-2"}>
+            <div className="flex items-start justify-center">
+              <TextIcon className="h-4 w-4" />
+            </div>
+            <div className="flex flex-col text-left">
+              <Label className="text-xs font-semibold">Descripción de la actividad</Label>
+              <p className="text-sm">{reserva.descripcion?.length > 0 ? reserva.descripcion : "Sin informar"}</p>
+            </div>
+          </div>
+        )}
+        {reserva.reserva.motivoRechazo && (
+          <div className={"flex flex-row space-x-2"}>
+            <div className="flex items-start justify-center">
+              <XIcon className="h-4 w-4" />
+            </div>
+            <div className="flex flex-col text-left">
+              <Label className="text-xs font-semibold">Motivo rechazo</Label>
+              <p className="text-sm">{reserva.reserva.motivoRechazo}</p>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
