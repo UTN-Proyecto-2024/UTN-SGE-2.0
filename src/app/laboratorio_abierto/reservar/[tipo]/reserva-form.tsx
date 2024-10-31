@@ -1,4 +1,4 @@
-import { Controller, FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { api } from "@/trpc/react";
 import { Button, FormInput, ScrollArea, toast } from "@/components/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,13 +11,13 @@ import {
 import { FormTextarea, Textarea } from "@/components/ui/textarea";
 import { FormEquipoTipoSelector } from "@/app/laboratorios/_components/filtros/equipo-tipo-selector";
 import { type LaboratorioAbiertoType } from "../_components/laboratorios";
-import { Slider } from "@/components/ui/slider";
 import { SelectSedeForm } from "@/app/_components/select-ubicacion/select-sede";
 import { esFechaPasada, getDateISOString, getTimeISOString } from "@/shared/get-date";
 import { SelectEspecialidadForm } from "@/app/_components/select-especialidad";
 import { FormInputPoliticas } from "@/app/_components/input-form-politicas";
 import { LaboratorioAbiertoTipo, ReservaEstatus } from "@prisma/client";
 import { ReservaDetalle } from "../../_components/info-basica-reserva";
+import { FormSelect } from "@/components/ui/autocomplete";
 
 type Props = {
   onSubmit: () => void;
@@ -25,6 +25,8 @@ type Props = {
 } & ({ reservaId: number; tipo?: undefined } | { reservaId?: undefined; tipo: LaboratorioAbiertoType });
 
 export type FormReservarLaboratorioAbiertoType = z.infer<typeof inputEditarReservaLaboratorioAbiertoSchema>;
+
+const cantidadPersonas = [...Array(8).keys()].map((i) => (i + 1).toString());
 
 export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: Props) => {
   const esNuevo = reservaId === undefined;
@@ -53,7 +55,7 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
       id: reservaId,
       tipo: esNuevo ? tipo! : reservaData?.laboratorioAbiertoTipo,
       aceptoTerminos: false,
-      concurrentes: esNuevo ? 1 : reservaData?.concurrentes,
+      concurrentes: esNuevo ? "1" : reservaData?.concurrentes.toString(),
       equipoReservado: esNuevo ? [] : (reservaData?.equipoReservado ?? []),
       fechaReserva: esNuevo ? undefined : getDateISOString(reservaData?.reserva.fechaHoraInicio as unknown as Date),
       horaInicio: esNuevo ? undefined : getTimeISOString(reservaData?.reserva.fechaHoraInicio as unknown as Date),
@@ -85,7 +87,7 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
         id: reservaId,
         tipo: esNuevo ? tipo! : reservaData?.laboratorioAbiertoTipo,
         aceptoTerminos: false,
-        concurrentes: esNuevo ? 1 : reservaData?.concurrentes,
+        concurrentes: esNuevo ? "1" : reservaData?.concurrentes.toString(),
         equipoReservado: esNuevo ? [] : (reservaData?.equipoReservado ?? []),
         fechaReserva: esNuevo ? undefined : getDateISOString(reservaData?.reserva.fechaHoraInicio as unknown as Date),
         horaInicio: esNuevo ? undefined : getTimeISOString(reservaData?.reserva.fechaHoraInicio as unknown as Date),
@@ -148,8 +150,6 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
     );
   };
 
-  const concurrentes = formHook.watch("concurrentes");
-
   const haSidoRechazada = !!(
     reservaData &&
     reservaData?.reserva?.motivoRechazo &&
@@ -164,107 +164,40 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
 
   return (
     <FormProvider {...formHook}>
-      <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
-        <ScrollArea className="max-h-[calc(100vh_-_20%)] w-full pr-4 md:max-h-[calc(100vh_-_20%)] lg:max-h-[calc(100vh_-_25%)]">
-          <div className="flex w-full flex-col items-center justify-center">
-            <div className="flex flex-col space-y-4 px-0">
-              <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-                <div className="mt-4 basis-1/2">
-                  <FormInput
-                    label={"Tipo de laboratorio"}
-                    control={control}
-                    name="tipo"
-                    className="mt-2"
-                    type={"text"}
-                    readOnly
-                  />
-                </div>
-                <div className="mt-4 basis-1/2">
-                  <FormInput
-                    label={"Fecha de reserva"}
-                    control={control}
-                    name="fechaReserva"
-                    className="mt-2"
-                    type={"date"}
-                  />
-                </div>
-              </div>
-
-              <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-                <div className="mt-4 basis-1/2">
-                  <FormInput
-                    label={"Hora de inicio"}
-                    control={control}
-                    name="horaInicio"
-                    className="mt-2"
-                    type={"time"}
-                  />
-                </div>
-                <div className="mt-4 basis-1/2">
-                  <FormInput label={"Hora de fin"} control={control} name="horaFin" className="mt-2" type={"time"} />
-                </div>
-              </div>
-
-              <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-                <div className="mt-4 w-full">
-                  <label htmlFor="concurrentes">¿Cuántas personas concurrirán al Laboratorio?</label>
-                  <Controller
-                    control={control}
-                    name="concurrentes"
-                    render={({ field }) => (
-                      <Slider
-                        id="concurrentes"
-                        value={[field.value]}
-                        min={1}
-                        max={8}
-                        step={1}
-                        className={"w-full"}
-                        onValueChange={(value) => field.onChange(value[0] ?? 1)}
-                      />
-                    )}
-                  />
-                  <p className="mt-2">Cantidad de personas: {concurrentes}</p>
-                </div>
-              </div>
-
-              <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-                {esTLA && (
-                  <div className="mt-4 w-full">
-                    <SelectEspecialidadForm
-                      name="especialidad"
-                      label={"Especialidad"}
-                      control={control}
-                      className="mt-2"
-                      placeholder={"Selecciona una especialidad"}
-                    />
-                  </div>
-                )}
-                <div className="mt-4 w-full">
-                  <SelectSedeForm
-                    name="sedeId"
-                    label={"Sede"}
-                    control={control}
-                    className="mt-2"
-                    placeholder={"Selecciona una sede"}
-                  />
-                </div>
-              </div>
-
-              <div className="flex w-full flex-col justify-end gap-y-4 lg:justify-between">
-                <FormEquipoTipoSelector name="equipoReservado" />
-              </div>
-
-              <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-                <div className="mt-4 w-full">
-                  <FormTextarea
-                    label={"Observaciones"}
-                    control={control}
-                    name="observaciones"
-                    className="mt-2 w-full"
-                  />
-                </div>
-              </div>
-
+      <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col md:px-4">
+        <ScrollArea className="max-h-[calc(100vh_-_300px)] w-full">
+          <div className="mx-auto max-w-3xl space-y-6">
+            <div className="mx-auto grid grid-cols-1 gap-6 md:grid-cols-2">
+              <FormInput label={"Tipo de laboratorio"} control={control} name="tipo" type={"text"} readOnly />
+              <SelectSedeForm name="sedeId" label={"Sede"} control={control} placeholder={"Selecciona una sede"} />
+              <FormSelect
+                name={"concurrentes"}
+                control={control}
+                items={cantidadPersonas}
+                label={"¿Cuántas personas concurrirán al laboratorio?"}
+                clearable
+              />
+              <FormInput label={"Fecha de reserva"} control={control} name="fechaReserva" type={"date"} />
+              <FormInput label={"Hora de inicio"} control={control} name="horaInicio" type={"time"} />
+              <FormInput label={"Hora de fin"} control={control} name="horaFin" type={"time"} />
+            </div>
+            <div className="mx-auto space-y-6">
+              {esTLA && (
+                <SelectEspecialidadForm
+                  name="especialidad"
+                  label={"Especialidad"}
+                  control={control}
+                  placeholder={"Selecciona una especialidad"}
+                />
+              )}
+              <FormTextarea
+                label={"Breve descripción de la actividad"}
+                control={control}
+                name="observaciones"
+                maxLength={250}
+                showCharCount={true}
+              />
+              <FormEquipoTipoSelector name="equipoReservado" />
               {haSidoRechazada && (
                 <div className="flex w-full flex-col justify-end gap-y-4 lg:justify-between">
                   <div className="mt-4 w-full">
@@ -278,38 +211,31 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
                   </div>
                 </div>
               )}
-
-              <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-                <div className="mt-4">
-                  <div className="items-top flex space-x-2">
-                    <FormInputPoliticas name="aceptoTerminos" control={control} />
-                  </div>
-                </div>
-              </div>
+              <FormInputPoliticas name="aceptoTerminos" control={control} />
             </div>
           </div>
-          <div className="flex w-full flex-row items-end justify-end space-x-4">
-            <Button title="Cerrar" type="button" variant="default" color="secondary" onClick={handleClickClose}>
-              Cerrar
-            </Button>
-            {!esNuevo && !estaEstatusCancelada && !esReservaPasada && (
-              <Button
-                title="Cancelar Reserva"
-                type="button"
-                variant="default"
-                color="danger"
-                onClick={handleCancelReserva}
-              >
-                Cancelar Reserva
-              </Button>
-            )}
-            {!estaEstatusCancelada && !esReservaPasada && (
-              <Button title="Guardar" type="submit" variant="default" color="primary">
-                {estaEstatusAprobada ? "Modificar" : "Guardar"}
-              </Button>
-            )}
-          </div>
         </ScrollArea>
+        <div className="flex w-full flex-row items-end justify-end space-x-4 pt-4">
+          <Button title="Cerrar" type="button" variant="default" color="secondary" onClick={handleClickClose}>
+            Cerrar
+          </Button>
+          {!esNuevo && !estaEstatusCancelada && !esReservaPasada && (
+            <Button
+              title="Cancelar Reserva"
+              type="button"
+              variant="default"
+              color="danger"
+              onClick={handleCancelReserva}
+            >
+              Cancelar Reserva
+            </Button>
+          )}
+          {!estaEstatusCancelada && !esReservaPasada && (
+            <Button title="Guardar" type="submit" variant="default" color="primary">
+              {estaEstatusAprobada ? "Modificar" : "Guardar"}
+            </Button>
+          )}
+        </div>
       </form>
     </FormProvider>
   );
