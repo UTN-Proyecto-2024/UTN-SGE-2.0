@@ -20,6 +20,7 @@ import {
   getAllArmarios,
   getAllEstantes,
   getAllLaboratoriosConEstadoReserva,
+  getAllLaboratoriosConArmario,
 } from "../../repositories/admin/laboratorios-admin.repository";
 
 export const getTodosLosLaboratoriosProcedure = protectedProcedure
@@ -28,6 +29,16 @@ export const getTodosLosLaboratoriosProcedure = protectedProcedure
     validarInput(inputGetLaboratorios, input);
 
     const laboratorios = await getAllLaboratorios(ctx, input);
+
+    return laboratorios;
+  });
+
+export const getTodosLosLaboratoriosConArmarioProcedure = protectedProcedure
+  .input(inputGetLaboratorios)
+  .query(async ({ ctx, input }) => {
+    validarInput(inputGetLaboratorios, input);
+
+    const laboratorios = await getAllLaboratoriosConArmario(ctx, input);
 
     return laboratorios;
   });
