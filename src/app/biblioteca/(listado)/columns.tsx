@@ -1,6 +1,6 @@
 import { type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import EstadoLibro from "./estado-libro";
+import { EstadoLibro, PrestarDevolverLibro } from "./estado-libro";
 
 type LibroData = RouterOutputs["biblioteca"]["getAll"]["libros"][number];
 
@@ -57,6 +57,19 @@ export const getColumns = () => {
         const { disponible, id } = row.original;
 
         return <EstadoLibro disponible={disponible} id={id} />;
+      },
+    }),
+    colHelper.display({
+      header: "Prestar / Devolver",
+      cell: ({ row }) => {
+        const { disponible, id } = row.original;
+
+        return <PrestarDevolverLibro disponible={disponible} id={id} />;
+      },
+      meta: {
+        header: {
+          hideSort: true,
+        },
       },
     }),
   ] as ColumnDef<LibroData>[];

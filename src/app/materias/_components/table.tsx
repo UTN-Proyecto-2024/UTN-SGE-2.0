@@ -6,7 +6,8 @@ import { getColumns } from "./columns";
 import RemoveMateriaModal from "./remove-materia";
 import EditMateriaModal from "./edit-materia";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
+import type { GroupingState } from "@tanstack/react-table";
 
 type MateriaData = RouterOutputs["materia"]["getAll"];
 
@@ -17,6 +18,7 @@ type MateriasTableProps = {
 export const MateriasTable = ({ data }: MateriasTableProps) => {
   const columns = getColumns();
   const router = useRouter();
+  const [grouping, setGrouping] = useState<GroupingState>(["anio"]);
 
   const onDeleteMateria = () => {
     router.refresh();
@@ -38,6 +40,8 @@ export const MateriasTable = ({ data }: MateriasTableProps) => {
             );
           },
         }}
+        grouping={grouping}
+        setGrouping={setGrouping}
       />
     </>
   );

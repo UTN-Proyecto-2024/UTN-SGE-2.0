@@ -1,30 +1,24 @@
-import { Badge } from "@/components/ui/badge";
 import PrestarEquipoModal from "../_components/modal-prestar";
 import DevolverEquipoModal from "../_components/modal-devolver";
+import { EstadoDisponible, EstadoPrestado } from "@/app/_components/prestado-disponible";
 
 type EstadoEquipoProps = {
   id: number;
   disponible: boolean;
 };
 
-export default function EstadoEquipo({ disponible, id }: EstadoEquipoProps) {
+export function EstadoEquipo({ disponible }: EstadoEquipoProps) {
   if (disponible) {
-    return (
-      <div className="flex flex-col">
-        <Badge variant={"default"} color={"success"} className="w-full text-center">
-          <div className="w-full">Disponible</div>
-        </Badge>
-        <PrestarEquipoModal equipoId={id} />
-      </div>
-    );
+    return <EstadoDisponible />;
   }
 
-  return (
-    <div className="flex flex-col">
-      <Badge variant={"default"} color={"danger"} className="w-full text-center">
-        <div className="w-full">Prestado</div>
-      </Badge>
-      <DevolverEquipoModal equipoId={id} />
-    </div>
-  );
+  return <EstadoPrestado />;
 }
+
+export const PrestarDevolverEquipo = ({ disponible, id }: EstadoEquipoProps) => {
+  if (disponible) {
+    return <PrestarEquipoModal equipoId={id} />;
+  }
+
+  return <DevolverEquipoModal equipoId={id} />;
+};

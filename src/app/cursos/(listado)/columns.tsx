@@ -3,6 +3,7 @@ import { CursoTurno } from "@/app/_components/turno-text";
 import { type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { Root, Trigger, Portal, Content, Arrow } from "@radix-ui/react-popover";
+import { Check, X } from "lucide-react";
 
 type CursosData = RouterOutputs["cursos"]["getAll"]["cursos"][number];
 
@@ -14,7 +15,12 @@ export const getColumns = () => {
       header: "Año",
     }),
     colHelper.accessor("materia.nombre", {
+      id: "materia",
       header: "Materia",
+    }),
+    colHelper.accessor("activo", {
+      header: "Activo",
+      cell: (info) => (info.row.original.activo ? <Check size={20} /> : <X size={20} />),
     }),
     colHelper.accessor("sede.nombre", {
       header: "Sede",
@@ -69,7 +75,7 @@ export const getColumns = () => {
 };
 
 export const getColumnsNames = () => {
-  return ["Año", "Materia", "Sede", "Duración", "Turno", "Division", "Profesor", "Ayudante/s"];
+  return ["Año", "Materia", "Activo", "Sede", "Duración", "Turno", "Division", "Profesor", "Ayudante/s"];
 };
 
 const dayMapper = {

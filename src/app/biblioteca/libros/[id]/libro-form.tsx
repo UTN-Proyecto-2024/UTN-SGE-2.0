@@ -9,7 +9,7 @@ import { MateriaDropdownMultipleForm } from "@/app/_components/form/materias-dro
 import { SelectEditorialForm } from "../../_components/select-editorial";
 import { SelectIdiomasForm } from "../../_components/select-idiomas";
 import { SelectSedeForm } from "@/app/_components/select-ubicacion/select-sede";
-import { SelectLaboratorioForm } from "@/app/_components/select-ubicacion/select-laboratorio";
+import { SelectLaboratorioConArmariosForm } from "@/app/_components/select-ubicacion/select-laboratorio";
 import { SelectArmarioForm } from "@/app/_components/select-ubicacion/select-armario";
 import { SelectEstanteForm } from "@/app/_components/select-ubicacion/select-estante";
 import { SelectAutoresForm } from "../../_components/select-autor";
@@ -207,7 +207,7 @@ export const LibroForm = ({ id, onSubmit, onCancel }: Props) => {
                 </div>
 
                 <div className="mt-4 basis-1/2">
-                  <SelectLaboratorioForm
+                  <SelectLaboratorioConArmariosForm
                     name="laboratorioId"
                     control={control}
                     className="mt-2 text-sm"

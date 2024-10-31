@@ -51,6 +51,7 @@ export default function RemoveEquipoModal({ equipoId, nombre, onSubmit }: Remove
       onCancel={handleCancel}
       onSubmit={() => handleRemoveMachine(equipoId)}
       isAlertDialog
+      esEliminar
     >
       <div>
         Está seguro que desea eliminar <span className="font-bold">{nombre ?? "este equipo"}</span>?

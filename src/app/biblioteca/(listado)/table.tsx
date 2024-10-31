@@ -45,9 +45,9 @@ export const BibliotecaTable = ({ data, filters }: BibliotecaTableProps) => {
           cell({ original }) {
             return (
               <>
-                <VerLibroModal libroId={original.id} />
-                <EditLibroModal libroId={original.id} />
                 <RemoveLibroModal libroId={original.id} nombre={original.titulo} onSubmit={refresh} />
+                <EditLibroModal libroId={original.id} />
+                <VerLibroModal libroId={original.id} />
               </>
             );
           },

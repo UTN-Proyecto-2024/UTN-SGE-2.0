@@ -52,6 +52,7 @@ export default function RemoveDivisionModal({ divisionId, nombre, onSubmit }: Re
       onCancel={handleCancel}
       onSubmit={() => handleRemoveDivision(divisionId)}
       isAlertDialog
+      esEliminar
     >
       <div>
         Está seguro que desea eliminar <span className="font-bold">{nombre ?? "esta división"}</span>?

@@ -7,7 +7,7 @@ import { useEffect, useMemo } from "react";
 import { inputEditarEquipos } from "@/shared/filters/equipos-filter.schema";
 import { SelectSedeForm } from "@/app/_components/select-ubicacion/select-sede";
 import { SelectMarcasForm } from "../../_components/select-marca";
-import { SelectLaboratorioForm } from "@/app/_components/select-ubicacion/select-laboratorio";
+import { SelectLaboratorioConArmariosForm } from "@/app/_components/select-ubicacion/select-laboratorio";
 import { SelectArmarioForm } from "@/app/_components/select-ubicacion/select-armario";
 import { SelectEstanteForm } from "@/app/_components/select-ubicacion/select-estante";
 import { SelectTipoForm } from "../../_components/select-tipo";
@@ -238,7 +238,7 @@ export const EquipoForm = ({ id, onSubmit, onCancel }: Props) => {
                 </div>
 
                 <div className="mt-4 basis-1/2">
-                  <SelectLaboratorioForm
+                  <SelectLaboratorioConArmariosForm
                     name="laboratorioId"
                     control={control}
                     className="mt-2"
