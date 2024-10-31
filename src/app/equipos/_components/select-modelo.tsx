@@ -3,6 +3,7 @@ import { type Path, type FieldValues } from "react-hook-form";
 import { api } from "@/trpc/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
+  Button,
   FormAutocomplete,
   type FormAutocompleteProps,
   Select,
@@ -11,7 +12,6 @@ import {
   toast,
 } from "@/components/ui";
 import { estaDentroDe } from "@/shared/string-compare";
-import Link from "next/link";
 
 export const SelectModelosForm = <T extends FieldValues, TType extends string>({
   name,
@@ -83,9 +83,15 @@ export const SelectModelosForm = <T extends FieldValues, TType extends string>({
         <div className="flex flex-col items-center justify-center gap-2 px-4 py-6 text-sm">
           <span>No se encontró el modelo</span>
           {query && (
-            <Link href={""} className="text-primary" onClick={onCreateModelo}>
+            <Button
+              type="button"
+              variant={"default"}
+              color={"outline"}
+              className="text-primary"
+              onClick={onCreateModelo}
+            >
               Crear nuevo modelo
-            </Link>
+            </Button>
           )}
         </div>
       }

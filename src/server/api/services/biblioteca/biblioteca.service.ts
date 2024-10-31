@@ -8,9 +8,13 @@ import {
   getAllEditorial,
   getAllIdiomas,
   getAllAutores,
+  agregarAutor,
+  agregarEditorial,
 } from "../../repositories/biblioteca/biblioteca.repository";
 import {
   inputAddBooks,
+  inputAgregarAutor,
+  inputAgregarEditorial,
   inputEditBooks,
   inputEliminarLibro,
   inputGetBooks,
@@ -79,3 +83,25 @@ export const getTodosLosAutoresProcedure = protectedProcedure.query(async ({ ctx
 
   return autores;
 });
+
+export const crearAutorProcedure = protectedProcedure.input(inputAgregarAutor).mutation(async ({ ctx, input }) => {
+  validarInput(inputAgregarAutor, input);
+
+  const userId = ctx.session.user.id;
+
+  const autor = await agregarAutor(ctx, input, userId);
+
+  return autor;
+});
+
+export const crearEditorialProcedure = protectedProcedure
+  .input(inputAgregarEditorial)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputAgregarEditorial, input);
+
+    const userId = ctx.session.user.id;
+
+    const editorial = await agregarEditorial(ctx, input, userId);
+
+    return editorial;
+  });

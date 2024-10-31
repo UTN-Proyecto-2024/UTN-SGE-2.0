@@ -80,6 +80,8 @@ export const LibroForm = ({ id, onSubmit, onCancel }: Props) => {
   useEffect(() => formHook.reset(libroBase), [formHook, libroBase]);
 
   const onFormSubmit = (formData: FormEditarLibroType) => {
+    console.log("CALLED ON FORM SUBMIT");
+
     if (esNuevo) {
       agregarlibro.mutate(formData, {
         onSuccess: () => {

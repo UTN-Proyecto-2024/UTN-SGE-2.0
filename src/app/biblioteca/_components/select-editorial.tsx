@@ -3,9 +3,8 @@ import { type Path, type FieldValues } from "react-hook-form";
 import { api } from "@/trpc/react";
 import { type FormSelectProps } from "@/components/ui/autocomplete";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FormAutocomplete, Select, SelectTrigger, SelectValue } from "@/components/ui";
+import { Button, FormAutocomplete, Select, SelectTrigger, SelectValue, toast } from "@/components/ui";
 import { estaDentroDe } from "@/shared/string-compare";
-import Link from "next/link";
 
 export const SelectEditorialForm = <T extends FieldValues, TType extends string>({
   name,
@@ -13,7 +12,9 @@ export const SelectEditorialForm = <T extends FieldValues, TType extends string>
   className,
   ...props
 }: Omit<FormSelectProps<T, TType>, "items"> & { realNameId?: Path<T> }): ReactElement => {
+  const utils = api.useUtils();
   const { data, isLoading, isError } = api.biblioteca.getAllEditorial.useQuery();
+  const agregarEditorial = api.biblioteca.crearEditorial.useMutation();
 
   const [query, setQuery] = useState("");
 
@@ -32,6 +33,23 @@ export const SelectEditorialForm = <T extends FieldValues, TType extends string>
       .filter((item) => !query || estaDentroDe(query, item.label));
   }, [data, query]);
 
+  const onCreateEditorial = () => {
+    agregarEditorial.mutate(
+      { nombre: query },
+      {
+        onSuccess: (editorial) => {
+          toast.success(`Editorial ${editorial.editorial} creada con éxito.`);
+          utils.biblioteca.getAllEditorial.invalidate().catch((err) => {
+            console.error(err);
+          });
+        },
+        onError: (error) => {
+          toast.error(error?.message ?? "Error al agregar la editorial");
+        },
+      },
+    );
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-row items-center space-x-2">
@@ -47,7 +65,7 @@ export const SelectEditorialForm = <T extends FieldValues, TType extends string>
           <SelectTrigger
             disabled
             id="selectEditorial"
-            className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+            className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
           >
             <SelectValue placeholder="Error cargando editoriales" />
           </SelectTrigger>
@@ -63,9 +81,16 @@ export const SelectEditorialForm = <T extends FieldValues, TType extends string>
       noOptionsComponent={
         <div className="flex flex-col items-center justify-center gap-2 px-4 py-6 text-sm">
           <span>No se encontró la editorial</span>
-          <Link href="href" className="text-primary">
+          <Button
+            type="button"
+            variant={"default"}
+            color={"outline"}
+            className="text-primary"
+            onClick={onCreateEditorial}
+            isLoading={agregarEditorial.isPending}
+          >
             Crear nueva editorial
-          </Link>
+          </Button>
         </div>
       }
       className={className}
