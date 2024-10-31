@@ -58,6 +58,7 @@ export default function EliminarReservaPantallaModal({ ids, onSubmit }: RemoveSo
       onCancel={handleCancel}
       onSubmit={handleRemoverReservaPantalla}
       isAlertDialog
+      esEliminar
     >
       <div>
         Está seguro que desea eliminar {ids.length} {texto} en pantalla?

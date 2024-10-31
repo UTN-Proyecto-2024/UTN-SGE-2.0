@@ -1,30 +1,24 @@
-import { Badge } from "@/components/ui/badge";
 import PrestarLibroModal from "../_components/modal-prestar";
 import DevolverLibroModal from "../_components/modal-devolver";
+import { EstadoDisponible, EstadoPrestado } from "@/app/_components/prestado-disponible";
 
 type RemoveLibroModalProps = {
   id: number;
   disponible: boolean;
 };
 
-export default function EstadoLibro({ disponible, id }: RemoveLibroModalProps) {
+export function EstadoLibro({ disponible }: RemoveLibroModalProps) {
   if (disponible) {
-    return (
-      <div className="flex flex-col">
-        <Badge variant={"default"} color={"success"} className="w-full text-center">
-          <div className="w-full">Disponible</div>
-        </Badge>
-        <PrestarLibroModal libroId={id} />
-      </div>
-    );
+    return <EstadoDisponible />;
   }
 
-  return (
-    <div className="flex flex-col">
-      <Badge variant={"default"} color={"danger"} className="w-full text-center">
-        <div className="w-full">Prestado</div>
-      </Badge>
-      <DevolverLibroModal libroId={id} />
-    </div>
-  );
+  return <EstadoPrestado />;
 }
+
+export const PrestarDevolverLibro = ({ disponible, id }: RemoveLibroModalProps) => {
+  if (disponible) {
+    return <PrestarLibroModal libroId={id} />;
+  }
+
+  return <DevolverLibroModal libroId={id} />;
+};

@@ -19,6 +19,7 @@ export type ModalDrawerProps = {
   onCancel?: () => void; // Función que se ejecuta al cancelar
   onOpenChange?: (open: boolean) => void; // Función que se ejecuta al cambiar el estado del modal (lo dispara automaticamente el modal cuando el usuario lo abre)
   className?: string;
+  esEliminar?: boolean;
 };
 
 export default function ModalDrawer(props: ModalDrawerProps) {

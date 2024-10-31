@@ -9,9 +9,7 @@ type VerLibroModalProps = {
 export const VerLibroModal = (props: VerLibroModalProps) => {
   return (
     <Link key={props.libroId} href={`/biblioteca/libros/ver/${props.libroId}`} passHref prefetch={false}>
-      <Button color={"outline"} className="h-8 w-8 px-1 py-1">
-        <EyeIcon size={16} />
-      </Button>
+      <Button color={"outline"} className="h-8 w-8 px-1 py-1" variant={"icon"} icon={EyeIcon} />
     </Link>
   );
 };

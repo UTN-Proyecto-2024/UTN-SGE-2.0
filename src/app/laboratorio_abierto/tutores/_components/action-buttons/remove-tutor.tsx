@@ -53,6 +53,7 @@ export default function RemoveTutorModal({ tutorId, nombre, onSubmit }: RemoveTu
       onCancel={handleCancel}
       onSubmit={() => handleRemoveMachine(tutorId)}
       isAlertDialog
+      esEliminar
     >
       <div>
         ¿Está seguro que desea eliminar <span className="font-bold">{nombre ?? "este tutor"}</span>?

@@ -41,7 +41,14 @@ export default function RemoveLibroModal({ libroId, nombre, onSubmit }: RemoveLi
   return (
     <ModalDrawer
       trigger={
-        <Button title="Eliminar libro" variant="icon" color="danger" className="h-8 w-8 px-2 py-2" icon={TrashIcon} />
+        <Button
+          title="Eliminar libro"
+          variant="icon"
+          color="danger"
+          className="h-8 w-8 px-2 py-2"
+          icon={TrashIcon}
+          type="button"
+        />
       }
       titulo={`Eliminar libro ${nombre ?? ""}`}
       cancelText="Cancelar"
