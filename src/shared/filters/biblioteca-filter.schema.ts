@@ -61,3 +61,11 @@ export const inputEditBooks = z
     id: z.number().optional(), // Si viene significa que se va a usar para editar, si no significa que se va a usar para crear
   })
   .merge(inputAddBooks);
+
+export const inputAgregarAutor = z.object({
+  nombre: z.string().min(1, { message: "Requerido" }),
+});
+
+export const inputAgregarEditorial = z.object({
+  nombre: z.string().min(1, { message: "Requerido" }),
+});
