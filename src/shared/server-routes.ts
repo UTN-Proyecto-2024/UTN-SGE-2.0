@@ -88,7 +88,7 @@ export const LABORATORIO_ABIERTO_ROUTE = {
     },
     {
       href: "/laboratorio_abierto/solicitudes",
-      label: "Solicitudes",
+      label: "Administrar",
       isPublic: false,
     },
     {

@@ -44,14 +44,12 @@ export default function VerReservaModal({ params: { id } }: PageProps) {
       trigger={<></>}
       className="max-h-[calc(100vh_-_10%)]"
     >
-      <div className="flex max-h-max w-full flex-col gap-4">
-        <ReservaViewAdmin
-          reservaId={Number(id)}
-          onCancel={handleClickCancel}
-          onAprobar={handleClickAprobar}
-          onRechazar={handleClickRechazar}
-        />
-      </div>
+      <ReservaViewAdmin
+        reservaId={Number(id)}
+        onCancel={handleClickCancel}
+        onAprobar={handleClickAprobar}
+        onRechazar={handleClickRechazar}
+      />
     </ModalDrawer>
   );
 }
