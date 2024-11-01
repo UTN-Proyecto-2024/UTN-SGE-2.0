@@ -2,13 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { EquipoForm } from "./equipo-form";
-import { EQUIPOS_ROUTE } from "@/shared/server-routes";
 
 type PageProps = {
   params: { id?: string };
 };
-
-const equipoRuta = EQUIPOS_ROUTE;
 
 export default function PageEquipoDetails({ params: { id } }: PageProps) {
   const router = useRouter();

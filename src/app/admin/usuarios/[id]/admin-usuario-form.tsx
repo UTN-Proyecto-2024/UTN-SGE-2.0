@@ -1,6 +1,6 @@
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { type RouterOutputs, api } from "@/trpc/react";
-import { Button, FormInput, ScrollArea, toast } from "@/components/ui";
+import { Button, Input, ScrollArea, toast } from "@/components/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
 import { useEffect, useState } from "react";
@@ -31,10 +31,6 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
     mode: "onChange",
     defaultValues: {
       id: usuario?.id ?? undefined,
-      nombre: usuario?.nombre ?? "",
-      apellido: usuario?.apellido ?? "",
-      email: usuario?.email ?? "",
-      legajo: usuario?.legajo ?? "",
       roles: usuario?.usuarioRol.map((rol) => String(rol.rolId)) ?? [],
       esTutor: usuario?.esTutor ?? false,
       esDocente: usuario?.esDocente ?? false,
@@ -46,15 +42,10 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
 
   const currentRoles = watch("roles");
 
-  // TODO: Separar componente de formulario y logica de carga y actualización de rol
   useEffect(() => {
     if (usuario) {
       formHook.reset({
         id: usuario.id,
-        nombre: usuario?.nombre ?? "",
-        apellido: usuario?.apellido ?? "",
-        email: usuario?.email ?? "",
-        legajo: usuario?.legajo ?? "",
         roles: usuario.usuarioRol.map((rol) => String(rol.rolId)),
         esTutor: usuario?.esTutor ?? false,
         esDocente: usuario?.esDocente ?? false,
@@ -127,24 +118,23 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
             <div className="flex w-full flex-col space-y-4 px-0 md:px-6">
               <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
                 <div className="mt-4 w-full">
-                  <FormInput
+                  <Input
                     label={"Nombre"}
-                    control={control}
                     name="nombre"
                     type={"text"}
                     className="mt-2"
+                    value={usuario?.nombre ?? ""}
                     autoComplete="off"
                     readOnly
                   />
                 </div>
                 <div className="mt-4 w-full">
-                  <FormInput
+                  <Input
                     label={"Apellido"}
-                    control={control}
-                    name="apellido"
                     type={"text"}
                     className="mt-2"
                     autoComplete="off"
+                    value={usuario?.apellido ?? ""}
                     readOnly
                   />
                 </div>
@@ -152,13 +142,13 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
 
               <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
                 <div className="mt-4 w-full">
-                  <FormInput
+                  <Input
                     label={"Email"}
-                    control={control}
                     name="email"
                     type={"text"}
                     className="mt-2"
                     autoComplete="off"
+                    value={usuario?.email ?? ""}
                     readOnly
                   />
                 </div>
@@ -166,13 +156,14 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
 
               <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
                 <div className="mt-4 w-full">
-                  <FormInput
+                  <Input
                     label={"Legajo"}
-                    control={control}
                     name="legajo"
                     type={"text"}
                     className="mt-2"
                     autoComplete="off"
+                    value={usuario?.legajo ?? ""}
+                    readOnly
                   />
                 </div>
               </div>

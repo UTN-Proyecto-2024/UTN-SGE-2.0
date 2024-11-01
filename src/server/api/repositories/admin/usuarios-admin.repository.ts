@@ -165,10 +165,6 @@ export const editarUsuario = async (ctx: { db: PrismaClient }, input: InputEdita
     const usuario = await ctx.db.$transaction(async (prisma) => {
       const updatedUser = await prisma.user.update({
         data: {
-          nombre: input.nombre,
-          apellido: input.apellido,
-          email: input.email,
-          legajo: input.legajo,
           esDocente: input.esDocente,
           esTutor: input.esTutor,
           usuarioRol: {
