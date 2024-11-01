@@ -195,7 +195,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
-        <ScrollArea className="max-h-[calc(100vh_-_35%)]">
+        <ScrollArea className="max-h-[calc(100vh_-_300px)]">
           <div className="flex w-full flex-col items-center justify-center">
             {haSidoRechazada && <MotivoRechazo motivoRechazo={reservaData?.reserva.motivoRechazo ?? ""} />}
             <div className="flex flex-col space-y-4 px-0 md:px-6">

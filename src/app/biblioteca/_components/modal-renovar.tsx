@@ -7,6 +7,7 @@ import { LibroInformacionBasica } from "../libros/_components/info-basica-libro"
 import { Separator } from "@radix-ui/react-separator";
 import { LibroFormPrestarORenovar } from "./form-prestar";
 import { RenovarButton } from "@/app/_components/prestar-devolver";
+import { ScrollArea } from "@/components/ui";
 
 type RenovarPrestamoLibroModalProps = {
   libroId: number;
@@ -30,13 +31,15 @@ export default function RenovarPrestamoLibroModal({ libroId }: RenovarPrestamoLi
       open={open}
       onOpenChange={setOpen}
     >
-      <div className="flex flex-col">
-        <LibroInformacionBasica libroId={libroId} />
+      <ScrollArea className="max-h-[calc(100vh_-_300px)] w-full pr-4">
+        <div className="flex h-auto w-full flex-col">
+          <LibroInformacionBasica libroId={libroId} />
 
-        <Separator className="my-8 border-2" />
+          <Separator className="my-8 border-2" />
 
-        <LibroFormPrestarORenovar libroId={libroId} onCancel={handleCancel} onSubmit={handleSubmit} renovar />
-      </div>
+          <LibroFormPrestarORenovar libroId={libroId} onCancel={handleCancel} onSubmit={handleSubmit} renovar />
+        </div>
+      </ScrollArea>
     </ModalDrawer>
   );
 }

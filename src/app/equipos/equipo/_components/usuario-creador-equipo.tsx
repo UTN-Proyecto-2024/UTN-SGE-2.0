@@ -20,7 +20,7 @@ export const UsuarioCreador = ({ equipoId }: { equipoId: number }) => {
   return (
     <div className="flex flex-col space-y-4 px-0 md:px-6">
       Equipo dado de alta el {new Date(equipo?.fechaCreacion ?? "").toLocaleDateString("es-ES")} por{" "}
-      {creador?.nombre ?? "Usuario sin nombre"} ({creador?.apellido ?? "Usuario sin apellido"})
+      {creador?.nombre ?? "Usuario sin nombre"} {creador?.apellido ?? ""}
     </div>
   );
 };
