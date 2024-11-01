@@ -61,7 +61,7 @@ export const BibliotecaFilterMateria = ({ filters }: Props) => {
             <SelectTrigger
               disabled
               id="selectMateria"
-              className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+              className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
             >
               <SelectValue placeholder="Error cargando materias" />
             </SelectTrigger>
@@ -88,7 +88,10 @@ export const BibliotecaFilterMateria = ({ filters }: Props) => {
         clearable
         debounceTime={0}
         value={currentMateria}
-        onChange={(value) => onMateriaChange(value?.id ? String(value.id) : "")}
+        onChange={(value) => {
+          onMateriaChange(value?.id ? String(value.id) : "");
+          setQuery("");
+        }}
       />
     </div>
   );
