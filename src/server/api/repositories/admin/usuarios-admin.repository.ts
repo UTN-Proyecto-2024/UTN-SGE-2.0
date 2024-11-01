@@ -123,13 +123,29 @@ export const getUsuarioPorId = async (ctx: { db: PrismaClient }, input: InputGet
           rol: true,
         },
       },
+      materiasDirector: {
+        select: {
+          id: true,
+          nombre: true,
+          codigo: true,
+          anio: true,
+          duracion: true,
+          tipo: true,
+        },
+      },
     },
     where: {
       id,
     },
   });
 
-  return usuario;
+  if (!usuario) return null;
+
+  return {
+    ...usuario,
+    esDirectorDeMateria: usuario.materiasDirector.length > 0,
+    materiasACargo: usuario.materiasDirector,
+  };
 };
 
 type InputGetUsuariosPorIds = z.infer<typeof inputGetUsuariosPorIds>;
