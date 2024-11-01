@@ -96,7 +96,7 @@ export const DivisionForm = ({ id, onSubmit, onCancel }: Props) => {
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-8 md:px-4">
-        <ScrollArea className="max-h-[calc(100vh_-_20%)] w-full md:max-h-[calc(100vh_-_30%)] lg:max-h-[calc(100vh_-_30%)]">
+        <ScrollArea className="max-h-[calc(100vh_-_300px)] w-full">
           <div className="space-y-4">
             <FormInput
               label={"Nombre"}

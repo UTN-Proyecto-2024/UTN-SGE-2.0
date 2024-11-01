@@ -73,7 +73,7 @@ export const AgregarCursoPantallaForm = ({ onSubmit, onCancel }: Props) => {
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
-        <ScrollArea className="max-h-[calc(100vh_-_30%)] w-full pr-4">
+        <ScrollArea className="max-h-[calc(100vh_-_300px)] w-full pr-4">
           <div className="flex w-full flex-col items-center justify-center">
             <div className="flex w-full flex-col space-y-4 px-0 md:px-6">
               <div className="flex w-full flex-col gap-x-4 md:flex-row">
