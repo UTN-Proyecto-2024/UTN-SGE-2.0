@@ -54,7 +54,7 @@ export const RolesSelector = ({ onRolChange, currentRolId, label }: Props) => {
             <SelectTrigger
               disabled
               id="selectRol"
-              className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+              className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
             >
               <SelectValue placeholder="Error cargando roles" />
             </SelectTrigger>
@@ -82,7 +82,10 @@ export const RolesSelector = ({ onRolChange, currentRolId, label }: Props) => {
         clearable
         debounceTime={0}
         value={currentRol}
-        onChange={(value) => onRolChange(value?.id ? String(value.id) : "")}
+        onChange={(value) => {
+          onRolChange(value?.id ? String(value.id) : "");
+          setQuery("");
+        }}
       />
     </div>
   );
