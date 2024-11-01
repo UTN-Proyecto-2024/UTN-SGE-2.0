@@ -122,131 +122,136 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
-        <div className="flex w-full flex-col items-center justify-center">
-          <div className="flex w-full flex-col space-y-4 px-0 md:px-6">
-            <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
-              <div className="mt-4 w-full">
-                <FormInput
-                  label={"Nombre"}
-                  control={control}
-                  name="nombre"
-                  type={"text"}
-                  className="mt-2"
-                  autoComplete="off"
-                />
-              </div>
-              <div className="mt-4 w-full">
-                <FormInput
-                  label={"Apellido"}
-                  control={control}
-                  name="apellido"
-                  type={"text"}
-                  className="mt-2"
-                  autoComplete="off"
-                />
-              </div>
-            </div>
-
-            <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
-              <div className="mt-4 w-full">
-                <FormInput
-                  label={"Email"}
-                  control={control}
-                  name="email"
-                  type={"text"}
-                  className="mt-2"
-                  autoComplete="off"
-                />
-              </div>
-            </div>
-
-            <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
-              <div className="mt-4 w-full">
-                <FormInput
-                  label={"Legajo"}
-                  control={control}
-                  name="legajo"
-                  type={"text"}
-                  className="mt-2"
-                  autoComplete="off"
-                />
-              </div>
-            </div>
-
-            <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
-              <div className="mt-4 w-full">
-                <Controller
-                  control={control}
-                  name="esDocente"
-                  render={({ field }) => (
-                    <div className="flex items-center justify-between rounded-md border border-white p-2">
-                      <label htmlFor="esDocente" className="text-base">
-                        Es docente
-                      </label>
-                      <Switch id="esDocente" checked={field.value} onCheckedChange={field.onChange} />
-                    </div>
-                  )}
-                />
-              </div>
-
-              <div className="mt-4 w-full">
-                <Controller
-                  control={control}
-                  name="esTutor"
-                  render={({ field }) => (
-                    <div className="flex items-center justify-between rounded-md border border-white  p-2">
-                      <label htmlFor="esTutor" className="text-base">
-                        Es tutor
-                      </label>
-                      <Switch id="esTutor" checked={field.value} onCheckedChange={field.onChange} />
-                    </div>
-                  )}
-                />
-              </div>
-            </div>
-
-            <div className="flex w-full flex-col lg:justify-between">
-              <div className="mt-4 w-full">
-                {/* TODO: Pasar permisos actuales para que elimine de la lista*/}
-                <RolesSelector onRolChange={onRolChange} label={"Roles actuales"} />
-              </div>
-
-              <ScrollArea className="mt-4 max-h-80 w-full pr-4">
-                <div className="grid w-full grid-cols-2 gap-2">
-                  {currentRoles?.map((rol) => (
-                    <Badge
-                      key={rol}
-                      label={rolesDiccionario[rol]?.nombre ?? "Error"}
-                      variant={"default"}
-                      color={"aqua"}
-                      className="cursor-pointer justify-between text-sm"
-                      onClick={() => onRolDelete(rol)}
-                      title={`Eliminar ${rolesDiccionario[rol]?.nombre ?? ""} rol`}
-                    >
-                      <Button
-                        title="Eliminar"
-                        type="button"
-                        variant={"icon"}
-                        icon={XIcon}
-                        size="sm"
-                        color={"ghost"}
-                        className="rounded-full border-none hover:bg-[transparent]"
-                      />
-                    </Badge>
-                  ))}
+        <ScrollArea className="max-h-[calc(100vh_-_20%)] w-full pr-4 md:max-h-[calc(100vh_-_20%)] lg:max-h-[calc(100vh_-_25%)]">
+          <div className="flex w-full flex-col items-center justify-center">
+            <div className="flex w-full flex-col space-y-4 px-0 md:px-6">
+              <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
+                <div className="mt-4 w-full">
+                  <FormInput
+                    label={"Nombre"}
+                    control={control}
+                    name="nombre"
+                    type={"text"}
+                    className="mt-2"
+                    autoComplete="off"
+                    readOnly
+                  />
                 </div>
-              </ScrollArea>
+                <div className="mt-4 w-full">
+                  <FormInput
+                    label={"Apellido"}
+                    control={control}
+                    name="apellido"
+                    type={"text"}
+                    className="mt-2"
+                    autoComplete="off"
+                    readOnly
+                  />
+                </div>
+              </div>
+
+              <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
+                <div className="mt-4 w-full">
+                  <FormInput
+                    label={"Email"}
+                    control={control}
+                    name="email"
+                    type={"text"}
+                    className="mt-2"
+                    autoComplete="off"
+                    readOnly
+                  />
+                </div>
+              </div>
+
+              <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
+                <div className="mt-4 w-full">
+                  <FormInput
+                    label={"Legajo"}
+                    control={control}
+                    name="legajo"
+                    type={"text"}
+                    className="mt-2"
+                    autoComplete="off"
+                  />
+                </div>
+              </div>
+
+              <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
+                <div className="mt-4 w-full">
+                  <Controller
+                    control={control}
+                    name="esDocente"
+                    render={({ field }) => (
+                      <div className="flex items-center justify-between rounded-md border border-white p-2">
+                        <label htmlFor="esDocente" className="text-base">
+                          Es docente
+                        </label>
+                        <Switch id="esDocente" checked={field.value} onCheckedChange={field.onChange} />
+                      </div>
+                    )}
+                  />
+                </div>
+
+                <div className="mt-4 w-full">
+                  <Controller
+                    control={control}
+                    name="esTutor"
+                    render={({ field }) => (
+                      <div className="flex items-center justify-between rounded-md border border-white  p-2">
+                        <label htmlFor="esTutor" className="text-base">
+                          Es tutor
+                        </label>
+                        <Switch id="esTutor" checked={field.value} onCheckedChange={field.onChange} />
+                      </div>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="flex w-full flex-col lg:justify-between">
+                <div className="mt-4 w-full">
+                  {/* TODO: Pasar permisos actuales para que elimine de la lista*/}
+                  <RolesSelector onRolChange={onRolChange} label={"Roles actuales"} />
+                </div>
+
+                <ScrollArea className="mt-4 max-h-80 w-full pr-4">
+                  <div className="grid w-full grid-cols-2 gap-2">
+                    {currentRoles?.map((rol) => (
+                      <Badge
+                        key={rol}
+                        label={rolesDiccionario[rol]?.nombre ?? "Error"}
+                        variant={"default"}
+                        color={"aqua"}
+                        className="cursor-pointer justify-between text-sm"
+                        onClick={() => onRolDelete(rol)}
+                        title={`Eliminar ${rolesDiccionario[rol]?.nombre ?? ""} rol`}
+                      >
+                        <Button
+                          title="Eliminar"
+                          type="button"
+                          variant={"icon"}
+                          icon={XIcon}
+                          size="sm"
+                          color={"ghost"}
+                          className="rounded-full border-none hover:bg-[transparent]"
+                        />
+                      </Badge>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex w-full flex-row items-end justify-end space-x-4">
-          <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
-            Cancelar
-          </Button>
-          <Button title="Guardar" type="submit" variant="default" color="primary">
-            Guardar
-          </Button>
-        </div>
+          <div className="mt-2 flex w-full flex-row items-end justify-end space-x-4">
+            <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
+              Cancelar
+            </Button>
+            <Button title="Guardar" type="submit" variant="default" color="primary">
+              Guardar
+            </Button>
+          </div>
+        </ScrollArea>
       </form>
     </FormProvider>
   );

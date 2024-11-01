@@ -132,7 +132,7 @@ export const AdminRolForm = ({ id, onSubmit, onCancel }: Props) => {
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
-        <ScrollArea className="mt-4 max-h-80 w-full pr-4">
+        <ScrollArea className="mt-4 max-h-[calc(100vh_-_10%)] w-full pr-4 md:max-h-[calc(100vh_-_10%)] lg:max-h-[calc(100vh_-_10%)]">
           <div className="flex w-full flex-col items-center justify-center">
             <div className="flex w-full flex-col space-y-4 px-0 md:px-6">
               <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
