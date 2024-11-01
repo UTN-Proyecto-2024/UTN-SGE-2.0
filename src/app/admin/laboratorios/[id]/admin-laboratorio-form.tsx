@@ -190,7 +190,7 @@ export const AdminLaboratorioForm = ({ id, onSubmit, onCancel }: Props) => {
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="flex h-full flex-col">
-        <ScrollArea className="max-h-[calc(100vh_-_10%)]" ref={scrollAreaRef}>
+        <ScrollArea className="max-h-[calc(100vh_-_300px)]" ref={scrollAreaRef}>
           <div className="flex flex-grow flex-col overflow-hidden">
             <div className="space-y-4 px-0 md:px-6">
               <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
@@ -246,97 +246,95 @@ export const AdminLaboratorioForm = ({ id, onSubmit, onCancel }: Props) => {
             </div>
 
             <div className="mt-4 flex flex-grow flex-col overflow-hidden">
-              <ScrollArea className={armarios.length > 0 ? "h-[150px]" : ""}>
-                <div className="mb-2 flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">Armarios</h3>
-                  <Button onClick={agregarArmario} variant="default" size="sm" type="button">
-                    <Plus size={16} className="mr-2" />
-                    Agregar Armario
-                  </Button>
-                </div>
-                <div className="flex-grow overflow-hidden">
-                  <div className="space-y-4 pr-4">
-                    {armarios.map((armario, armarioIndex) => (
-                      <div key={armario.id ?? armarioIndex} className="rounded border p-4">
-                        <div className="mb-2 flex items-center justify-between">
-                          <div className="flex items-center">
-                            <Button
-                              onClick={() => toggleArmarioExpansion(armarioIndex)}
-                              variant="default"
-                              size="sm"
-                              className="mr-2"
-                              type="button"
-                            >
-                              {armario.isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-                            </Button>
-                            <Input
-                              type="text"
-                              className="flex-grow"
-                              value={armario.nombre}
-                              onChange={(event) => {
-                                const newArmarios = [...armarios];
-                                if (!newArmarios[armarioIndex]) {
-                                  return;
-                                }
-                                newArmarios[armarioIndex].nombre = event.target.value;
-                                setArmarios(newArmarios);
-                              }}
-                            />
-                          </div>
+              <div className="mb-2 flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Armarios</h3>
+                <Button onClick={agregarArmario} variant="default" size="sm" type="button">
+                  <Plus size={16} className="mr-2" />
+                  Agregar Armario
+                </Button>
+              </div>
+              <div className="flex-grow overflow-hidden">
+                <div className="space-y-4 pr-4">
+                  {armarios.map((armario, armarioIndex) => (
+                    <div key={armario.id ?? armarioIndex} className="rounded border p-4">
+                      <div className="mb-2 flex items-center justify-between">
+                        <div className="flex flex-row items-center gap-x-4">
                           <Button
-                            onClick={() => eliminarArmario(armarioIndex)}
-                            variant="icon"
-                            color="outline"
-                            icon={MinusIcon}
+                            onClick={() => toggleArmarioExpansion(armarioIndex)}
+                            variant="default"
+                            size="sm"
+                            className="mr-2"
                             type="button"
+                          >
+                            {armario.isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                          </Button>
+                          <Input
+                            type="text"
+                            className="flex-grow"
+                            value={armario.nombre}
+                            onChange={(event) => {
+                              const newArmarios = [...armarios];
+                              if (!newArmarios[armarioIndex]) {
+                                return;
+                              }
+                              newArmarios[armarioIndex].nombre = event.target.value;
+                              setArmarios(newArmarios);
+                            }}
                           />
+                          <Button
+                            onClick={() => agregarEstante(armarioIndex)}
+                            variant="default"
+                            size="sm"
+                            className="mt-2"
+                            type="button"
+                          >
+                            <Plus size={16} className="mr-2" />
+                            Agregar Estante
+                          </Button>
                         </div>
-                        {armario.isExpanded && (
-                          <div className="ml-6 mt-2 space-y-2">
-                            {armario.estantes.map((estante, estanteIndex) => (
-                              <div key={estante.id ?? estanteIndex} className="flex items-center">
-                                <Input
-                                  type="text"
-                                  className="mr-2 flex-grow"
-                                  value={estante.nombre}
-                                  onChange={(event) => {
-                                    const newArmarios = [...armarios];
-                                    if (!newArmarios[armarioIndex]) {
-                                      return;
-                                    }
-                                    if (!newArmarios[armarioIndex].estantes[estanteIndex]) {
-                                      return;
-                                    }
-                                    newArmarios[armarioIndex].estantes[estanteIndex].nombre = event.target.value;
-                                    setArmarios(newArmarios);
-                                  }}
-                                />
-                                <Button
-                                  onClick={() => eliminarEstante(armarioIndex, estanteIndex)}
-                                  variant="icon"
-                                  color="outline"
-                                  icon={MinusIcon}
-                                  type="button"
-                                />
-                              </div>
-                            ))}
-                            <Button
-                              onClick={() => agregarEstante(armarioIndex)}
-                              variant="default"
-                              size="sm"
-                              className="mt-2"
-                              type="button"
-                            >
-                              <Plus size={16} className="mr-2" />
-                              Agregar Estante
-                            </Button>
-                          </div>
-                        )}
+                        <Button
+                          onClick={() => eliminarArmario(armarioIndex)}
+                          variant="icon"
+                          color="outline"
+                          icon={MinusIcon}
+                          type="button"
+                        />
                       </div>
-                    ))}
-                  </div>
+                      {armario.isExpanded && (
+                        <div className="ml-6 mt-2 grid grid-cols-2 gap-x-4 space-y-2">
+                          {armario.estantes.map((estante, estanteIndex) => (
+                            <div key={estante.id ?? estanteIndex} className="flex items-center">
+                              <Input
+                                type="text"
+                                className="mr-2 flex-grow"
+                                value={estante.nombre}
+                                onChange={(event) => {
+                                  const newArmarios = [...armarios];
+                                  if (!newArmarios[armarioIndex]) {
+                                    return;
+                                  }
+                                  if (!newArmarios[armarioIndex].estantes[estanteIndex]) {
+                                    return;
+                                  }
+                                  newArmarios[armarioIndex].estantes[estanteIndex].nombre = event.target.value;
+                                  setArmarios(newArmarios);
+                                }}
+                              />
+                              <Button
+                                onClick={() => eliminarEstante(armarioIndex, estanteIndex)}
+                                variant="icon"
+                                color="outline"
+                                icon={MinusIcon}
+                                type="button"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
-              </ScrollArea>
+              </div>
             </div>
           </div>
         </ScrollArea>

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const inputGetLaboratorios = z.object({
   searchText: z.string().default(""),
-  sedeId: z.string().optional(),
+  sedeId: z.string().optional().default(""),
 });
 
 export const inputGetLaboratoriosConEstadoReserva = inputGetLaboratorios.merge(
