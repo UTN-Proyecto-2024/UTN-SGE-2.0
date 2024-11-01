@@ -61,7 +61,7 @@ export const EquiposFilterTipo = ({ filters }: Props) => {
             <SelectTrigger
               disabled
               id="selectTipo"
-              className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+              className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
             >
               <SelectValue placeholder="Error cargando tipos de equipos" />
             </SelectTrigger>
@@ -88,7 +88,10 @@ export const EquiposFilterTipo = ({ filters }: Props) => {
         clearable
         debounceTime={0}
         value={currentTipo}
-        onChange={(value) => onTipoChange(value?.id ? String(value.id) : "")}
+        onChange={(value) => {
+          onTipoChange(value?.id ? String(value.id) : "");
+          setQuery("");
+        }}
       />
     </div>
   );
