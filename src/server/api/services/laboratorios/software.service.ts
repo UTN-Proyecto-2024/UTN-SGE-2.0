@@ -3,6 +3,7 @@ import {
   inputEditarSoftware,
   inputEliminarSoftware,
   inputGetSoftware,
+  inputGetSoftwareFilter,
 } from "@/shared/filters/laboratorio-filter.schema";
 import { protectedProcedure } from "../../trpc";
 import { validarInput } from "../helper";
@@ -14,11 +15,14 @@ import {
   eliminarSoftware,
 } from "../../repositories/laboratorios/software.repository";
 
-export const getAllSoftwareProcedure = protectedProcedure.query(async ({ ctx }) => {
-  const libros = await getAllSoftware(ctx);
+export const getAllSoftwareProcedure = protectedProcedure
+  .input(inputGetSoftwareFilter)
+  .query(async ({ ctx, input }) => {
+    validarInput(inputGetSoftwareFilter, input);
+    const libros = await getAllSoftware(ctx, input);
 
-  return libros;
-});
+    return libros;
+  });
 
 export const getSoftwarePorIdProcedure = protectedProcedure.input(inputGetSoftware).query(async ({ ctx, input }) => {
   validarInput(inputGetSoftware, input);
