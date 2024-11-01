@@ -1,7 +1,7 @@
 import { type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
-type SoftwareData = RouterOutputs["software"]["getAll"][number];
+type SoftwareData = RouterOutputs["software"]["getAll"]["software"][number];
 
 export const getColumns = () => {
   const colHelper = createColumnHelper<SoftwareData>();

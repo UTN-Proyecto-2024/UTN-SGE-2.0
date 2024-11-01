@@ -46,12 +46,18 @@ export default function CustomDatePicker<T extends FieldValues>({
     };
   }, []);
 
+  const adjustToLocalDate = (date: Date) => {
+    return new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+  };
+
   return (
     <Controller
       control={control}
       name={name}
       render={({ field: { onChange, value }, fieldState: { error } }) => {
-        const selectedDate = value ? new Date(value) : undefined;
+        const selectedDate = value
+          ? new Date(value).toISOString().split("T")[0]?.split("-").reverse().join("/")
+          : undefined;
 
         return (
           <div className={cn("flex flex-col", className)}>
@@ -71,9 +77,9 @@ export default function CustomDatePicker<T extends FieldValues>({
                 onClick={() => setIsOpen(!isOpen)}
               >
                 <input
-                  value={selectedDate ? format(selectedDate, "dd/MM/yyyy") : ""}
-                  onChange={(e) => {
-                    const date = new Date(e.target.value);
+                  value={selectedDate}
+                  onChange={() => {
+                    const date = new Date(value);
                     if (!isNaN(date.getTime())) {
                       onChange(format(date, "yyyy-MM-dd"));
                     }
@@ -88,9 +94,10 @@ export default function CustomDatePicker<T extends FieldValues>({
                 <div className="absolute z-10 mt-1 rounded-md bg-white shadow-lg">
                   <DayPicker
                     mode="single"
-                    selected={selectedDate}
+                    selected={selectedDate ? new Date(selectedDate) : undefined}
                     onSelect={(date) => {
-                      onChange(date ? format(date, "yyyy-MM-dd") : undefined);
+                      const adjustedDate = adjustToLocalDate(date ?? new Date());
+                      onChange(format(adjustedDate, "yyyy-MM-dd"));
                       setIsOpen(false);
                     }}
                     disabled={isDateDisabled}
