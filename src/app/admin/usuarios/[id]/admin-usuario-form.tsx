@@ -9,6 +9,7 @@ import { XIcon } from "lucide-react";
 import { inputEditarUsuario } from "@/shared/filters/admin-usuarios-filter.schema";
 import { RolesSelector } from "../../usuarios/_components/filtros/roles-selector";
 import { Switch } from "@/components/ui/switch";
+import ModalDrawer from "@/app/_components/modal/modal-drawer";
 
 type Props = {
   id: string;
@@ -21,6 +22,7 @@ type FormEditarUsuarioType = z.infer<typeof inputEditarUsuario>;
 
 export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
   const [rolesDiccionario, setRolesDiccionario] = useState<Record<string, RolType>>({});
+  const [showMessage, setShowMessage] = useState(false);
 
   const { data: todosLosRoles } = api.admin.roles.getAllRoles.useQuery();
   const { data: usuario, isLoading, isError } = api.admin.usuarios.getUsuarioPorId.useQuery({ id }, { enabled: !!id });
@@ -178,10 +180,35 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
                         <label htmlFor="esDocente" className="text-base">
                           Es docente
                         </label>
-                        <Switch id="esDocente" checked={field.value} onCheckedChange={field.onChange} />
+                        <Switch
+                          id="esDocente"
+                          checked={field.value}
+                          onCheckedChange={(checked) => {
+                            field.onChange(checked);
+                            if (!checked) {
+                              setShowMessage(true);
+                            } else {
+                              setShowMessage(false);
+                            }
+                          }}
+                        />
                       </div>
                     )}
                   />
+                  {showMessage && (
+                    <ModalDrawer
+                      titulo={"Confirmación"}
+                      open={true}
+                      submitText="Confirmar"
+                      onSubmit={() => setShowMessage(false)}
+                      isAlertDialog
+                    >
+                      <div>
+                        <span className="font-bold text-red-500">Tiene materias a cargo.</span> ¿esta seguro de esta
+                        acción?
+                      </div>
+                    </ModalDrawer>
+                  )}
                 </div>
 
                 <div className="mt-4 w-full">
