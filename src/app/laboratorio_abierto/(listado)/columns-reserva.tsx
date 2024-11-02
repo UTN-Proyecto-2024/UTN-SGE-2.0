@@ -79,7 +79,7 @@ export const getColumnasReservasLaboratorioAbierto = ({ filterByUser }: { filter
           return <span className="text-center">Rechazada</span>;
         }
         if (!laboratorio) {
-          return <span className="text-center">Sin informar</span>;
+          return <span className="text-center">No asignado</span>;
         }
 
         return laboratorio.nombre;
