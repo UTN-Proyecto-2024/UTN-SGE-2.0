@@ -25,6 +25,7 @@ export const inputReservaLaboratorioDiscrecional = z
     sedeId: z.string().refine((value) => parseInt(value) >= 0, { message: "Debe seleccionar una sede" }),
     horaInicio: z.string().min(1, { message: "Requerido" }),
     horaFin: z.string().min(1, { message: "Requerido" }),
+    laboratorioId: z.string().refine((value) => parseInt(value) >= 0, { message: "Debe seleccionar un laboratorio" }),
   })
   .merge(inputReservaLaboratorioDiscrecionalBase);
 

@@ -21,6 +21,7 @@ import { ReservaDetalle } from "./info-basica-reserva";
 import { SelectSedeForm } from "@/app/_components/select-ubicacion/select-sede";
 import CustomDatePicker from "@/components/date-picker";
 import { MotivoRechazo } from "./rechazo-alert";
+import { LaboratorioDropdownSingleForm } from "@/app/_components/form/laboratorios-dropdown-multiple";
 
 type Props = {
   cursoId?: string | null | number;
@@ -131,6 +132,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
           sedeId: String(formHook.watch("sedeId")),
           horaInicio: formHook.watch("horaInicio"),
           horaFin: formHook.watch("horaFin"),
+          laboratorioId: String(formHook.watch("laboratorioId")),
         },
         {
           onSuccess: () => {
@@ -310,20 +312,29 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
               </div>
 
               {esDiscrecional && (
-                <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-                  <div className="mt-4 basis-1/2">
-                    <FormInput
-                      label={"Hora de inicio"}
-                      control={control}
-                      name="horaInicio"
-                      className="mt-2"
-                      type={"time"}
-                    />
+                <>
+                  <LaboratorioDropdownSingleForm name="laboratorioId" control={control} />
+                  <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
+                    <div className="mt-4 basis-1/2">
+                      <FormInput
+                        label={"Hora de inicio"}
+                        control={control}
+                        name="horaInicio"
+                        className="mt-2"
+                        type={"time"}
+                      />
+                    </div>
+                    <div className="mt-4 basis-1/2">
+                      <FormInput
+                        label={"Hora de fin"}
+                        control={control}
+                        name="horaFin"
+                        className="mt-2"
+                        type={"time"}
+                      />
+                    </div>
                   </div>
-                  <div className="mt-4 basis-1/2">
-                    <FormInput label={"Hora de fin"} control={control} name="horaFin" className="mt-2" type={"time"} />
-                  </div>
-                </div>
+                </>
               )}
 
               <div className="flex w-full flex-col justify-end gap-y-4 lg:justify-between">

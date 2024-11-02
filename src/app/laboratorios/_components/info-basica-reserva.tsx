@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CalendarIcon, ClockIcon, MapPinIcon, TextIcon, WrenchIcon, XIcon } from "lucide-react";
+import { CalendarIcon, ClockIcon, MapPinIcon, TextIcon, WrenchIcon } from "lucide-react";
 import { Label } from "@/components/ui";
 import { api } from "@/trpc/react";
 import {

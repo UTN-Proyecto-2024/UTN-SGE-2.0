@@ -98,6 +98,44 @@ export const getAllLaboratoriosConEstadoReserva = async (ctx: { db: PrismaClient
   };
 };
 
+export const getAllLaboratoriosReservables = async (ctx: { db: PrismaClient }, input: InputGetAll) => {
+  const { searchText, sedeId } = input;
+
+  const laboratorios = await ctx.db.laboratorio.findMany({
+    include: {
+      armarios: {
+        select: {
+          id: true,
+          nombre: true,
+        },
+      },
+      sede: {
+        select: {
+          id: true,
+          nombre: true,
+        },
+      },
+    },
+    where: {
+      esReservable: true,
+      nombre: {
+        contains: searchText ?? undefined,
+        mode: "insensitive",
+      },
+      ...(sedeId !== undefined && sedeId !== null
+        ? {
+            sedeId: Number(sedeId),
+          }
+        : {}),
+    },
+  });
+
+  return {
+    count: laboratorios.length,
+    laboratorios: laboratorios,
+  };
+};
+
 type InputGetLaboratorioPorId = z.infer<typeof inputGetLaboratorio>;
 export const getLaboratorioPorId = async (ctx: { db: PrismaClient }, input: InputGetLaboratorioPorId) => {
   const { id } = input;
