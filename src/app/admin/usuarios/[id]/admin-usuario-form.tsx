@@ -23,7 +23,6 @@ type FormEditarUsuarioType = z.infer<typeof inputEditarUsuario>;
 export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
   const [rolesDiccionario, setRolesDiccionario] = useState<Record<string, RolType>>({});
   const [showMessage, setShowMessage] = useState(false);
-  const [tieneMaterias, setTieneMaterias] = useState(false);
 
   const { data: todosLosRoles } = api.admin.roles.getAllRoles.useQuery();
   const { data: usuario, isLoading, isError } = api.admin.usuarios.getUsuarioPorId.useQuery({ id }, { enabled: !!id });
@@ -53,10 +52,6 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
         esTutor: usuario?.esTutor ?? false,
         esDocente: usuario?.esDocente ?? false,
       });
-
-      if (usuario.materiasACargo.length > 0) {
-        setTieneMaterias(true);
-      }
     }
   }, [formHook, usuario]);
 
@@ -71,6 +66,24 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
       setRolesDiccionario(newRoles);
     }
   }, [todosLosRoles]);
+
+  // Hack porque al presionar `Escape` dentro del modal se activa primero el return antes que se pueda volver a activar el switch
+  useEffect(() => {
+    const handleEscPress = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setShowMessage(false);
+        formHook.setValue("esDocente", true);
+      }
+    };
+
+    if (showMessage) {
+      window.addEventListener("keydown", handleEscPress);
+    }
+
+    return () => {
+      setTimeout(() => window.removeEventListener("keydown", handleEscPress), 0);
+    };
+  }, [showMessage, formHook]);
 
   if (isLoading) {
     return <div>Cargando...</div>;
@@ -190,11 +203,8 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
                           checked={field.value}
                           onCheckedChange={(checked) => {
                             field.onChange(checked);
-                            if (!checked && tieneMaterias) {
-                              setShowMessage(true);
-                            } else {
-                              setShowMessage(false);
-                            }
+                            const mostrarMensaje = !checked && usuario?.tieneMaterias;
+                            setShowMessage(!!mostrarMensaje);
                           }}
                         />
                       </div>
@@ -203,13 +213,22 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
                   {showMessage && (
                     <ModalDrawer
                       titulo={"Confirmación"}
-                      open={true}
+                      open={showMessage}
+                      onOpenChange={(open) => setShowMessage(open)}
                       submitText="Confirmar"
-                      onSubmit={() => setShowMessage(false)}
+                      onSubmit={() => {
+                        setShowMessage(false);
+                        formHook.setValue("esDocente", false);
+                      }}
+                      cancelText="Cancelar"
+                      onCancel={() => {
+                        setShowMessage(false);
+                        formHook.setValue("esDocente", true);
+                      }}
                       isAlertDialog
                     >
                       <div>
-                        <span className="font-bold text-red-500">Tiene materias a cargo.</span> ¿esta seguro de esta
+                        <span className="font-bold">El usuario tiene materias a cargo.</span> ¿esta seguro de esta
                         acción?
                       </div>
                     </ModalDrawer>

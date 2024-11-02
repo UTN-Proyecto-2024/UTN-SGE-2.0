@@ -116,21 +116,11 @@ type InputGetUsuarioPorId = z.infer<typeof inputGetUsuario>;
 export const getUsuarioPorId = async (ctx: { db: PrismaClient }, input: InputGetUsuarioPorId) => {
   const { id } = input;
 
-  const usuario = await ctx.db.user.findUnique({
+  const usuarioProm = ctx.db.user.findUnique({
     include: {
       usuarioRol: {
         include: {
           rol: true,
-        },
-      },
-      materiasDirector: {
-        select: {
-          id: true,
-          nombre: true,
-          codigo: true,
-          anio: true,
-          duracion: true,
-          tipo: true,
         },
       },
     },
@@ -139,12 +129,23 @@ export const getUsuarioPorId = async (ctx: { db: PrismaClient }, input: InputGet
     },
   });
 
+  const tieneMateriasProm = ctx.db.$queryRaw<{ tienematerias: boolean }[]>`
+    SELECT
+      EXISTS (SELECT 1 FROM "Materia" m WHERE m."directorUsuarioId" = ${id}) OR
+      EXISTS (SELECT 1 FROM "Curso" c WHERE c."profesorId" = ${id}) OR
+      EXISTS (SELECT 1 FROM "CursoAyudante" ca WHERE ca."userId" = ${id}) OR
+      EXISTS (SELECT 1 FROM "MateriaJefeTp" mj WHERE mj."jefeTrabajoPracticoUsuarioId" = ${id}) AS tienematerias;
+  `;
+
+  const [usuario, tieneMaterias] = await Promise.all([usuarioProm, tieneMateriasProm]);
+
   if (!usuario) return null;
+
+  const usuarioTieneMaterias = tieneMaterias.length > 0 ? (tieneMaterias[0]?.tienematerias ?? false) : false;
 
   return {
     ...usuario,
-    esDirectorDeMateria: usuario.materiasDirector.length > 0,
-    materiasACargo: usuario.materiasDirector,
+    tieneMaterias: usuarioTieneMaterias,
   };
 };
 
