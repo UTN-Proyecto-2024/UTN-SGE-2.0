@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { estaDentroDe } from "@/shared/string-compare";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Autocomplete, Button, Input, ScrollArea, Select, SelectTrigger, SelectValue } from "@/components/ui";
-import { MinusIcon } from "lucide-react";
+import { MinusIcon, WrenchIcon } from "lucide-react";
 import { type Control, type FieldValues, type Path, useFormContext } from "react-hook-form";
 import { Switch } from "@/components/ui/switch";
 import { type FormReservarLaboratorioAbiertoType } from "@/app/laboratorio_abierto/reservar/[tipo]/reserva-form";
@@ -147,7 +147,9 @@ export const FormEquipoTipoSelector = <T extends FieldValues>({ name: nombre }: 
           htmlFor={name}
           className="flex w-full items-center justify-between rounded-md border p-2 hover:cursor-pointer hover:bg-gray-100/20"
         >
-          <div className="mx-2 text-sm">Requiere instrumental</div>
+          <div className="flex flex-row justify-center text-base">
+            <WrenchIcon className="m-auto mr-2 h-4 w-4" /> Requiere instrumental
+          </div>
           <Switch id={name} checked={requiereInstrumental} onCheckedChange={setRequiereInstrumental} />
         </label>
       </div>
