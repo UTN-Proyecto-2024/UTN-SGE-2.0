@@ -26,6 +26,7 @@ export const inputReservaLaboratorioDiscrecional = z
     horaInicio: z.string().min(1, { message: "Requerido" }),
     horaFin: z.string().min(1, { message: "Requerido" }),
     laboratorioId: z.string().refine((value) => parseInt(value) >= 0, { message: "Debe seleccionar un laboratorio" }),
+    agregarAPantalla: z.boolean().default(false),
   })
   .merge(inputReservaLaboratorioDiscrecionalBase);
 
@@ -40,7 +41,7 @@ export const inputReservaLaboratorioAbierto = z.object({
   fechaReserva: z.string().min(1, { message: "Requerido" }),
   horaInicio: z.string().min(1, { message: "Requerido" }),
   horaFin: z.string().min(1, { message: "Requerido" }),
-  concurrentes: z.number().min(1, { message: "Requerido" }),
+  concurrentes: z.string().min(1, { message: "Requerido" }),
   sedeId: z.string().refine((value) => parseInt(value) >= 0, { message: "Debe seleccionar una sede" }),
   equipoReservado: z.array(inputEquipoReservado).default([]),
   observaciones: z.string().default(""),

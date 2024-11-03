@@ -22,6 +22,7 @@ import { SelectSedeForm } from "@/app/_components/select-ubicacion/select-sede";
 import CustomDatePicker from "@/components/date-picker";
 import { MotivoRechazo } from "./rechazo-alert";
 import { LaboratorioDropdownSingleForm } from "@/app/_components/form/laboratorios-dropdown-multiple";
+import { LaptopIcon, ProjectorIcon, ScreenShareIcon } from "lucide-react";
 
 type Props = {
   cursoId?: string | null | number;
@@ -75,6 +76,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
       observaciones: reservaData?.descripcion ?? "",
       esDiscrecional: esDiscrecional,
       sedeId: esDiscrecional ? String(reservaData?.sedeId) : undefined,
+      agregarAPantalla: esDiscrecional ? false : undefined,
     } as FormReservarLaboratorioType;
   }, [cursoId, esDiscrecional, esNuevo, reservaData, reservaId]);
 
@@ -133,6 +135,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
           horaInicio: formHook.watch("horaInicio"),
           horaFin: formHook.watch("horaFin"),
           laboratorioId: String(formHook.watch("laboratorioId")),
+          agregarAPantalla: formHook.watch("agregarAPantalla"),
         },
         {
           onSuccess: () => {
@@ -197,7 +200,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
-        <ScrollArea className="max-h-[calc(100vh_-_35%)]">
+        <ScrollArea className="max-h-[calc(100vh_-_300px)]">
           <div className="flex w-full flex-col items-center justify-center">
             {haSidoRechazada && <MotivoRechazo motivoRechazo={reservaData?.reserva.motivoRechazo ?? ""} />}
             <div className="flex flex-col space-y-4 px-0 md:px-6">
@@ -338,6 +341,26 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
               )}
 
               <div className="flex w-full flex-col justify-end gap-y-4 lg:justify-between">
+                {esDiscrecional && (
+                  <div className="items-top flex space-x-2">
+                    <Controller
+                      control={control}
+                      name="agregarAPantalla"
+                      render={({ field }) => (
+                        <label
+                          htmlFor="agregarAPantalla"
+                          className="flex w-full items-center justify-between rounded-md border p-2 hover:cursor-pointer hover:bg-gray-100/20"
+                        >
+                          <div className="flex flex-row justify-center text-base">
+                            <ScreenShareIcon className="m-auto mr-2 h-4 w-4" /> Agregar a pantalla
+                          </div>
+                          <Switch id="agregarAPantalla" checked={field.value} onCheckedChange={field.onChange} />
+                        </label>
+                      )}
+                    />
+                  </div>
+                )}
+
                 <div className="items-top flex space-x-2">
                   <Controller
                     control={control}
@@ -347,7 +370,9 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
                         htmlFor="requierePc"
                         className="flex w-full items-center justify-between rounded-md border p-2 hover:cursor-pointer hover:bg-gray-100/20"
                       >
-                        <div className="text-base">Requiere PCs para los alumnos</div>
+                        <div className="flex flex-row justify-center text-base">
+                          <LaptopIcon className="m-auto mr-2 h-4 w-4" /> Requiere PCs para los alumnos
+                        </div>
                         <Switch id="requierePc" checked={field.value} onCheckedChange={field.onChange} />
                       </label>
                     )}
@@ -363,7 +388,9 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
                         htmlFor="requiereProyector"
                         className="flex w-full items-center justify-between rounded-md border p-2 hover:cursor-pointer hover:bg-gray-100/20"
                       >
-                        <div className="text-base">Requiere proyector</div>
+                        <div className="flex flex-row justify-center text-base">
+                          <ProjectorIcon className="m-auto mr-2 h-4 w-4" /> Requiere proyector
+                        </div>
                         <Switch id="requiereProyector" checked={field.value} onCheckedChange={field.onChange} />
                       </label>
                     )}

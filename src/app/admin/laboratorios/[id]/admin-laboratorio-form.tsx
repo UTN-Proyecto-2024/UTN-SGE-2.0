@@ -145,17 +145,12 @@ export const AdminLaboratorioForm = ({ id, onSubmit, onCancel }: Props) => {
   const agregarEstante = (armarioIndex: number) => {
     saveScrollPosition();
     const nuevosArmarios = [...armarios];
-    if (!nuevosArmarios || !nuevosArmarios[armarioIndex] || !nuevosArmarios[armarioIndex].estantes) {
+    if (!nuevosArmarios[armarioIndex]) {
       return;
     }
-
-    // Asignamos a una variable después de las comprobaciones
-    const armario = nuevosArmarios[armarioIndex];
-
-    armario.estantes.push({
-      nombre: `Estante ${(armario?.estantes?.length ?? 0) + 1}`,
+    nuevosArmarios[armarioIndex].estantes.push({
+      nombre: `Estante ${nuevosArmarios[armarioIndex]?.estantes.length + 1}`,
     });
-
     setArmarios(nuevosArmarios);
   };
 
@@ -195,7 +190,7 @@ export const AdminLaboratorioForm = ({ id, onSubmit, onCancel }: Props) => {
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="flex h-full flex-col">
-        <ScrollArea className="max-h-[calc(100vh_-_10%)]" ref={scrollAreaRef}>
+        <ScrollArea className="max-h-[calc(100vh_-_300px)]" ref={scrollAreaRef}>
           <div className="flex flex-grow flex-col overflow-hidden">
             <div className="space-y-4 px-0 md:px-6">
               <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
@@ -263,7 +258,7 @@ export const AdminLaboratorioForm = ({ id, onSubmit, onCancel }: Props) => {
                   {armarios.map((armario, armarioIndex) => (
                     <div key={armario.id ?? armarioIndex} className="rounded border p-4">
                       <div className="mb-2 flex items-center justify-between">
-                        <div className="flex items-center">
+                        <div className="flex flex-row items-center gap-x-4">
                           <Button
                             onClick={() => toggleArmarioExpansion(armarioIndex)}
                             variant="default"
@@ -286,6 +281,16 @@ export const AdminLaboratorioForm = ({ id, onSubmit, onCancel }: Props) => {
                               setArmarios(newArmarios);
                             }}
                           />
+                          <Button
+                            onClick={() => agregarEstante(armarioIndex)}
+                            variant="default"
+                            size="sm"
+                            className="mt-2"
+                            type="button"
+                          >
+                            <Plus size={16} className="mr-2" />
+                            Agregar Estante
+                          </Button>
                         </div>
                         <Button
                           onClick={() => eliminarArmario(armarioIndex)}
@@ -296,7 +301,7 @@ export const AdminLaboratorioForm = ({ id, onSubmit, onCancel }: Props) => {
                         />
                       </div>
                       {armario.isExpanded && (
-                        <div className="ml-6 mt-2 space-y-2">
+                        <div className="ml-6 mt-2 grid grid-cols-2 gap-x-4 space-y-2">
                           {armario.estantes.map((estante, estanteIndex) => (
                             <div key={estante.id ?? estanteIndex} className="flex items-center">
                               <Input
@@ -324,16 +329,6 @@ export const AdminLaboratorioForm = ({ id, onSubmit, onCancel }: Props) => {
                               />
                             </div>
                           ))}
-                          <Button
-                            onClick={() => agregarEstante(armarioIndex)}
-                            variant="default"
-                            size="sm"
-                            className="mt-2"
-                            type="button"
-                          >
-                            <Plus size={16} className="mr-2" />
-                            Agregar Estante
-                          </Button>
                         </div>
                       )}
                     </div>

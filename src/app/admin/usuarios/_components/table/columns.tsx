@@ -49,9 +49,11 @@ export const getColumns = () => {
 
         return (
           <div className="flex flex-row space-x-2">
-            {rolesUsuario.map((rol) => (
-              <Badge key={rol.rolId} color="aqua" label={rol.rol.nombre} />
-            ))}
+            {rolesUsuario
+              .sort((a, b) => a.rol.nombre.localeCompare(b.rol.nombre))
+              .map((rol) => (
+                <Badge key={rol.rolId} color="aqua" label={rol.rol.nombre} />
+              ))}
           </div>
         );
       },

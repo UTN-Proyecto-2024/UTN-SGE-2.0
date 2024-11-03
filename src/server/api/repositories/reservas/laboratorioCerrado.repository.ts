@@ -449,6 +449,7 @@ export const crearReservaLaboratorioCerradoDiscrecional = async (
           usuarioSolicitoId: userId,
           usuarioCreadorId: userId,
           usuarioModificadorId: userId,
+          mostrarEnPantalla: input.agregarAPantalla,
           reservaLaboratorioCerrado: {
             create: {
               esDiscrecional: true,

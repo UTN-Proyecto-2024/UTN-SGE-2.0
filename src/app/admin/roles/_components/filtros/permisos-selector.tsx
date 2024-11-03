@@ -54,7 +54,7 @@ export const PermisosSelector = ({ onPermisoChange, currentPermisoId, label }: P
             <SelectTrigger
               disabled
               id="selectPermiso"
-              className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+              className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
             >
               <SelectValue placeholder="Error cargando permisos" />
             </SelectTrigger>
@@ -82,7 +82,10 @@ export const PermisosSelector = ({ onPermisoChange, currentPermisoId, label }: P
         clearable
         debounceTime={0}
         value={currentPermiso}
-        onChange={(value) => onPermisoChange(value?.id ? String(value.id) : "")}
+        onChange={(value) => {
+          onPermisoChange(value?.id ? String(value.id) : "");
+          setQuery("");
+        }}
       />
     </div>
   );

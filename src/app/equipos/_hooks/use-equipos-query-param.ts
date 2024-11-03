@@ -51,10 +51,25 @@ const changeSearchText = (filters: EquiposFilters, searchText: string): EquiposF
   return filtersTyped;
 };
 
+const changeSede = (filters: EquiposFilters, sede: string): EquiposFilters => {
+  const newFilters: EquiposFilters = {
+    ...filters,
+    sede,
+    laboratorio: "",
+    armario: "",
+    pageIndex: "0",
+  };
+
+  const filtersTyped = inputGetEquipos.parse(newFilters);
+
+  return filtersTyped;
+};
+
 const changeLaboratorio = (filters: EquiposFilters, laboratorio: string): EquiposFilters => {
   const newFilters: EquiposFilters = {
     ...filters,
     laboratorio,
+    armario: "",
     pageIndex: "0",
   };
 
@@ -106,6 +121,7 @@ export const useEquiposQueryParam = (filters: EquiposFilters) => {
   const sorting = getSorting(filters);
   const pagination = getPagination(filters);
   const searchText = filters.searchText;
+  const sede = filters.sede;
   const laboratorio = filters.laboratorio;
   const armario = filters.armario;
   const tipo = filters.tipo;
@@ -144,6 +160,15 @@ export const useEquiposQueryParam = (filters: EquiposFilters) => {
     [filters, changeQueryParams],
   );
 
+  const onSedeChange = useCallback(
+    (sede: string) => {
+      const newFilters = changeSede(filters, sede);
+
+      changeQueryParams({ ...newFilters });
+    },
+    [filters, changeQueryParams],
+  );
+
   const onLaboratorioChange = useCallback(
     (materia: string) => {
       const newFilters = changeLaboratorio(filters, materia);
@@ -176,12 +201,14 @@ export const useEquiposQueryParam = (filters: EquiposFilters) => {
     pagination,
     sorting,
     searchText,
+    sede,
     laboratorio,
     armario,
     tipo,
     onSortingChange,
     onPaginationChange,
     onSearchTextChange,
+    onSedeChange,
     onLaboratorioChange,
     onArmarioChange,
     onTipoChange,

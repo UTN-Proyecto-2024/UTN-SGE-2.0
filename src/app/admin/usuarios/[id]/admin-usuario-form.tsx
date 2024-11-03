@@ -1,6 +1,6 @@
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { type RouterOutputs, api } from "@/trpc/react";
-import { Button, FormInput, ScrollArea, toast } from "@/components/ui";
+import { Button, Input, ScrollArea, toast } from "@/components/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
 import { useEffect, useState } from "react";
@@ -9,6 +9,7 @@ import { XIcon } from "lucide-react";
 import { inputEditarUsuario } from "@/shared/filters/admin-usuarios-filter.schema";
 import { RolesSelector } from "../../usuarios/_components/filtros/roles-selector";
 import { Switch } from "@/components/ui/switch";
+import ModalDrawer from "@/app/_components/modal/modal-drawer";
 
 type Props = {
   id: string;
@@ -21,6 +22,7 @@ type FormEditarUsuarioType = z.infer<typeof inputEditarUsuario>;
 
 export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
   const [rolesDiccionario, setRolesDiccionario] = useState<Record<string, RolType>>({});
+  const [showMessage, setShowMessage] = useState(false);
 
   const { data: todosLosRoles } = api.admin.roles.getAllRoles.useQuery();
   const { data: usuario, isLoading, isError } = api.admin.usuarios.getUsuarioPorId.useQuery({ id }, { enabled: !!id });
@@ -31,10 +33,6 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
     mode: "onChange",
     defaultValues: {
       id: usuario?.id ?? undefined,
-      nombre: usuario?.nombre ?? "",
-      apellido: usuario?.apellido ?? "",
-      email: usuario?.email ?? "",
-      legajo: usuario?.legajo ?? "",
       roles: usuario?.usuarioRol.map((rol) => String(rol.rolId)) ?? [],
       esTutor: usuario?.esTutor ?? false,
       esDocente: usuario?.esDocente ?? false,
@@ -46,15 +44,10 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
 
   const currentRoles = watch("roles");
 
-  // TODO: Separar componente de formulario y logica de carga y actualización de rol
   useEffect(() => {
     if (usuario) {
       formHook.reset({
         id: usuario.id,
-        nombre: usuario?.nombre ?? "",
-        apellido: usuario?.apellido ?? "",
-        email: usuario?.email ?? "",
-        legajo: usuario?.legajo ?? "",
         roles: usuario.usuarioRol.map((rol) => String(rol.rolId)),
         esTutor: usuario?.esTutor ?? false,
         esDocente: usuario?.esDocente ?? false,
@@ -73,6 +66,24 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
       setRolesDiccionario(newRoles);
     }
   }, [todosLosRoles]);
+
+  // Hack porque al presionar `Escape` dentro del modal se activa primero el return antes que se pueda volver a activar el switch
+  useEffect(() => {
+    const handleEscPress = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setShowMessage(false);
+        formHook.setValue("esDocente", true);
+      }
+    };
+
+    if (showMessage) {
+      window.addEventListener("keydown", handleEscPress);
+    }
+
+    return () => {
+      setTimeout(() => window.removeEventListener("keydown", handleEscPress), 0);
+    };
+  }, [showMessage, formHook]);
 
   if (isLoading) {
     return <div>Cargando...</div>;
@@ -122,131 +133,167 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
-        <div className="flex w-full flex-col items-center justify-center">
-          <div className="flex w-full flex-col space-y-4 px-0 md:px-6">
-            <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
-              <div className="mt-4 w-full">
-                <FormInput
-                  label={"Nombre"}
-                  control={control}
-                  name="nombre"
-                  type={"text"}
-                  className="mt-2"
-                  autoComplete="off"
-                />
-              </div>
-              <div className="mt-4 w-full">
-                <FormInput
-                  label={"Apellido"}
-                  control={control}
-                  name="apellido"
-                  type={"text"}
-                  className="mt-2"
-                  autoComplete="off"
-                />
-              </div>
-            </div>
-
-            <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
-              <div className="mt-4 w-full">
-                <FormInput
-                  label={"Email"}
-                  control={control}
-                  name="email"
-                  type={"text"}
-                  className="mt-2"
-                  autoComplete="off"
-                />
-              </div>
-            </div>
-
-            <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
-              <div className="mt-4 w-full">
-                <FormInput
-                  label={"Legajo"}
-                  control={control}
-                  name="legajo"
-                  type={"text"}
-                  className="mt-2"
-                  autoComplete="off"
-                />
-              </div>
-            </div>
-
-            <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
-              <div className="mt-4 w-full">
-                <Controller
-                  control={control}
-                  name="esDocente"
-                  render={({ field }) => (
-                    <div className="flex items-center justify-between rounded-md border border-white p-2">
-                      <label htmlFor="esDocente" className="text-base">
-                        Es docente
-                      </label>
-                      <Switch id="esDocente" checked={field.value} onCheckedChange={field.onChange} />
-                    </div>
-                  )}
-                />
-              </div>
-
-              <div className="mt-4 w-full">
-                <Controller
-                  control={control}
-                  name="esTutor"
-                  render={({ field }) => (
-                    <div className="flex items-center justify-between rounded-md border border-white  p-2">
-                      <label htmlFor="esTutor" className="text-base">
-                        Es tutor
-                      </label>
-                      <Switch id="esTutor" checked={field.value} onCheckedChange={field.onChange} />
-                    </div>
-                  )}
-                />
-              </div>
-            </div>
-
-            <div className="flex w-full flex-col lg:justify-between">
-              <div className="mt-4 w-full">
-                {/* TODO: Pasar permisos actuales para que elimine de la lista*/}
-                <RolesSelector onRolChange={onRolChange} label={"Roles actuales"} />
-              </div>
-
-              <ScrollArea className="mt-4 max-h-80 w-full pr-4">
-                <div className="grid w-full grid-cols-2 gap-2">
-                  {currentRoles?.map((rol) => (
-                    <Badge
-                      key={rol}
-                      label={rolesDiccionario[rol]?.nombre ?? "Error"}
-                      variant={"default"}
-                      color={"aqua"}
-                      className="cursor-pointer justify-between text-sm"
-                      onClick={() => onRolDelete(rol)}
-                      title={`Eliminar ${rolesDiccionario[rol]?.nombre ?? ""} rol`}
-                    >
-                      <Button
-                        title="Eliminar"
-                        type="button"
-                        variant={"icon"}
-                        icon={XIcon}
-                        size="sm"
-                        color={"ghost"}
-                        className="rounded-full border-none hover:bg-[transparent]"
-                      />
-                    </Badge>
-                  ))}
+        <ScrollArea className="max-h-[calc(100vh_-_300px)] w-full pr-4">
+          <div className="flex w-full flex-col items-center justify-center">
+            <div className="flex w-full flex-col space-y-4 px-0 md:px-6">
+              <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
+                <div className="mt-4 w-full">
+                  <Input
+                    label={"Nombre"}
+                    name="nombre"
+                    type={"text"}
+                    className="mt-2"
+                    value={usuario?.nombre ?? ""}
+                    autoComplete="off"
+                    readOnly
+                  />
                 </div>
-              </ScrollArea>
+                <div className="mt-4 w-full">
+                  <Input
+                    label={"Apellido"}
+                    type={"text"}
+                    className="mt-2"
+                    autoComplete="off"
+                    value={usuario?.apellido ?? ""}
+                    readOnly
+                  />
+                </div>
+              </div>
+
+              <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
+                <div className="mt-4 w-full">
+                  <Input
+                    label={"Email"}
+                    name="email"
+                    type={"text"}
+                    className="mt-2"
+                    autoComplete="off"
+                    value={usuario?.email ?? ""}
+                    readOnly
+                  />
+                </div>
+              </div>
+
+              <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
+                <div className="mt-4 w-full">
+                  <Input
+                    label={"Legajo"}
+                    name="legajo"
+                    type={"text"}
+                    className="mt-2"
+                    autoComplete="off"
+                    value={usuario?.legajo ?? ""}
+                    readOnly
+                  />
+                </div>
+              </div>
+
+              <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
+                <div className="mt-4 w-full">
+                  <Controller
+                    control={control}
+                    name="esDocente"
+                    render={({ field }) => (
+                      <div className="flex items-center justify-between rounded-md border border-white p-2">
+                        <label htmlFor="esDocente" className="text-base">
+                          Es docente
+                        </label>
+                        <Switch
+                          id="esDocente"
+                          checked={field.value}
+                          onCheckedChange={(checked) => {
+                            field.onChange(checked);
+                            const mostrarMensaje = !checked && usuario?.tieneMaterias;
+                            setShowMessage(!!mostrarMensaje);
+                          }}
+                        />
+                      </div>
+                    )}
+                  />
+                  {showMessage && (
+                    <ModalDrawer
+                      titulo={"Confirmación"}
+                      open={showMessage}
+                      onOpenChange={(open) => setShowMessage(open)}
+                      submitText="Confirmar"
+                      onSubmit={() => {
+                        setShowMessage(false);
+                        formHook.setValue("esDocente", false);
+                      }}
+                      cancelText="Cancelar"
+                      onCancel={() => {
+                        setShowMessage(false);
+                        formHook.setValue("esDocente", true);
+                      }}
+                      isAlertDialog
+                    >
+                      <div>
+                        <span className="font-bold">El usuario tiene materias a cargo.</span> ¿esta seguro de esta
+                        acción?
+                      </div>
+                    </ModalDrawer>
+                  )}
+                </div>
+
+                <div className="mt-4 w-full">
+                  <Controller
+                    control={control}
+                    name="esTutor"
+                    render={({ field }) => (
+                      <div className="flex items-center justify-between rounded-md border border-white  p-2">
+                        <label htmlFor="esTutor" className="text-base">
+                          Es tutor
+                        </label>
+                        <Switch id="esTutor" checked={field.value} onCheckedChange={field.onChange} />
+                      </div>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div className="flex w-full flex-col lg:justify-between">
+                <div className="mt-4 w-full">
+                  {/* TODO: Pasar permisos actuales para que elimine de la lista*/}
+                  <RolesSelector onRolChange={onRolChange} label={"Roles actuales"} />
+                </div>
+
+                <ScrollArea className="mt-4 max-h-80 w-full pr-4">
+                  <div className="grid w-full grid-cols-2 gap-2">
+                    {currentRoles?.map((rol) => (
+                      <Badge
+                        key={rol}
+                        label={rolesDiccionario[rol]?.nombre ?? "Error"}
+                        variant={"default"}
+                        color={"aqua"}
+                        className="cursor-pointer justify-between text-sm"
+                        onClick={() => onRolDelete(rol)}
+                        title={`Eliminar ${rolesDiccionario[rol]?.nombre ?? ""} rol`}
+                      >
+                        <Button
+                          title="Eliminar"
+                          type="button"
+                          variant={"icon"}
+                          icon={XIcon}
+                          size="sm"
+                          color={"ghost"}
+                          className="rounded-full border-none hover:bg-[transparent]"
+                        />
+                      </Badge>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex w-full flex-row items-end justify-end space-x-4">
-          <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
-            Cancelar
-          </Button>
-          <Button title="Guardar" type="submit" variant="default" color="primary">
-            Guardar
-          </Button>
-        </div>
+          <div className="mt-2 flex w-full flex-row items-end justify-end space-x-4">
+            <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
+              Cancelar
+            </Button>
+            <Button title="Guardar" type="submit" variant="default" color="primary">
+              Guardar
+            </Button>
+          </div>
+        </ScrollArea>
       </form>
     </FormProvider>
   );

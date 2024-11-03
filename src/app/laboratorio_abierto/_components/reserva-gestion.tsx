@@ -58,16 +58,18 @@ export const ReservaAprobacion = ({ reservaId, onAprobar, onCancel, onRechazar }
 
   useEffect(() => {
     if (reservaData) {
+      const { laboratorioId, reserva, equipoReservado } = reservaData;
+      const { usuarioTutor, usuarioTutorId } = reserva;
       formHook.reset({
         id: reservaId,
         inventarioRevisado: [],
-        laboratorioId: reservaData?.laboratorioId ? String(reservaData?.laboratorioId) : undefined,
-        tutorId: reservaData?.reserva.usuarioTutorId ?? undefined,
+        laboratorioId: laboratorioId ? String(laboratorioId) : undefined,
+        tutorId: usuarioTutorId ?? undefined,
         tutor: {
-          id: reservaData?.reserva.usuarioTutorId ?? undefined,
-          label: `${reservaData?.reserva?.usuarioTutor?.apellido ?? ""} ${reservaData?.reserva?.usuarioTutor?.nombre ?? ""}`,
+          id: usuarioTutorId ?? undefined,
+          label: usuarioTutor ? `${usuarioTutor.apellido ?? ""} ${usuarioTutor.nombre ?? ""}` : undefined,
         },
-        equipoReservado: reservaData?.equipoReservado ?? [],
+        equipoReservado: equipoReservado ?? [],
       });
     }
   }, [formHook, reservaData, reservaId]);

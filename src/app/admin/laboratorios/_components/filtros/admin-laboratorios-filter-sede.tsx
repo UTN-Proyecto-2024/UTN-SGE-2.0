@@ -5,26 +5,24 @@ import { Autocomplete, Select, SelectTrigger, SelectValue } from "@/components/u
 import { api } from "@/trpc/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { type z } from "zod";
-import { useEquiposQueryParam } from "../../_hooks/use-equipos-query-param";
-import { type inputGetEquipos } from "@/shared/filters/equipos-filter.schema";
 import { estaDentroDe } from "@/shared/string-compare";
+import { type inputGetLaboratorios } from "@/shared/filters/admin-laboratorios-filter.schema";
+import { useAdminLaboratoriosQueryParam } from "../../_hooks/use-admin-laboratorios-query-param";
 
-type EquiposFilters = z.infer<typeof inputGetEquipos>;
+type AdminLaboratoriosFilters = z.infer<typeof inputGetLaboratorios>;
 
 type Props = {
-  filters: EquiposFilters;
+  filters: AdminLaboratoriosFilters;
 };
 
-export const EquiposFilterArmario = ({ filters }: Props) => {
-  const { armario, laboratorio, onArmarioChange } = useEquiposQueryParam(filters);
+export const AdminLaboratoriosFilterSede = ({ filters }: Props) => {
+  const { sedeId, onSedeChange } = useAdminLaboratoriosQueryParam(filters);
 
   const [query, setQuery] = useState("");
 
-  const { data, isLoading, isError } = api.equipos.getAllArmarios.useQuery({
-    laboratorioId: !laboratorio ? undefined : Number(laboratorio),
-  });
+  const { data, isLoading, isError } = api.admin.laboratorios.getAllSedes.useQuery();
 
-  const armarios = useMemo(() => {
+  const sedes = useMemo(() => {
     if (!data) return [];
 
     return data
@@ -39,11 +37,11 @@ export const EquiposFilterArmario = ({ filters }: Props) => {
       .filter((item) => !query || estaDentroDe(query, item.label));
   }, [data, query]);
 
-  const currentTipo = useMemo(() => {
-    if (!armarios) return null;
+  const currentSede = useMemo(() => {
+    if (!sedes) return null;
 
-    return armarios.find((item) => String(item.id) === armario);
-  }, [armarios, armario]);
+    return sedes.find((item) => String(item.id) === sedeId);
+  }, [sedes, sedeId]);
 
   if (isLoading) {
     return (
@@ -62,10 +60,10 @@ export const EquiposFilterArmario = ({ filters }: Props) => {
           <div className="flex flex-row items-center space-x-2">
             <SelectTrigger
               disabled
-              id="selectArmario"
+              id="selectSede"
               className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
             >
-              <SelectValue placeholder="Error cargando armarios" />
+              <SelectValue placeholder="Error cargando sedes" />
             </SelectTrigger>
           </div>
         </Select>
@@ -77,21 +75,21 @@ export const EquiposFilterArmario = ({ filters }: Props) => {
     <div className="w-full">
       <Autocomplete
         async
-        items={armarios}
+        items={sedes}
         noOptionsComponent={
           <div className="flex flex-col items-center justify-center gap-2 px-4 py-6 text-sm">
-            <span>No se encontraron armarios</span>
+            <span>No se encontraron sedes</span>
           </div>
         }
         className={""}
         onQueryChange={setQuery}
         isLoading={isLoading}
-        placeholder="Buscar por armario"
+        placeholder="Buscar por sede"
         clearable
         debounceTime={0}
-        value={currentTipo}
+        value={currentSede}
         onChange={(value) => {
-          onArmarioChange(value?.id ? String(value.id) : "");
+          onSedeChange(value?.id ? String(value.id) : "");
           setQuery("");
         }}
       />
