@@ -442,7 +442,7 @@ export const crearReservaLaboratorioCerradoDiscrecional = async (
     const reserva = await ctx.db.$transaction(async (tx) => {
       const reserva = await tx.reserva.create({
         data: {
-          estatus: "PENDIENTE",
+          estatus: "FINALIZADA",
           tipo: "LABORATORIO_CERRADO",
           fechaHoraInicio: armarFechaReserva(input.fechaReserva, input.horaInicio),
           fechaHoraFin: armarFechaReserva(input.fechaReserva, input.horaFin),
@@ -454,7 +454,7 @@ export const crearReservaLaboratorioCerradoDiscrecional = async (
               esDiscrecional: true,
               sedeId: Number(input.sedeId),
               cursoId: null,
-              laboratorioId: null,
+              laboratorioId: Number(input.laboratorioId),
               requierePC: input.requierePc,
               requiereProyector: input.requiereProyector,
               descripcion: input.observaciones,
