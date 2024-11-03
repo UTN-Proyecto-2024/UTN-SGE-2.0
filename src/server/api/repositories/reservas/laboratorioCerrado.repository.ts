@@ -69,12 +69,15 @@ export const getReservaPorId = async (ctx: { db: PrismaClient }, input: InputGet
 
 type InputGetAllReservas = z.infer<typeof inputGetAllSolicitudesReservaLaboratorioCerrado>;
 export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetAllReservas, userId: string) => {
-  const { pageIndex, pageSize, searchText, orderDirection, orderBy, estatus, filtrByUserId } = input;
+  const { pageIndex, pageSize, searchText, orderDirection, orderBy, estatus, filtrByUserId, pasadas, aprobadas } =
+    input;
 
   const filtrosWhereReservaLaboratorioCerrado: Prisma.ReservaLaboratorioCerradoWhereInput = {
     reserva: {
       ...(filtrByUserId === "true" ? { usuarioSolicitoId: userId } : {}),
       ...(estatus ? { estatus: estatus } : {}),
+      ...(pasadas === "true" ? { fechaHoraInicio: { lte: new Date() } } : {}),
+      ...(aprobadas === "true" ? { fechaHoraInicio: { gte: new Date() }, estatus: "FINALIZADA" } : {}),
     },
     ...(searchText
       ? {
