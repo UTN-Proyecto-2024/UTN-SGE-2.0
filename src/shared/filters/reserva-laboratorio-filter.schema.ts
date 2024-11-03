@@ -126,6 +126,8 @@ export const inputGetAllSolicitudesReservaLaboratorioCerrado = z.object({
   searchText: z.string().default(""),
   estatus: enumReservaEstatus.default("").catch(""),
   filtrByUserId: z.enum(["true", "false"]).optional(),
+  pasadas: z.enum(["true", "false"]).optional(),
+  aprobadas: z.enum(["true", "false"]).optional(),
 });
 
 export const inputRechazarReservaLaboratorioCerrado = z.object({

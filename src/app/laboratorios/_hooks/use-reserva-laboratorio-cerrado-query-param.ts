@@ -67,11 +67,39 @@ const changeEstatus = (
   filters: resevaLaboratorioCerradoFilters,
   newEstatus: EstadoReservaType | "",
 ): resevaLaboratorioCerradoFilters => {
-  const newFilters: resevaLaboratorioCerradoFilters = {
-    ...filters,
-    estatus: newEstatus,
-    pageIndex: "0",
-  };
+  let newFilters: resevaLaboratorioCerradoFilters;
+  if (
+    newEstatus !== "FINALIZADA" &&
+    newEstatus !== "CANCELADA" &&
+    newEstatus !== "RECHAZADA" &&
+    newEstatus !== "PENDIENTE" &&
+    newEstatus !== ""
+  ) {
+    newEstatus = "FINALIZADA";
+    newFilters = {
+      ...filters,
+      estatus: newEstatus,
+      pageIndex: "0",
+      aprobadas: "true",
+      pasadas: "false",
+    };
+  } else if (newEstatus === "FINALIZADA") {
+    newFilters = {
+      ...filters,
+      estatus: newEstatus,
+      pageIndex: "0",
+      pasadas: "true",
+      aprobadas: "false",
+    };
+  } else {
+    newFilters = {
+      ...filters,
+      estatus: newEstatus,
+      pageIndex: "0",
+      aprobadas: "false",
+      pasadas: "false",
+    };
+  }
 
   const filtersTyped = inputGetAllSolicitudesReservaLaboratorioCerrado.parse(newFilters);
 

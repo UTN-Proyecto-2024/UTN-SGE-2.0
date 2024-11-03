@@ -8,6 +8,10 @@ const reservaEstatus = [
     label: "Pendientes",
   },
   {
+    id: "APROBADA",
+    label: "Aprobadas",
+  },
+  {
     id: ReservaEstatus.FINALIZADA,
     label: "Pasadas",
   },
