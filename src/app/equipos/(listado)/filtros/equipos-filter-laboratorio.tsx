@@ -16,21 +16,21 @@ type Props = {
 };
 
 export const EquiposFilterLaboratorio = ({ filters }: Props) => {
-  const { laboratorio, onLaboratorioChange } = useEquiposQueryParam(filters);
+  const { sede, laboratorio, onLaboratorioChange } = useEquiposQueryParam(filters);
 
   const [query, setQuery] = useState("");
 
-  const { data, isLoading, isError } = api.admin.laboratorios.getAll.useQuery({ sedeId: undefined });
+  const { data, isLoading, isError } = api.admin.laboratorios.getAll.useQuery({ sedeId: !sede ? undefined : sede });
 
   const laboratorios = useMemo(() => {
     if (!data) return [];
 
     return data.laboratorios
       .map((item) => {
-        const { id, nombre, sede } = item;
+        const { id, nombre } = item;
         return {
           id: id,
-          label: `${nombre} (${sede.nombre})`,
+          label: `${nombre}`,
           data: item,
         };
       })
@@ -61,7 +61,7 @@ export const EquiposFilterLaboratorio = ({ filters }: Props) => {
             <SelectTrigger
               disabled
               id="selectLaboratorio"
-              className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+              className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
             >
               <SelectValue placeholder="Error cargando laboratorios" />
             </SelectTrigger>
@@ -78,7 +78,7 @@ export const EquiposFilterLaboratorio = ({ filters }: Props) => {
         items={laboratorios}
         noOptionsComponent={
           <div className="flex flex-col items-center justify-center gap-2 px-4 py-6 text-sm">
-            <span>No se encontró el laboratorio</span>
+            <span>No se encontraron laboratorios</span>
           </div>
         }
         className={""}
@@ -88,7 +88,10 @@ export const EquiposFilterLaboratorio = ({ filters }: Props) => {
         clearable
         debounceTime={0}
         value={currentLaboratorio}
-        onChange={(value) => onLaboratorioChange(value?.id ? String(value.id) : "")}
+        onChange={(value) => {
+          onLaboratorioChange(value?.id ? String(value.id) : "");
+          setQuery("");
+        }}
       />
     </div>
   );

@@ -48,7 +48,10 @@ export const CursosFilterAño = ({ filters }: Props) => {
         clearable
         debounceTime={0}
         value={currentAño}
-        onChange={(value) => onAñoChange(value?.id ? String(value.id) : "")}
+        onChange={(value) => {
+          onAñoChange(value?.id ? String(value.id) : "");
+          setQuery("");
+        }}
       />
     </div>
   );

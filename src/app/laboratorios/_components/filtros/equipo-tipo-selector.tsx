@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { estaDentroDe } from "@/shared/string-compare";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Autocomplete, Button, Input, ScrollArea, Select, SelectTrigger, SelectValue } from "@/components/ui";
-import { MinusIcon } from "lucide-react";
+import { MinusIcon, WrenchIcon } from "lucide-react";
 import { type Control, type FieldValues, type Path, useFormContext } from "react-hook-form";
 import { Switch } from "@/components/ui/switch";
 import { type FormReservarLaboratorioAbiertoType } from "@/app/laboratorio_abierto/reservar/[tipo]/reserva-form";
@@ -57,7 +57,7 @@ export const EquipoTipoSelector = ({ onEquipoTipoChange, label, disabled }: Prop
             <SelectTrigger
               disabled
               id="selectEquipoTipo"
-              className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+              className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
             >
               <SelectValue placeholder="Error cargando equipos" />
             </SelectTrigger>
@@ -100,11 +100,8 @@ export const FormEquipoTipoSelector = <T extends FieldValues>({ name: nombre }: 
   }
 
   const name = "equipoReservado";
-
   const formHook = useFormContext<FormReservarLaboratorioAbiertoType>();
-
   const currentEquipoTipo = formHook.watch(name);
-
   const [requiereInstrumental, setRequiereInstrumental] = useState(false);
 
   useEffect(() => {
@@ -113,14 +110,10 @@ export const FormEquipoTipoSelector = <T extends FieldValues>({ name: nombre }: 
 
   const onEquipoTipoChange = (equipoTipoId: number) => {
     const equipos = formHook.getValues(name);
-
     const existeEquipo = equipos.find((equipo) => equipo.equipoId === equipoTipoId);
 
-    if (existeEquipo) {
-      return;
-    } else {
+    if (!existeEquipo) {
       formHook.setValue(name, [...equipos, { equipoId: equipoTipoId, cantidad: 1 }]);
-      return;
     }
   };
 
@@ -154,62 +147,56 @@ export const FormEquipoTipoSelector = <T extends FieldValues>({ name: nombre }: 
           htmlFor={name}
           className="flex w-full items-center justify-between rounded-md border p-2 hover:cursor-pointer hover:bg-gray-100/20"
         >
-          <div className="text-base">Requiere instrumental</div>
+          <div className="flex flex-row justify-center text-base">
+            <WrenchIcon className="m-auto mr-2 h-4 w-4" /> Requiere instrumental
+          </div>
           <Switch id={name} checked={requiereInstrumental} onCheckedChange={setRequiereInstrumental} />
         </label>
       </div>
 
       {requiereInstrumental && (
         <>
-          <div className="mt-4 w-full">
-            <EquipoTipoSelector onEquipoTipoChange={onEquipoTipoChange} />
-          </div>
+          <EquipoTipoSelector onEquipoTipoChange={onEquipoTipoChange} />
+          <ScrollArea className="max-h-80 w-full">
+            <div className="flex w-full flex-col gap-y-4">
+              {currentEquipoTipo
+                .filter((equipo) => !!equipo)
+                .map((equipoTipo) => {
+                  const currentEquipo = todosLosEquiposTipo?.tipos?.find((equipo) => equipo.id === equipoTipo.equipoId);
 
-          <div className="mt-4 w-full">
-            <ScrollArea className="max-h-80 w-full">
-              <div className="flex w-full flex-col">
-                {currentEquipoTipo
-                  .filter((equipo) => !!equipo)
-                  .map((equipoTipo) => {
-                    const currentEquipo = todosLosEquiposTipo?.tipos?.find(
-                      (equipo) => equipo.id === equipoTipo.equipoId,
-                    );
+                  return (
+                    <div key={equipoTipo.equipoId} className="flex w-full flex-row gap-x-2 sm:gap-x-4">
+                      <Input readOnly value={currentEquipo?.nombre ?? ""} className="w-full grow" />
+                      <Input
+                        value={equipoTipo.cantidad}
+                        onChange={(event) => {
+                          const value = event.target.value;
 
-                    return (
-                      <div key={equipoTipo.equipoId} className="flex w-full flex-row gap-x-4 pl-4">
-                        <Input readOnly value={currentEquipo?.nombre ?? ""} className="mt-2 grow basis-2/3" />
-                        <Input
-                          value={equipoTipo.cantidad}
-                          onChange={(event) => {
-                            const value = event.target.value;
+                          if (value === "") {
+                            onEquipoCambiarCantidad(equipoTipo.equipoId, 0);
+                            return;
+                          }
 
-                            if (value === "") {
-                              onEquipoCambiarCantidad(equipoTipo.equipoId, 0);
-                              return;
-                            }
-
-                            onEquipoCambiarCantidad(equipoTipo.equipoId, Number(value));
-                          }}
-                          type="number"
-                          className="mt-2 grow basis-1/3"
-                          min={1}
-                          step={1}
-                        />
-                        <Button
-                          type="button"
-                          variant={"icon"}
-                          icon={MinusIcon}
-                          size="sm"
-                          className="mt-2 rounded-md border-none"
-                          onClick={() => onEquipoTipoDelete(equipoTipo.equipoId)}
-                          title={`Eliminar ${currentEquipo?.nombre} de la reserva`}
-                        />
-                      </div>
-                    );
-                  })}
-              </div>
-            </ScrollArea>
-          </div>
+                          onEquipoCambiarCantidad(equipoTipo.equipoId, Number(value));
+                        }}
+                        type="number"
+                        min={1}
+                        step={1}
+                      />
+                      <Button
+                        type="button"
+                        variant={"icon"}
+                        icon={MinusIcon}
+                        size="sm"
+                        className="h-[41px] w-[44px] shrink-0 rounded-md border-none"
+                        onClick={() => onEquipoTipoDelete(equipoTipo.equipoId)}
+                        title={`Eliminar ${currentEquipo?.nombre} de la reserva`}
+                      />
+                    </div>
+                  );
+                })}
+            </div>
+          </ScrollArea>
         </>
       )}
     </div>

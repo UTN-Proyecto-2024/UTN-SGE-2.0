@@ -14,13 +14,21 @@ export const getColumnasReservasLaboratorioAbierto = ({ filterByUser }: { filter
     colHelper.accessor("id", {
       header: "Reserva #",
     }),
+    ...(filterByUser
+      ? []
+      : [
+          colHelper.display({
+            header: "Solicitante",
+            cell: ({ row }) => {
+              return `${row.original.reserva.usuarioSolicito.nombre} ${row.original.reserva.usuarioSolicito.apellido}`;
+            },
+          }),
+        ]),
     colHelper.display({
       header: "Fecha",
       cell: ({ row }) => {
         const { reserva } = row.original;
-
-        const fecha = getDateISOString(reserva.fechaHoraInicio);
-
+        const fecha = getDateISOString(reserva.fechaHoraInicio).split("-").reverse().join("/");
         return `${fecha}`;
       },
     }),
@@ -28,9 +36,7 @@ export const getColumnasReservasLaboratorioAbierto = ({ filterByUser }: { filter
       header: "Hora Inicio",
       cell: ({ row }) => {
         const { reserva } = row.original;
-
         const fecha = getTimeISOString(reserva.fechaHoraInicio);
-
         return fecha;
       },
     }),
@@ -38,9 +44,7 @@ export const getColumnasReservasLaboratorioAbierto = ({ filterByUser }: { filter
       header: "Hora Fin",
       cell: ({ row }) => {
         const { reserva } = row.original;
-
         const fecha = getTimeISOString(reserva.fechaHoraFin);
-
         return fecha;
       },
     }),
@@ -97,19 +101,18 @@ export const getColumnasReservasLaboratorioAbierto = ({ filterByUser }: { filter
   ] as ColumnDef<LaboratorioAbiertoReservaData>[];
 
   const columnas = filterByUser ? columnasBasicas : [...columnasBasicas];
-
   return columnas;
 };
 
 export const getColumnasResevaNames = () => {
   return [
-    "Préstamo #",
+    "Reserva #",
+    "Solicitante",
     "Laboratorio",
     "Nombre Laboratorio",
     "Sede",
     "Fecha de solicitud",
     "Inicio de Reserva",
     "Fin de Reserva",
-    "Solicitado por",
   ];
 };

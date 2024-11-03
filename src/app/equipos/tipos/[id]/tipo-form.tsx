@@ -128,7 +128,7 @@ export const TipoForm = ({ id, onSubmit, onCancel }: Props) => {
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
-        <ScrollArea className="max-h-[calc(100vh_-_20%)] w-full pr-4 md:max-h-[calc(100vh_-_30%)] lg:max-h-[calc(100vh_-_30%)]">
+        <ScrollArea className="max-h-[calc(100vh_-_300px)] w-full pr-4">
           <div className="flex w-full flex-col items-center justify-center">
             <div className="flex flex-col space-y-4 px-0 md:flex-row md:justify-between md:space-x-8 md:px-6">
               <div className="flex w-full flex-col md:w-1/2 md:flex-col lg:justify-between">

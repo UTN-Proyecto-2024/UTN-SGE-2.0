@@ -26,7 +26,11 @@ export default function EditarReservaModal({ id, onSubmit }: ModalProps) {
     <ModalDrawer
       titulo="Editar reserva"
       description="Sí modifica la reserva, volverá al estado pendiente de aprobación"
-      trigger={<Button title="Editar reserva" variant="icon" color="ghost" icon={EditIcon} />}
+      trigger={
+        <Button color={"outline"} className="h-8 w-8 px-1 py-1">
+          <EditIcon size={16} />
+        </Button>
+      }
       open={open}
       onOpenChange={setOpen}
       className="max-h-[calc(100vh_-_10%)]"

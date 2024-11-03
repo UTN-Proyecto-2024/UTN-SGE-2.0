@@ -30,7 +30,6 @@ export const CargarCursos = () => {
           <Upload size={16} />
         </Button>
       }
-      className={"max-h-[calc(100vh_-_10%)]"}
     >
       <FileUpload onSubmit={handleSave} onCancel={handleCancel} />
     </ModalDrawer>

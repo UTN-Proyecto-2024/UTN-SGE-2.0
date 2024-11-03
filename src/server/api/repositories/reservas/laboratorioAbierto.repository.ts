@@ -126,6 +126,9 @@ export const getReservaPorId = async (ctx: { db: PrismaClient }, input: InputGet
           usuarioTutor: {
             select: informacionUsuario,
           },
+          usuarioSolicito: {
+            select: informacionUsuario,
+          },
         },
       },
       laboratorio: true,
@@ -455,7 +458,7 @@ const getReservaAbiertaCreateArgs = (input: InputCrearReservaLaboratorioAbierto,
           usuarioCreadorId: userId,
           usuarioModificadorId: userId,
           especialidad: input.especialidad ?? "",
-          concurrentes: input.concurrentes ?? 1,
+          concurrentes: input.concurrentes ? parseInt(input.concurrentes) : 1,
           equipoReservado: {
             createMany: {
               data: input.equipoReservado.map((equipo) => ({

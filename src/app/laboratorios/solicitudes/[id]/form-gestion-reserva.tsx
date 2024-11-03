@@ -22,7 +22,7 @@ export const ReservaViewAdmin = ({ reservaId, onCancel, onAprobar, onRechazar }:
   const estaCancelada = reservaData?.reserva.estatus === ReservaEstatus.CANCELADA;
 
   return (
-    <ScrollArea className="max-h-[calc(100vh_-_10%)]">
+    <ScrollArea className="max-h-[calc(100vh_-_300px)]">
       <div className="container mx-auto space-y-8 p-4">
         <ReservaDetalle reservaId={reservaId} mostrarCompleto={true} />
         {!esReservaPasada && !estaCancelada && (

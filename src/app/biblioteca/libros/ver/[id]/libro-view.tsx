@@ -17,7 +17,7 @@ export const LibroView = ({ id, onCancel }: Props) => {
 
   return (
     <div className="relative flex w-full flex-col gap-4">
-      <ScrollArea className="flex max-h-[calc(100vh_-_30%)] w-full flex-col pr-4">
+      <ScrollArea className="flex max-h-[calc(100vh_-_300px)] w-full flex-col pr-4">
         <div className="my-8 flex w-full flex-col items-center justify-center">
           <LibroInformacionBasica libroId={libroId} />
         </div>

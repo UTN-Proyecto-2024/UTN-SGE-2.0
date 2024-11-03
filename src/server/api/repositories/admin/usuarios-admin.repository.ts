@@ -116,7 +116,7 @@ type InputGetUsuarioPorId = z.infer<typeof inputGetUsuario>;
 export const getUsuarioPorId = async (ctx: { db: PrismaClient }, input: InputGetUsuarioPorId) => {
   const { id } = input;
 
-  const usuario = await ctx.db.user.findUnique({
+  const usuarioProm = ctx.db.user.findUnique({
     include: {
       usuarioRol: {
         include: {
@@ -129,7 +129,24 @@ export const getUsuarioPorId = async (ctx: { db: PrismaClient }, input: InputGet
     },
   });
 
-  return usuario;
+  const tieneMateriasProm = ctx.db.$queryRaw<{ tienematerias: boolean }[]>`
+    SELECT
+      EXISTS (SELECT 1 FROM "Materia" m WHERE m."directorUsuarioId" = ${id}) OR
+      EXISTS (SELECT 1 FROM "Curso" c WHERE c."profesorId" = ${id}) OR
+      EXISTS (SELECT 1 FROM "CursoAyudante" ca WHERE ca."userId" = ${id}) OR
+      EXISTS (SELECT 1 FROM "MateriaJefeTp" mj WHERE mj."jefeTrabajoPracticoUsuarioId" = ${id}) AS tienematerias;
+  `;
+
+  const [usuario, tieneMaterias] = await Promise.all([usuarioProm, tieneMateriasProm]);
+
+  if (!usuario) return null;
+
+  const usuarioTieneMaterias = tieneMaterias.length > 0 ? (tieneMaterias[0]?.tienematerias ?? false) : false;
+
+  return {
+    ...usuario,
+    tieneMaterias: usuarioTieneMaterias,
+  };
 };
 
 type InputGetUsuariosPorIds = z.infer<typeof inputGetUsuariosPorIds>;
@@ -165,10 +182,6 @@ export const editarUsuario = async (ctx: { db: PrismaClient }, input: InputEdita
     const usuario = await ctx.db.$transaction(async (prisma) => {
       const updatedUser = await prisma.user.update({
         data: {
-          nombre: input.nombre,
-          apellido: input.apellido,
-          email: input.email,
-          legajo: input.legajo,
           esDocente: input.esDocente,
           esTutor: input.esTutor,
           usuarioRol: {

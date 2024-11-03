@@ -31,6 +31,7 @@ export const inputGetEquipos = z.object({
   searchText: z.string().default(""),
   armario: z.string().default(""),
   tipo: z.string().default(""),
+  sede: z.string().default(""),
   laboratorio: z
     .string()
     .optional()
@@ -49,7 +50,7 @@ export const inputEditarEquipos = z
   .merge(inputAgregarEquipo);
 
 export const inputGetArmarios = z.object({
-  laboratorioId: z.number(),
+  laboratorioId: z.number().optional(),
 });
 
 export const inputAgregarMarca = z.object({

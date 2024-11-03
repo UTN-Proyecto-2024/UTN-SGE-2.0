@@ -36,7 +36,7 @@ export const getAllLaboratorios = async (ctx: { db: PrismaClient }, input: Input
         contains: searchText ?? undefined,
         mode: "insensitive",
       },
-      ...(sedeId !== undefined && sedeId !== null
+      ...(sedeId !== undefined && sedeId !== null && sedeId !== ""
         ? {
             sedeId: Number(sedeId),
           }
