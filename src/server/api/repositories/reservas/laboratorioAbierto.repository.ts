@@ -13,7 +13,7 @@ import type {
   inputCancelarReservaLaboratorioAbierto,
 } from "@/shared/filters/reserva-laboratorio-filter.schema";
 import { armarFechaReserva } from "@/shared/get-date";
-import { lanzarErrorSiLaboratorioOcupado } from "./laboratorioEnUso.repository";
+// import { lanzarErrorSiLaboratorioOcupado } from "./laboratorioEnUso.repository";
 
 type InputGetPorUsuarioID = z.infer<typeof inputGetReservaLaboratorioPorUsuarioId>;
 export const getReservaPorUsuarioId = async (ctx: { db: PrismaClient }, input: InputGetPorUsuarioID) => {
@@ -178,15 +178,15 @@ export const aprobarReserva = async (
         throw new Error("La reserva ya se encuentra cancelada");
       }
 
-      await lanzarErrorSiLaboratorioOcupado(
-        { db: tx },
-        {
-          fechaHoraInicio: reserva.fechaHoraInicio,
-          fechaHoraFin: reserva.fechaHoraFin,
-          laboratorioId: laboratorioId,
-          excepcionReservaId: reserva.id,
-        },
-      );
+      // await lanzarErrorSiLaboratorioOcupado(
+      //   { db: tx },
+      //   {
+      //     fechaHoraInicio: reserva.fechaHoraInicio,
+      //     fechaHoraFin: reserva.fechaHoraFin,
+      //     laboratorioId: laboratorioId,
+      //     excepcionReservaId: reserva.id,
+      //   },
+      // );
 
       await tx.reserva.update({
         where: {

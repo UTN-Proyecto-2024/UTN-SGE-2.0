@@ -26,13 +26,17 @@ export default function VerReservaModal({ params: { id } }: PageProps) {
   };
 
   const handleClickAprobar = () => {
-    router.refresh();
-    setTimeout(() => router.back(), 100);
+    router.back();
+    setTimeout(() => {
+      window.location.reload();
+    }, 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
   };
 
   const handleClickRechazar = () => {
-    router.refresh();
-    setTimeout(() => router.back(), 100);
+    router.back();
+    setTimeout(() => {
+      window.location.reload();
+    }, 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
   };
 
   return (

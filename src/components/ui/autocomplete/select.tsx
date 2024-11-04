@@ -12,6 +12,7 @@ import {
 } from "react-hook-form";
 
 import { cn } from "../../utils";
+import { XIcon } from "lucide-react";
 
 export interface ISelectItem {
   id: string;
@@ -36,6 +37,7 @@ export interface SelectSelectProps<TType> {
   isLoading?: boolean;
   clearable?: boolean;
   error?: string;
+  onClear?: () => void;
 }
 
 export const CustomSelect = <TType extends ISelectItem | string>({
@@ -57,7 +59,8 @@ export const CustomSelect = <TType extends ISelectItem | string>({
   const currentValue = typeof props.value === "string" ? props.value : props.value?.id;
 
   const handleClear = () => {
-    props.onChange?.(undefined);
+    props.onClear?.();
+    setKey(+new Date());
   };
 
   return (
@@ -71,6 +74,22 @@ export const CustomSelect = <TType extends ISelectItem | string>({
         <SelectTrigger className="w-full bg-input">
           {isLoading ? <SelectValue placeholder={"Cargando..."} /> : <SelectValue placeholder={placeholder ?? ""} />}
         </SelectTrigger>
+        {props.clearable && (
+          <Button
+            type="button"
+            className="absolute right-[3em] top-[3em] shadow-none"
+            variant={"icon"}
+            color={"secondary"}
+            size={"sm"}
+            icon={XIcon}
+            title="Limpiar"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleClear();
+            }}
+          />
+        )}
+
         <SelectContent id={id} className="hover:bg-card mt-1 max-h-[300px] overflow-y-auto bg-menu text-black">
           {props.items.map((item) => {
             if (typeof item === "string") {
@@ -139,17 +158,24 @@ export const FormSelect = <T extends FieldValues, TType extends ISelectItem | st
         });
 
         return (
-          <CustomSelect
-            {...props}
-            value={value}
-            onChange={(value) => {
-              props.onChange?.(value);
-              value && field.onChange?.(value as PathValue<T, Path<T>>);
-            }}
-            onBlur={field.onBlur}
-            isDirty={fieldState.isDirty}
-            error={error?.message}
-          />
+          <>
+            <CustomSelect
+              {...props}
+              value={value}
+              onChange={(value) => {
+                console.log("onChange", value);
+                props.onChange?.(value);
+                value && field.onChange?.(value as PathValue<T, Path<T>>);
+              }}
+              onClear={() => {
+                props.onChange?.("");
+                field.onChange?.("");
+              }}
+              onBlur={field.onBlur}
+              isDirty={fieldState.isDirty}
+              error={error?.message}
+            />
+          </>
         );
       }}
     />

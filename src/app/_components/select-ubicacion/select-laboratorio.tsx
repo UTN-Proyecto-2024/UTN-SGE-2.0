@@ -1,4 +1,4 @@
-import { useMemo, type ReactElement } from "react";
+import { useEffect, useMemo, useState, type ReactElement } from "react";
 import type { FieldValues } from "react-hook-form";
 import { api, type RouterInputs } from "@/trpc/react";
 import { FormSelect, type ISelectItem, type FormSelectProps } from "@/components/ui/autocomplete";
@@ -7,6 +7,7 @@ import { Select, SelectTrigger, SelectValue } from "@/components/ui";
 import { CheckIcon, XIcon } from "lucide-react";
 import { LaboratorioOcupado } from "../laboratorio-ocupado";
 import { LABORATORIO_ABIERTO_ROUTE, LABORATORIO_ROUTE } from "@/shared/server-routes";
+import { Switch } from "@/components/ui/switch";
 
 const RUTA_RESERVA_ABIERTO = LABORATORIO_ABIERTO_ROUTE.subRutas[1]?.href ?? "";
 const RUTA_RESERVA_CERRADO = LABORATORIO_ROUTE.subRutas[5]?.href ?? "";
@@ -62,12 +63,16 @@ export const SelectLaboratorioFormConEstadoReservaForm = <T extends FieldValues,
   ...props
 }: Omit<FormSelectProps<T, TType>, "items"> &
   PropsConEstadoReserva & { laboratorioId: string | null | undefined; esAbierto?: boolean }): ReactElement => {
+  const [seleccionoFueraSede, setSeleccionoFueraSede] = useState(false);
+  const [ignorarSede, setIgnorarSede] = useState(false);
+
   const propsQuery: PropsConEstadoReserva = {
     excepcionReservaId: props.excepcionReservaId,
     fechaHoraFin: props.fechaHoraFin,
     fechaHoraInicio: props.fechaHoraInicio,
     searchText: undefined,
     sedeId: props.sedeId,
+    ignorarSede,
   };
 
   const { data, isLoading, isError } = api.admin.laboratorios.getAllConEstadoReserva.useQuery(propsQuery);
@@ -79,12 +84,27 @@ export const SelectLaboratorioFormConEstadoReservaForm = <T extends FieldValues,
       const { id, nombre: label, estaOcupado } = laboratorio;
 
       return {
-        label: `${label} (${estaOcupado ? "Ocupado" : "Libre"})`,
+        label: `${ignorarSede ? `(${laboratorio.sede.nombre})` : ""} ${label} (${estaOcupado ? "Ocupado" : "Libre"})`,
         id: String(id),
         icon: !estaOcupado ? <CheckIcon className="text-success" /> : <XIcon className="text-danger" />,
       };
     });
-  }, [data]);
+  }, [data, ignorarSede]);
+
+  useEffect(() => {
+    if (!data) return;
+    if (!props.laboratorioId) return;
+
+    const seSeleccionoLaboratorioEnLista = data?.laboratorios.some(
+      (laboratorio) => laboratorio.id === Number(props.laboratorioId),
+    );
+    if (!seSeleccionoLaboratorioEnLista) {
+      setIgnorarSede(true);
+      setSeleccionoFueraSede(true);
+    } else {
+      setSeleccionoFueraSede(false);
+    }
+  }, [data, props.laboratorioId]);
 
   if (isLoading) {
     return <SelectLoading />;
@@ -94,8 +114,15 @@ export const SelectLaboratorioFormConEstadoReservaForm = <T extends FieldValues,
     return <SelectError />;
   }
 
+  const onChangeIgnorarSede = (value: boolean) => {
+    if (seleccionoFueraSede) {
+      return;
+    }
+    setIgnorarSede(value);
+  };
+
   return (
-    <>
+    <div className="flex flex-col gap-x-2">
       <FormSelect
         className={className}
         name={name}
@@ -103,6 +130,7 @@ export const SelectLaboratorioFormConEstadoReservaForm = <T extends FieldValues,
         items={laboratorios}
         {...props}
         disabled={!props.sedeId || props.disabled}
+        clearable
       />
       {props.fechaHoraInicio && props.fechaHoraFin && props.laboratorioId && (
         <LaboratorioOcupado
@@ -113,7 +141,13 @@ export const SelectLaboratorioFormConEstadoReservaForm = <T extends FieldValues,
           rutaBase={props.esAbierto ? RUTA_RESERVA_ABIERTO : RUTA_RESERVA_CERRADO}
         />
       )}
-    </>
+      <div className="mt-2 flex flex-row gap-x-2 text-base">
+        <Switch id="ignorarSede" name="ignorarSede" checked={ignorarSede} onCheckedChange={onChangeIgnorarSede} />
+        <label htmlFor="ignorarSede">
+          <span className="text-base">Ignorar sede</span>
+        </label>
+      </div>
+    </div>
   );
 };
 

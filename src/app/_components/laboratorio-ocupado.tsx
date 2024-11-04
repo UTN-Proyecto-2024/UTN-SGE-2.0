@@ -38,7 +38,7 @@ export const LaboratorioOcupado = (props: Props & { rutaBase?: string }) => {
   }
 
   return (
-    <Alert variant={"warn"} className="w-full">
+    <Alert variant={"warn"} className="mt-2 w-full">
       <AlertTitle className="flex flex-row">
         <CalendarOffIcon className="mr-2 h-4 w-4" />
         El laboratorio ya está ocupado

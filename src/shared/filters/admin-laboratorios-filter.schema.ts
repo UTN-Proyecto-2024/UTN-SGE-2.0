@@ -10,6 +10,7 @@ export const inputGetLaboratoriosConEstadoReserva = inputGetLaboratorios.merge(
     fechaHoraInicio: z.date().optional(),
     fechaHoraFin: z.date().optional(),
     excepcionReservaId: z.number().optional(),
+    ignorarSede: z.boolean().optional(),
   }),
 );
 

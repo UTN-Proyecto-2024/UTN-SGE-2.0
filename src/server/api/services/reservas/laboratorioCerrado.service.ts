@@ -27,6 +27,7 @@ import {
   enviarMailRechazoLaboratorioCerradoProcedure,
   enviarMailReservaLaboratorioCerradoProcedure,
 } from "../mails/emailLaboratorioCerrado.service";
+import { revalidatePath } from "next/cache";
 
 export const getReservaLaboratorioCerradoPorUserProcedure = protectedProcedure
   .input(inputGetReservaLaboratorioPorUsuarioId)
@@ -71,6 +72,8 @@ export const aprobarReservaProcedure = protectedProcedure
 
     void enviarMailAproboLaboratorioCerradoProcedure(ctx, reserva.id);
 
+    revalidatePath("/");
+
     return reserva;
   });
 
@@ -84,6 +87,8 @@ export const rechazarReservaProcedure = protectedProcedure
     const reserva = await rechazarReserva(ctx, input, userId);
 
     void enviarMailRechazoLaboratorioCerradoProcedure(ctx, reserva.id);
+
+    revalidatePath("/");
 
     return reserva;
   });
