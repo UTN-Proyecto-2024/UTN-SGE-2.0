@@ -12,7 +12,7 @@ import { type PrismaClient, type Prisma, type CursoDia, ReservaEstatus } from "@
 import type { z } from "zod";
 import { informacionUsuario } from "../usuario-helper";
 import { construirOrderByDinamico } from "@/shared/dynamic-orderby";
-import { lanzarErrorSiLaboratorioOcupado } from "./laboratorioEnUso.repository";
+// import { lanzarErrorSiLaboratorioOcupado } from "./laboratorioEnUso.repository";
 import { obtenerHoraInicioFin, addMinutes, setHours, setMinutes, armarFechaReserva } from "@/shared/get-date";
 
 type InputGetPorUsuarioID = z.infer<typeof inputGetReservaLaboratorioPorUsuarioId>;
@@ -172,15 +172,15 @@ export const aprobarReserva = async (ctx: { db: PrismaClient }, input: InputApro
 
       const laboratorioId = input.laboratorioId ? Number(input.laboratorioId) : undefined;
 
-      await lanzarErrorSiLaboratorioOcupado(
-        { db: tx },
-        {
-          fechaHoraInicio: reserva.fechaHoraInicio,
-          fechaHoraFin: reserva.fechaHoraFin,
-          laboratorioId: laboratorioId,
-          excepcionReservaId: reserva.id,
-        },
-      );
+      // await lanzarErrorSiLaboratorioOcupado(
+      //   { db: tx },
+      //   {
+      //     fechaHoraInicio: reserva.fechaHoraInicio,
+      //     fechaHoraFin: reserva.fechaHoraFin,
+      //     laboratorioId: laboratorioId,
+      //     excepcionReservaId: reserva.id,
+      //   },
+      // );
 
       await tx.reserva.update({
         where: {
@@ -192,7 +192,7 @@ export const aprobarReserva = async (ctx: { db: PrismaClient }, input: InputApro
           fechaAprobacion: new Date(),
           reservaLaboratorioCerrado: {
             update: {
-              laboratorioId: laboratorioId,
+              laboratorioId: laboratorioId ?? null,
               usuarioModificadorId: userId,
               equipoReservado: {
                 deleteMany: {},

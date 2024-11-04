@@ -28,6 +28,7 @@ interface ReservaAprobacionProps {
 }
 
 export const ReservaAprobacion = ({ reservaId, onAprobar, onCancel, onRechazar }: ReservaAprobacionProps) => {
+  const utils = api.useUtils();
   const { isPending: estaAprobando, mutate: aprobarReserva } =
     api.reservas.reservarLaboratorioCerrado.aprobarReserva.useMutation();
   const { isPending: estaRechazando, mutate: rechazarReserva } =
@@ -72,6 +73,9 @@ export const ReservaAprobacion = ({ reservaId, onAprobar, onCancel, onRechazar }
     aprobarReserva(data, {
       onSuccess: () => {
         toast.success("Reserva aprobada con éxito");
+        utils.reservas.reservarLaboratorioCerrado.getReservaPorID.invalidate({ id: reservaId }).catch((err) => {
+          console.error(err);
+        });
         onAprobar();
       },
       onError: (error) => {
@@ -87,6 +91,9 @@ export const ReservaAprobacion = ({ reservaId, onAprobar, onCancel, onRechazar }
       {
         onSuccess: () => {
           toast.success("Reserva rechazada con éxito");
+          utils.reservas.reservarLaboratorioCerrado.getReservaPorID.invalidate({ id: reservaId }).catch((err) => {
+            console.error(err);
+          });
           onRechazar();
         },
         onError: (error) => {
