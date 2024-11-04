@@ -52,7 +52,7 @@ export default function PageLayout({ route, buttons, children }: PageLayoutProps
               </TabsList>
             </Tabs>
           </div>
-          {buttons && <div className="mt-4 flex gap-x-2 lg:mt-0">{buttons}</div>}
+          {buttons && <div className="mt-4 flex gap-x-2 p-2 lg:mt-0">{buttons}</div>}
         </div>
       </header>
       <div className="mx-auto w-full space-y-6 px-4 py-6 pb-10 sm:px-6 lg:px-8">{children}</div>
