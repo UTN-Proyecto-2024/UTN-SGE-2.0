@@ -144,7 +144,8 @@ export const EquipoFormPrestarORenovar = ({ equipoId, onSubmit, onCancel, renova
             )}
           </div>
         </div>
-        <div className="flex w-full flex-row items-end justify-end space-x-4">
+
+        <div className="bottom-0 mb-1 flex w-full flex-row items-end justify-end space-x-4 bg-white md:justify-end lg:sticky">
           <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
             Cancelar
           </Button>

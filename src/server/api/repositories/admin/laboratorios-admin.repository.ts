@@ -75,7 +75,7 @@ export const getAllLaboratoriosConArmario = async (ctx: { db: PrismaClient }, in
 
 type InputGetAllConEstado = z.infer<typeof inputGetLaboratoriosConEstadoReserva>;
 export const getAllLaboratoriosConEstadoReserva = async (ctx: { db: PrismaClient }, input: InputGetAllConEstado) => {
-  const { searchText, sedeId, fechaHoraFin, fechaHoraInicio, excepcionReservaId } = input;
+  const { searchText, sedeId, fechaHoraFin, fechaHoraInicio, excepcionReservaId, ignorarSede } = input;
 
   if (!fechaHoraFin || !fechaHoraInicio) {
     return {
@@ -89,7 +89,7 @@ export const getAllLaboratoriosConEstadoReserva = async (ctx: { db: PrismaClient
     fechaHoraInicio: fechaHoraInicio,
     excepcionReservaId: excepcionReservaId,
     searchText,
-    sedeId: sedeId ? Number(sedeId) : undefined,
+    sedeId: ignorarSede ? undefined : sedeId ? Number(sedeId) : undefined,
   });
 
   return {
