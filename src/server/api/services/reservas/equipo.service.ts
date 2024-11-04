@@ -19,7 +19,7 @@ export const getReservaEquipoPorUserProcedure = protectedProcedure
 
     const reservas = await getReservaPorUsuarioId(ctx, input);
 
-    void enviarMailReservaEquipoProcedure(ctx, Number(input.id));
+    void enviarMailReservaEquipoProcedure(ctx, { reservaId: Number(input.id) });
     return reservas;
   });
 
