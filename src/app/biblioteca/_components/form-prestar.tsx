@@ -128,7 +128,7 @@ export const LibroFormPrestarORenovar = ({ libroId, onSubmit, onCancel, renovar 
             )}
           </div>
         </div>
-        <div className="flex w-full flex-row items-end space-x-4 md:justify-end">
+        <div className="bottom-0 flex w-full flex-row items-end space-x-4 bg-white md:justify-end lg:sticky">
           <Button
             title="Cancelar"
             type="button"

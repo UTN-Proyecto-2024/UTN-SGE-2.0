@@ -198,10 +198,12 @@ export const obtenerTodasLasReservasEnHorario = async (
     ) "r" ON "l"."id" = "r"."laboratorioId"
     LEFT JOIN "Sede" "s" ON "l"."sedeId" = "s"."id"
     LEFT JOIN "Armario" "a" ON "l"."id" = "a"."laboratorioId"
-    WHERE "l"."nombre" ILIKE '%' || ${searchText} || '%'
-        AND (${sedeId}::int IS NULL OR "l"."sedeId" = ${sedeId})
+    WHERE 
+      "l"."esReservable" AND 
+      "l"."nombre" ILIKE '%' || ${searchText} || '%' AND 
+      (${sedeId}::int IS NULL OR "l"."sedeId" = ${sedeId})
     GROUP BY "l"."id", "r"."laboratorioId", "s"."id"
-    ORDER BY "l"."id";
+    ORDER BY "l"."sedeId", "l"."nombre";
   `;
 
   const resultados = await ctx.db.$queryRaw<Laboratorio[]>(query);
