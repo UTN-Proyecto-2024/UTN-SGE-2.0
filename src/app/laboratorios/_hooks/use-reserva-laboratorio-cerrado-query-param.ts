@@ -4,6 +4,7 @@ import { type PaginationState, type SortingState } from "@tanstack/react-table";
 import { useCallback } from "react";
 import { type RouterOutputs } from "@/trpc/react";
 import { inputGetAllSolicitudesReservaLaboratorioCerrado } from "@/shared/filters/reserva-laboratorio-filter.schema";
+import { EstadoAprobada } from "@/shared/estado-reserva";
 
 type EstadoReservaType =
   RouterOutputs["reservas"]["reservarLaboratorioCerrado"]["getAll"]["reservas"][number]["reserva"]["estatus"];
@@ -69,11 +70,8 @@ const changeEstatus = (
 ): resevaLaboratorioCerradoFilters => {
   let newFilters: resevaLaboratorioCerradoFilters;
   if (
-    newEstatus !== "FINALIZADA" &&
-    newEstatus !== "CANCELADA" &&
-    newEstatus !== "RECHAZADA" &&
-    newEstatus !== "PENDIENTE" &&
-    newEstatus !== ""
+    //@ts-ignore estado custom para el filtro de reservas aprobadas.
+    newEstatus === EstadoAprobada
   ) {
     newEstatus = "FINALIZADA";
     newFilters = {
@@ -98,6 +96,8 @@ const changeEstatus = (
       pageIndex: "0",
       aprobadas: "false",
       pasadas: "false",
+      orderBy: "reserva_fechaHoraInicio",
+      orderDirection: "desc",
     };
   }
 

@@ -21,7 +21,6 @@ import { ReservaDetalle } from "./info-basica-reserva";
 import { SelectSedeForm } from "@/app/_components/select-ubicacion/select-sede";
 import CustomDatePicker from "@/components/date-picker";
 import { MotivoRechazo } from "./rechazo-alert";
-import { LaboratorioDropdownSingleForm } from "@/app/_components/form/laboratorios-dropdown-multiple";
 import { LaptopIcon, ProjectorIcon, ScreenShareIcon } from "lucide-react";
 import { SelectLaboratorioFormConEstadoReservaForm } from "@/app/_components/select-ubicacion/select-laboratorio";
 
@@ -452,7 +451,13 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
           )}
           {!estaEstatusCancelada && !esReservaPasada && (
             <Button title="Guardar" type="submit" variant="default" color="primary" className="mb-3">
-              {estaEstatusAprobada ? "Modificar" : haSidoRechazada ? "Modificar y solicitar" : "Guardar"}
+              {estaEstatusAprobada
+                ? "Modificar"
+                : haSidoRechazada
+                  ? "Modificar y solicitar"
+                  : esDiscrecional
+                    ? "Guardar y aprobar"
+                    : "Guardar"}
             </Button>
           )}
         </div>
