@@ -54,7 +54,7 @@ export const LABORATORIO_ROUTE = {
     },
     {
       href: "/laboratorios/software",
-      label: "Aplicaciones",
+      label: "Aplicaciones PC",
       isPublic: false,
     },
     {
@@ -69,7 +69,7 @@ export const LABORATORIO_ROUTE = {
     },
     {
       href: "/laboratorios/solicitudes",
-      label: "Solicitudes",
+      label: "Administrar reservas",
       isPublic: false,
     },
   ],

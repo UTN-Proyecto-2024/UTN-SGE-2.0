@@ -1,11 +1,16 @@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/components/utils";
+import { EstadoAprobada } from "@/shared/estado-reserva";
 import { ReservaEstatus } from "@prisma/client";
 
 const reservaEstatus = [
   {
     id: ReservaEstatus.PENDIENTE,
     label: "Pendientes",
+  },
+  {
+    id: EstadoAprobada,
+    label: "Aprobadas",
   },
   {
     id: ReservaEstatus.FINALIZADA,

@@ -15,13 +15,14 @@ import { FormEquipoTipoSelector } from "./filtros/equipo-tipo-selector";
 import { CursoTurno } from "@/app/_components/turno-text";
 import { Switch } from "@/components/ui/switch";
 import { FormInputPoliticas } from "@/app/_components/input-form-politicas";
-import { esFechaPasada, getDateISOString } from "@/shared/get-date";
+import { armarFechaReserva, esFechaPasada, getDateISOString } from "@/shared/get-date";
 import { ReservaEstatus, TurnoCurso } from "@prisma/client";
 import { ReservaDetalle } from "./info-basica-reserva";
 import { SelectSedeForm } from "@/app/_components/select-ubicacion/select-sede";
 import CustomDatePicker from "@/components/date-picker";
 import { MotivoRechazo } from "./rechazo-alert";
 import { LaptopIcon, ProjectorIcon, ScreenShareIcon } from "lucide-react";
+import { SelectLaboratorioFormConEstadoReservaForm } from "@/app/_components/select-ubicacion/select-laboratorio";
 
 type Props = {
   cursoId?: string | null | number;
@@ -133,6 +134,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
           sedeId: String(formHook.watch("sedeId")),
           horaInicio: formHook.watch("horaInicio"),
           horaFin: formHook.watch("horaFin"),
+          laboratorioId: String(formHook.watch("laboratorioId")),
           agregarAPantalla: formHook.watch("agregarAPantalla"),
         },
         {
@@ -313,20 +315,40 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
               </div>
 
               {esDiscrecional && (
-                <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-                  <div className="mt-4 basis-1/2">
-                    <FormInput
-                      label={"Hora de inicio"}
-                      control={control}
-                      name="horaInicio"
-                      className="mt-2"
-                      type={"time"}
-                    />
+                <>
+                  <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
+                    <div className="mt-4 basis-1/2">
+                      <FormInput
+                        label={"Hora de inicio"}
+                        control={control}
+                        name="horaInicio"
+                        className="mt-2"
+                        type={"time"}
+                      />
+                    </div>
+                    <div className="mt-4 basis-1/2">
+                      <FormInput
+                        label={"Hora de fin"}
+                        control={control}
+                        name="horaFin"
+                        className="mt-2"
+                        type={"time"}
+                      />
+                    </div>
                   </div>
-                  <div className="mt-4 basis-1/2">
-                    <FormInput label={"Hora de fin"} control={control} name="horaFin" className="mt-2" type={"time"} />
-                  </div>
-                </div>
+                  <SelectLaboratorioFormConEstadoReservaForm
+                    name="laboratorioId"
+                    control={control}
+                    className="mt-2"
+                    label="Laboratorio"
+                    placeholder="Selecciona un laboratorio"
+                    sedeId={formHook.watch("sedeId")}
+                    excepcionReservaId={reservaId}
+                    fechaHoraInicio={armarFechaReserva(formHook.watch("fechaReserva"), formHook.watch("horaInicio"))}
+                    fechaHoraFin={armarFechaReserva(formHook.watch("fechaReserva"), formHook.watch("horaFin"))}
+                    laboratorioId={formHook.watch("laboratorioId")}
+                  />
+                </>
               )}
 
               <div className="flex w-full flex-col justify-end gap-y-4 lg:justify-between">
@@ -429,7 +451,13 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
           )}
           {!estaEstatusCancelada && !esReservaPasada && (
             <Button title="Guardar" type="submit" variant="default" color="primary" className="mb-3">
-              {estaEstatusAprobada ? "Modificar" : haSidoRechazada ? "Modificar y solicitar" : "Guardar"}
+              {estaEstatusAprobada
+                ? "Modificar"
+                : haSidoRechazada
+                  ? "Modificar y solicitar"
+                  : esDiscrecional
+                    ? "Guardar y aprobar"
+                    : "Guardar"}
             </Button>
           )}
         </div>

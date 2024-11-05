@@ -69,12 +69,17 @@ export const getReservaPorId = async (ctx: { db: PrismaClient }, input: InputGet
 
 type InputGetAllReservas = z.infer<typeof inputGetAllSolicitudesReservaLaboratorioCerrado>;
 export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetAllReservas, userId: string) => {
-  const { pageIndex, pageSize, searchText, orderDirection, orderBy, estatus, filtrByUserId } = input;
+  const { pageIndex, pageSize, searchText, orderDirection, orderBy, estatus, filtrByUserId, pasadas, aprobadas } =
+    input;
 
+  const fechaHoyMenos1Dia = new Date();
+  fechaHoyMenos1Dia.setHours(0, 0, 0, 0);
   const filtrosWhereReservaLaboratorioCerrado: Prisma.ReservaLaboratorioCerradoWhereInput = {
     reserva: {
       ...(filtrByUserId === "true" ? { usuarioSolicitoId: userId } : {}),
       ...(estatus ? { estatus: estatus } : {}),
+      ...(pasadas === "true" ? { fechaHoraFin: { lte: fechaHoyMenos1Dia } } : {}),
+      ...(aprobadas === "true" ? { fechaHoraFin: { gte: fechaHoyMenos1Dia } } : {}),
     },
     ...(searchText
       ? {
@@ -442,7 +447,7 @@ export const crearReservaLaboratorioCerradoDiscrecional = async (
     const reserva = await ctx.db.$transaction(async (tx) => {
       const reserva = await tx.reserva.create({
         data: {
-          estatus: "PENDIENTE",
+          estatus: "FINALIZADA",
           tipo: "LABORATORIO_CERRADO",
           fechaHoraInicio: armarFechaReserva(input.fechaReserva, input.horaInicio),
           fechaHoraFin: armarFechaReserva(input.fechaReserva, input.horaFin),
@@ -455,7 +460,7 @@ export const crearReservaLaboratorioCerradoDiscrecional = async (
               esDiscrecional: true,
               sedeId: Number(input.sedeId),
               cursoId: null,
-              laboratorioId: null,
+              laboratorioId: Number(input.laboratorioId),
               requierePC: input.requierePc,
               requiereProyector: input.requiereProyector,
               descripcion: input.observaciones,

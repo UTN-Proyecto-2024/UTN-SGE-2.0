@@ -25,6 +25,7 @@ export const inputReservaLaboratorioDiscrecional = z
     sedeId: z.string().refine((value) => parseInt(value) >= 0, { message: "Debe seleccionar una sede" }),
     horaInicio: z.string().min(1, { message: "Requerido" }),
     horaFin: z.string().min(1, { message: "Requerido" }),
+    laboratorioId: z.string().refine((value) => parseInt(value) >= 0, { message: "Debe seleccionar un laboratorio" }),
     agregarAPantalla: z.boolean().default(false),
   })
   .merge(inputReservaLaboratorioDiscrecionalBase);
@@ -118,13 +119,22 @@ export const inputGetAllSolicitudesReservaLaboratorioCerrado = z.object({
     .refine((value) => parseInt(value) >= 0, { message: "Debe ser mayor o igual a 0" })
     .catch("0"),
   orderBy: z
-    .enum(["id", "laboratorioId", "sede", "reserva_fechaCreacion", "reserva_usuarioSolicito_apellido"])
-    .default("id")
-    .catch("id"),
-  orderDirection: z.enum(["asc", "desc"]).default("desc").catch("desc"),
+    .enum([
+      "id",
+      "laboratorioId",
+      "sede",
+      "reserva_usuarioSolicito_apellido",
+      "reserva_fechaHoraInicio",
+      "reserva_fechaHoraFin",
+    ])
+    .default("reserva_fechaHoraInicio")
+    .catch("reserva_fechaHoraInicio"),
+  orderDirection: z.enum(["asc", "desc"]).default("asc").catch("asc"),
   searchText: z.string().default(""),
   estatus: enumReservaEstatus.default("").catch(""),
   filtrByUserId: z.enum(["true", "false"]).optional(),
+  pasadas: z.enum(["true", "false"]).optional(),
+  aprobadas: z.enum(["true", "false"]).optional(),
 });
 
 export const inputRechazarReservaLaboratorioCerrado = z.object({

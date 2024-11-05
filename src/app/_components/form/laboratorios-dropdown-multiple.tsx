@@ -27,7 +27,7 @@ type LaboratorioDropdownType = {
 export const LaboratorioDropdownMultiple = (props: LaboratorioDropdownType): ReactElement => {
   const { className, defaultValue, onValueChange, error } = props;
 
-  const { data, isLoading, isError } = api.admin.laboratorios.getAll.useQuery({});
+  const { data, isLoading, isError } = api.admin.laboratorios.getAllReservables.useQuery({});
 
   const laboratorios = useMemo(() => {
     if (!data) return [];
@@ -57,7 +57,7 @@ export const LaboratorioDropdownMultiple = (props: LaboratorioDropdownType): Rea
           <SelectTrigger
             disabled
             id="selectLaboratorio"
-            className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+            className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
           >
             <SelectValue placeholder="Error cargando laboratorios" />
           </SelectTrigger>
