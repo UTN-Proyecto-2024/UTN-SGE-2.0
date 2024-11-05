@@ -4,6 +4,7 @@ import { type PaginationState, type SortingState } from "@tanstack/react-table";
 import { useCallback } from "react";
 import { type RouterOutputs } from "@/trpc/react";
 import { inputGetAllSolicitudesReservaLaboratorioCerrado } from "@/shared/filters/reserva-laboratorio-filter.schema";
+import { EstadoAprobada } from "@/shared/estado-reserva";
 
 type EstadoReservaType =
   RouterOutputs["reservas"]["reservarLaboratorioCerrado"]["getAll"]["reservas"][number]["reserva"]["estatus"];
@@ -67,11 +68,38 @@ const changeEstatus = (
   filters: resevaLaboratorioCerradoFilters,
   newEstatus: EstadoReservaType | "",
 ): resevaLaboratorioCerradoFilters => {
-  const newFilters: resevaLaboratorioCerradoFilters = {
-    ...filters,
-    estatus: newEstatus,
-    pageIndex: "0",
-  };
+  let newFilters: resevaLaboratorioCerradoFilters;
+  if (
+    //@ts-expect-error estado custom para el filtro de reservas aprobadas.
+    newEstatus === EstadoAprobada
+  ) {
+    newEstatus = "FINALIZADA";
+    newFilters = {
+      ...filters,
+      estatus: newEstatus,
+      pageIndex: "0",
+      aprobadas: "true",
+      pasadas: "false",
+    };
+  } else if (newEstatus === "FINALIZADA") {
+    newFilters = {
+      ...filters,
+      estatus: newEstatus,
+      pageIndex: "0",
+      pasadas: "true",
+      aprobadas: "false",
+    };
+  } else {
+    newFilters = {
+      ...filters,
+      estatus: newEstatus,
+      pageIndex: "0",
+      aprobadas: "false",
+      pasadas: "false",
+      orderBy: "reserva_fechaHoraInicio",
+      orderDirection: "desc",
+    };
+  }
 
   const filtersTyped = inputGetAllSolicitudesReservaLaboratorioCerrado.parse(newFilters);
 

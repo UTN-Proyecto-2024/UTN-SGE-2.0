@@ -105,6 +105,7 @@ export const esFechaPasada = (fecha: string | Date | undefined) => {
  * armarFechaReserva("2023-01-01", "10:00"); // Devuelve Date("2023-01-01T10:00")
  */
 export const armarFechaReserva = (fecha: string, hora: string) => {
+  if (!fecha || !hora) return new Date();
   return new Date(`${fecha}T${hora}`);
 };
 
