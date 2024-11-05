@@ -1,6 +1,6 @@
 "use client";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui";
+import { Select, SelectTrigger, SelectValue } from "@/components/ui";
 import { MultiSelectFormField } from "@/components/ui/multi-select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/components/utils";
@@ -20,13 +20,6 @@ type LaboratorioDropdownType = {
   className?: string;
   defaultValue?: string[];
   onValueChange: (value: string[]) => void;
-  error?: string;
-};
-
-type LaboratorioDropdownTypeSingle = {
-  className?: string;
-  defaultValue?: string;
-  onValueChange: (value: string) => void;
   error?: string;
 };
 
@@ -121,98 +114,5 @@ export const LaboratorioDropdownMultipleForm = <T extends FieldValues>(
         );
       }}
     ></Controller>
-  );
-};
-
-/* Componente de selección única */
-export const LaboratorioDropdownSingle = (props: LaboratorioDropdownTypeSingle): ReactElement => {
-  const { className, defaultValue, onValueChange, error } = props;
-
-  const { data, isLoading, isError } = api.admin.laboratorios.getAllReservables.useQuery({});
-
-  const laboratorios = useMemo(() => {
-    if (!data) return [];
-
-    return data.laboratorios.map((laboratorio) => {
-      const { id, nombre } = laboratorio;
-
-      return {
-        label: nombre,
-        value: String(id),
-      };
-    });
-  }, [data]);
-
-  if (isLoading) {
-    return (
-      <div className="flex flex-row items-center space-x-2">
-        <Skeleton className="h-10 w-full" />
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <Select>
-        <div className="flex flex-row items-center space-x-2">
-          <SelectTrigger
-            disabled
-            id="selectLaboratorio"
-            className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
-          >
-            <SelectValue placeholder="Error cargando laboratorios" />
-          </SelectTrigger>
-        </div>
-      </Select>
-    );
-  }
-
-  return (
-    <>
-      <Select onValueChange={onValueChange} defaultValue={defaultValue}>
-        <SelectTrigger className={className}>
-          <SelectValue placeholder="Selecciona un laboratorio" />
-        </SelectTrigger>
-        <SelectContent>
-          {laboratorios.map((lab) => (
-            <SelectItem key={lab.value} value={lab.value}>
-              {lab.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      {error && <span className={cn("ml-1 mt-2 block text-xs text-danger")}>{error}</span>}
-    </>
-  );
-};
-
-interface FormAutocompleteProps<T extends FieldValues> {
-  control: Control<T>;
-  name: Path<T>;
-  labelTooltip?: React.ReactNode;
-  noOptionsComponent?: React.ReactNode;
-  className?: string;
-}
-
-export const LaboratorioDropdownSingleForm = <T extends FieldValues>(props: FormAutocompleteProps<T>): ReactElement => {
-  const { className, name, control } = props;
-  const { formState } = useFormContext<T>();
-
-  const error = get(formState.errors, name, undefined) as FieldError | undefined;
-
-  return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field }) => (
-        <LaboratorioDropdownSingle
-          className={className}
-          defaultValue={field.value}
-          onValueChange={(value) => field.onChange(value)}
-          error={error?.message}
-          {...props}
-        />
-      )}
-    />
   );
 };

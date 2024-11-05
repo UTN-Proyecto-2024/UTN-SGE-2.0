@@ -122,7 +122,7 @@ export const getAllLaboratoriosReservables = async (ctx: { db: PrismaClient }, i
         contains: searchText ?? undefined,
         mode: "insensitive",
       },
-      ...(sedeId !== undefined && sedeId !== null
+      ...(sedeId !== undefined && sedeId !== null && sedeId !== ""
         ? {
             sedeId: Number(sedeId),
           }
