@@ -1,12 +1,14 @@
 "use client";
 
-import { DataTable } from "@/components/ui";
+import { Button, DataTable } from "@/components/ui";
 import { type RouterOutputs } from "@/trpc/react";
 import { getColumns } from "./columns";
 import EliminarReservaPantallaModal from "../actions/pantalla-eliminar";
 import { useRouter } from "next/navigation";
 import React, { useState, type HTMLProps } from "react";
 import { type ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
+import { EyeIcon } from "lucide-react";
 
 type PantallaData = RouterOutputs["reservas"]["pantalla"]["getAllActivas"];
 
@@ -27,13 +29,21 @@ export const PantallaTable = ({ data }: BibliotecaTableProps) => {
       {
         id: "select",
         header: ({ table }) => (
-          <IndeterminateCheckbox
-            {...{
-              checked: table.getIsAllRowsSelected(),
-              indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler(),
-            }}
-          />
+          <>
+            <IndeterminateCheckbox
+              {...{
+                checked: table.getIsAllRowsSelected(),
+                indeterminate: table.getIsSomeRowsSelected(),
+                onChange: table.getToggleAllRowsSelectedHandler(),
+              }}
+            />
+            <Link href={`/pantalla`} target="_blank" title="Ver pantalla de laboratorios">
+              <Button variant="default" color="white" size="sm">
+                <EyeIcon size={16} className="mr-2" />
+                Ver pantalla
+              </Button>
+            </Link>
+          </>
         ),
         cell: ({ row }) => (
           <div className="px-1">
