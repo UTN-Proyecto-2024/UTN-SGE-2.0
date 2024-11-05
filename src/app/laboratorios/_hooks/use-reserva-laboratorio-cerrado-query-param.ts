@@ -70,7 +70,7 @@ const changeEstatus = (
 ): resevaLaboratorioCerradoFilters => {
   let newFilters: resevaLaboratorioCerradoFilters;
   if (
-    //@ts-ignore estado custom para el filtro de reservas aprobadas.
+    //@ts-expect-error estado custom para el filtro de reservas aprobadas.
     newEstatus === EstadoAprobada
   ) {
     newEstatus = "FINALIZADA";
