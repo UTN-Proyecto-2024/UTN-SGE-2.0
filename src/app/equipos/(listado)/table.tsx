@@ -44,7 +44,12 @@ export const EquiposTable = ({ data, filters }: EquiposTableProps) => {
           cell({ original }) {
             return (
               <>
-                <RemoveEquipoModal equipoId={original.id} nombre={original.inventarioId} onSubmit={refresh} />
+                <RemoveEquipoModal
+                  equipoId={original.id}
+                  nombre={original.inventarioId}
+                  disponible={original.disponible}
+                  onSubmit={refresh}
+                />
                 <EditarEquipoModal equipoId={original.id} />
                 <VerEquipoModal equipoId={original.id} />
               </>
