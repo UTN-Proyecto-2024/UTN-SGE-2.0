@@ -14,6 +14,11 @@ import {
   inputGetReservasEquiposPorEquipoId,
   inputPrestarEquipo,
 } from "@/shared/filters/reservas-equipos-filter.schema";
+import {
+  enviarMailDevolverEquipoProcedure,
+  enviarMailRenovarEquipoProcedure,
+  enviarMailReservaEquipoProcedure,
+} from "../mails/emailEquipos.service";
 
 export const getTodasLasReservasProcedure = protectedProcedure
   .input(inputGetAllPrestamosEquipos)
@@ -46,6 +51,8 @@ export const crearPrestamoEquipoProcedure = protectedProcedure
 
     const reserva = await crearPrestamoEquipo(ctx, input, userId);
 
+    void enviarMailReservaEquipoProcedure(ctx, { reservaId: reserva.id });
+
     return reserva;
   });
 
@@ -68,6 +75,8 @@ export const devolverEquipoProcedure = protectedProcedure
 
     const reserva = await devolverEquipo(ctx, input, userId);
 
+    void enviarMailDevolverEquipoProcedure(ctx, { equipoId: input.equipoId });
+
     return reserva;
   });
 
@@ -77,6 +86,12 @@ export const renovarEquipoProcedure = protectedProcedure.input(inputPrestarEquip
   const userId = ctx.session.user.id;
 
   const reserva = await renovarEquipo(ctx, input, userId);
+
+  void enviarMailRenovarEquipoProcedure(ctx, {
+    equipoId: input.equipoId,
+    fechaInicio: new Date(input.fechaInicio),
+    fechaFin: new Date(input.fechaFin),
+  });
 
   return reserva;
 });
