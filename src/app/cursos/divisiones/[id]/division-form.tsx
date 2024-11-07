@@ -10,8 +10,8 @@ import RemoveDivisionModal from "../_components/remove-division";
 import { useRouter } from "next/navigation";
 
 type Props = {
-  id: string;
-  name: string;
+  id?: string;
+  name?: string;
   onSubmit: () => void;
   onCancel: () => void;
 };
@@ -127,11 +127,7 @@ export const DivisionForm = ({ id, name, onSubmit, onCancel }: Props) => {
           <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
             Cancelar
           </Button>
-          <RemoveDivisionModal
-            divisionId={parseInt(id)}
-            nombre={name}
-            onSubmit={onDeleteDivision}
-          ></RemoveDivisionModal>
+          <RemoveDivisionModal divisionId={id} nombre={name} onSubmit={onDeleteDivision}></RemoveDivisionModal>
           <Button title="Guardar" type="submit" variant="default" color="primary">
             Guardar
           </Button>
