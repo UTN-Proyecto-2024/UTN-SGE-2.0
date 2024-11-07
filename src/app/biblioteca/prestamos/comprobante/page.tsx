@@ -2,7 +2,7 @@
 import PageLayout from "@/components/ui/page-template";
 import { BIBLIOTECA_ROUTE } from "@/shared/server-routes";
 
-import ComprobanteContent from "../_components/ComprobanteContent";
+import ComprobanteContent from "../_components/comprobanteContent";
 import { useSearchParams } from "next/navigation";
 
 export default function ComprobantePage() {

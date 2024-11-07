@@ -53,7 +53,7 @@ export const BibliotecaPrestamosTable = ({ data, filters, filterByUser }: Biblio
                     icon={PrinterIcon}
                     onClick={() => {
                       const datos = JSON.stringify(data.reservas[0]);
-                      router.push(`/biblioteca/prestamos/comprobante?data=${encodeURIComponent(datos)}`);
+                      router.push(`/biblioteca/prestamos/comprobante?datos=${encodeURIComponent(datos)}`);
                       console.log(datos);
                     }}
                   />
