@@ -1,3 +1,4 @@
+import { construirOrderByDinamico } from "@/shared/dynamic-orderby";
 import type {
   inputAddSoftware,
   inputEditarSoftware,
@@ -10,25 +11,27 @@ import { type z } from "zod";
 
 type InputGetAll = z.infer<typeof inputGetSoftwareFilter>;
 export const getAllSoftware = async (ctx: { db: PrismaClient }, input: InputGetAll) => {
+  const { pageIndex, pageSize, searchText } = input;
+
   const softwareWhereLibro: Prisma.SoftwareWhereInput = {
     ...(input?.searchText
       ? {
           OR: [
             {
               nombre: {
-                contains: input?.searchText ?? undefined,
+                contains: searchText ?? undefined,
                 mode: "insensitive",
               },
             },
             {
               estado: {
-                contains: input?.searchText ?? undefined,
+                contains: searchText ?? undefined,
                 mode: "insensitive",
               },
             },
             {
               version: {
-                contains: input?.searchText ?? undefined,
+                contains: searchText ?? undefined,
                 mode: "insensitive",
               },
             },
@@ -37,9 +40,10 @@ export const getAllSoftware = async (ctx: { db: PrismaClient }, input: InputGetA
       : {}),
   };
 
-  const ordenSoftware: Prisma.SoftwareOrderByWithRelationInput = {
-    nombre: "asc",
-  };
+  const ordenSoftware: Prisma.SoftwareOrderByWithRelationInput = construirOrderByDinamico(
+    input?.orderBy ?? "",
+    input?.orderDirection ?? "",
+  );
 
   const [count, software] = await ctx.db.$transaction([
     ctx.db.software.count({
@@ -60,6 +64,8 @@ export const getAllSoftware = async (ctx: { db: PrismaClient }, input: InputGetA
         },
       },
       orderBy: ordenSoftware,
+      skip: parseInt(pageIndex) * parseInt(pageSize),
+      take: parseInt(pageSize),
     }),
   ]);
 
