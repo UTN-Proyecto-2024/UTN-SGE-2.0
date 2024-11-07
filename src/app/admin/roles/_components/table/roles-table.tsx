@@ -40,8 +40,8 @@ export const RolesTable = ({ data, filters }: BibliotecaTableProps) => {
           cell({ original }) {
             return (
               <>
-                <EditarRolModal rolId={original.id} />
                 <RemoverRolModal rolId={original.id} nombre={original.nombre} onSubmit={refresh} />
+                <EditarRolModal rolId={original.id} />
               </>
             );
           },
