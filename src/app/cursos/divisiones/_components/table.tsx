@@ -3,12 +3,9 @@
 import { DataTable } from "@/components/ui";
 import { type RouterOutputs } from "@/trpc/react";
 import { getColumns } from "./columns";
-import RemoveDivisionModal from "./remove-division";
-import EditDivisionModal from "./edit-division";
-import { useRouter } from "next/navigation";
 import React from "react";
 
-type DivisionData = RouterOutputs["division"]["getAll"];
+type DivisionData = RouterOutputs["division"]["getFiltered"];
 
 type DivisionesTableProps = {
   data: DivisionData;
@@ -16,27 +13,7 @@ type DivisionesTableProps = {
 
 export const DivisionesTable = ({ data }: DivisionesTableProps) => {
   const columns = getColumns();
-  const router = useRouter();
-  const onDeleteDivision = () => {
-    router.refresh();
-  };
-  return (
-    <DataTable
-      data={data ?? []}
-      columns={columns}
-      action={{
-        header: "Acciones",
-        cell({ original }) {
-          return (
-            <>
-              <RemoveDivisionModal divisionId={original.id} nombre={original.nombre} onSubmit={onDeleteDivision} />
-              <EditDivisionModal divisionId={original.id.toString()} />
-            </>
-          );
-        },
-      }}
-    />
-  );
+  return <DataTable data={data ?? []} columns={columns} />;
 };
 
 export default DivisionesTable; // Exporta el componente
