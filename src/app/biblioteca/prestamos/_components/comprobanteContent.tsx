@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type ComprobanteContentProps = {
   datos: object;
@@ -8,6 +8,13 @@ type ComprobanteContentProps = {
 
 export default function ComprobanteContent({ datos }: ComprobanteContentProps) {
   const printRef = useRef<HTMLDivElement>(null);
+  const [datosReserva, setDatosReserva] = useState<object | null>(null);
+
+  useEffect(() => {
+    setDatosReserva(datos);
+  }, [datos]);
+
+  console.log("nuestro state", datosReserva);
 
   useEffect(() => {
     const handlePrint = () => {
@@ -23,9 +30,6 @@ export default function ComprobanteContent({ datos }: ComprobanteContentProps) {
     handlePrint();
   }, []);
 
-  useEffect(() => {
-    console.log("Datos en ComprobanteContent:", datos);
-  }, [datos]);
   return (
     <div ref={printRef}>
       <section className="mx-auto h-[500px] max-w-3xl p-2">
@@ -35,7 +39,7 @@ export default function ComprobanteContent({ datos }: ComprobanteContentProps) {
             <div className="w-5/12 border border-gray-800 p-2">
               <h3 className="text-sm font-semibold">Datos del Alumno</h3>
               <div className="text-left">
-                <p className="underline">Apellido y Nombre:</p>
+                <p className="underline">Apellido y Nombre: {}</p>
                 <p className="underline">Número de Legajo:</p>
                 <span className="underline">T:</span>
                 <span className="ml-2 underline">C:</span>
