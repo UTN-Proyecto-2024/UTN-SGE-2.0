@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { EditIcon } from "lucide-react";
+import { PencilIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { DivisionForm } from "../[id]/division-form";
@@ -30,7 +30,7 @@ export const EditDivisionModal = ({ divisionId }: EditDivisionProps) => {
       onOpenChange={setOpen}
       trigger={
         <Button color={"outline"} className="flex h-8 w-8 px-1 py-1">
-          <EditIcon size={16} />
+          <PencilIcon size={16} />
         </Button>
       }
       className={"max-h-[calc(100vh_-_10%)]"}

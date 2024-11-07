@@ -42,8 +42,8 @@ export const SoftwareTable = ({ data, filters }: BibliotecaTableProps) => {
           cell({ original }) {
             return (
               <>
-                <SoftwareNuevoEditar softwareId={original.id} />
                 <EliminarSoftwareModal softwareId={original.id} nombre={original.nombre} onSubmit={refresh} />
+                <SoftwareNuevoEditar softwareId={original.id} />
               </>
             );
           },

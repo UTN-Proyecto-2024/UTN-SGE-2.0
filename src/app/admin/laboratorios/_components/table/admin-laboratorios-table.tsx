@@ -33,8 +33,8 @@ export const AdminLaboratoriosTable = ({ data, filters }: LaboratorioTableProps)
           cell({ original }) {
             return (
               <>
-                <EditarLaboratorioModal laboratorioId={original.id} />
                 <RemoverLaboratorioModal laboratorioId={original.id} nombre={original.nombre} onSubmit={refresh} />
+                <EditarLaboratorioModal laboratorioId={original.id} />
               </>
             );
           },
