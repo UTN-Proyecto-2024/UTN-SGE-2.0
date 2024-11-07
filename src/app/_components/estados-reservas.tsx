@@ -38,14 +38,14 @@ export const EstadoReservaToString = ({
   currentEstado: string;
 }) => {
   return (
-    <ToggleGroup type="single" className="flex flex-row justify-between overflow-auto rounded-lg bg-primary/20 p-1">
+    <ToggleGroup type="single" className="flex flex-row justify-between overflow-auto">
       {reservaEstatus.map(({ id: value, label }) => (
         <ToggleGroupItem
           key={value || "all"}
           value={value}
           aria-label={`Cambiar a ${label}`}
-          className={cn("h-9 w-full text-center hover:bg-transparent", {
-            "bg-primary/50 hover:bg-primary/50": currentEstado === value,
+          className={cn("w-full text-center hover:bg-primary", {
+            "bg-primary": currentEstado === value,
           })}
           onClick={() => handleEstadoChange(value as ReservaEstatus)}
         >

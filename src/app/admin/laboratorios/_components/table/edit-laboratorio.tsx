@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ADMIN_ROUTE } from "@/shared/server-routes";
-import { EditIcon } from "lucide-react";
+import { PencilIcon } from "lucide-react";
 import Link from "next/link";
 
 type EditarLaboratorioModalProps = {
@@ -13,7 +13,7 @@ export const EditarLaboratorioModal = ({ laboratorioId }: EditarLaboratorioModal
   return (
     <Link key={laboratorioId} href={`${rutaAdmin.href}/laboratorios/${laboratorioId}`} passHref prefetch={false}>
       <Button color={"outline"} className="h-8 w-8 px-1 py-1">
-        <EditIcon size={16} />
+        <PencilIcon size={16} />
       </Button>
     </Link>
   );
