@@ -3,7 +3,6 @@ import {
   inputEditarDivision,
   inputAgregarDivision,
   inputGetDivision,
-  inputGetDivisiones,
 } from "./../../../../shared/filters/divisiones-filter.schema";
 import {
   getAllDivisiones,
@@ -20,9 +19,19 @@ export const getTodasLasDivisiones = protectedProcedure.query(async ({ ctx }) =>
   return await getAllDivisiones(ctx);
 });
 
-export const getDivisionesFiltradas = protectedProcedure.input(inputGetDivisiones).query(async ({ ctx, input }) => {
-  const divisiones = await getAllDivisiones(ctx, input);
-  return divisiones;
+type GroupedDivision = { anio: number; divisiones: { nombre: string; id: number }[] };
+
+export const getDivisionesFiltradas = protectedProcedure.query(async ({ ctx }) => {
+  const divisiones = await getAllDivisiones(ctx);
+  const groupedMap = divisiones.reduce(
+    (acc, division) => {
+      if (!acc[division.anio]) acc[division.anio] = { anio: division.anio, divisiones: [] };
+      acc[division.anio]?.divisiones.push({ nombre: division.nombre, id: division.id });
+      return acc;
+    },
+    {} as Record<number, GroupedDivision>,
+  );
+  return Object.values(groupedMap);
 });
 
 export const eliminarDivisionProcedure = protectedProcedure
