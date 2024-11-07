@@ -22,6 +22,8 @@ export const EquiposPrestamoFilterText = ({ filters }: Props) => {
     e.preventDefault();
 
     setCurrentSearchText(e.target.value);
+
+    if (!e.target.value) onSearchTextChange("");
   };
 
   const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -43,7 +45,7 @@ export const EquiposPrestamoFilterText = ({ filters }: Props) => {
       <Input
         placeholder={"Buscar por tipo o inventario"}
         name="searchText"
-        unit={<SearchIcon className="relative top-0.5 h-4 w-4 text-sub" onClick={onClickIcon} />}
+        unit={<SearchIcon className="text-sub relative top-0.5 h-4 w-4" onClick={onClickIcon} />}
         type={"search"}
         value={currentSearchText}
         onChange={handleTextChange}

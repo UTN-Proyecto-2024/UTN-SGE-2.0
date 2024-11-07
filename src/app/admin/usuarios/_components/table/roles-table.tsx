@@ -43,8 +43,8 @@ export const AdminUsuariosTable = ({ data, filters }: Props) => {
           cell({ original }) {
             return (
               <>
-                <DetallesUsuarioPage usuarioId={original.id} />
                 <EditarUsuarioModal usuarioId={original.id} />
+                <DetallesUsuarioPage usuarioId={original.id} />
               </>
             );
           },
