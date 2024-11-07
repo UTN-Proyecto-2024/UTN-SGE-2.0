@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { TrashIcon } from "lucide-react";
-import { Button } from "@/components/ui";
-import { toast } from "@/components/ui";
+import { toast, Button } from "@/components/ui";
 import { api } from "@/trpc/react";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 
@@ -36,13 +34,9 @@ export default function RemoveDivisionModal({ divisionId, nombre, onSubmit }: Re
   return (
     <ModalDrawer
       trigger={
-        <Button
-          title="Eliminar división"
-          variant="icon"
-          color="danger"
-          className="h-8 w-8 px-2 py-2"
-          icon={TrashIcon}
-        />
+        <Button title="Eliminar" type="button" variant="default" color="danger" className="h-9">
+          Eliminar
+        </Button>
       }
       titulo={`Eliminar división ${nombre ?? ""}`}
       cancelText="Cancelar"
