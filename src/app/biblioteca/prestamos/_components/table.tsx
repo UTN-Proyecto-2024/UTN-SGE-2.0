@@ -10,6 +10,7 @@ import { useBibliotecaPrestamosQueryParam } from "../../_hooks/use-biblioteca-pr
 import { type inputGetAllPrestamosLibros } from "@/shared/filters/reservas-filter.schema";
 import { getColumnasPrestamo } from "../../(listado)/columns-prestamo";
 import { PrinterIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type LibroPrestamoData = RouterOutputs["reservas"]["reservaBiblioteca"]["getAll"];
 type BibliotecaFilters = z.infer<typeof inputGetAllPrestamosLibros>;
@@ -24,6 +25,7 @@ export const BibliotecaPrestamosTable = ({ data, filters, filterByUser }: Biblio
   const { pagination, sorting, onSortingChange, onPaginationChange } = useBibliotecaPrestamosQueryParam(filters);
 
   const columns = getColumnasPrestamo({ filterByUser });
+  const router = useRouter();
 
   return (
     <>
@@ -44,7 +46,17 @@ export const BibliotecaPrestamosTable = ({ data, filters, filterByUser }: Biblio
             return (
               <>
                 {!filterByUser && (
-                  <Button title="Ver" variant="icon" color="ghost" icon={PrinterIcon} onClick={() => window.print()} />
+                  <Button
+                    title="Ver"
+                    variant="icon"
+                    color="ghost"
+                    icon={PrinterIcon}
+                    onClick={() => {
+                      const datos = JSON.stringify(data.reservas[0]);
+                      router.push(`/biblioteca/prestamos/comprobante?data=${encodeURIComponent(datos)}`);
+                      console.log(datos);
+                    }}
+                  />
                 )}
                 {/* <VerLibroModal libroId={original.id} />
                 <EditLibroModal libroId={original.id} /> */}
