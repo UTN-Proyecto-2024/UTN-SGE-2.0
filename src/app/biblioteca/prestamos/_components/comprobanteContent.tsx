@@ -13,10 +13,10 @@ export default function ComprobanteContent({ datos }: ComprobanteContentProps) {
     const handlePrint = () => {
       if (printRef.current) {
         const printContents = printRef.current.innerHTML;
-        const originalContents = document.body.innerHTML;
+        const originalContent = document.body.innerHTML;
         document.body.innerHTML = printContents;
         window.print();
-        document.body.innerHTML = originalContents;
+        document.body.innerHTML = originalContent;
       }
     };
 
