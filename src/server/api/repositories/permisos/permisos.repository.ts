@@ -1,4 +1,4 @@
-import { type PrismaClient } from "@prisma/client";
+import { type SgeNombre, type PrismaClient } from "@prisma/client";
 import { type z } from "zod";
 import { type inputGetUsuarioYRol } from "@/shared/filters/permisos-filter";
 
@@ -7,68 +7,43 @@ type InputGetUsuarioYRol = z.infer<typeof inputGetUsuarioYRol>;
 export const getUsuarioYPermisos = async (ctx: { db: PrismaClient }, input: InputGetUsuarioYRol) => {
   const { usuarioId } = input;
 
-  const usuario = await ctx.db.user.findUnique({
-    where: { id: usuarioId },
-    include: {
-      usuarioRol: {
-        include: {
-          rol: {
-            include: {
-              rolPermiso: {
-                include: {
-                  permiso: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  });
+  const permisosResult = await ctx.db.$queryRaw<{ sgeNombre: SgeNombre }[]>`
+    SELECT DISTINCT p."sgeNombre"
+    FROM "User" u
+    INNER JOIN "UsuarioRol" ur ON ur."userId" = u.id
+    INNER JOIN "Rol" r ON r.id = ur."rolId"
+    INNER JOIN "RolPermiso" rp ON rp."rolId" = r.id
+    INNER JOIN "Permiso" p ON p.id = rp."permisoId"
+    WHERE u.id = ${usuarioId};
+  `;
 
-  if (!usuario) {
-    throw new Error(`Usuario con ID ${usuarioId} no encontrado.`);
+  if (!permisosResult || permisosResult.length === 0) {
+    return [];
   }
 
-  return usuario;
+  const permisosSgeNombre = permisosResult.map((permiso) => permiso.sgeNombre);
+
+  return permisosSgeNombre;
 };
 
-export const verificarPermisoUsuario = async (ctx: { db: PrismaClient }, usuarioId: string, permisos: string[]) => {
-  const usuarioConPermisos = await ctx.db.user.findFirst({
-    where: {
-      id: usuarioId,
-      OR: [
-        {
-          usuarioRol: {
-            some: {
-              rol: {
-                nombre: {
-                  in: permisos,
-                },
-              },
-            },
-          },
-        },
-        {
-          usuarioRol: {
-            some: {
-              rol: {
-                rolPermiso: {
-                  some: {
-                    permiso: {
-                      nombre: {
-                        in: permisos,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      ],
-    },
-  });
+export const verificarPermisoUsuario = async (
+  ctx: { db: PrismaClient },
+  usuarioId: string,
+  sgePermisoNombre: SgeNombre[],
+) => {
+  const permisos = Array.isArray(sgePermisoNombre) ? sgePermisoNombre : [sgePermisoNombre];
 
-  return !!usuarioConPermisos; // Retorna true si el usuario tiene algún permiso
+  // Utilizamos queryRaw porque es una consulta de SQL que se realiza muchas veces y de esta forma la hacemos mas eficiente
+  const result = await ctx.db.$queryRaw<{ existe: boolean }[]>`SELECT EXISTS(
+    SELECT 1
+    FROM "User" u
+    JOIN "UsuarioRol" ur ON ur."userId" = u.id
+    JOIN "Rol" r ON r.id = ur."rolId"
+    JOIN "RolPermiso" rp ON rp."rolId" = r.id
+    JOIN "Permiso" p ON p.id = rp."permisoId"
+    WHERE u.id = ${usuarioId}
+      AND p."sgeNombre" = ANY(${permisos})
+  ) AS "existe";`;
+
+  return result[0]?.existe ?? false;
 };

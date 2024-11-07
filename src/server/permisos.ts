@@ -1,7 +1,8 @@
 import { api } from "@/trpc/server";
 import { getServerAuthSession } from "./auth";
+import { type SgeNombre } from "@prisma/client";
 
-export const tienePermisoBack = async (permisos: string[]) => {
+export const tienePermisoBack = async (permisos: SgeNombre[]) => {
   const tienePermiso = await api.permisos.usuarioTienePermisos({ permisos });
 
   return tienePermiso;
@@ -13,7 +14,7 @@ export const getSession = async () => {
   return session;
 };
 
-export const estaLogueadoYConPermiso = async (permisos: string[]) => {
+export const estaLogueadoYConPermiso = async (permisos: SgeNombre[]) => {
   const sesionProm = getSession();
   const tienePermisoProm = tienePermisoBack(permisos);
 

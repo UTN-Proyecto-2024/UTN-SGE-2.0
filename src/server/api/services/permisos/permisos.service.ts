@@ -1,9 +1,9 @@
 import { protectedProcedure } from "../../trpc";
 import { getUsuarioYPermisos, verificarPermisoUsuario } from "../../repositories/permisos/permisos.repository";
 import { permisosSchema } from "@/shared/filters/permisos-filter";
-import { type PrismaClient } from "@prisma/client";
+import { type SgeNombre, type PrismaClient } from "@prisma/client";
 
-export const tienePermiso = async (ctx: { db: PrismaClient }, permisos: string[], userId: string) => {
+export const tienePermiso = async (ctx: { db: PrismaClient }, permisos: SgeNombre[], userId: string) => {
   if (permisos.length === 0) {
     return true;
   }
@@ -17,8 +17,6 @@ export const getUsuarioPermiso = protectedProcedure.query(async ({ ctx }) => {
   const userId = ctx.session.user.id;
 
   const usuario = await getUsuarioYPermisos(ctx, { usuarioId: userId });
-
-  console.log(usuario, userId);
 
   return usuario;
 });

@@ -1,35 +1,32 @@
 "use client";
 
-import { api } from "@/trpc/react";
+import { type SgeNombre } from "@prisma/client";
+import { usePermisos } from "./use-context-tiene-permisos";
 
-export const useTienePermisos = (permisos: string[] = []) => {
-  const esValido = Array.isArray(permisos) && permisos.length > 0;
+export const useTienePermisos = (permisos: SgeNombre[] = []) => {
+  const { permisos: tienePermisosResponse, isLoading, isError } = usePermisos();
 
-  const {
-    data: tienePermisosResponse,
-    isLoading,
-    error,
-  } = api.permisos.usuarioTienePermisos.useQuery(
-    {
-      permisos,
-    },
-    {
-      refetchOnWindowFocus: false,
-      enabled: esValido,
-    },
-  );
-
-  if (!esValido) {
+  if (isError) {
     return {
-      tienePermisos: true,
+      tienePermisos: false,
       isLoading: false,
-      error: null,
+      isError: true,
     };
   }
 
+  if (isLoading) {
+    return {
+      tienePermisos: false,
+      isLoading: true,
+      isError: false,
+    };
+  }
+
+  const tieneAlguno = permisos.some((permiso) => tienePermisosResponse[permiso]);
+
   return {
-    tienePermisos: tienePermisosResponse ?? false,
-    isLoading,
-    error,
+    tienePermisos: tieneAlguno,
+    isLoading: false,
+    isError: false,
   };
 };
