@@ -7,7 +7,7 @@ import React from "react";
 import PageLayout from "@/components/ui/page-template";
 import { NuevaDivision } from "./_components/division-new-division";
 import { CURSOS_ROUTE } from "@/shared/server-routes";
-import { ActionButtons } from "./_components/action-buttons";
+// import { ActionButtons } from "./_components/action-buttons";
 
 type PageProps = {
   searchParams: ReadonlyURLSearchParams;
@@ -19,11 +19,9 @@ export default function Page({ searchParams }: PageProps) {
 
   return (
     <PageLayout route={CURSOS_ROUTE} buttons={<NuevaDivision />}>
-      <ActionButtons filters={filters} />
+      {/* <ActionButtons filters={filters} /> */}
       <Suspense key={filter_as_key} fallback={<LoadingDivisionesTable />}>
-        <div className="mx-auto max-w-xl">
-          <DivisionesTableContainer filters={filters} />
-        </div>
+        <DivisionesTableContainer />
       </Suspense>
     </PageLayout>
   );
