@@ -29,8 +29,8 @@ export const DivisionesTable = ({ data }: DivisionesTableProps) => {
         cell({ original }) {
           return (
             <>
-              <EditDivisionModal divisionId={original.id.toString()} />
               <RemoveDivisionModal divisionId={original.id} nombre={original.nombre} onSubmit={onDeleteDivision} />
+              <EditDivisionModal divisionId={original.id.toString()} />
             </>
           );
         },
