@@ -6,7 +6,7 @@ import { api } from "@/trpc/react";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 
 type RemoveDivisionModalProps = {
-  divisionId: number;
+  divisionId?: string;
   nombre?: string;
   onSubmit: () => void;
 };
@@ -24,8 +24,8 @@ export default function RemoveDivisionModal({ divisionId, nombre, onSubmit }: Re
 
   const [open, setOpen] = useState(false);
 
-  const handleRemoveDivision = async (divisionId: number) => {
-    eliminarDivision.mutate({ id: divisionId });
+  const handleRemoveDivision = async (divisionId?: string) => {
+    if (divisionId) eliminarDivision.mutate({ id: parseInt(divisionId) });
     setOpen(false);
   };
 
