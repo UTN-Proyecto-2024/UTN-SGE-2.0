@@ -27,6 +27,8 @@ export const BibliotecaPrestamosTable = ({ data, filters, filterByUser }: Biblio
   const columns = getColumnasPrestamo({ filterByUser });
   const router = useRouter();
 
+  console.log(data);
+
   return (
     <>
       <DataTable
@@ -42,7 +44,7 @@ export const BibliotecaPrestamosTable = ({ data, filters, filterByUser }: Biblio
         }}
         action={{
           header: "Acciones",
-          cell() {
+          cell: (row) => {
             return (
               <>
                 {!filterByUser && (
@@ -52,9 +54,9 @@ export const BibliotecaPrestamosTable = ({ data, filters, filterByUser }: Biblio
                     color="ghost"
                     icon={PrinterIcon}
                     onClick={() => {
-                      const datos = JSON.stringify(data.reservas[0]);
+                      const rowIndex = row.index;
+                      const datos = JSON.stringify(data.reservas[rowIndex]);
                       router.push(`/biblioteca/prestamos/comprobante?datos=${encodeURIComponent(datos)}`);
-                      console.log(datos);
                     }}
                   />
                 )}
