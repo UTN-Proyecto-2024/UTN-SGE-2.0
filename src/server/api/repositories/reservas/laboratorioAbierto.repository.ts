@@ -39,12 +39,17 @@ export const getReservaPorUsuarioId = async (ctx: { db: PrismaClient }, input: I
 
 type InputGetAll = z.infer<typeof inputGetAllSolicitudesReservaLaboratorioAbierto>;
 export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetAll, userId: string) => {
-  const { pageIndex, pageSize, searchText, orderDirection, orderBy, estatus, filtrByUserId } = input;
+  const { pageIndex, pageSize, searchText, orderDirection, orderBy, estatus, filtrByUserId, pasadas, aprobadas } =
+    input;
 
+  const fechaHoyMenos1Dia = new Date();
+  fechaHoyMenos1Dia.setHours(0, 0, 0, 0);
   const filtrosWhereReservaLaboratorioAbierto: Prisma.ReservaLaboratorioAbiertoWhereInput = {
     reserva: {
       ...(filtrByUserId === "true" ? { usuarioSolicitoId: userId } : {}),
       ...(estatus ? { estatus: estatus } : {}),
+      ...(pasadas === "true" ? { fechaHoraFin: { lte: fechaHoyMenos1Dia } } : {}),
+      ...(aprobadas === "true" ? { fechaHoraFin: { gte: fechaHoyMenos1Dia } } : {}),
     },
     ...(searchText
       ? {
@@ -57,6 +62,40 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
                       contains: searchText ?? undefined,
                       mode: "insensitive",
                     },
+                  },
+                },
+              },
+            },
+            {
+              reserva: {
+                reservaLaboratorioAbierto: {
+                  laboratorio: {
+                    sede: {
+                      nombre: {
+                        contains: searchText ?? undefined,
+                        mode: "insensitive",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              reserva: {
+                usuarioTutor: {
+                  nombre: {
+                    contains: searchText ?? undefined,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+            {
+              reserva: {
+                reservaLaboratorioAbierto: {
+                  especialidad: {
+                    contains: searchText ?? undefined,
+                    mode: "insensitive",
                   },
                 },
               },

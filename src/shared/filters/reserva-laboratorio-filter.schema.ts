@@ -75,10 +75,9 @@ export const inputGetAllSolicitudesReservaLaboratorioAbierto = z.object({
       "id",
       "laboratorioId",
       "sede",
-      "reserva_fechaCreacion",
+      "reserva_usuarioSolicito_apellido",
       "reserva_fechaHoraInicio",
       "reserva_fechaHoraFin",
-      "reserva_usuarioSolicito_apellido",
     ])
     .default("id")
     .catch("id"),
@@ -86,6 +85,8 @@ export const inputGetAllSolicitudesReservaLaboratorioAbierto = z.object({
   searchText: z.string().default(""),
   estatus: enumReservaEstatus.default("").catch(""),
   filtrByUserId: z.enum(["true", "false"]).optional(),
+  pasadas: z.enum(["true", "false"]).optional(),
+  aprobadas: z.enum(["true", "false"]).optional(),
 });
 
 export const inputRechazarReservaLaboratorioAbierto = z.object({

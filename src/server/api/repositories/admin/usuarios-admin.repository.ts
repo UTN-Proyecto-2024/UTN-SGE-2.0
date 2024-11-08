@@ -7,7 +7,7 @@ import {
   type inputEditarTutor,
   type inputGetTutor,
   type inputGetUsuariosPorIds,
-  inputCambiarAsistio,
+  type inputCambiarAsistio,
 } from "@/shared/filters/admin-usuarios-filter.schema";
 import { ReservaTipo, type Prisma, type PrismaClient } from "@prisma/client";
 import { type z } from "zod";
