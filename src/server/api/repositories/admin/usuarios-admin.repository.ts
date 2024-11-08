@@ -7,8 +7,9 @@ import {
   type inputEditarTutor,
   type inputGetTutor,
   type inputGetUsuariosPorIds,
+  type inputCambiarAsistio,
 } from "@/shared/filters/admin-usuarios-filter.schema";
-import { type Prisma, type PrismaClient } from "@prisma/client";
+import { ReservaTipo, type Prisma, type PrismaClient } from "@prisma/client";
 import { type z } from "zod";
 import { informacionUsuario } from "../usuario-helper";
 
@@ -316,7 +317,7 @@ export const getAllProfesores = async (ctx: { db: PrismaClient }) => {
   };
 };
 
-export const getReservasHechasPorUsuario = async (ctx: { db: PrismaClient }, userId: string) => {
+export const getReservasHechasEsteAnno = async (ctx: { db: PrismaClient }, userId: string) => {
   const annoActual = new Date().getFullYear();
 
   const reservas = await ctx.db.$queryRaw<{ cantidad: bigint }[]>`
@@ -324,6 +325,7 @@ export const getReservasHechasPorUsuario = async (ctx: { db: PrismaClient }, use
     FROM "Reserva" r
     WHERE
       r."usuarioSolicitoId" = ${userId} AND
+      r.tipo in (${ReservaTipo.LABORATORIO_CERRADO}, ${ReservaTipo.LABORATORIO_ABIERTO}) AND
       r."fechaHoraInicio" BETWEEN '${annoActual}-01-01' AND '${annoActual}-12-31'
       LIMIT 1;
   `;
@@ -335,4 +337,45 @@ export const getReservasHechasPorUsuario = async (ctx: { db: PrismaClient }, use
   const cantidad = Number(reservas[0].cantidad ?? 0);
 
   return cantidad;
+};
+
+export const getNumeroReservasQueNoAsistioEsteAnno = async (ctx: { db: PrismaClient }, userId: string) => {
+  const annoActual = new Date().getFullYear();
+
+  const reservas = await ctx.db.$queryRaw<{ cantidad: bigint }[]>`
+    SELECT COUNT(*) as cantidad
+    FROM "Reserva" r
+    WHERE
+      r."usuarioSolicitoId" = ${userId} AND
+      r.tipo in (${ReservaTipo.LABORATORIO_CERRADO}, ${ReservaTipo.LABORATORIO_ABIERTO}) AND
+      r."fechaHoraInicio" BETWEEN '${annoActual}-01-01' AND '${annoActual}-12-31' AND
+      r."asistio" = false
+      LIMIT 1
+  `;
+
+  if (!reservas || reservas.length === 0 || reservas[0] === undefined) {
+    return 0;
+  }
+
+  const cantidad = Number(reservas[0].cantidad ?? 0);
+
+  return cantidad;
+};
+
+type InputCambiarAsistio = z.infer<typeof inputCambiarAsistio>;
+export const cambiarAsistioReserva = async (ctx: { db: PrismaClient }, input: InputCambiarAsistio) => {
+  try {
+    const reserva = await ctx.db.reserva.update({
+      where: {
+        id: input.id,
+      },
+      data: {
+        asistio: input.asistio,
+      },
+    });
+
+    return reserva;
+  } catch (error) {
+    throw new Error(`Error cambiando asistió de reserva ${input.id}`);
+  }
 };

@@ -24,8 +24,9 @@ type ReservaDetalleProps = {
 };
 
 export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetalleProps) => {
-  const { data: reservasHechas = 0, isLoading: isLoadingReservasHechas } =
-    api.admin.usuarios.reservasHechasPorUsuario.useQuery();
+  const { data: reservasHechas = 0 } = api.admin.usuarios.reservasHechasEsteAnno.useQuery();
+  const { data: reservasQueNoAsistio = 0 } = api.admin.usuarios.reservasQueNoAsistioEsteAnno.useQuery();
+
   const {
     data: reserva,
     isLoading,
@@ -150,9 +151,17 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
             <div className="space-y-2">
               <b className="flex items-center text-sm font-semibold">
                 <CalculatorIcon className="h-4 w-4" />
-                Solicitudes hechas este año
+                Reservas hechas este año
               </b>
-              <p>{isLoadingReservasHechas ? "" : reservasHechas}</p>
+              <p>{reservasHechas}</p>
+            </div>
+
+            <div className="space-y-2">
+              <b className="flex items-center text-sm font-semibold">
+                <CalculatorIcon className="h-4 w-4" />
+                Reservas no asistidas este año
+              </b>
+              <p>{reservasQueNoAsistio}</p>
             </div>
           </div>
         </CardContent>
