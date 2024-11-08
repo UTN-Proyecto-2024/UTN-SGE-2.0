@@ -492,8 +492,8 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
           )}
           {!esNuevo && (
             <ConfirmarCambioEstadoModal
-              open={isModalOpen} // Pasa el estado del modal
-              onOpenChange={setModalOpen} // Controla el cambio de apertura
+              open={isModalOpen}
+              onOpenChange={setModalOpen}
               handleModificar={handleConfirmModificacion}
             />
           )}
