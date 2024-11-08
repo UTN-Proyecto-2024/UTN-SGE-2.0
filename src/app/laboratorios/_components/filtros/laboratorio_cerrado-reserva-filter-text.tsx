@@ -43,9 +43,9 @@ export const LaboratorioCerradoReservasFilterText = ({ filters }: Props) => {
   return (
     <form onSubmit={(e) => e.preventDefault()} className="w-full">
       <Input
-        placeholder={"Buscar por título o inventario"}
+        placeholder={"Buscar por división, materia, sede o laboratorio"}
         name="searchText"
-        unit={<SearchIcon className="text-sub relative top-0.5 h-4 w-4" onClick={onClickIcon} />}
+        unit={<SearchIcon className="text-sub relative top-0.5 h-4 w-4" onClick={onClickIcon}  />}
         type={"search"}
         value={currentSearchText}
         onChange={handleTextChange}

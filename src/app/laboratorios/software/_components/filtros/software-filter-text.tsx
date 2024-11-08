@@ -43,7 +43,7 @@ export const SoftwareFilterText = ({ filters }: Props) => {
   return (
     <form onSubmit={(e) => e.preventDefault()} className="w-full">
       <Input
-        placeholder={"Buscar por nombre"}
+        placeholder={"Buscar por nombre, version o estado"}
         name="searchText"
         unit={<SearchIcon className="text-sub relative top-0.5 h-4 w-4" onClick={onClickIcon} />}
         type={"search"}

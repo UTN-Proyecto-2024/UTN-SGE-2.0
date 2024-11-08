@@ -4,7 +4,7 @@ import { api } from "@/trpc/react";
 import { Button, FormInput, Input, ScrollArea, toast } from "@/components/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   inputEditarReservaLaboratorioCerradoSchema,
   inputReservaLaboratorioCerrado,
@@ -23,6 +23,7 @@ import CustomDatePicker from "@/components/date-picker";
 import { MotivoRechazo } from "./rechazo-alert";
 import { LaptopIcon, ProjectorIcon, ScreenShareIcon } from "lucide-react";
 import { SelectLaboratorioFormConEstadoReservaForm } from "@/app/_components/select-ubicacion/select-laboratorio";
+import { ConfirmarCambioEstadoModal } from "./modal-confirmar-reserva";
 
 type Props = {
   cursoId?: string | null | number;
@@ -37,6 +38,8 @@ type FormReservarLaboratorioType =
 export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel }: Props) => {
   const esNuevo = reservaId === undefined;
   const esDiscrecional = !cursoId;
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [formData, setFormData] = useState<FormReservarLaboratorioType | null>(null);
 
   const {
     data: curso,
@@ -107,6 +110,33 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
           : inputEditarReservaLaboratorioCerradoSchema,
     ),
   });
+
+  const handleFormSubmit = async (data: FormReservarLaboratorioType) => {
+    if (esNuevo) {
+      await onFormSubmit(data);
+    } else {
+      setFormData(data);
+      setModalOpen(true);
+    }
+  };
+
+  const handleConfirmModificacion = () => {
+    if (!formData) return;
+
+    modificarReservaLaboratorio.mutate(
+      { ...formData, id: reservaId!, cursoId: Number(reservaData?.cursoId) },
+      {
+        onSuccess: () => {
+          toast.success("Reserva modificada con éxito.");
+          onSubmit();
+        },
+        onError: (error) => {
+          toast.error(error?.message ?? "Error al modificar la reserva");
+        },
+      },
+    );
+    setModalOpen(false);
+  };
 
   useEffect(() => {
     formHook.reset(reservaBase);
@@ -199,7 +229,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
 
   return (
     <FormProvider {...formHook}>
-      <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
+      <form onSubmit={handleSubmit(handleFormSubmit)} className="relative flex w-full flex-col gap-4">
         <ScrollArea className="max-h-[calc(100vh_-_300px)]">
           <div className="flex w-full flex-col items-center justify-center">
             {haSidoRechazada && <MotivoRechazo motivoRechazo={reservaData?.reserva.motivoRechazo ?? ""} />}
@@ -459,6 +489,13 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
                     ? "Guardar y aprobar"
                     : "Guardar"}
             </Button>
+          )}
+          {!esNuevo && (
+            <ConfirmarCambioEstadoModal
+              open={isModalOpen}
+              onOpenChange={setModalOpen}
+              handleModificar={handleConfirmModificacion}
+            />
           )}
         </div>
       </form>

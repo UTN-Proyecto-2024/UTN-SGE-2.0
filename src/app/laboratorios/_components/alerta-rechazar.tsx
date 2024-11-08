@@ -11,17 +11,23 @@ type Props = {
 export const AdminLaboratoriosNuevoLaboratorio = ({ estaRechazando, handleRechazo }: Props) => {
   const [open, setOpen] = useState(false);
   const [motivo, setMotivo] = useState("");
+  const [showError, setShowError] = useState(false);
 
   const handleSave = () => {
     if (!motivo) {
+      setShowError(true);
       return;
     }
 
     handleRechazo(motivo);
     setOpen(false);
+    setShowError(false);
   };
 
-  const handleCancel = () => setOpen(false);
+  const handleCancel = () => {
+    setOpen(false);
+    setShowError(false);
+  };
 
   return (
     <ModalDrawer
@@ -46,7 +52,7 @@ export const AdminLaboratoriosNuevoLaboratorio = ({ estaRechazando, handleRechaz
       esEliminar
     >
       <div className="flex w-full flex-col gap-y-4">
-        <div className="flex max-h-max w-full flex-col  gap-4">Está seguro que desea rechazar la solicitud?</div>
+        <div className="flex max-h-max w-full flex-col gap-4">¿Está seguro que desea rechazar la solicitud?</div>
 
         <Textarea
           label={"Motivo"}
@@ -54,8 +60,13 @@ export const AdminLaboratoriosNuevoLaboratorio = ({ estaRechazando, handleRechaz
           className="max-h-80 w-full"
           placeholder="Escribe el motivo de rechazo"
           value={motivo}
-          onChange={(e) => setMotivo(e.target.value)}
+          onChange={(e) => {
+            setMotivo(e.target.value);
+            setShowError(false);
+          }}
         />
+
+        {showError && <span className="text-red-600">El motivo es requerido.</span>}
 
         <div className="flex w-full flex-row justify-end gap-x-4">
           <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
