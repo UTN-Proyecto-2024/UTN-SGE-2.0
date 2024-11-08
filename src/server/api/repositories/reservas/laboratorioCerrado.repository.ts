@@ -86,8 +86,48 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
           OR: [
             {
               reserva: {
-                reservaLaboratorioAbierto: {
+                reservaLaboratorioCerrado: {
                   laboratorio: {
+                    nombre: {
+                      contains: searchText ?? undefined,
+                      mode: "insensitive",
+                    },
+                  },
+                },
+              },
+            },
+            {
+              reserva: {
+                reservaLaboratorioCerrado: {
+                  curso: {
+                    division: {
+                      nombre: {
+                        contains: searchText ?? undefined,
+                        mode: "insensitive",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              reserva: {
+                reservaLaboratorioCerrado: {
+                  curso: {
+                    materia: {
+                      nombre: {
+                        contains: searchText ?? undefined,
+                        mode: "insensitive",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            {
+              reserva: {
+                reservaLaboratorioCerrado: {
+                  sede: {
                     nombre: {
                       contains: searchText ?? undefined,
                       mode: "insensitive",
@@ -311,7 +351,20 @@ export const editarReserva = async (ctx: { db: PrismaClient }, input: InputEdita
         },
       });
 
-      const { fechaHoraInicio, fechaHoraFin } = reserva;
+      if (!reserva.reservaLaboratorioCerrado) {
+        throw new Error("ReservaLaboratorioCerrado no encontrada");
+      }
+
+      const curso = {
+        dia1: reserva.reservaLaboratorioCerrado.curso!.dia1,
+        dia2: reserva.reservaLaboratorioCerrado.curso!.dia2,
+        horaInicio1: reserva.reservaLaboratorioCerrado.curso!.horaInicio1,
+        horaInicio2: reserva.reservaLaboratorioCerrado.curso!.horaInicio2,
+        duracion1: reserva.reservaLaboratorioCerrado.curso!.duracion1,
+        duracion2: reserva.reservaLaboratorioCerrado.curso!.duracion2,
+        turno: reserva.reservaLaboratorioCerrado.curso!.turno,
+      };
+      const { fechaHoraInicio, fechaHoraFin } = obtenerFechaHoraInicio(curso, input);
 
       await tx.reserva.update({
         where: {
