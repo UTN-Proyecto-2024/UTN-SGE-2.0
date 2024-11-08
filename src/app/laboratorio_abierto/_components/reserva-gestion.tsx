@@ -11,9 +11,9 @@ import { SelectLaboratorioFormConEstadoReservaForm } from "@/app/_components/sel
 import { api } from "@/trpc/react";
 import { FormEquipoTipoSelector } from "@/app/laboratorios/_components/filtros/equipo-tipo-selector";
 import { ReservaEstatus } from "@prisma/client";
-import { AdminLaboratoriosNuevoLaboratorio } from "./alerta-rechazar";
 import { esFechaPasada } from "@/shared/get-date";
 import { getMensajeError } from "@/shared/error";
+import { AdminLaboratoriosNuevoLaboratorio } from "@/app/laboratorios/_components/alerta-rechazar";
 
 type FormHelperType = {
   tutor: { id: string; label: string };
