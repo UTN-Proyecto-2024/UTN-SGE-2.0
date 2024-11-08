@@ -315,3 +315,24 @@ export const getAllProfesores = async (ctx: { db: PrismaClient }) => {
     count: profesores.length,
   };
 };
+
+export const getReservasHechasPorUsuario = async (ctx: { db: PrismaClient }, userId: string) => {
+  const annoActual = new Date().getFullYear();
+
+  const reservas = await ctx.db.$queryRaw<{ cantidad: bigint }[]>`
+    SELECT COUNT(*) as cantidad
+    FROM "Reserva" r
+    WHERE
+      r."usuarioSolicitoId" = ${userId} AND
+      r."fechaHoraInicio" BETWEEN '${annoActual}-01-01' AND '${annoActual}-12-31'
+      LIMIT 1;
+  `;
+
+  if (!reservas || reservas.length === 0 || reservas[0] === undefined) {
+    return 0;
+  }
+
+  const cantidad = Number(reservas[0].cantidad ?? 0);
+
+  return cantidad;
+};

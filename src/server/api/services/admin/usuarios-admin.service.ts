@@ -20,6 +20,7 @@ import {
   getUsuarioPorId,
   getAllTutoresEspecialidades,
   getUsuariosPorIds,
+  getReservasHechasPorUsuario,
 } from "../../repositories/admin/usuarios-admin.repository";
 
 export const getTodosLosUsuariosProcedure = protectedProcedure.input(inputGetUsuarios).query(async ({ ctx, input }) => {
@@ -106,4 +107,12 @@ export const getAllProfesoresProcedure = protectedProcedure.query(async ({ ctx }
   const profesores = await getAllProfesores(ctx);
 
   return profesores;
+});
+
+export const reservasHechasPorUsuarioProcedure = protectedProcedure.query(async ({ ctx }) => {
+  const userId = ctx.session.user.id;
+
+  const reservas = await getReservasHechasPorUsuario(ctx, userId);
+
+  return reservas;
 });

@@ -4,8 +4,8 @@ import { DataTable } from "@/components/ui";
 import { type RouterOutputs } from "@/trpc/react";
 import { ReservarLaboratorioCerradoModal } from "./reservar-laboratorio";
 import { getColumns } from "./columns";
-import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+// import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
+// import { SgeNombre } from "@prisma/client";
 
 type CursoData = RouterOutputs["cursos"]["getAll"];
 
@@ -16,10 +16,9 @@ type CursosTableProps = {
 export const CursosTable = ({ data }: CursosTableProps) => {
   const columns = getColumns();
 
-  // TODO: Implement resizing
   return (
     <>
-      <TienePermiso
+      {/* <TienePermiso
         permisos={[SgeNombre.LAB_ABIERTO_RESERVAR]}
         fallback={<span className="text-red-500">NO TIENE LAB_ABIERTO_RESERVAR</span>}
       >
@@ -31,7 +30,7 @@ export const CursosTable = ({ data }: CursosTableProps) => {
         fallback={<span className="text-red-500">NO TIENE ADMIN_ACCESO_SVN</span>}
       >
         <span className="text-green-500">TIENE ADMIN_ACCESO_SVN</span>
-      </TienePermiso>
+      </TienePermiso> */}
 
       <DataTable
         data={data.cursos ?? []}
