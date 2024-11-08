@@ -47,8 +47,8 @@ export const CursosTable = ({ data, filters }: CursosTableProps) => {
           cell({ original }) {
             return (
               <>
-                <EditCursoModal cursoId={original.id} />
                 <RemoveCursoModal cursoId={original.id} nombre={original.division.nombre} onSubmit={refresh} />
+                <EditCursoModal cursoId={original.id} />
               </>
             );
           },

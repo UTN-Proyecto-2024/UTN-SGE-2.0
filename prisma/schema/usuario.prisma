@@ -125,9 +125,10 @@ model RolPermiso {
 model Permiso {
     id Int @id @default(autoincrement())
 
-    nombre   String
-    grupo    String
-    enDesuso Boolean @default(false)
+    sgeNombre SgeNombre
+    nombre    String
+    grupo     String
+    enDesuso  Boolean   @default(false)
 
     rolPermiso RolPermiso[]
 
@@ -137,7 +138,9 @@ model Permiso {
     usuarioModificadorId String
 
     @@unique([nombre, grupo])
+    @@unique([sgeNombre])
     @@index([nombre(sort: Asc)])
+    @@index([sgeNombre])
 }
 
 model Provincia {

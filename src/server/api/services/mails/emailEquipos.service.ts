@@ -5,12 +5,15 @@ import {
   getReservaRenovacionEquipoParaEmail,
 } from "../../repositories/reservas/equipo.repository";
 import { type PrismaClient } from "@prisma/client";
+import { getDateISOString } from "@/shared/get-date";
 
-export const enviarMailReservaEquipoProcedure = async (ctx: { db: PrismaClient }, id: number) => {
-  const reservaData = await getReservaEquipoParaEmail(ctx, { id: id });
+export const enviarMailReservaEquipoProcedure = async (ctx: { db: PrismaClient }, input: { reservaId: number }) => {
+  const { reservaId } = input;
+
+  const reservaData = await getReservaEquipoParaEmail(ctx, { id: reservaId });
 
   await sendEmail(ctx, {
-    asunto: "Reserva de equipo confirmada",
+    asunto: "Reserva de equipo creada",
     to: reservaData.usuarioSolicitante.email ?? "",
     usuario: {
       nombre: reservaData.usuarioSolicitante.nombre ?? "Usuario",
@@ -35,8 +38,7 @@ export const enviarMailRenovarEquipoProcedure = async (
       apellido: renovacionData.usuarioSolicitante?.apellido ?? "",
     },
 
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    textoMail: `<strong>Has renovado el préstamo del equipo</strong> <br/> <em>${renovacionData.equipoModelo}</em> <br> desde ${input.fechaInicio} hasta ${input.fechaFin}`,
+    textoMail: `<strong>Has renovado el préstamo del equipo</strong> <br/> <em>${renovacionData.equipoModelo}</em> <br> desde ${getDateISOString(input.fechaInicio)} hasta ${getDateISOString(input.fechaFin)}`,
     hipervinculo: EQUIPOS_ROUTE.misPrestamosRuta,
   });
 };
@@ -51,7 +53,7 @@ export const enviarMailDevolverEquipoProcedure = async (ctx: { db: PrismaClient 
       nombre: reservaData.usuarioSolicitante.nombre ?? "Usuario",
       apellido: reservaData.usuarioSolicitante.apellido ?? "",
     },
-    textoMail: `<strong>Has devuelto el equipo</strong> <br/> <em>${reservaData.equipoModelo}</em> ha sido recibido correctamente.`,
+    textoMail: `<strong>Has devuelto el equipo</strong> <br/> <em>${reservaData.equipoModelo}</em>`,
     hipervinculo: EQUIPOS_ROUTE.misPrestamosRuta,
   });
 };

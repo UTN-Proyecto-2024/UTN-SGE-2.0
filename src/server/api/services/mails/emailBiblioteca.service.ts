@@ -49,7 +49,7 @@ export const enviarMailDevolverLibroProcedure = async (ctx: { db: PrismaClient }
       nombre: reservaData.usuarioSolicitante.nombre ?? "Usuario",
       apellido: reservaData.usuarioSolicitante.apellido ?? "",
     },
-    textoMail: `<strong>Has devuelto el libro</strong> <br/> <em>${reservaData.libroNombre}</em> ha sido recibido correctamente.`,
+    textoMail: `<strong>Has devuelto el libro</strong> <br/> <em>${reservaData.libroNombre}</em>`,
     hipervinculo: BIBLIOTECA_ROUTE.misPrestamosRuta,
   });
 };

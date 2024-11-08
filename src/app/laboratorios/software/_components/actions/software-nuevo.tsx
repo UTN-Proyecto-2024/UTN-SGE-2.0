@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { EditIcon, Plus } from "lucide-react";
+import { PencilIcon, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import React, { useState } from "react";
@@ -49,7 +49,7 @@ export const SoftwareNuevoEditar = ({ softwareId }: SoftwareFormProps) => {
 
 const ButtonSoftware = ({ softwareId }: SoftwareFormProps) => {
   if (softwareId) {
-    return <EditIcon size={16} />;
+    return <PencilIcon size={16} />;
   }
 
   return (

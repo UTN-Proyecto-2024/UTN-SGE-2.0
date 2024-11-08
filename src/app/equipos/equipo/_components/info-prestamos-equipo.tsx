@@ -27,9 +27,9 @@ export const EquipoInformacionPrestamos = (props: Props) => {
         <table className="w-full table-auto border-collapse text-center">
           <thead>
             <tr>
-              <th>Prestamo #</th>
+              <th>Préstamo #</th>
               <th>Prestado a</th>
-              <th>Fecha del prestamo</th>
+              <th>Fecha del préstamo</th>
               <th>Fecha de finalización</th>
               <th>Prestó</th>
               <th>Renovado</th>

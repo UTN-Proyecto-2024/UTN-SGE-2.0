@@ -3,29 +3,25 @@ import type {
   inputAgregarDivision,
   inputEditarDivision,
   inputGetDivision,
-  inputGetDivisiones,
 } from "@/shared/filters/divisiones-filter.schema";
 import { type PrismaClient } from "@prisma/client";
 import { type z } from "zod";
 
-type InputGetAll = z.infer<typeof inputGetDivisiones>;
-export const getAllDivisiones = async (ctx: { db: PrismaClient }, input?: InputGetAll) => {
+export const getAllDivisiones = async (ctx: { db: PrismaClient }) => {
   return await ctx.db.division.findMany({
     select: {
       id: true,
       nombre: true,
       anio: true,
     },
-    orderBy: {
-      nombre: "asc",
-    },
-    where: {
-      anio: input?.anio ? parseInt(input.anio) : undefined,
-      nombre: {
-        contains: input?.searchText,
-        mode: "insensitive",
+    orderBy: [
+      {
+        anio: "asc",
       },
-    },
+      {
+        nombre: "asc",
+      },
+    ],
   });
 };
 
@@ -69,7 +65,7 @@ export const eliminarDivision = async (ctx: { db: PrismaClient }, input: InputEl
 type InputAgregarDivision = z.infer<typeof inputAgregarDivision>;
 export const agregarDivision = async (ctx: { db: PrismaClient }, input: InputAgregarDivision, userId: string) => {
   if (input.anio === undefined) {
-    throw new Error("El campo 'anio' es requerido.");
+    throw new Error("El campo 'año' es requerido.");
   }
   const existeDivision = await ctx.db.division.findFirst({
     where: {
@@ -84,7 +80,7 @@ export const agregarDivision = async (ctx: { db: PrismaClient }, input: InputAgr
   const division = await ctx.db.division.create({
     data: {
       nombre: input.nombre,
-      anio: input.anio,
+      anio: Number(input.anio),
       usuarioCreadorId: userId,
       usuarioModificadorId: userId,
     },
@@ -111,7 +107,7 @@ export const editarDivision = async (ctx: { db: PrismaClient }, input: InputEdit
   const division = await ctx.db.division.update({
     data: {
       nombre: input.nombre,
-      anio: input.anio,
+      anio: Number(input.anio),
       usuarioModificadorId: userId,
     },
     where: {

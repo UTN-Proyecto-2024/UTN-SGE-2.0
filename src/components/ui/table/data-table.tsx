@@ -173,7 +173,7 @@ export function DataTable<T>({
                     {header.isPlaceholder || !column.columnDef.header || header.id === "action" ? null : (
                       <div
                         className={cn(
-                          "inline-flex h-8 cursor-pointer items-center gap-2 rounded px-2 hover:bg-gray-400",
+                          "inline-flex h-8 cursor-pointer items-center gap-2 rounded px-2",
                           meta?.header?.className,
                           {
                             "-translate-x-2": (meta?.header?.align ?? "left") === "left",
@@ -212,43 +212,39 @@ export function DataTable<T>({
                       }
                     : undefined
                 }
-                className={cn({ "bg-slate-50": index % 2 === 0 })}
+                className={cn({
+                  "bg-slate-50": index % 2 === 0 && !row.getIsGrouped(), // default for non-grouped rows
+                  "bg-slate-200": row.getIsGrouped(), // color for grouped rows
+                })}
               >
                 {row.getVisibleCells().map((cell) => {
                   const meta = getMeta(cell.column);
                   const alignment = getAlignment(meta?.cell?.align);
                   return (
                     <TableCell key={cell.id} className={cn(alignment, meta?.cell?.className)}>
-                      {/* {flexRender(cell.column.columnDef.cell, cell.getContext())} */}
                       {cell.getIsGrouped() ? (
-                        // If it's a grouped cell, add an expander and row count
-                        <>
-                          <button
-                            className="flex flex-row items-center gap-1 text-left"
-                            {...{
-                              onClick: row.getToggleExpandedHandler(),
-                              style: {
-                                cursor: row.getCanExpand() ? "pointer" : "normal",
-                              },
-                            }}
-                          >
-                            {row.getIsExpanded() ? (
-                              <ChevronDown className="flex-shrink-0" size={15} strokeWidth={2} />
-                            ) : (
-                              <ChevronRight className="flex-shrink-0" size={15} strokeWidth={2} />
-                            )}{" "}
-                            {flexRender(cell.column.columnDef.cell, cell.getContext())} ({row.subRows.length})
-                          </button>
-                        </>
+                        <button
+                          className="flex flex-row items-center gap-1 text-left"
+                          {...{
+                            onClick: row.getToggleExpandedHandler(),
+                            style: {
+                              cursor: row.getCanExpand() ? "pointer" : "normal",
+                            },
+                          }}
+                        >
+                          {row.getIsExpanded() ? (
+                            <ChevronDown className="flex-shrink-0" size={15} strokeWidth={2} />
+                          ) : (
+                            <ChevronRight className="flex-shrink-0" size={15} strokeWidth={2} />
+                          )}{" "}
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())} ({row.subRows.length})
+                        </button>
                       ) : cell.getIsAggregated() ? (
-                        // If the cell is aggregated, use the Aggregated
-                        // renderer for cell
                         flexRender(
                           cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
                           cell.getContext(),
                         )
-                      ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
-                        // Otherwise, just render the regular cell
+                      ) : cell.getIsPlaceholder() ? null : (
                         flexRender(cell.column.columnDef.cell, cell.getContext())
                       )}
                     </TableCell>

@@ -34,8 +34,8 @@ export const MateriasTable = ({ data }: MateriasTableProps) => {
           cell({ original }) {
             return (
               <>
-                <EditMateriaModal materiaId={original.id.toString()} /> {/* Modal para editar */}
                 <RemoveMateriaModal materiaId={original.id} nombre={original.nombre} onSubmit={onDeleteMateria} />
+                <EditMateriaModal materiaId={original.id.toString()} /> {/* Modal para editar */}
               </>
             );
           },
