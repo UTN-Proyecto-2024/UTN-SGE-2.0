@@ -24,8 +24,9 @@ type ReservaDetalleProps = {
 };
 
 export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetalleProps) => {
-  const { data: reservasHechas = 0, isLoading: isLoadingReservasHechas } =
-    api.admin.usuarios.reservasHechasPorUsuario.useQuery();
+  const { data: reservasHechas = 0 } = api.admin.usuarios.reservasHechasEsteAnno.useQuery();
+  const { data: reservasQueNoAsistio = 0 } = api.admin.usuarios.reservasQueNoAsistioEsteAnno.useQuery();
+
   const {
     data: reserva,
     isLoading,
@@ -108,11 +109,16 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
                     ? `${reserva.reserva.usuarioSolicito.nombre} ${reserva.reserva.usuarioSolicito.apellido}`
                     : "Sin asignar",
                 },
-                  {
-                      icon: <CalculatorIcon className="h-4 w-4" />,
-                      label: "Solicitudes hechas este año",
-                      value: isLoadingReservasHechas ? "" : reservasHechas,
-                  },
+                {
+                  icon: <CalculatorIcon className="h-4 w-4" />,
+                  label: "Reservas hechas este año",
+                  value: reservasHechas,
+                },
+                {
+                  icon: <CalculatorIcon className="h-4 w-4" />,
+                  label: "Reservas no asistidas este año",
+                  value: reservasQueNoAsistio,
+                },
               ],
               ...(mostrarCompleto
                 ? [

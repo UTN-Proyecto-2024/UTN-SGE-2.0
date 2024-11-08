@@ -80,3 +80,5 @@ export const ReservaViewAdmin = ({ reservaId, onCancel, onAprobar, onRechazar }:
     </ScrollArea>
   );
 };
+
+// TODO @Alex: si es reserva pasada, mostrar boton para indicar que asistió o no

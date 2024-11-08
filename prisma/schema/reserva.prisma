@@ -5,6 +5,7 @@ model Reserva {
     fechaHoraInicio DateTime
     fechaHoraFin    DateTime
     tipo            ReservaTipo
+    asistio         Boolean        @default(true)
 
     motivoRechazo String?
 
@@ -50,10 +51,11 @@ model Reserva {
 
     mostrarEnPantalla Boolean @default(true)
 
-    @@index([estatus])
-    @@index([fechaHoraInicio(sort: Asc)])
-    @@index([fechaHoraFin(sort: Asc)])
-    @@index([tipo])
+    @@index([tipo], type: Hash)
+    @@index([estatus], type: Hash)
+    @@index([usuarioSolicitoId], type: Hash)
+    @@index([fechaHoraInicio(sort: Asc)], type: BTree)
+    @@index([fechaHoraFin(sort: Asc)], type: BTree)
 }
 
 model ReservaEquipo {

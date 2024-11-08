@@ -8,6 +8,7 @@ import {
   inputGetTutor,
   inputEditarTutor,
   inputGetUsuariosPorIds,
+  inputCambiarAsistio,
 } from "@/shared/filters/admin-usuarios-filter.schema";
 import {
   editarUsuario,
@@ -20,7 +21,9 @@ import {
   getUsuarioPorId,
   getAllTutoresEspecialidades,
   getUsuariosPorIds,
-  getReservasHechasPorUsuario,
+  getReservasHechasEsteAnno,
+  getNumeroReservasQueNoAsistioEsteAnno,
+  cambiarAsistioReserva,
 } from "../../repositories/admin/usuarios-admin.repository";
 
 export const getTodosLosUsuariosProcedure = protectedProcedure.input(inputGetUsuarios).query(async ({ ctx, input }) => {
@@ -109,10 +112,28 @@ export const getAllProfesoresProcedure = protectedProcedure.query(async ({ ctx }
   return profesores;
 });
 
-export const reservasHechasPorUsuarioProcedure = protectedProcedure.query(async ({ ctx }) => {
+export const getNumeroReservasHechasEsteAnnoProcedure = protectedProcedure.query(async ({ ctx }) => {
   const userId = ctx.session.user.id;
 
-  const reservas = await getReservasHechasPorUsuario(ctx, userId);
+  const reservas = await getReservasHechasEsteAnno(ctx, userId);
 
   return reservas;
 });
+
+export const reservasQueNoAsistioEsteAnnoProcedure = protectedProcedure.query(async ({ ctx }) => {
+  const userId = ctx.session.user.id;
+
+  const reservas = await getNumeroReservasQueNoAsistioEsteAnno(ctx, userId);
+
+  return reservas;
+});
+
+export const cambiarAsistioReservaProcedure = protectedProcedure
+  .input(inputCambiarAsistio)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputCambiarAsistio, input);
+
+    const reserva = await cambiarAsistioReserva(ctx, input);
+
+    return reserva;
+  });
