@@ -12,11 +12,7 @@ type TienePermisoProps = {
 export const TienePermiso = ({ permisos, fallback = null, children }: TienePermisoProps) => {
   const { tienePermisos, isLoading, isError } = useTienePermisos(permisos);
 
-  if (isLoading) {
-    return null;
-  }
-
-  if (isError) {
+  if (isLoading || isError) {
     return null;
   }
 

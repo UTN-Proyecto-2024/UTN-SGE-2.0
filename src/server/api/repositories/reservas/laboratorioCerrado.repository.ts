@@ -47,7 +47,13 @@ export const getReservaPorId = async (ctx: { db: PrismaClient }, input: InputGet
     },
     include: {
       sede: true,
-      reserva: true,
+      reserva: {
+        include: {
+          usuarioSolicito: {
+            select: informacionUsuario,
+          },
+        },
+      },
       laboratorio: true,
       curso: true,
       equipoReservado: {
