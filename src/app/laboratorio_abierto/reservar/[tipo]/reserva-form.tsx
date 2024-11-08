@@ -3,12 +3,12 @@ import { api } from "@/trpc/react";
 import { Button, FormInput, ScrollArea, toast } from "@/components/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   inputEditarReservaLaboratorioAbiertoSchema,
   inputReservaLaboratorioAbierto,
 } from "@/shared/filters/reserva-laboratorio-filter.schema";
-import { FormTextarea, Textarea } from "@/components/ui/textarea";
+import { FormTextarea } from "@/components/ui/textarea";
 import { FormEquipoTipoSelector } from "@/app/laboratorios/_components/filtros/equipo-tipo-selector";
 import { type LaboratorioAbiertoType } from "../_components/laboratorios";
 import { SelectSedeForm } from "@/app/_components/select-ubicacion/select-sede";
@@ -18,6 +18,9 @@ import { FormInputPoliticas } from "@/app/_components/input-form-politicas";
 import { LaboratorioAbiertoTipo, ReservaEstatus } from "@prisma/client";
 import { ReservaDetalle } from "../../_components/info-basica-reserva";
 import { FormSelect } from "@/components/ui/autocomplete";
+import { ConfirmarCambioEstadoModal } from "@/app/laboratorios/_components/modal-confirmar-reserva";
+import { MotivoRechazo } from "@/app/laboratorios/_components/rechazo-alert";
+import CustomDatePicker from "@/components/date-picker";
 
 type Props = {
   onSubmit: () => void;
@@ -30,6 +33,8 @@ const cantidadPersonas = [...Array(8).keys()].map((i) => (i + 1).toString());
 
 export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: Props) => {
   const esNuevo = reservaId === undefined;
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [formData, setFormData] = useState<FormReservarLaboratorioAbiertoType | null>(null);
 
   const crearReservaLaboratorioAbierto = api.reservas.reservaLaboratorioAbierto.crearReserva.useMutation();
   const modificarReservaLaboratorioAbierto = api.reservas.reservaLaboratorioAbierto.editarReserva.useMutation();
@@ -43,6 +48,7 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
     },
   );
 
+  const diasDeshabilitados = [0];
   const estaEstatusAprobada = reservaData?.reserva.estatus === ReservaEstatus.FINALIZADA;
   const estaEstatusCancelada = reservaData?.reserva.estatus === ReservaEstatus.CANCELADA;
 
@@ -80,6 +86,30 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
   });
 
   const { handleSubmit, control, setValue } = formHook;
+
+  const handleFormSubmit = async (data: FormReservarLaboratorioAbiertoType) => {
+    if (esNuevo) {
+      await onFormSubmit(data);
+    } else {
+      setFormData(data);
+      setModalOpen(true);
+    }
+  };
+
+  const handleConfirmModificacion = () => {
+    if (!formData) return;
+
+    modificarReservaLaboratorioAbierto.mutate(formData, {
+      onSuccess: () => {
+        toast.success("Reserva actualizada con éxito.");
+        onSubmit();
+      },
+      onError: (error) => {
+        toast.error(error?.message ?? "Error al actualizar la reserva");
+      },
+    });
+    setModalOpen(false);
+  };
 
   useEffect(() => {
     if (reservaData) {
@@ -153,7 +183,8 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
   const haSidoRechazada = !!(
     reservaData &&
     reservaData?.reserva?.motivoRechazo &&
-    reservaData.reserva.motivoRechazo.length > 0
+    reservaData.reserva.motivoRechazo.length > 0 &&
+    reservaData?.reserva.estatus === ReservaEstatus.RECHAZADA
   );
 
   const esReservaPasada = esFechaPasada(reservaData?.reserva?.fechaHoraFin);
@@ -164,9 +195,10 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
 
   return (
     <FormProvider {...formHook}>
-      <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col md:px-4">
+      <form onSubmit={handleSubmit(handleFormSubmit)} className="relative flex w-full flex-col md:px-4">
         <ScrollArea className="max-h-[calc(100vh_-_300px)] w-full">
           <div className="mx-auto max-w-3xl space-y-6">
+            {haSidoRechazada && <MotivoRechazo motivoRechazo={reservaData?.reserva.motivoRechazo ?? ""} />}
             <div className="mx-auto grid grid-cols-1 gap-6 md:grid-cols-2">
               <FormInput label={"Tipo de laboratorio"} control={control} name="tipo" type={"text"} readOnly />
               <SelectSedeForm name="sedeId" label={"Sede"} control={control} placeholder={"Selecciona una sede"} />
@@ -177,7 +209,15 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
                 label={"¿Cuántas personas concurrirán al laboratorio?"}
                 clearable
               />
-              <FormInput label={"Fecha de reserva"} control={control} name="fechaReserva" type={"date"} />
+              <div>
+                <CustomDatePicker
+                  label="Fecha de reserva"
+                  control={control}
+                  name="fechaReserva"
+                  className="mt-2"
+                  disabledDays={diasDeshabilitados}
+                />
+              </div>
               <FormInput label={"Hora de inicio"} control={control} name="horaInicio" type={"time"} />
               <FormInput label={"Hora de fin"} control={control} name="horaFin" type={"time"} />
             </div>
@@ -198,19 +238,6 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
                 showCharCount={true}
               />
               <FormEquipoTipoSelector name="equipoReservado" />
-              {haSidoRechazada && (
-                <div className="flex w-full flex-col justify-end gap-y-4 lg:justify-between">
-                  <div className="mt-4 w-full">
-                    <Textarea
-                      label={"Motivo de rechazo"}
-                      className="max-h-10 w-full"
-                      placeholder="Escribí el motivo de rechazo"
-                      readOnly
-                      value={reservaData?.reserva.motivoRechazo ?? ""}
-                    />
-                  </div>
-                </div>
-              )}
               <FormInputPoliticas name="aceptoTerminos" control={control} />
             </div>
           </div>
@@ -234,6 +261,13 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
             <Button title="Guardar" type="submit" variant="default" color="primary">
               {estaEstatusAprobada ? "Modificar" : "Guardar"}
             </Button>
+          )}
+          {!esNuevo && (
+            <ConfirmarCambioEstadoModal
+              open={isModalOpen}
+              onOpenChange={setModalOpen}
+              handleModificar={handleConfirmModificacion}
+            />
           )}
         </div>
       </form>
