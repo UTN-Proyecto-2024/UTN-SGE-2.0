@@ -14,8 +14,6 @@ export default function ComprobanteContent({ datos }: ComprobanteContentProps) {
     setDatosReserva(datos);
   }, [datos]);
 
-  {
-    /*
   useEffect(() => {
     const handlePrint = () => {
       if (printRef.current) {
@@ -29,8 +27,6 @@ export default function ComprobanteContent({ datos }: ComprobanteContentProps) {
 
     handlePrint();
   }, []);
- */
-  }
 
   const fechaHoraFin = datosReserva?.reserva?.fechaHoraFin ? new Date(datosReserva?.reserva?.fechaHoraFin) : null;
   const fechaFormateada = fechaHoraFin
