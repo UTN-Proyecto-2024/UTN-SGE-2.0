@@ -71,7 +71,7 @@ export const DatoUsuarioReserva = ({
           </div>
         </div>
         <div>
-          <Link href={`${rutaUsuario}/${usuario.id}`} passHref>
+          <Link href={`${rutaUsuario}/${usuario.id}`}>
             <Button variant="default" color="outline" size="sm" className="w-full">
               Ver perfil
             </Button>

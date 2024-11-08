@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
+  CalculatorIcon,
   CalendarIcon,
   ClockIcon,
   MapPinIcon,
@@ -23,6 +24,8 @@ type ReservaDetalleProps = {
 };
 
 export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetalleProps) => {
+  const { data: reservasHechas = 0, isLoading: isLoadingReservasHechas } =
+    api.admin.usuarios.reservasHechasPorUsuario.useQuery();
   const {
     data: reserva,
     isLoading,
@@ -105,6 +108,11 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
                     ? `${reserva.reserva.usuarioSolicito.nombre} ${reserva.reserva.usuarioSolicito.apellido}`
                     : "Sin asignar",
                 },
+                  {
+                      icon: <CalculatorIcon className="h-4 w-4" />,
+                      label: "Solicitudes hechas este año",
+                      value: isLoadingReservasHechas ? "" : reservasHechas,
+                  },
               ],
               ...(mostrarCompleto
                 ? [

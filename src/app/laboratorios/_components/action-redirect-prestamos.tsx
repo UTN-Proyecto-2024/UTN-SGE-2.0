@@ -16,7 +16,7 @@ export const ActionButtonsPrestamos = ({ filters }: ActionButtonsProps) => {
         <div className="md:basis-1/3">
           <LaboratorioCerradoReservasFilterText filters={filters} />
         </div>
-        <div className="md:basis-1/2">
+        <div className="md:basis-1/3">
           <ReservaLaboratorioCerradoEstadoFilter filters={filters} />
         </div>
       </div>

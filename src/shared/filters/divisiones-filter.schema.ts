@@ -2,12 +2,7 @@ import { z } from "zod";
 
 export const inputAgregarDivision = z.object({
   nombre: z.string().min(1, { message: "Requerido" }).max(5, { message: "No debe superar 5 caracteres" }),
-  anio: z
-    .number()
-    .min(1, "El año debe ser al menos 1")
-    .max(6, "El año debe ser como máximo 6")
-    .int("El año debe ser un número entero")
-    .optional(),
+  anio: z.string().min(1, "El año debe ser al menos 1"),
 });
 
 export const inputGetDivisiones = z.object({

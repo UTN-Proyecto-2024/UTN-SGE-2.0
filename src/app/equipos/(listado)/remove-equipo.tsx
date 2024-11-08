@@ -12,10 +12,11 @@ import ModalDrawer from "@/app/_components/modal/modal-drawer";
 type RemoveEquipoModalProps = {
   equipoId: number;
   nombre?: string;
+  disponible: boolean;
   onSubmit: () => void;
 };
 
-export default function RemoveEquipoModal({ equipoId, nombre, onSubmit }: RemoveEquipoModalProps) {
+export default function RemoveEquipoModal({ equipoId, nombre, disponible, onSubmit }: RemoveEquipoModalProps) {
   const eliminarEquipo = api.equipos.eliminarEquipo.useMutation({
     onSuccess: () => {
       toast.success(`El equipo ${nombre} se eliminó con éxito.`);
@@ -37,6 +38,32 @@ export default function RemoveEquipoModal({ equipoId, nombre, onSubmit }: Remove
   };
 
   const handleCancel = () => setOpen(false);
+
+  if (!disponible) {
+    return (
+      <ModalDrawer
+        trigger={
+          <Button
+            title="Eliminar equipo"
+            variant="icon"
+            color="danger"
+            className="h-8 w-8 px-2 py-2"
+            icon={TrashIcon}
+          />
+        }
+        titulo={`El equipo ${nombre ?? ""} tiene un préstamo activo`}
+        cancelText="Cerrar"
+        open={open}
+        onOpenChange={setOpen}
+        onCancel={handleCancel}
+        isAlertDialog
+      >
+        <div>
+          Es necesario devolver <span className="font-bold">{nombre ?? "este equipo"}</span> para poder eliminarlo
+        </div>
+      </ModalDrawer>
+    );
+  }
 
   return (
     <ModalDrawer
