@@ -23,7 +23,7 @@ export const ConfirmarCambioEstadoModal = ({ open, onOpenChange, handleModificar
       description="Al modificar la solicitud, pasará a estado pendiente. ¿Estás seguro de que deseas modificar la reserva?"
       open={open} // Usar el estado abierto del prop
       onOpenChange={onOpenChange} // Usar la función de cambio de apertura del prop
-      className="max-h-[calc(100vh_-_10%)]"
+      className="max-h-[calc(100vh_-_300px)]"
       isAlertDialog // Puedes quitar el atributo trigger si se controla desde el padre.
     >
       <div className="flex flex-col gap-y-4">
