@@ -11,6 +11,7 @@ import {
   getTodosLosLaboratoriosConEstadoReservaProcedure,
   getTodosLosLaboratoriosConArmarioProcedure,
   getTodosLosLaboratoriosReservablesProcedure,
+  getTodosLosSedesConLaboratoriosProcedure,
 } from "../../services/admin/laboratorios-admin.service";
 
 export const laboratoriosRouter = createTRPCRouter({
@@ -19,6 +20,7 @@ export const laboratoriosRouter = createTRPCRouter({
   getAllConEstadoReserva: getTodosLosLaboratoriosConEstadoReservaProcedure,
   getAllReservables: getTodosLosLaboratoriosReservablesProcedure,
   getAllSedes: getTodosLosSedesProcedure,
+  getAllSedesConLaboratorios: getTodosLosSedesConLaboratoriosProcedure,
   getAllArmarios: getTodosLosArmariosProcedure,
   getAllEstantes: getTodosLosEstantesProcedure,
   getLaboratorioPorId: getLaboratorioPorIdProcedure,

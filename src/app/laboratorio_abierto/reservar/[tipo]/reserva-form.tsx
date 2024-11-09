@@ -5,13 +5,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
 import { useEffect, useState } from "react";
 import {
-  inputEditarReservaLaboratorioAbiertoSchema,
-  inputReservaLaboratorioAbierto,
+  type inputEditarReservaLaboratorioAbiertoSchema,
+  inputEditarReservaLaboratorioForm,
+  inputReservaLaboratorioAbiertoForm,
 } from "@/shared/filters/reserva-laboratorio-filter.schema";
 import { FormTextarea } from "@/components/ui/textarea";
 import { FormEquipoTipoSelector } from "@/app/laboratorios/_components/filtros/equipo-tipo-selector";
 import { type LaboratorioAbiertoType } from "../_components/laboratorios";
-import { SelectSedeForm } from "@/app/_components/select-ubicacion/select-sede";
 import { esFechaPasada, getDateISOString, getTimeISOString } from "@/shared/get-date";
 import { SelectEspecialidadForm } from "@/app/_components/select-especialidad";
 import { FormInputPoliticas } from "@/app/_components/input-form-politicas";
@@ -21,15 +21,35 @@ import { FormSelect } from "@/components/ui/autocomplete";
 import { ConfirmarCambioEstadoModal } from "@/app/laboratorios/_components/modal-confirmar-reserva";
 import { MotivoRechazo } from "@/app/laboratorios/_components/rechazo-alert";
 import CustomDatePicker from "@/components/date-picker";
+import { SelectSedeConLaboratorioForm } from "@/app/_components/select-ubicacion/select-sede-con-laboratorio";
 
 type Props = {
   onSubmit: () => void;
   onCancel: () => void;
 } & ({ reservaId: number; tipo?: undefined } | { reservaId?: undefined; tipo: LaboratorioAbiertoType });
 
-export type FormReservarLaboratorioAbiertoType = z.infer<typeof inputEditarReservaLaboratorioAbiertoSchema>;
+export type FormReservarLaboratorioAbiertoType = z.infer<typeof inputEditarReservaLaboratorioForm>;
+export type DataLaboratorioAbiertoBack = z.infer<typeof inputEditarReservaLaboratorioAbiertoSchema>;
 
 const cantidadPersonas = [...Array(8).keys()].map((i) => (i + 1).toString());
+
+const turnos = [
+  { label: "08:00 - 09:00", start: "08:00", end: "09:00" },
+  { label: "09:00 - 10:00", start: "09:00", end: "10:00" },
+  { label: "10:00 - 11:00", start: "10:00", end: "11:00" },
+  { label: "11:00 - 12:00", start: "11:00", end: "12:00" },
+  { label: "12:00 - 13:00", start: "12:00", end: "13:00" },
+  { label: "13:00 - 14:00", start: "13:00", end: "14:00" },
+  { label: "14:00 - 15:00", start: "14:00", end: "15:00" },
+  { label: "15:00 - 16:00", start: "15:00", end: "16:00" },
+  { label: "16:00 - 17:00", start: "16:00", end: "17:00" },
+  { label: "17:00 - 18:00", start: "17:00", end: "18:00" },
+  { label: "18:00 - 19:00", start: "18:00", end: "19:00" },
+  { label: "19:00 - 20:00", start: "19:00", end: "20:00" },
+  { label: "20:00 - 21:00", start: "20:00", end: "21:00" },
+  { label: "21:00 - 22:00", start: "21:00", end: "22:00" },
+  { label: "22:00 - 23:00", start: "22:00", end: "23:00" },
+];
 
 export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: Props) => {
   const esNuevo = reservaId === undefined;
@@ -64,42 +84,61 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
       concurrentes: esNuevo ? "1" : reservaData?.concurrentes.toString(),
       equipoReservado: esNuevo ? [] : (reservaData?.equipoReservado ?? []),
       fechaReserva: esNuevo ? undefined : getDateISOString(reservaData?.reserva.fechaHoraInicio as unknown as Date),
-      horaInicio: esNuevo ? undefined : getTimeISOString(reservaData?.reserva.fechaHoraInicio as unknown as Date),
-      horaFin: esNuevo ? undefined : getTimeISOString(reservaData?.reserva.fechaHoraFin as unknown as Date),
+      turno: esNuevo
+        ? undefined
+        : turnos.find(
+            (t) =>
+              t.start === getTimeISOString(reservaData?.reserva.fechaHoraInicio) &&
+              t.end === getTimeISOString(reservaData?.reserva.fechaHoraFin),
+          )?.label,
       observaciones: esNuevo ? "" : (reservaData?.descripcion ?? ""),
       sedeId: esNuevo ? undefined : String(reservaData?.sedeId),
     },
-    resolver: zodResolver(
-      (esNuevo ? inputReservaLaboratorioAbierto : inputEditarReservaLaboratorioAbiertoSchema).refine(
-        ({ fechaReserva, horaInicio, horaFin }) => {
-          const date1 = new Date(`${fechaReserva}T${horaInicio}`);
-          const date2 = new Date(`${fechaReserva}T${horaFin}`);
-
-          return date1 < date2;
-        },
-        {
-          message: "Debe ser mayor a hora de inicio",
-          path: ["horaFin"],
-        },
-      ),
-    ),
+    resolver: zodResolver(esNuevo ? inputReservaLaboratorioAbiertoForm : inputEditarReservaLaboratorioForm),
   });
 
   const { handleSubmit, control, setValue } = formHook;
 
+  interface Turno {
+    label: string;
+    start: string;
+    end: string;
+  }
+
+  const handleTurnoChange = (selectedTurnoLabel: string | null | undefined) => {
+    const turno: Turno | undefined = turnos.find((t) => t.label === selectedTurnoLabel);
+    if (turno) {
+      if (selectedTurnoLabel) {
+        setValue("turno", selectedTurnoLabel);
+      }
+    }
+  };
+
   const handleFormSubmit = async (data: FormReservarLaboratorioAbiertoType) => {
+    const selectedTurno = turnos.find((turno) => turno.label === data.turno);
+    const dataToSend = {
+      ...data,
+      horaInicio: selectedTurno?.start ?? "",
+      horaFin: selectedTurno?.end ?? "",
+    };
     if (esNuevo) {
-      await onFormSubmit(data);
+      await onFormSubmit(dataToSend);
     } else {
-      setFormData(data);
+      setFormData(dataToSend);
       setModalOpen(true);
     }
   };
 
   const handleConfirmModificacion = () => {
     if (!formData) return;
+    const selectedTurno = turnos.find((turno) => turno.label === formData.turno);
+    const dataToSend = {
+      ...formData,
+      horaInicio: selectedTurno?.start ?? "",
+      horaFin: selectedTurno?.end ?? "",
+    };
 
-    modificarReservaLaboratorioAbierto.mutate(formData, {
+    modificarReservaLaboratorioAbierto.mutate(dataToSend, {
       onSuccess: () => {
         toast.success("Reserva actualizada con éxito.");
         onSubmit();
@@ -113,6 +152,14 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
 
   useEffect(() => {
     if (reservaData) {
+      const initialTurno = esNuevo
+        ? undefined
+        : turnos.find(
+            (t) =>
+              t.start === getTimeISOString(reservaData?.reserva.fechaHoraInicio) &&
+              t.end === getTimeISOString(reservaData?.reserva.fechaHoraFin),
+          )?.label;
+
       formHook.reset({
         id: reservaId,
         tipo: esNuevo ? tipo! : reservaData?.laboratorioAbiertoTipo,
@@ -120,8 +167,7 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
         concurrentes: esNuevo ? "1" : reservaData?.concurrentes.toString(),
         equipoReservado: esNuevo ? [] : (reservaData?.equipoReservado ?? []),
         fechaReserva: esNuevo ? undefined : getDateISOString(reservaData?.reserva.fechaHoraInicio as unknown as Date),
-        horaInicio: esNuevo ? undefined : getTimeISOString(reservaData?.reserva.fechaHoraInicio as unknown as Date),
-        horaFin: esNuevo ? undefined : getTimeISOString(reservaData?.reserva.fechaHoraFin as unknown as Date),
+        turno: initialTurno,
         observaciones: esNuevo ? "" : (reservaData?.descripcion ?? ""),
         sedeId: esNuevo ? undefined : String(reservaData?.sedeId),
       });
@@ -134,7 +180,7 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
     }
   }, [esNuevo, tipo, setValue]);
 
-  const onFormSubmit = async (formData: FormReservarLaboratorioAbiertoType) => {
+  const onFormSubmit = async (formData: DataLaboratorioAbiertoBack) => {
     if (esNuevo) {
       crearReservaLaboratorioAbierto.mutate(formData, {
         onSuccess: () => {
@@ -201,7 +247,12 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
             {haSidoRechazada && <MotivoRechazo motivoRechazo={reservaData?.reserva.motivoRechazo ?? ""} />}
             <div className="mx-auto grid grid-cols-1 gap-6 md:grid-cols-2">
               <FormInput label={"Tipo de laboratorio"} control={control} name="tipo" type={"text"} readOnly />
-              <SelectSedeForm name="sedeId" label={"Sede"} control={control} placeholder={"Selecciona una sede"} />
+              <SelectSedeConLaboratorioForm
+                name="sedeId"
+                label={"Sede"}
+                control={control}
+                placeholder={"Selecciona una sede"}
+              />
               <FormSelect
                 name={"concurrentes"}
                 control={control}
@@ -218,8 +269,13 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
                   disabledDays={diasDeshabilitados}
                 />
               </div>
-              <FormInput label={"Hora de inicio"} control={control} name="horaInicio" type={"time"} />
-              <FormInput label={"Hora de fin"} control={control} name="horaFin" type={"time"} />
+              <FormSelect
+                name="turno"
+                label="Seleccionar Turno"
+                control={control}
+                items={turnos.map((turno) => turno.label)}
+                onChange={handleTurnoChange}
+              />
             </div>
             <div className="mx-auto space-y-6">
               {esTLA && (

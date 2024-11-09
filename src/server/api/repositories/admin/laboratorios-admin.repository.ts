@@ -235,6 +235,31 @@ export const getAllSedes = async (ctx: { db: PrismaClient }) => {
   return sedes;
 };
 
+export const getAllSedesConLaboratorios = async (ctx: { db: PrismaClient }) => {
+  const sedes = await ctx.db.sede.findMany({
+    select: {
+      id: true,
+      nombre: true,
+      laboratorios: {
+        select: {
+          id: true,
+          nombre: true,
+        },
+      },
+    },
+    where: {
+      laboratorios: {
+        some: {},
+      },
+    },
+    orderBy: {
+      nombre: "asc",
+    },
+  });
+
+  return sedes;
+};
+
 type InputGetAllArmarios = z.infer<typeof inputGetArmarios>;
 export const getAllArmarios = async (ctx: { db: PrismaClient }, input: InputGetAllArmarios) => {
   const { laboratorioId } = input;
