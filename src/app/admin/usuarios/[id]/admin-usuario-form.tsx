@@ -111,13 +111,14 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
   };
 
   const onRolChange = (rol: string) => {
+    if (!rol || !rolesDiccionario[rol]) {
+      return;
+    }
+
     const roles = getValues("roles");
 
-    if (roles?.includes(rol)) {
-      return;
-    } else {
+    if (!roles.includes(rol)) {
       setValue("roles", [...roles, rol]);
-      return;
     }
   };
 
