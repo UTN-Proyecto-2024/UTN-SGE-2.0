@@ -22,6 +22,7 @@ import {
   getAllLaboratoriosConEstadoReserva,
   getAllLaboratoriosConArmario,
   getAllLaboratoriosReservables,
+  getAllSedesConLaboratorios,
 } from "../../repositories/admin/laboratorios-admin.repository";
 
 export const getTodosLosLaboratoriosProcedure = protectedProcedure
@@ -84,6 +85,12 @@ export const getTodosLosEstantesProcedure = protectedProcedure.input(inputGetEst
   const estantes = await getAllEstantes(ctx, input);
 
   return estantes;
+});
+
+export const getTodosLosSedesConLaboratoriosProcedure = protectedProcedure.query(async ({ ctx }) => {
+  const sedes = await getAllSedesConLaboratorios(ctx);
+
+  return sedes;
 });
 
 export const getLaboratorioPorIdProcedure = protectedProcedure

@@ -49,6 +49,31 @@ export const inputReservaLaboratorioAbierto = z.object({
   aceptoTerminos: z.boolean().refine((value) => value === true, { message: "Debe aceptar los términos y condiciones" }),
 });
 
+export const inputReservaLaboratorioAbiertoForm = z.object({
+  tipo: z.enum(["LA", "TLA", "TLA_BASICA"]),
+  fechaReserva: z.string().min(1, { message: "Requerido" }),
+  turno: z.string().min(1, { message: "Requerido" }),
+  concurrentes: z.string().min(1, { message: "Requerido" }),
+  sedeId: z.string().refine((value) => parseInt(value) >= 0, { message: "Debe seleccionar una sede" }),
+  equipoReservado: z.array(inputEquipoReservado).default([]),
+  observaciones: z.string().default(""),
+  especialidad: z.string().optional().default(""),
+  aceptoTerminos: z.boolean().refine((value) => value === true, { message: "Debe aceptar los términos y condiciones" }),
+});
+
+export const inputEditarReservaLaboratorioForm = z.object({
+  id: z.number().positive().min(1, { message: "Requerido" }),
+  tipo: z.enum(["LA", "TLA", "TLA_BASICA"]),
+  fechaReserva: z.string().min(1, { message: "Requerido" }),
+  turno: z.string().min(1, { message: "Requerido" }),
+  concurrentes: z.string().min(1, { message: "Requerido" }),
+  sedeId: z.string().refine((value) => parseInt(value) >= 0, { message: "Debe seleccionar una sede" }),
+  equipoReservado: z.array(inputEquipoReservado).default([]),
+  observaciones: z.string().default(""),
+  especialidad: z.string().optional().default(""),
+  aceptoTerminos: z.boolean().refine((value) => value === true, { message: "Debe aceptar los términos y condiciones" }),
+});
+
 export const inputAprobarReservaLaboratorioAbiertoSchema = z.object({
   id: z.number().positive().min(1, { message: "Requerido" }),
   tutorId: z.string().optional(),
