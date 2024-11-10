@@ -325,8 +325,8 @@ export const getReservasHechasEsteAnno = async (ctx: { db: PrismaClient }, userI
     FROM "Reserva" r
     WHERE
       r."usuarioSolicitoId" = ${userId} AND
-      r.tipo in (${ReservaTipo.LABORATORIO_CERRADO}, ${ReservaTipo.LABORATORIO_ABIERTO}) AND
-      r."fechaHoraInicio" BETWEEN '${annoActual}-01-01' AND '${annoActual}-12-31'
+      CAST(r.tipo AS TEXT) IN (${ReservaTipo.LABORATORIO_CERRADO}, ${ReservaTipo.LABORATORIO_ABIERTO}) AND
+      r."fechaHoraInicio" BETWEEN '${annoActual}-01-01' AND '${annoActual}-12-31T23:59:59'
       LIMIT 1;
   `;
 
@@ -347,8 +347,8 @@ export const getNumeroReservasQueNoAsistioEsteAnno = async (ctx: { db: PrismaCli
     FROM "Reserva" r
     WHERE
       r."usuarioSolicitoId" = ${userId} AND
-      r.tipo in (${ReservaTipo.LABORATORIO_CERRADO}, ${ReservaTipo.LABORATORIO_ABIERTO}) AND
-      r."fechaHoraInicio" BETWEEN '${annoActual}-01-01' AND '${annoActual}-12-31' AND
+      CAST(r.tipo AS TEXT) IN (${ReservaTipo.LABORATORIO_CERRADO}, ${ReservaTipo.LABORATORIO_ABIERTO}) AND
+      r."fechaHoraInicio" BETWEEN '${annoActual}-01-01' AND '${annoActual}-12-31T23:59:59' AND
       r."asistio" = false
       LIMIT 1
   `;

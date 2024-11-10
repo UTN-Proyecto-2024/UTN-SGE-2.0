@@ -17,6 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getDateISOString, getTimeISOString } from "@/shared/get-date";
 import { DatoUsuarioReserva } from "@/app/_components/datos-usuario";
 import { MotivoRechazo } from "@/app/laboratorios/_components/rechazo-alert";
+import { AsistioReserva } from "@/app/_components/asistio-reserva";
 
 type ReservaDetalleProps = {
   reservaId: number;
@@ -24,16 +25,23 @@ type ReservaDetalleProps = {
 };
 
 export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetalleProps) => {
-  const { data: reservasHechas = 0 } = api.admin.usuarios.reservasHechasEsteAnno.useQuery();
-  const { data: reservasQueNoAsistio = 0 } = api.admin.usuarios.reservasQueNoAsistioEsteAnno.useQuery();
-
   const {
     data: reserva,
     isLoading,
     isError,
+    refetch: refetchReserva,
   } = api.reservas.reservaLaboratorioAbierto.getReservaPorID.useQuery({
     id: Number(reservaId),
   });
+
+  const { data: reservasHechas = 0 } = api.admin.usuarios.reservasHechasEsteAnno.useQuery();
+  const { data: reservasQueNoAsistio = 0, refetch: refetchReservasQueNoAsistio } =
+    api.admin.usuarios.reservasQueNoAsistioEsteAnno.useQuery();
+
+  const onChangeAsistencia = () => {
+    void refetchReservasQueNoAsistio();
+    void refetchReserva();
+  };
 
   if (isError) {
     return <div>Error al cargar reserva...</div>;
@@ -60,7 +68,16 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
         <CardHeader>
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
             <div className="flex-grow text-center sm:text-left">
-              <CardTitle className="mb-1 text-2xl">Reserva #{reserva.id}</CardTitle>
+              <CardTitle className="mb-1 flex flex-row justify-between text-2xl">
+                <div>Reserva #{reserva.reserva.id}</div>
+                <div>
+                  <AsistioReserva
+                    reservaId={reserva.reserva.id}
+                    asistio={reserva.reserva.asistio}
+                    onChange={onChangeAsistencia}
+                  />
+                </div>
+              </CardTitle>
               <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
                 <BadgeEstatusReserva estatus={reserva.reserva.estatus} />
                 <Badge color="secondary">{reserva.reserva.tipo}</Badge>
