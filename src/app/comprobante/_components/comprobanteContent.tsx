@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { UTNLogo } from "@/app/_components/utn-logo";
 import { type RouterOutputs } from "@/trpc/react";
 
@@ -11,21 +11,11 @@ type ComprobanteContentProps = {
 };
 
 export default function ComprobanteContent({ datos: datosReserva }: ComprobanteContentProps) {
-  const printRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    const handlePrint = () => {
-      if (printRef.current) {
-        const printContents = printRef.current.innerHTML;
-        const originalContent = document.body.innerHTML;
-        document.body.innerHTML = printContents;
-        window.print();
-        document.body.innerHTML = originalContent;
-      }
-    };
+    if (!datosReserva) return;
 
-    handlePrint();
-  }, []);
+    window.print();
+  }, [datosReserva]);
 
   const fechaHoraFin = datosReserva?.fechaHoraFin ? new Date(datosReserva?.fechaHoraFin) : null;
   const fechaFormateada = fechaHoraFin
@@ -46,7 +36,7 @@ export default function ComprobanteContent({ datos: datosReserva }: ComprobanteC
     prestamoFechaFin: fechaFormateada,
   };
   return (
-    <div ref={printRef}>
+    <div>
       <section className="mx-auto h-[500px] max-w-3xl p-2">
         <div className="mb-2">
           <div className="d-flex flex-row items-center justify-between">
