@@ -1,18 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { UTNLogo } from "@/app/_components/utn-logo";
+import { type RouterOutputs } from "@/trpc/react";
+
+type DataReservaLibro = RouterOutputs["reservas"]["reservaBiblioteca"]["getReservaPorId"];
+
 type ComprobanteContentProps = {
-  datos: object;
+  datos: DataReservaLibro;
 };
 
-export default function ComprobanteContent({ datos }: ComprobanteContentProps) {
+export default function ComprobanteContent({ datos: datosReserva }: ComprobanteContentProps) {
   const printRef = useRef<HTMLDivElement>(null);
-  const [datosReserva, setDatosReserva] = useState<object | null>();
-
-  useEffect(() => {
-    setDatosReserva(datos);
-  }, [datos]);
 
   useEffect(() => {
     const handlePrint = () => {
@@ -28,22 +27,22 @@ export default function ComprobanteContent({ datos }: ComprobanteContentProps) {
     handlePrint();
   }, []);
 
-  const fechaHoraFin = datosReserva?.reserva?.fechaHoraFin ? new Date(datosReserva?.reserva?.fechaHoraFin) : null;
+  const fechaHoraFin = datosReserva?.fechaHoraFin ? new Date(datosReserva?.fechaHoraFin) : null;
   const fechaFormateada = fechaHoraFin
     ? `${fechaHoraFin.getDate().toString().padStart(2, "0")}/${(fechaHoraFin.getMonth() + 1).toString().padStart(2, "0")}/${fechaHoraFin.getFullYear()}`
     : "";
 
   const datosReservaToForm = {
-    id: JSON.stringify(datosReserva?.reserva?.id),
-    nombre: JSON.stringify(datosReserva?.reserva?.usuarioSolicito?.nombre),
-    apellido: JSON.stringify(datosReserva?.reserva?.usuarioSolicito?.apellido),
-    email: JSON.stringify(datosReserva?.reserva?.usuarioSolicito?.email),
-    nLegajo: JSON.stringify(datosReserva?.reserva?.usuarioSolicito?.legajo),
-    tituloLibro: JSON.stringify(datosReserva?.libro?.titulo),
-    editorial: JSON.stringify(datosReserva?.libro?.editorialId),
-    inventario: JSON.stringify(datosReserva?.libro?.inventarioId),
-    nombreAprobador: JSON.stringify(datosReserva?.reserva?.usuarioAprobador?.nombre),
-    apellidoAprobador: JSON.stringify(datosReserva?.reserva?.usuarioAprobador?.apellido),
+    id: JSON.stringify(datosReserva?.id),
+    nombre: JSON.stringify(datosReserva?.usuarioSolicito?.nombre),
+    apellido: JSON.stringify(datosReserva?.usuarioSolicito?.apellido),
+    email: JSON.stringify(datosReserva?.usuarioSolicito?.email),
+    nLegajo: JSON.stringify(datosReserva?.usuarioSolicito?.legajo),
+    tituloLibro: JSON.stringify(datosReserva?.reservaLibro?.libro?.titulo),
+    editorial: JSON.stringify(datosReserva?.reservaLibro?.libro?.editorialId),
+    inventario: JSON.stringify(datosReserva?.reservaLibro?.libro?.inventarioId),
+    nombreAprobador: JSON.stringify(datosReserva?.usuarioAprobador?.nombre),
+    apellidoAprobador: JSON.stringify(datosReserva?.usuarioAprobador?.apellido),
     prestamoFechaFin: fechaFormateada,
   };
   return (

@@ -192,6 +192,18 @@ export const ADMIN_ROUTE = {
   ],
 };
 
+export const COMPROBANTE_ROUTE = {
+  href: "/comprobante",
+  label: "Comprobante",
+  isPublic: false,
+  bibliotecaRuta: {
+    href: "/comprobante/biblioteca",
+  },
+  inventarioRuta: {
+    href: "/comprobante/inventario",
+  },
+};
+
 export const APP_ROUTES: AppRoute[] = [
   INICIO_ROUTE,
   LABORATORIO_ROUTE,
