@@ -102,12 +102,42 @@ export const getReservaPorId = async (ctx: { db: PrismaClient }, input: InputGet
     where: {
       id: id,
     },
-    include: {
-      usuarioSolicito: true,
-      usuarioAprobador: true,
+
+    select: {
+      id: true,
+      fechaHoraInicio: true,
+      fechaHoraFin: true,
+      usuarioSolicito: {
+        select: {
+          nombre: true,
+          apellido: true,
+          legajo: true,
+          email: true,
+          telefonoCasa: true,
+          telefonoCelular: true,
+          telefonoLaboral: true,
+        },
+      },
+      usuarioAprobador: {
+        select: {
+          nombre: true,
+          apellido: true,
+        },
+      },
       reservaLibro: {
         select: {
-          libro: true,
+          libro: {
+            select: {
+              id: true,
+              titulo: true,
+              inventarioId: true,
+              editorial: {
+                select: {
+                  editorial: true,
+                },
+              },
+            },
+          },
         },
       },
     },

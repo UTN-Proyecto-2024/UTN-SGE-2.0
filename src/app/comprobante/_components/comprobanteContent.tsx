@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { UTNLogo } from "@/app/_components/utn-logo";
 import { type RouterOutputs } from "@/trpc/react";
+import { getFechaHumanoTexto } from "@/shared/get-date";
 
 type DataReservaLibro = RouterOutputs["reservas"]["reservaBiblioteca"]["getReservaPorId"];
 
@@ -17,138 +18,139 @@ export default function ComprobanteContent({ datos: datosReserva }: ComprobanteC
     window.print();
   }, [datosReserva]);
 
-  const fechaHoraFin = datosReserva?.fechaHoraFin ? new Date(datosReserva?.fechaHoraFin) : null;
-  const fechaFormateada = fechaHoraFin
-    ? `${fechaHoraFin.getDate().toString().padStart(2, "0")}/${(fechaHoraFin.getMonth() + 1).toString().padStart(2, "0")}/${fechaHoraFin.getFullYear()}`
-    : "";
+  const prestamoFechaFinHumano = getFechaHumanoTexto(datosReserva?.fechaHoraFin);
 
-  const datosReservaToForm = {
-    id: JSON.stringify(datosReserva?.id),
-    nombre: JSON.stringify(datosReserva?.usuarioSolicito?.nombre),
-    apellido: JSON.stringify(datosReserva?.usuarioSolicito?.apellido),
-    email: JSON.stringify(datosReserva?.usuarioSolicito?.email),
-    nLegajo: JSON.stringify(datosReserva?.usuarioSolicito?.legajo),
-    tituloLibro: JSON.stringify(datosReserva?.reservaLibro?.libro?.titulo),
-    editorial: JSON.stringify(datosReserva?.reservaLibro?.libro?.editorialId),
-    inventario: JSON.stringify(datosReserva?.reservaLibro?.libro?.inventarioId),
-    nombreAprobador: JSON.stringify(datosReserva?.usuarioAprobador?.nombre),
-    apellidoAprobador: JSON.stringify(datosReserva?.usuarioAprobador?.apellido),
-    prestamoFechaFin: fechaFormateada,
-  };
+  if (!datosReserva) return null;
+
   return (
-    <div>
-      <section className="mx-auto h-[500px] max-w-3xl p-2">
-        <div className="mb-2">
-          <div className="d-flex flex-row items-center justify-between">
-            <UTNLogo className="h-7" />
-            <h3 className="text-center text-lg font-bold"> Préstamo de Libro #{datosReservaToForm.id}</h3>
-          </div>
-          <div className="mt-4 flex flex-wrap justify-around">
-            <div className="w-6/12 border border-gray-800 p-2">
-              <h3 className="text-sm font-semibold">Datos del Alumno</h3>
-              <div className="text-left">
-                <p>
-                  Apellido y Nombre:{" "}
-                  <span>
-                    {datosReservaToForm.nombre} {datosReservaToForm.apellido}
-                  </span>
-                </p>
-                <p>Número de Legajo: -</p>
-                <span>T:</span>
-                <span className="ml-2">C:</span>
-                <span className="ml-2">L:{datosReservaToForm.email}</span>
-              </div>
-            </div>
-            <div className="w-6/12 border border-gray-800 p-2">
-              <h3 className="text-sm font-semibold">Datos del Libro</h3>
-              <div className="text-left">
-                <p>Título: {datosReservaToForm.tituloLibro}</p>
-                <p>Editorial: {datosReservaToForm.editorial}</p>
-                <p>Número de inventario: {datosReservaToForm.inventario}</p>
-              </div>
+    <section className="mx-auto flex h-[297mm] w-[210mm] flex-col justify-around gap-y-4 overflow-hidden px-8 py-2">
+      {/* Titulo */}
+      <div className="flex-initial items-center justify-between">
+        <UTNLogo className="h-7" />
+        <h3 className="text-center text-2xl font-bold">
+          Préstamo de Libro #{datosReserva.reservaLibro?.libro.id} - {datosReserva.id}
+        </h3>
+      </div>
+
+      {/* Datos del Alumno / Datos del Libro */}
+      <div className="flex w-full flex-initial flex-row space-x-4">
+        <div className="h-full basis-1/2 border border-gray-800 p-2">
+          <div className="flex h-full flex-col justify-between text-left">
+            <h3 className="text-center text-lg font-bold">Datos del Alumno</h3>
+            <p>
+              Apellido y Nombre: {datosReserva.usuarioSolicito.apellido}, {datosReserva.usuarioSolicito.nombre}
+            </p>
+            <p>Número de Legajo: {datosReserva.usuarioSolicito.legajo}</p>
+            <div className="flex w-full flex-row justify-between">
+              <span>T: {datosReserva.usuarioSolicito.telefonoCasa ?? "---"}</span>
+              <span>C: {datosReserva.usuarioSolicito.telefonoCelular ?? "---"}</span>
+              <span>L: {datosReserva.usuarioSolicito.telefonoLaboral ?? "---"}</span>
             </div>
           </div>
         </div>
-
-        <div className="w-12/12 mx-auto my-3 border border-gray-800 p-3">
-          <div className="flex h-full flex-col justify-between">
-            <div>
-              <h3 className="text-sm font-semibold">Datos del Préstamo</h3>
-              <p className="mt-2 text-justify text-sm">
-                Recibí el libro descrito, en perfeto estado de conservación, y en concepto de prestamos. Me comprometo a
-                hacer buen uso del mismo y devolverlo antes del {datosReservaToForm.prestamoFechaFin}. De requerir una
-                extensión de plazo, me comprometo a presentarme en el departamento de electrónica a los efectos de
-                solicitar la renovación correspondiente. Asi mismo delcaro que mi datos personales figuran
-                correctamente.
-              </p>
+        <div className="basis-1/2 border border-gray-800 p-2">
+          <div className="flex h-full flex-col justify-between text-left">
+            <h3 className="text-center text-lg font-semibold">Datos del Libro</h3>
+            <div className="text-left">
+              <p>Título: {datosReserva.reservaLibro?.libro.titulo}</p>
+              <p>Editorial: {datosReserva.reservaLibro?.libro.editorial.editorial}</p>
+              <p>Número de inventario: {datosReserva.reservaLibro?.libro.inventarioId}</p>
             </div>
-            <p className="mt-10 text-sm font-semibold">
-              Préstamo Realizado por{" "}
-              <span className="font-bold">
-                {datosReservaToForm.nombreAprobador} {datosReservaToForm.apellidoAprobador}
-              </span>
-              .
+          </div>
+        </div>
+      </div>
+
+      {/* Datos del Préstamo */}
+      <div className="w-full flex-1 border border-gray-800 p-3">
+        <div className="flex h-full flex-col justify-between">
+          <div>
+            <h3 className="text-center text-lg font-semibold">Datos del Préstamo</h3>
+            <p className="mt-2 text-justify text-sm">
+              Recibí el libro descrito, en perfeto estado de conservación, y en concepto de prestamos. Me comprometo a
+              hacer buen uso del mismo y devolverlo antes del{" "}
+              <span className="underline">{prestamoFechaFinHumano}</span>. De requerir una extensión de plazo, me
+              comprometo a presentarme en el departamento de electrónica a los efectos de solicitar la renovación
+              correspondiente. Asi mismo delcaro que mi datos personales figuran correctamente.
             </p>
           </div>
-        </div>
-
-        <div className="w-12/12 mx-auto my-3 h-[185px] border border-gray-800 p-3">
-          <div className="flex h-full flex-col justify-between">
-            <div>
-              <h3 className="text-center text-sm font-semibold">Cancelación del Préstamo</h3>
-            </div>
-            <div className="mt-4 flex w-4/5 justify-between">
-              <p>Observaciones:</p>
-              <p className="underline">Fecha: / /</p>
-            </div>
-            <div className="mt-5 flex items-center justify-between">
-              <p className="me-1 mt-1 font-semibold">
-                Yo,{datosReservaToForm.nombre} {datosReservaToForm.apellido}
-                <span> Declaro recibir el libro anteriormente descrito.</span>
-              </p>
-              <p className="mt-16 overline">Firma y Aclaración</p>
+          <div>
+            <div className="flex flex-row justify-between text-sm">
+              <span>
+                Préstamo Realizado por{" "}
+                <span className="font-bold">
+                  {datosReserva.usuarioAprobador?.nombre} {datosReserva.usuarioAprobador?.apellido}
+                </span>
+              </span>
+              <p className="overline">Firma y Aclaración</p>
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="w-12/12 mx-auto my-3 h-[185px] border border-gray-800 p-3">
-          <div className="flex h-full flex-col justify-between">
+      {/* Cancelación del Préstamo */}
+      <div className="w-full flex-1 border border-gray-800 p-3">
+        <div className="flex h-full flex-col justify-between">
+          <div className="w-full">
             <div>
-              <h3 className="text-center text-sm font-semibold">Renovación del Préstamo</h3>
+              <h3 className="text-center text-lg font-semibold">Cancelación del Préstamo</h3>
             </div>
-            <div className="mt-4 flex w-4/5 justify-between">
-              <p>Observaciones:</p>
-              <p className="underline">Fecha: / /</p>
-            </div>
-            <div className="mt-5 flex items-center justify-between">
-              <p className="mt-1 font-semibold">
-                Yo,{datosReservaToForm.nombre} {datosReservaToForm.apellido}{" "}
-                <span>Declaro recibir el libro anteriormente descrito.</span>
+            <div className="flex  justify-between">
+              <p className="underline">Observaciones:</p>
+              <p>
+                <span className="underline">Fecha:</span> ___/___/______
               </p>
-              <p className="mt-16 overline">Firma y Aclaración</p>
             </div>
           </div>
-        </div>
-
-        <div className="w-12/12 mx-auto my-3 h-[185px] border border-gray-800 p-3">
-          <div className="flex h-full flex-col justify-between">
-            <div>
-              <h3 className="text-center text-sm font-semibold">Renovación del Préstamo</h3>
-            </div>
-            <div className="mt-4 flex w-4/5 justify-between">
-              <p>Observaciones:</p>
-              <p className="underline">Fecha: / /</p>
-            </div>
-            <div className="mt-5 flex items-center justify-between">
-              <p className="mt-1 font-semibold">
-                Yo,{datosReservaToForm.nombre} {datosReservaToForm.apellido}{" "}
-                <span>Declaro recibir el libro anteriormente descrito.</span>
-              </p>
-              <p className="mt-16 overline">Firma y Aclaración</p>
-            </div>
+          <div className="flex flex-row items-center justify-between">
+            <p className="me-1 mt-1 text-sm font-semibold">
+              Yo _______________________, declaro recibir el libro anteriormente descrito
+            </p>
+            <p className="overline">Firma y Aclaración</p>
           </div>
         </div>
-      </section>
-    </div>
+      </div>
+
+      {/* Renovación del Préstamo */}
+      <div className="w-full flex-1 border border-gray-800 p-3">
+        <div className="flex h-full flex-col justify-between">
+          <div className="w-full">
+            <div>
+              <h3 className="text-center text-lg font-semibold">Renovación del Préstamo</h3>
+            </div>
+            <div className="mt-4 flex  justify-between">
+              <p className="underline">Observaciones:</p>
+              <p>
+                <span className="underline">Fecha:</span> ___/___/______
+              </p>
+            </div>
+          </div>
+          <div className="mt-5 flex items-center justify-between">
+            <p className="mt-1 text-sm font-semibold">Libro renovado hasta la fecha ____/___/______</p>
+            <p className="overline">Firma y Aclaración</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Renovación del Préstamo */}
+      <div className="w-full flex-1 border border-gray-800 p-3">
+        <div className="flex h-full flex-col justify-between">
+          <div className="w-full">
+            <div>
+              <h3 className="text-center text-lg font-semibold">Renovación del Préstamo</h3>
+            </div>
+            <div className="mt-4 flex  justify-between">
+              <p className="underline">Observaciones:</p>
+              <p>
+                <span className="underline">Fecha:</span> ___/___/______
+              </p>
+            </div>
+          </div>
+          <div className="mt-5 flex items-center justify-between">
+            <p className="mt-1 text-sm font-semibold">Libro renovado hasta la fecha ____/___/______</p>
+            <p className="overline"> Firma y Aclaración </p>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
