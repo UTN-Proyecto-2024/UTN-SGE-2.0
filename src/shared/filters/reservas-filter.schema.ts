@@ -2,6 +2,10 @@ import { z } from "zod";
 
 export const enumReservaEstatus = z.enum(["PENDIENTE", "FINALIZADA", "CANCELADA", "RECHAZADA", ""]);
 
+export const inputGetReservaLibroPorId = z.object({
+  id: z.number().positive().min(1, { message: "Requerido" }),
+});
+
 export const inputGetReservaLibroPorUsuarioId = z.object({
   id: z.string().min(1),
 });
