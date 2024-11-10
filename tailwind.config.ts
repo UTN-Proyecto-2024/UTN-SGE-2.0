@@ -64,6 +64,8 @@ const sgePlugin = plugin(
           "3xl": "1800px",
           "4xl": "2000px",
           "5xl": "2400px",
+          print: { raw: "print" },
+          screen: { raw: "screen" },
         },
         colors: {
           border: "hsl(var(--border))",
