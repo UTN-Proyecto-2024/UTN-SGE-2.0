@@ -191,3 +191,36 @@ export const addMinutes = (date: Date, minutes: number): Date => {
   newDate.setMinutes(newDate.getMinutes() + minutes);
   return newDate;
 };
+
+/**
+ * Devuelve una fecha en formato DD/MM/YYYY
+ * @param fecha Fecha en formato Date (Contiene hora, minutos y segundos)
+ * @returns Fecha en formato DD/MM/YYYY
+ */
+export const getFechaHumanoDDMMYYYY = (fecha: Date | undefined) => {
+  if (!fecha) return "";
+
+  const dateISOSplit = fecha.toISOString().split("T")[0]?.split("-").reverse().join("/");
+
+  return dateISOSplit;
+};
+
+/**
+ * Devuelve una fecha en formato dddd DD de MMMM de YYYY
+ * @param fecha Fecha en formato Date (Contiene hora, minutos y segundos)
+ * @returns Fecha en formato dddd DD de MMMM de YYYY
+ */
+export const getFechaHumanoTexto = (fecha: Date | undefined) => {
+  if (!fecha) return "";
+
+  const dayName = fecha.toLocaleString("es-ES", { weekday: "long" });
+  const nombreDia = dayName[0]?.toUpperCase() + dayName.slice(1);
+
+  const day = fecha.getDate();
+  const monthName = fecha.toLocaleString("es-ES", { month: "long" });
+  const nombreMes = monthName[0]?.toUpperCase() + monthName.slice(1);
+
+  const year = fecha.getFullYear();
+
+  return `${nombreDia} ${day} de ${nombreMes} de ${year}`;
+};
