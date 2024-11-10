@@ -6,11 +6,13 @@ import {
   devolverLibroProcedure,
   getTodasLasReservasProcedure,
   renovarLibroProcedure,
+  getReservaLibroPorIdProcedure,
 } from "@/server/api/services/reservas/biblioteca.service";
 
 export const reservaBibliotecaRouter = createTRPCRouter({
   getAll: getTodasLasReservasProcedure,
 
+  getReservaPorId: getReservaLibroPorIdProcedure,
   getReservaPorUser: getReservaLibroPorUserProcedure,
   crearReserva: crearPrestamoLibroProcedure,
   verReservas: verReservasProcedure,

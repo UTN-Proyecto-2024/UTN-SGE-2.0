@@ -5,6 +5,7 @@ import {
   type inputPrestarLibro,
   type inputGetReservaLibroPorUsuarioId,
   type inputGetAllPrestamosLibros,
+  type inputGetReservaLibroPorId,
 } from "@/shared/filters/reservas-filter.schema";
 import { getDateISO } from "@/shared/get-date";
 import { informacionUsuario } from "../usuario-helper";
@@ -51,17 +52,10 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
       : {}),
   };
 
-  console.log({
-    input,
-    filtrosWhereReservaLibro,
-  });
-
   const ordenLibro: Prisma.ReservaLibroOrderByWithRelationInput = construirOrderByDinamico(
     orderBy ?? "",
     orderDirection ?? "",
   );
-
-  console.log({ filtrosWhereReservaLibro, userId });
 
   const [count, reservas] = await ctx.db.$transaction([
     ctx.db.reservaLibro.count({
@@ -98,6 +92,28 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
     count,
     reservas,
   };
+};
+
+type InputGetPorId = z.infer<typeof inputGetReservaLibroPorId>;
+export const getReservaPorId = async (ctx: { db: PrismaClient }, input: InputGetPorId) => {
+  const { id } = input;
+
+  const reserva = await ctx.db.reserva.findUnique({
+    where: {
+      id: id,
+    },
+    include: {
+      usuarioSolicito: true,
+      usuarioAprobador: true,
+      reservaLibro: {
+        select: {
+          libro: true,
+        },
+      },
+    },
+  });
+
+  return reserva;
 };
 
 type InputGetPorUsuarioID = z.infer<typeof inputGetReservaLibroPorUsuarioId>;
