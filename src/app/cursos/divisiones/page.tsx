@@ -21,7 +21,9 @@ export default function Page({ searchParams }: PageProps) {
     <PageLayout route={CURSOS_ROUTE} buttons={<NuevaDivision />}>
       {/* <ActionButtons filters={filters} /> */}
       <Suspense key={filter_as_key} fallback={<LoadingDivisionesTable />}>
-        <DivisionesTableContainer />
+        <div className="m-auto max-w-3xl">
+          <DivisionesTableContainer />
+        </div>
       </Suspense>
     </PageLayout>
   );

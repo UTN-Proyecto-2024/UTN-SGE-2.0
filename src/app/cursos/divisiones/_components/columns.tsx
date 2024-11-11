@@ -1,6 +1,7 @@
 import { type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import EditDivisionModal from "./edit-division";
+import { AnnoTexto } from "@/app/_components/anno-texto";
 
 type DivisionesData = RouterOutputs["division"]["getFiltered"][number];
 
@@ -10,6 +11,11 @@ export const getColumns = () => {
   return [
     colHelper.accessor("anio", {
       header: "Año",
+      cell: ({ row }) => {
+        const { anio } = row.original;
+
+        return <AnnoTexto anio={anio} />;
+      },
     }),
     colHelper.display({
       header: "Divisiones",

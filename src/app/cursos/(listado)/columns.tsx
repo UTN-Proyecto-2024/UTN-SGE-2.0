@@ -1,3 +1,4 @@
+import { AnnoTexto } from "@/app/_components/anno-texto";
 import { DatoUsuarioReserva } from "@/app/_components/datos-usuario";
 import { CursoTurno } from "@/app/_components/turno-text";
 import { type RouterOutputs } from "@/trpc/react";
@@ -24,6 +25,11 @@ export const getColumns = () => {
   return [
     colHelper.accessor("anioDeCarrera", {
       header: "Año",
+      cell: ({ row }) => {
+        const { anioDeCarrera } = row.original;
+
+        return <AnnoTexto anio={anioDeCarrera} />;
+      },
     }),
     colHelper.accessor("materia.nombre", {
       id: "materia",
