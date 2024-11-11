@@ -5,6 +5,10 @@ import { getTimeISOString } from "@/shared/get-date";
 import { api, type RouterInputs } from "@/trpc/react";
 import { Card, CardContent } from "@/components/ui/card";
 import "./pantalla.css";
+import { useEffect, useState } from "react";
+import ModalDrawer from "@/app/_components/modal/modal-drawer";
+import Link from "next/link";
+import { Button } from "@/components/ui";
 
 type PantallaInput = RouterInputs["reservas"]["pantalla"]["getAllActivas"];
 
@@ -13,16 +17,24 @@ type PantallaTableContainerProps = {
 };
 
 export const PantallaTableContainer = (props: PantallaTableContainerProps) => {
+  const [currentDate, setCurrentDate] = useState(new Date());
+
   const { data, isLoading } = api.reservas.pantalla.getAllActivas.useQuery(
     { ...props.filters },
     { refetchInterval: 1000 * 60 },
   );
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentDate(new Date());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   if (isLoading) {
     return <div>Cargando...</div>;
   }
-
-  const currentDate = new Date();
 
   return (
     <div className="flex h-screen flex-col">
@@ -31,7 +43,7 @@ export const PantallaTableContainer = (props: PantallaTableContainerProps) => {
           <div className="flex flex-row justify-between">
             <div className="flex flex-row gap-x-2">
               <UTNLogo className="h-14 invert" />
-              <div className="h-14 border-l-2 border-solid border-white pl-2">UTN</div>
+              <CambiarSedeDialog sedeId={props.filters.sedeId} />
             </div>
 
             <div className="flex flex-row gap-x-2">{getTimeISOString(currentDate)}</div>
@@ -86,5 +98,64 @@ export const PantallaTableContainer = (props: PantallaTableContainerProps) => {
         </Card>
       </div>
     </div>
+  );
+};
+
+const CambiarSedeDialog = ({ sedeId }: { sedeId: string | undefined }) => {
+  const [open, setOpen] = useState(false);
+  const { data: sede } = api.reservas.pantalla.getSedeById.useQuery({ sedeId: sedeId });
+
+  const sedeNombre = sede?.nombre ?? "";
+
+  const { data: sedesExistentes, isLoading } = api.admin.laboratorios.getAllSedesConLaboratorios.useQuery(undefined, {
+    enabled: open,
+  });
+
+  return (
+    <ModalDrawer
+      trigger={
+        <button type="button" className="h-14 border-l-2 border-solid border-white pl-2 hover:bg-slate-100/10">
+          <div className="h-14 border-solid border-white">UTN {sedeNombre ? `- ${sedeNombre}` : ""}</div>
+        </button>
+      }
+      titulo={`Cambiar de sede`}
+      open={open}
+      onOpenChange={setOpen}
+    >
+      <div>Elija la sede a la cual quiere mostrar pantalla</div>
+      {isLoading ? (
+        <div>Cargando...</div>
+      ) : (
+        <div className="flex flex-row gap-y-4">
+          {sedesExistentes?.map((sede) => {
+            return (
+              <Link
+                key={sede.id}
+                href={`/pantalla?sedeId=${sede.id}`}
+                passHref
+                prefetch={false}
+                className="h-14 w-full border-l-2 border-solid border-white pl-2"
+                onClick={() => setOpen(false)}
+              >
+                <Button type="button" color={"ghost"} variant={"default"} className="h-14 w-full">
+                  {sede.nombre}
+                </Button>
+              </Link>
+            );
+          })}
+          <Link
+            href={`/pantalla`}
+            passHref
+            prefetch={false}
+            className="h-14 w-full border-l-2 border-solid border-white pl-2"
+            onClick={() => setOpen(false)}
+          >
+            <Button type="button" color={"ghost"} variant={"default"} className="h-14 w-full">
+              Todas
+            </Button>
+          </Link>
+        </div>
+      )}
+    </ModalDrawer>
   );
 };

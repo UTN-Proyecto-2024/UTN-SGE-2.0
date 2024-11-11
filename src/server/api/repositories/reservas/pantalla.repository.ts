@@ -211,3 +211,27 @@ export const crearReservaPantalla = async (
 
   return reservaPantallaCreada;
 };
+
+export const getSedePorId = async (ctx: { db: PrismaClient }, input: InputGetReservasEnPntallaActivas) => {
+  const { sedeId } = input;
+  if (!sedeId) {
+    return null;
+  }
+
+  const id = Number(sedeId);
+  if (isNaN(id)) {
+    return null;
+  }
+
+  const sede = await ctx.db.sede.findUnique({
+    where: {
+      id: id,
+    },
+    select: {
+      id: true,
+      nombre: true,
+    },
+  });
+
+  return sede;
+};
