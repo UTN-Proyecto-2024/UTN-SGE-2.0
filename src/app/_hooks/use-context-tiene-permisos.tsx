@@ -1,7 +1,6 @@
 "use client";
 
-// context/PermisosContext.tsx
-import React, { createContext, useContext, useMemo } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { api } from "@/trpc/react";
 import { type SgeNombre } from "@prisma/client";
 import { type Session } from "next-auth";
@@ -22,25 +21,72 @@ export const PermisosProvider: React.FC<{ children: React.ReactNode; session?: S
   children,
   session,
 }) => {
+  const existenPermisosLocal = existenPermisosDeSessionStorage();
+  const [permisos, setPermisos] = useState<Record<string, boolean>>(obtenerPermisosDeSessionStorage);
+
   const { data, isLoading, isError } = api.permisos.getPermisosUsuario.useQuery(undefined, {
+    enabled: session !== null && !existenPermisosLocal,
     refetchOnWindowFocus: false,
-    enabled: session !== null,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    staleTime: Infinity,
   });
 
-  const permisos = useMemo(() => {
-    if (!data) return {} as Record<SgeNombre, boolean>;
+  useEffect(() => {
+    if (!session) {
+      borrarPermisosDeSessionStorage();
+    }
+  }, [session]);
 
-    return data.reduce(
+  useEffect(() => {
+    if (!data) return;
+
+    const nuevosPermisos = data.reduce(
       (acc, sgeNombre) => {
         acc[sgeNombre] = true;
-
         return acc;
       },
-      {} as Record<SgeNombre, boolean>,
+      {} as Record<string, boolean>,
     );
+
+    guardarPermisosEnSessionStorage(nuevosPermisos);
+    setPermisos(nuevosPermisos);
   }, [data]);
 
   return <PermisosContext.Provider value={{ permisos, isLoading, isError }}>{children}</PermisosContext.Provider>;
 };
 
 export const usePermisos = () => useContext(PermisosContext);
+
+const KEY_PERMISOS = "SGE_PERMISOS";
+const guardarPermisosEnSessionStorage = (permisos: Record<SgeNombre, boolean>) => {
+  const permisosStorage = JSON.stringify(permisos);
+
+  sessionStorage.setItem(KEY_PERMISOS, permisosStorage);
+};
+
+const obtenerPermisosDeSessionStorage = (): Record<SgeNombre, boolean> => {
+  let permisosStorage;
+  if (typeof window !== "undefined") {
+    permisosStorage = window.sessionStorage.getItem(KEY_PERMISOS);
+  }
+
+  if (!permisosStorage) return {} as Record<SgeNombre, boolean>;
+
+  return JSON.parse(permisosStorage);
+};
+
+const existenPermisosDeSessionStorage = (): boolean => {
+  let permisosStorage;
+  if (typeof window !== "undefined") {
+    permisosStorage = window.sessionStorage.getItem(KEY_PERMISOS);
+  }
+
+  return !!permisosStorage;
+};
+
+const borrarPermisosDeSessionStorage = () => {
+  if (typeof window !== "undefined") {
+    window.sessionStorage.removeItem(KEY_PERMISOS);
+  }
+};

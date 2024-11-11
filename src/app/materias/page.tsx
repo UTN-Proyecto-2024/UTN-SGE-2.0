@@ -19,7 +19,7 @@ export default function Page({ searchParams }: PageProps) {
   return (
     <PageLayout route={MATERIA_ROUTE} buttons={<NuevaMateria />}>
       <Suspense key={filter_as_key} fallback={<LoadingMateriasTable />}>
-        <MateriasTableContainer /> {/* Asegúrate de pasar los filtros al contenedor */}
+        <MateriasTableContainer />
       </Suspense>
     </PageLayout>
   );
