@@ -2,6 +2,7 @@ import {
   getReservasEnPantalla,
   removerReservaPantalla,
   crearReservaPantalla,
+  getSedePorId,
 } from "../../repositories/reservas/pantalla.repository";
 import { protectedProcedure } from "../../trpc";
 import {
@@ -41,4 +42,14 @@ export const agregarReservaPantallaProcedure = protectedProcedure
     const reservaPantallaCreada = await crearReservaPantalla(ctx, input, userId);
 
     return reservaPantallaCreada;
+  });
+
+export const getSedeByIdProcedure = protectedProcedure
+  .input(inputGetReservasEnPntallaActivas)
+  .query(async ({ ctx, input }) => {
+    validarInput(inputGetReservasEnPntallaActivas, input);
+
+    const sede = await getSedePorId(ctx, input);
+
+    return sede;
   });
