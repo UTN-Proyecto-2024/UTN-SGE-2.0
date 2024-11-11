@@ -49,7 +49,7 @@ export default function RemoveDivisionModal({ divisionId, nombre, onSubmit }: Re
       esEliminar
     >
       <div>
-        Está seguro que desea eliminar <span className="font-bold">{nombre ?? "esta división"}</span>?
+        ¿Está seguro que desea eliminar <span className="font-bold">{nombre ?? "esta división"}</span>?
       </div>
     </ModalDrawer>
   );
