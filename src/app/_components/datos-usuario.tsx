@@ -33,7 +33,7 @@ export const DatoUsuarioReserva = ({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button className="flex items-center space-x-2">
+        <button className="flex items-center space-x-2 rounded-l-full rounded-r-full pr-2 hover:bg-slate-300">
           <Avatar className="inline-block h-7 w-7 rounded-full ring-2 ring-white">
             <AvatarImage src={image ?? ""} alt={`Imagen de perfil de ${fullName}`} />
             <AvatarFallback>{fullName.slice(0, 2)}</AvatarFallback>
