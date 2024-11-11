@@ -45,7 +45,7 @@ export const CancelarReservaLaboratorio = ({ reservaId, refresh }: Props) => {
       esEliminar
     >
       <div className="flex w-full flex-col gap-y-4">
-        <div className="flex max-h-max w-full flex-col gap-4">Está seguro que desea cancelar la solicitud?</div>
+        <div className="flex max-h-max w-full flex-col gap-4">¿Está seguro que desea cancelar la solicitud?</div>
 
         <div className="flex w-full flex-row justify-end gap-x-4">
           <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>

@@ -62,7 +62,7 @@ export default function RemoverTipoModal({ tipoId, nombre, imagen, onSubmit }: R
       esEliminar
     >
       <div>
-        Está seguro que desea eliminar <span className="font-bold">{nombre ?? "este tipo"}</span>?
+        ¿Está seguro que desea eliminar <span className="font-bold">{nombre ?? "este tipo"}</span>?
       </div>
     </ModalDrawer>
   );
