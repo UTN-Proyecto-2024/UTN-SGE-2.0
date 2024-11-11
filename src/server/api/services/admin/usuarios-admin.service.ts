@@ -9,6 +9,7 @@ import {
   inputEditarTutor,
   inputGetUsuariosPorIds,
   inputCambiarAsistio,
+  inputUserId,
 } from "@/shared/filters/admin-usuarios-filter.schema";
 import {
   editarUsuario,
@@ -112,21 +113,25 @@ export const getAllProfesoresProcedure = protectedProcedure.query(async ({ ctx }
   return profesores;
 });
 
-export const getNumeroReservasHechasEsteAnnoProcedure = protectedProcedure.query(async ({ ctx }) => {
-  const userId = ctx.session.user.id;
+export const getNumeroReservasHechasEsteAnnoProcedure = protectedProcedure
+  .input(inputUserId)
+  .query(async ({ ctx, input }) => {
+    validarInput(inputUserId, input);
 
-  const reservas = await getReservasHechasEsteAnno(ctx, userId);
+    const reservas = await getReservasHechasEsteAnno(ctx, input);
 
-  return reservas;
-});
+    return reservas;
+  });
 
-export const reservasQueNoAsistioEsteAnnoProcedure = protectedProcedure.query(async ({ ctx }) => {
-  const userId = ctx.session.user.id;
+export const reservasQueNoAsistioEsteAnnoProcedure = protectedProcedure
+  .input(inputUserId)
+  .query(async ({ ctx, input }) => {
+    validarInput(inputUserId, input);
 
-  const reservas = await getNumeroReservasQueNoAsistioEsteAnno(ctx, userId);
+    const reservas = await getNumeroReservasQueNoAsistioEsteAnno(ctx, input);
 
-  return reservas;
-});
+    return reservas;
+  });
 
 export const cambiarAsistioReservaProcedure = protectedProcedure
   .input(inputCambiarAsistio)

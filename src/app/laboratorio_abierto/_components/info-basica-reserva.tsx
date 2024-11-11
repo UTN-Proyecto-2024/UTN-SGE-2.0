@@ -34,9 +34,15 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
     id: Number(reservaId),
   });
 
-  const { data: reservasHechas = 0 } = api.admin.usuarios.reservasHechasEsteAnno.useQuery();
+  const { data: reservasHechas = 0 } = api.admin.usuarios.reservasHechasEsteAnno.useQuery(
+    { userId: reserva?.reserva.usuarioSolicito.id ?? "" },
+    { enabled: !!reserva },
+  );
   const { data: reservasQueNoAsistio = 0, refetch: refetchReservasQueNoAsistio } =
-    api.admin.usuarios.reservasQueNoAsistioEsteAnno.useQuery();
+    api.admin.usuarios.reservasQueNoAsistioEsteAnno.useQuery(
+      { userId: reserva?.reserva.usuarioSolicito.id ?? "" },
+      { enabled: !!reserva },
+    );
 
   const onChangeAsistencia = () => {
     void refetchReservasQueNoAsistio();

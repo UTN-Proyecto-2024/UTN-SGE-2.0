@@ -8,6 +8,7 @@ import {
   type inputGetTutor,
   type inputGetUsuariosPorIds,
   type inputCambiarAsistio,
+  type inputUserId,
 } from "@/shared/filters/admin-usuarios-filter.schema";
 import { ReservaTipo, type Prisma, type PrismaClient } from "@prisma/client";
 import { type z } from "zod";
@@ -317,14 +318,15 @@ export const getAllProfesores = async (ctx: { db: PrismaClient }) => {
   };
 };
 
-export const getReservasHechasEsteAnno = async (ctx: { db: PrismaClient }, userId: string) => {
+type InputUserId = z.infer<typeof inputUserId>;
+export const getReservasHechasEsteAnno = async (ctx: { db: PrismaClient }, input: InputUserId) => {
   const annoActual = new Date().getFullYear();
 
   const reservas = await ctx.db.$queryRaw<{ cantidad: bigint }[]>`
     SELECT COUNT(*) as cantidad
     FROM "Reserva" r
     WHERE
-      r."usuarioSolicitoId" = ${userId} AND
+      r."usuarioSolicitoId" = ${input.userId} AND
       CAST(r.tipo AS TEXT) IN (${ReservaTipo.LABORATORIO_CERRADO}, ${ReservaTipo.LABORATORIO_ABIERTO}) AND
       r."fechaHoraInicio" BETWEEN '${annoActual}-01-01' AND '${annoActual}-12-31T23:59:59'
       LIMIT 1;
@@ -339,14 +341,14 @@ export const getReservasHechasEsteAnno = async (ctx: { db: PrismaClient }, userI
   return cantidad;
 };
 
-export const getNumeroReservasQueNoAsistioEsteAnno = async (ctx: { db: PrismaClient }, userId: string) => {
+export const getNumeroReservasQueNoAsistioEsteAnno = async (ctx: { db: PrismaClient }, input: InputUserId) => {
   const annoActual = new Date().getFullYear();
 
   const reservas = await ctx.db.$queryRaw<{ cantidad: bigint }[]>`
     SELECT COUNT(*) as cantidad
     FROM "Reserva" r
     WHERE
-      r."usuarioSolicitoId" = ${userId} AND
+      r."usuarioSolicitoId" = ${input.userId} AND
       CAST(r.tipo AS TEXT) IN (${ReservaTipo.LABORATORIO_CERRADO}, ${ReservaTipo.LABORATORIO_ABIERTO}) AND
       r."fechaHoraInicio" BETWEEN '${annoActual}-01-01' AND '${annoActual}-12-31T23:59:59' AND
       r."asistio" = false

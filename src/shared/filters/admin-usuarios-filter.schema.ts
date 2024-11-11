@@ -45,3 +45,7 @@ export const inputEditarTutor = z.object({
   sede: z.string().min(1, { message: "La sede es requerida" }).optional(), // Sede obligatoria
   especialidad: z.string().min(1, { message: "La especialidad es requerida" }).optional(), // Especialidad obligatoria
 });
+
+export const inputUserId = z.object({
+  userId: z.string().min(1, { message: "Requerido" }),
+});
