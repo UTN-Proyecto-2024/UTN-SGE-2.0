@@ -1,3 +1,4 @@
+import { AnnoTexto } from "@/app/_components/anno-texto";
 import { type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
@@ -12,6 +13,11 @@ export const getColumns = () => {
     }),
     colHelper.accessor("anio", {
       header: "Año",
+      cell: ({ row }) => {
+        const { anio } = row.original;
+
+        return <AnnoTexto anio={anio} />;
+      },
     }),
     colHelper.accessor("nombre", {
       header: "Materia",

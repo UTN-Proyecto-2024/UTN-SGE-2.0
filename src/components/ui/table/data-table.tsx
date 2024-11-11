@@ -19,7 +19,7 @@ import {
   getGroupedRowModel,
   getExpandedRowModel,
 } from "@tanstack/react-table";
-import { ChevronDown, ChevronRight, ChevronUp, Loader2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 
 import { cn } from "@/components/utils";
 import { DataTablePagination, type PaginationConfig } from "./table-pagination";
@@ -206,15 +206,24 @@ export function DataTable<T>({
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
                 onClick={
-                  onRowClick
+                  (onRowClick ?? row.getIsGrouped())
                     ? () => {
-                        onRowClick(row);
+                        if (onRowClick) {
+                          onRowClick(row);
+                        }
+
+                        console.log("Parent: ", row.parentId);
+
+                        if (row.getIsGrouped()) {
+                          row.getToggleExpandedHandler()();
+                        }
                       }
                     : undefined
                 }
                 className={cn({
-                  "bg-slate-50": index % 2 === 0 && !row.getIsGrouped(), // default for non-grouped rows
-                  "bg-slate-200": row.getIsGrouped(), // color for grouped rows
+                  "bg-slate-100": index % 2 === 0 && !row.getIsGrouped(), // Color default para todas las rows que solo son hijos
+                  "bg-slate-200 hover:bg-slate-400": row.getIsGrouped() && row.parentId === undefined, // Color para las rows de primer nivel que son grupos
+                  "bg-slate-300 hover:bg-slate-400": row.getIsGrouped() && row.parentId !== undefined, // Color para las rows de segundo nivel que son grupos
                 })}
               >
                 {row.getVisibleCells().map((cell) => {
@@ -223,22 +232,18 @@ export function DataTable<T>({
                   return (
                     <TableCell key={cell.id} className={cn(alignment, meta?.cell?.className)}>
                       {cell.getIsGrouped() ? (
-                        <button
-                          className="flex flex-row items-center gap-1 text-left"
-                          {...{
-                            onClick: row.getToggleExpandedHandler(),
-                            style: {
-                              cursor: row.getCanExpand() ? "pointer" : "normal",
-                            },
-                          }}
-                        >
-                          {row.getIsExpanded() ? (
-                            <ChevronDown className="flex-shrink-0" size={15} strokeWidth={2} />
-                          ) : (
-                            <ChevronRight className="flex-shrink-0" size={15} strokeWidth={2} />
-                          )}{" "}
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())} ({row.subRows.length})
-                        </button>
+                        <div className="flex h-8 flex-row items-center gap-1 text-left">
+                          <span className="absolute flex flex-row items-center gap-1 text-left font-bold">
+                            <ChevronDown
+                              className={cn("flex-shrink-0 transition duration-200", {
+                                "-rotate-90": !row.getIsExpanded(),
+                              })}
+                              size={15}
+                              strokeWidth={2}
+                            />
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())} ({row.subRows.length})
+                          </span>
+                        </div>
                       ) : cell.getIsAggregated() ? (
                         flexRender(
                           cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
@@ -258,7 +263,7 @@ export function DataTable<T>({
                 {config?.isLoading ? (
                   <div className="mx-auto flex w-min items-center space-x-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Loading...</span>
+                    <span>Cargando...</span>
                   </div>
                 ) : config?.emptyComponent ? (
                   config.emptyComponent
