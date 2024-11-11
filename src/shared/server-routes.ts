@@ -200,7 +200,7 @@ export const COMPROBANTE_ROUTE = {
     href: "/comprobante/biblioteca",
   },
   inventarioRuta: {
-    href: "/comprobante/inventario",
+    href: "/comprobante/equipo",
   },
 };
 

@@ -6,10 +6,12 @@ import {
   getReservaPorUsuarioId,
   renovarEquipo,
   verReservasDeEquipo,
+  getReservaPorId,
 } from "@/server/api/repositories/reservas/equipo.repository";
 import { validarInput } from "@/server/api/services/helper";
 import {
   inputGetAllPrestamosEquipos,
+  inputGetReservaEquipoPorId,
   inputGetReservaEquipoPorUsuarioId,
   inputGetReservasEquiposPorEquipoId,
   inputPrestarEquipo,
@@ -95,3 +97,13 @@ export const renovarEquipoProcedure = protectedProcedure.input(inputPrestarEquip
 
   return reserva;
 });
+
+export const getReservaEquipoPorIdProcedure = protectedProcedure
+  .input(inputGetReservaEquipoPorId)
+  .query(async ({ ctx, input }) => {
+    validarInput(inputGetReservaEquipoPorId, input);
+
+    const reserva = await getReservaPorId(ctx, input);
+
+    return reserva;
+  });

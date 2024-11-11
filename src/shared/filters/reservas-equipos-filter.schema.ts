@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { enumReservaEstatus } from "./reservas-filter.schema";
 
+export const inputGetReservaEquipoPorId = z.object({
+  id: z.number().positive().min(1, { message: "Requerido" }),
+});
+
 export const inputGetReservaEquipoPorUsuarioId = z.object({
   id: z.string().min(1),
 });
