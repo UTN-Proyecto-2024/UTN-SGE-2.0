@@ -5,6 +5,7 @@ import {
   type inputPrestarEquipo,
   type inputGetReservaEquipoPorUsuarioId,
   type inputGetAllPrestamosEquipos,
+  type inputGetReservaEquipoPorId,
 } from "@/shared/filters/reservas-equipos-filter.schema";
 import { getDateISO } from "@/shared/get-date";
 import { informacionUsuario } from "../usuario-helper";
@@ -491,4 +492,60 @@ export const getReservaRenovacionEquipoParaEmail = async (ctx: { db: PrismaClien
       email: datos?.usuarioSolicito.email,
     },
   };
+};
+
+type InputGetPorId = z.infer<typeof inputGetReservaEquipoPorId>;
+export const getReservaPorId = async (ctx: { db: PrismaClient }, input: InputGetPorId) => {
+  const { id } = input;
+
+  const reserva = await ctx.db.reserva.findUnique({
+    where: {
+      id: id,
+    },
+
+    select: {
+      id: true,
+      fechaHoraInicio: true,
+      fechaHoraFin: true,
+      usuarioSolicito: {
+        select: {
+          nombre: true,
+          apellido: true,
+          legajo: true,
+          email: true,
+          telefonoCasa: true,
+          telefonoCelular: true,
+          telefonoLaboral: true,
+        },
+      },
+      usuarioAprobador: {
+        select: {
+          nombre: true,
+          apellido: true,
+        },
+      },
+      reservaEquipo: {
+        select: {
+          equipo: {
+            select: {
+              id: true,
+              tipo: {
+                select: {
+                  nombre: true,
+                },
+              },
+              inventarioId: true,
+              marca: {
+                select: {
+                  nombre: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return reserva;
 };

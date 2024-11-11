@@ -10,6 +10,8 @@ import { useEquiposPrestamosQueryParam } from "../../_hooks/use-equipos-prestamo
 import { getColumnasPrestamo } from "../../(listado)/columns-prestamo";
 import { PrinterIcon } from "lucide-react";
 import { type inputGetAllPrestamosEquipos } from "@/shared/filters/reservas-equipos-filter.schema";
+import Link from "next/link";
+import { COMPROBANTE_ROUTE } from "@/shared/server-routes";
 
 type EquipoPrestamoData = RouterOutputs["reservas"]["reservaEquipo"]["getAll"];
 type EquiposFilters = z.infer<typeof inputGetAllPrestamosEquipos>;
@@ -40,11 +42,13 @@ export const EquiposPrestamosTable = ({ data, filters, filterByUser }: EquipoTab
         }}
         action={{
           header: "Acciones",
-          cell() {
+          cell({ original }) {
             return (
               <>
                 {!filterByUser && (
-                  <Button title="Ver" variant="icon" color="ghost" icon={PrinterIcon} onClick={() => window.print()} />
+                  <Link href={`${COMPROBANTE_ROUTE.inventarioRuta.href}/${original.reserva.id}`} target="_blank">
+                    <Button title="Imprimir" variant="icon" color="ghost" icon={PrinterIcon} />
+                  </Link>
                 )}
               </>
             );

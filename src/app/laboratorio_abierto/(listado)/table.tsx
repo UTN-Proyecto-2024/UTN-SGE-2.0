@@ -14,6 +14,8 @@ import EditarReservaModal from "./editar-reserva-modal";
 import { type inputGetAllSolicitudesReservaLaboratorioAbierto } from "@/shared/filters/reserva-laboratorio-filter.schema";
 import { ReservaEstatus } from "@prisma/client";
 import { CancelarReservaLaboratorioAbierto } from "../_components/cancelar-reserva";
+import Link from "next/link";
+import { COMPROBANTE_ROUTE } from "@/shared/server-routes";
 
 type LaboratorioAbiertoReservaData = RouterOutputs["reservas"]["reservaLaboratorioAbierto"]["getAll"];
 type reservaFilters = z.infer<typeof inputGetAllSolicitudesReservaLaboratorioAbierto>;
@@ -54,9 +56,9 @@ export const LaboratorioAbiertoReservaTable = ({ data, filters, filterByUser }: 
 
                 {filterByUser && !estaCancelada && <EditarReservaModal id={original.reserva.id} onSubmit={refresh} />}
 
-                <Button title="Imprimir" color="outline" className="h-8 w-8 px-1 py-1" onClick={() => window.print()}>
+                {/* <Button title="Imprimir" color="outline" className="h-8 w-8 px-1 py-1" onClick={() => window.print()}>
                   <PrinterIcon size={16} />
-                </Button>
+                </Button> */}
 
                 {filterByUser && !estaCancelada && (
                   <CancelarReservaLaboratorioAbierto reservaId={original.reserva.id} refresh={refresh} />

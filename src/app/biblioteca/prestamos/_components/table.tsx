@@ -47,7 +47,7 @@ export const BibliotecaPrestamosTable = ({ data, filters, filterByUser }: Biblio
               <>
                 {!filterByUser && (
                   <Link href={`${COMPROBANTE_ROUTE.bibliotecaRuta.href}/${row.original.reserva.id}`} target="_blank">
-                    <Button title="Ver" variant="icon" color="ghost" icon={PrinterIcon} />
+                    <Button title="Imprimir" variant="icon" color="ghost" icon={PrinterIcon} />
                   </Link>
                 )}
                 {/* <VerLibroModal libroId={original.id} />
