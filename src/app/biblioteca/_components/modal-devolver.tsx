@@ -53,7 +53,7 @@ export default function DevolverLibroModal({ libroId }: DevolverLibroModalProps)
       cancelText="Cancelar"
       submitText="Sí, devolver"
     >
-      <div>Está seguro que desea devolver el libro?</div>
+      <div>¿Está seguro que desea devolver el libro?</div>
     </ModalDrawer>
   );
 }

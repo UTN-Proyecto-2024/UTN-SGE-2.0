@@ -54,7 +54,7 @@ export default function RemoveCursoModal({ cursoId, nombre, onSubmit }: RemoveCu
       esEliminar
     >
       <div>
-        Está seguro que desea eliminar <span className="font-bold">{nombre ?? "este curso"}</span>?
+        ¿Está seguro que desea eliminar <span className="font-bold">{nombre ?? "este curso"}</span>?
       </div>
     </ModalDrawer>
   );

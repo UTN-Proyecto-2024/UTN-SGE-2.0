@@ -61,7 +61,7 @@ export default function EliminarReservaPantallaModal({ ids, onSubmit }: RemoveSo
       esEliminar
     >
       <div>
-        Está seguro que desea eliminar {ids.length} {texto} en pantalla?
+        ¿Está seguro que desea eliminar {ids.length} {texto} en pantalla?
       </div>
     </ModalDrawer>
   );
