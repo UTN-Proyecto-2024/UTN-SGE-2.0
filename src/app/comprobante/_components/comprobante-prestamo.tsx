@@ -20,11 +20,11 @@ type ComprobanteContentProps =
   | { datosLibro: undefined; datosEquipo: DataReservaEquipo };
 
 export default function ComprobanteContent({ datosLibro, datosEquipo }: ComprobanteContentProps) {
-  // useEffect(() => {
-  //   if (!datosLibro && !datosEquipo) return;
+  useEffect(() => {
+    if (!datosLibro && !datosEquipo) return;
 
-  //   window.print();
-  // }, [datosLibro, datosEquipo]);
+    window.print();
+  }, [datosLibro, datosEquipo]);
 
   if (!datosLibro && !datosEquipo) return null;
 
