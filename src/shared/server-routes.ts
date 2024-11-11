@@ -33,6 +33,11 @@ export const BIBLIOTECA_ROUTE = {
       label: "Mis préstamos",
       isPublic: false,
     },
+    {
+      href: "/biblioteca/mis_prestamos",
+      label: "Mis prestamos",
+      isPublic: false,
+    },
   ],
 };
 
@@ -213,6 +218,7 @@ export const APP_ROUTES: AppRoute[] = [
   EQUIPOS_ROUTE,
   BIBLIOTECA_ROUTE,
   ADMIN_ROUTE,
+  MATERIA_ROUTE,
 ];
 
 export const USER_ROUTES = (id: string): AppRoute[] => [
