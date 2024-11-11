@@ -6,3 +6,7 @@ README.md
 .next
 .git
 .vscode
+docker-compose.yaml
+Jenkinsfile.tst
+.env*
+.gitignore
