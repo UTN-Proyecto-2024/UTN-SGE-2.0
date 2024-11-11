@@ -1,11 +1,10 @@
 "use client";
 
-import { Button, DataTable } from "@/components/ui";
+import { DataTable } from "@/components/ui";
 import { type RouterOutputs } from "@/trpc/react";
 import { type z } from "zod";
 import { DataTablePaginationStandalone } from "@/components/ui/table/table-pagination-standalone";
 import { type SortingState } from "@tanstack/react-table";
-import { PrinterIcon } from "lucide-react";
 import type { inputGetAllSolicitudesReservaLaboratorioCerrado } from "@/shared/filters/reserva-laboratorio-filter.schema";
 import { ReservaEstatus } from "@prisma/client";
 import { getColumnasReservasLaboratorioCerrado } from "./reserva-labo-cerrado-columns";
@@ -50,24 +49,14 @@ export const LaboratorioCerradoReservaTable = ({ data, filters, filterByUser }: 
             return (
               <>
                 {!filterByUser && <VerReservaModal reservaID={original.reserva.id} />}
+
                 {filterByUser && !estaCancelada && (
                   <EditarReservaModal params={{ id: original.reserva.id, cursoId: original.cursoId }} />
                 )}
 
-                <Button
-                  title="Imprimir"
-                  variant="icon"
-                  color="ghost"
-                  icon={PrinterIcon}
-                  onClick={() => window.print()}
-                />
-
                 {filterByUser && !estaCancelada && (
                   <CancelarReservaLaboratorio reservaId={original.reserva.id} refresh={refresh} />
                 )}
-
-                {/* TODO CREAR COMPONENTE CON ALERT DIALOG */}
-                {/* {filterByUser && <Button title="Cancelar reserva" variant="icon" color="danger" icon={TrashIcon} />} */}
               </>
             );
           },
