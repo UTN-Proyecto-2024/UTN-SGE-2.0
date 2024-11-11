@@ -329,16 +329,6 @@ export const AdminLaboratorioForm = ({ id, onSubmit, onCancel }: Props) => {
                               />
                             </div>
                           ))}
-                          <Button
-                            onClick={() => agregarEstante(armarioIndex)}
-                            variant="default"
-                            size="sm"
-                            className="mt-2"
-                            type="button"
-                          >
-                            <Plus size={16} className="mr-2" />
-                            Agregar Estante
-                          </Button>
                         </div>
                       )}
                     </div>
