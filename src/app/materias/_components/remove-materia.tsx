@@ -49,7 +49,7 @@ export default function RemoveMateriaModal({ materiaId, nombre, onSubmit }: Remo
       esEliminar
     >
       <div>
-        Está seguro que desea eliminar <span className="font-bold">{nombre ?? "esta materia"}</span>?
+        ¿Está seguro que desea eliminar <span className="font-bold">{nombre ?? "esta materia"}</span>?
       </div>
     </ModalDrawer>
   );

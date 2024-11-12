@@ -58,7 +58,7 @@ export default function EliminarSoftwareModal({ softwareId, nombre, onSubmit }: 
       esEliminar
     >
       <div>
-        Está seguro que desea eliminar <span className="font-bold">{nombre ?? "esta aplicación"}</span>?
+        ¿Está seguro que desea eliminar <span className="font-bold">{nombre ?? "esta aplicación"}</span>?
       </div>
     </ModalDrawer>
   );

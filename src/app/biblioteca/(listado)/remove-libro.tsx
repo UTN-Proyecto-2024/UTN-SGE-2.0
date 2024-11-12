@@ -60,7 +60,7 @@ export default function RemoveLibroModal({ libroId, nombre, onSubmit }: RemoveLi
       isAlertDialog
     >
       <div>
-        Está seguro que desea eliminar <span className="font-bold">{nombre ?? "este libro"}</span>?
+        ¿Está seguro que desea eliminar <span className="font-bold">{nombre ?? "este libro"}</span>?
       </div>
     </ModalDrawer>
   );
