@@ -60,7 +60,7 @@ export default function RemoverLaboratorioModal({ laboratorioId, nombre, onSubmi
       esEliminar
     >
       <div>
-        Está seguro que desea eliminar <span className="font-bold">{nombre ?? "este laboratorio"}</span>?
+        ¿Está seguro que desea eliminar <span className="font-bold">{nombre ?? "este laboratorio"}</span>?
       </div>
     </ModalDrawer>
   );

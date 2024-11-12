@@ -54,7 +54,7 @@ export default function RemoverRolModal({ rolId, nombre, onSubmit }: RemoveRolMo
       esEliminar
     >
       <div>
-        Está seguro que desea eliminar <span className="font-bold">{nombre ?? "este rol"}</span>?
+        ¿Está seguro que desea eliminar <span className="font-bold">{nombre ?? "este rol"}</span>?
       </div>
     </ModalDrawer>
   );

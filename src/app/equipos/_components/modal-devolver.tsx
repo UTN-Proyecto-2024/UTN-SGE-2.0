@@ -51,7 +51,7 @@ export default function DevolverEquipoModal({ equipoId }: DevolverEquipoModalPro
       cancelText="Cancelar"
       submitText="Sí, devolver"
     >
-      <div>Está seguro que desea devolver el equipo?</div>
+      <div>¿Está seguro que desea devolver el equipo?</div>
     </ModalDrawer>
   );
 }

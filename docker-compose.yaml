@@ -13,16 +13,29 @@ services:
       POSTGRES_USER: ${PGUSER}
       POSTGRES_PASSWORD: ${PGPASSWORD}
     volumes:
-      - sge2-db-data:/var/lib/postgresql/data
-      - ./pg_dump.sql:/docker-entrypoint-initdb.d/pg_dump.sql
+      - /opt/sge2/data:/var/lib/postgresql/data
+      - /opt/sge2/pg_dump.sql:/docker-entrypoint-initdb.d/pg_dump.sql
     networks:
       - sge2
 
   app:
-    image: registry.frba.utn.edu.ar/tst/sge2
+    image: registry.frba.utn.edu.ar/ext/sge2
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      RUTA_ACTUAL: ${RUTA_ACTUAL}
+      DISCORD_CLIENT_ID: ${DISCORD_CLIENT_ID}
+      DISCORD_CLIENT_SECRET: ${DISCORD_CLIENT_SECRET}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+      KEYCLOAK_ISSUER: ${KEYCLOAK_ISSUER}
+      SMTP_EMAIL_USER: ${SMTP_EMAIL_USER}
+      SMTP_EMAIL_PASSWORD: ${SMTP_EMAIL_PASSWORD}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_SECURE: ${SMTP_SECURE}
     hostname: app
-    env_file:
-      - .env
     networks:
       - sge2
     depends_on:
@@ -32,7 +45,7 @@ services:
   proxy:
     image: nginx:1.27-alpine
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - /opt/sge2/nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "8000:80"
     networks:
