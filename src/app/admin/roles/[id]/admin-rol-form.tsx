@@ -179,11 +179,18 @@ export const AdminRolForm = ({ id, onSubmit, onCancel }: Props) => {
             </div>
           </div>
         </div>
-        <div className="bottom-0 flex w-full flex-row items-end justify-end space-x-4 bg-white  p-2 md:justify-end lg:sticky">
-          <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
+        <div className="sticky bottom-0 flex w-full flex-row items-end justify-end space-x-4 bg-white p-2 pb-8">
+          <Button
+            className="w-full lg:w-auto"
+            title="Cancelar"
+            type="button"
+            variant="default"
+            color="secondary"
+            onClick={handleCancel}
+          >
             Cancelar
           </Button>
-          <Button title="Guardar" type="submit" variant="default" color="primary">
+          <Button className="w-full lg:w-auto" title="Guardar" type="submit" variant="default" color="primary">
             Guardar
           </Button>
         </div>
