@@ -2,6 +2,7 @@
 
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { AdminRolForm } from "@/app/admin/roles/[id]/admin-rol-form";
+import { ScrollArea } from "@/components/ui";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -35,10 +36,11 @@ export default function PageDetails({ params: { id } }: PageProps) {
       open={open}
       onOpenChange={handleOpenChange}
       trigger={<></>}
-      className={"max-h-[calc(100vh_-_10%)]"}
     >
       <div className="flex max-h-max w-full flex-col  gap-4">
-        <AdminRolForm id={id} onCancel={handleClickCancel} onSubmit={handleClickSave} />
+        <ScrollArea className="mt-4 max-h-[calc(100vh_-_300px)] w-full pr-4">
+          <AdminRolForm id={id} onCancel={handleClickCancel} onSubmit={handleClickSave} />
+        </ScrollArea>
       </div>
     </ModalDrawer>
   );
