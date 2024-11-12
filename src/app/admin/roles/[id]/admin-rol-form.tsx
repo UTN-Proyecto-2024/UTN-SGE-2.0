@@ -1,6 +1,6 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { type RouterOutputs, api } from "@/trpc/react";
-import { Button, FormInput, ScrollArea, toast } from "@/components/ui";
+import { Button, FormInput, toast } from "@/components/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
 import { useEffect, useState } from "react";
@@ -132,63 +132,61 @@ export const AdminRolForm = ({ id, onSubmit, onCancel }: Props) => {
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
-        <ScrollArea className="mt-4 max-h-[calc(100vh_-_300px)] w-full pr-4">
-          <div className="flex w-full flex-col items-center justify-center">
-            <div className="flex w-full flex-col space-y-4 px-0 md:px-6">
-              <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
-                <div className="mt-4 w-full">
-                  <FormInput
-                    label={"Título"}
-                    control={control}
-                    name="nombre"
-                    type={"text"}
-                    className="mt-2"
-                    autoComplete="off"
-                  />
-                </div>
+        <div className="flex w-full flex-col items-center justify-center">
+          <div className="flex w-full flex-col space-y-4 px-0 md:px-6">
+            <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
+              <div className="mt-4 w-full">
+                <FormInput
+                  label={"Título"}
+                  control={control}
+                  name="nombre"
+                  type={"text"}
+                  className="mt-2"
+                  autoComplete="off"
+                />
+              </div>
+            </div>
+
+            <div className="flex w-full flex-col lg:justify-between">
+              <div className="mt-4 w-full">
+                {/* TODO: Pasar permisos actuales para que elimine de la lista*/}
+                <PermisosSelector onPermisoChange={onPermissionChange} label={"Permisos"} />
               </div>
 
-              <div className="flex w-full flex-col lg:justify-between">
-                <div className="mt-4 w-full">
-                  {/* TODO: Pasar permisos actuales para que elimine de la lista*/}
-                  <PermisosSelector onPermisoChange={onPermissionChange} label={"Permisos"} />
-                </div>
-
-                <div className="mb-2 grid w-full grid-cols-2 gap-2">
-                  {currentPermisos.map((permiso) => (
-                    <Badge
-                      key={permiso}
-                      label={permisosDictionario[permiso]?.nombre ?? "Error"}
-                      variant={"default"}
-                      color={"aqua"}
-                      className="cursor-pointer justify-between text-sm"
-                      onClick={() => onRolPermisoDelete(permiso)}
-                      title={`Eliminar ${permisosDictionario[permiso]?.nombre ?? ""} rol`}
-                    >
-                      <Button
-                        title="Eliminar"
-                        type="button"
-                        variant={"icon"}
-                        icon={XIcon}
-                        size="sm"
-                        color={"ghost"}
-                        className="rounded-full border-none hover:bg-[transparent]"
-                      />
-                    </Badge>
-                  ))}
-                </div>
+              <div className="mb-2 grid w-full grid-cols-2 gap-2">
+                {currentPermisos.map((permiso) => (
+                  <Badge
+                    key={permiso}
+                    label={permisosDictionario[permiso]?.nombre ?? "Error"}
+                    variant={"default"}
+                    color={"aqua"}
+                    className="cursor-pointer justify-between text-sm"
+                    onClick={() => onRolPermisoDelete(permiso)}
+                    title={`Eliminar ${permisosDictionario[permiso]?.nombre ?? ""} rol`}
+                  >
+                    <Button
+                      title="Eliminar"
+                      type="button"
+                      variant={"icon"}
+                      icon={XIcon}
+                      size="sm"
+                      color={"ghost"}
+                      className="rounded-full border-none hover:bg-[transparent]"
+                    />
+                  </Badge>
+                ))}
               </div>
             </div>
           </div>
-          <div className="bottom-0 flex w-full flex-row items-end justify-end space-x-4 bg-white  p-2 md:justify-end lg:sticky">
-            <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
-              Cancelar
-            </Button>
-            <Button title="Guardar" type="submit" variant="default" color="primary">
-              Guardar
-            </Button>
-          </div>
-        </ScrollArea>
+        </div>
+        <div className="bottom-0 flex w-full flex-row items-end justify-end space-x-4 bg-white  p-2 md:justify-end lg:sticky">
+          <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
+            Cancelar
+          </Button>
+          <Button title="Guardar" type="submit" variant="default" color="primary">
+            Guardar
+          </Button>
+        </div>
       </form>
     </FormProvider>
   );
