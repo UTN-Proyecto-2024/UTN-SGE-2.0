@@ -106,7 +106,16 @@ export const esFechaPasada = (fecha: string | Date | undefined) => {
  */
 export const armarFechaReserva = (fecha: string, hora: string) => {
   if (!fecha || !hora) return new Date();
-  return new Date(`${fecha}T${hora}`);
+
+  const nuevaFecha = new Date(`${fecha}T${hora}`);
+
+  const timeZoneOffset = new Date().getTimezoneOffset() / 60; // Obtener el offset en horas
+
+  const ajusteHoras = 3 - timeZoneOffset;
+
+  nuevaFecha.setHours(nuevaFecha.getHours() + ajusteHoras);
+
+  return nuevaFecha;
 };
 
 // Mapeo de horarios por turno

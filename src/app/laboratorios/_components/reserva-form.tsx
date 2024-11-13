@@ -24,6 +24,7 @@ import { MotivoRechazo } from "./rechazo-alert";
 import { LaptopIcon, ProjectorIcon, ScreenShareIcon } from "lucide-react";
 import { SelectLaboratorioFormConEstadoReservaForm } from "@/app/_components/select-ubicacion/select-laboratorio";
 import { ConfirmarCambioEstadoModal } from "./modal-confirmar-reserva";
+import { SelectSedeConLaboratorioForm } from "@/app/_components/select-ubicacion/select-sede-con-laboratorio";
 
 type Props = {
   cursoId?: string | null | number;
@@ -318,7 +319,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
               <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
                 {esDiscrecional && (
                   <div className="mt-4 basis-1/2">
-                    <SelectSedeForm
+                    <SelectSedeConLaboratorioForm
                       name="sedeId"
                       label={"Sede"}
                       control={control}
