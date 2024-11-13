@@ -28,6 +28,25 @@ export default function Calendar({ reservas, filters }: Props) {
   const startOfCurrentMonth = filters.desde ? new Date(filters.desde) : startOfMonth(new Date());
   const today = new Date();
 
+  const reservationsByDate = reservas.reservas.reduce<
+    Record<string, { id: number; text: React.ReactNode; holiday: boolean }[]>
+  >((acc, reserva) => {
+    const dateKey = format(reserva.reserva.fechaHoraInicio, "yyyy-MM-dd");
+    if (!acc[dateKey]) acc[dateKey] = [];
+    acc[dateKey].push({
+      id: reserva.id,
+      text: (
+        <span>
+          {" "}
+          <strong>{reserva.laboratorio?.nombre ?? "S/A"}</strong> {reserva.curso?.materia.nombre} (
+          {reserva.curso?.division.nombre}) {reserva.curso?.profesor.nombre} {reserva.curso?.profesor.apellido}
+        </span>
+      ),
+      holiday: false,
+    });
+    return acc;
+  }, {});
+
   useEffect(() => {
     fetchHolidays(new Date().getFullYear()).then(setHolidays).catch(console.error);
   }, []);
@@ -44,19 +63,8 @@ export default function Calendar({ reservas, filters }: Props) {
           const date = addDays(startOfCurrentMonth, index - startOfCurrentMonth.getDay());
           if (date.getDay() === 0) return;
 
-          const reservationsForDate = reservas.reservas
-            .filter((reserva) => isSameDay(reserva.reserva.fechaHoraInicio, date))
-            .map((reserva) => ({
-              id: reserva.id,
-              text: (
-                <span>
-                  {" "}
-                  <strong>{reserva.laboratorio?.nombre ?? "S/A"}</strong> {reserva.curso?.materia.nombre} (
-                  {reserva.curso?.division.nombre}) {reserva.curso?.profesor.nombre} {reserva.curso?.profesor.apellido}
-                </span>
-              ),
-              holiday: false,
-            }));
+          const dateKey = format(date, "yyyy-MM-dd");
+          const reservationsForDate = reservationsByDate[dateKey] ?? [];
 
           const isPast = isBefore(date, today);
           const holiday = holidays.find((holiday) => isSameDay(new Date(holiday.date), date));
