@@ -142,7 +142,7 @@ export const construirFechaReservaSinOffset = (fecha: string) => {
 
   const ajusteHoras = timeZoneOffset - 3;
 
-  nuevaFecha.setHours(nuevaFecha.getHours() - ajusteHoras);
+  nuevaFecha.setHours(nuevaFecha.getHours() + ajusteHoras);
 
   return nuevaFecha;
 };
