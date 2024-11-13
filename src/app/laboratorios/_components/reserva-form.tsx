@@ -18,7 +18,6 @@ import { FormInputPoliticas } from "@/app/_components/input-form-politicas";
 import { armarFechaReserva, esFechaPasada, getDateISOString } from "@/shared/get-date";
 import { ReservaEstatus, TurnoCurso } from "@prisma/client";
 import { ReservaDetalle } from "./info-basica-reserva";
-import { SelectSedeForm } from "@/app/_components/select-ubicacion/select-sede";
 import CustomDatePicker from "@/components/date-picker";
 import { MotivoRechazo } from "./rechazo-alert";
 import { LaptopIcon, ProjectorIcon, ScreenShareIcon } from "lucide-react";
