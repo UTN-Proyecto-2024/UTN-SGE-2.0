@@ -204,6 +204,29 @@ export const COMPROBANTE_ROUTE = {
   },
 };
 
+export const REPORTES_ROUTE = {
+  href: "/reportes",
+  label: "Reportes",
+  isPublic: false,
+  subRutas: [
+    {
+      href: "/reportes",
+      label: "Asignaciones",
+      isPublic: false,
+    },
+    {
+      href: "/reportes/bedelialab",
+      label: "BedelíaLab",
+      isPublic: false,
+    },
+    {
+      href: "/reportes/calendario",
+      label: "Calendario",
+      isPublic: false,
+    },
+  ],
+};
+
 export const APP_ROUTES: AppRoute[] = [
   INICIO_ROUTE,
   LABORATORIO_ROUTE,
@@ -213,6 +236,7 @@ export const APP_ROUTES: AppRoute[] = [
   EQUIPOS_ROUTE,
   BIBLIOTECA_ROUTE,
   ADMIN_ROUTE,
+  REPORTES_ROUTE,
 ];
 
 export const USER_ROUTES = (id: string): AppRoute[] => [

@@ -13,12 +13,7 @@ import type { z } from "zod";
 import { informacionUsuario } from "../usuario-helper";
 import { construirOrderByDinamico } from "@/shared/dynamic-orderby";
 // import { lanzarErrorSiLaboratorioOcupado } from "./laboratorioEnUso.repository";
-import {
-  obtenerHoraInicioFin,
-  armarFechaReserva,
-  armarFechaSinHorasALas0000,
-  construirFechaReservaSinOffset,
-} from "@/shared/get-date";
+import { obtenerHoraInicioFin, armarFechaReserva, construirFechaReservaSinOffset } from "@/shared/get-date";
 
 type InputGetPorUsuarioID = z.infer<typeof inputGetReservaLaboratorioPorUsuarioId>;
 export const getReservaPorUsuarioId = async (ctx: { db: PrismaClient }, input: InputGetPorUsuarioID) => {
@@ -80,17 +75,34 @@ export const getReservaPorId = async (ctx: { db: PrismaClient }, input: InputGet
 
 type InputGetAllReservas = z.infer<typeof inputGetAllSolicitudesReservaLaboratorioCerrado>;
 export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetAllReservas, userId: string) => {
-  const { pageIndex, pageSize, searchText, orderDirection, orderBy, estatus, filtrByUserId, pasadas, aprobadas } =
-    input;
+  const {
+    pageIndex,
+    pageSize,
+    searchText,
+    orderDirection,
+    orderBy,
+    estatus,
+    filtrByUserId,
+    pasadas,
+    aprobadas,
+    sede,
+    turno,
+    desde,
+    hasta,
+  } = input;
 
   const fechaHoyMenos1Dia = new Date();
   fechaHoyMenos1Dia.setHours(0, 0, 0, 0);
   const filtrosWhereReservaLaboratorioCerrado: Prisma.ReservaLaboratorioCerradoWhereInput = {
+    ...(sede ? { sedeId: parseInt(sede) } : {}),
+    ...(turno ? { curso: { turno: turno } } : {}),
     reserva: {
       ...(filtrByUserId === "true" ? { usuarioSolicitoId: userId } : {}),
       ...(estatus ? { estatus: estatus } : {}),
       ...(pasadas === "true" ? { fechaHoraFin: { lte: fechaHoyMenos1Dia } } : {}),
       ...(aprobadas === "true" ? { fechaHoraFin: { gte: fechaHoyMenos1Dia } } : {}),
+      ...(desde ? { fechaHoraInicio: { gte: new Date(desde) } } : {}),
+      ...(hasta ? { fechaHoraFin: { lte: new Date(hasta) } } : {}),
     },
     ...(searchText
       ? {
@@ -168,6 +180,7 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
             sede: true,
             division: true,
             materia: true,
+            profesor: true,
           },
         },
         equipoReservado: true,
@@ -193,8 +206,11 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
       },
       where: filtrosWhereReservaLaboratorioCerrado,
       orderBy: orden,
-      skip: parseInt(pageIndex) * parseInt(pageSize),
-      take: parseInt(pageSize),
+      ...(pageIndex &&
+        pageSize && {
+          skip: parseInt(pageIndex) * parseInt(pageSize),
+          take: parseInt(pageSize),
+        }),
     }),
   ]);
 
@@ -650,6 +666,9 @@ function obtenerFechaHoraInicio(
 ) {
   // Obtener el día de la fecha de reserva
   const fechaReserva = construirFechaReservaSinOffset(input.fechaReserva);
+  if (!(fechaReserva instanceof Date) || isNaN(fechaReserva.getTime())) {
+    throw new Error("Fecha de reserva inválida");
+  }
   const diaReserva = fechaReserva.getDay(); // Esto devolverá 0-6
   const diaReservaFinal = obtenerCursoDia(diaReserva);
 
