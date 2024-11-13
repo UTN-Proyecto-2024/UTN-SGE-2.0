@@ -18,7 +18,7 @@ type Props = {
 export const ReportesFilterSede = ({ filters }: Props) => {
   const { sede, onSedeChange } = useReportesQueryParam(filters);
   const [query, setQuery] = useState("");
-  const { data, isLoading, isError } = api.admin.laboratorios.getAllSedes.useQuery();
+  const { data, isLoading, isError } = api.admin.laboratorios.getAllSedesConLaboratorios.useQuery();
 
   const sedes = useMemo(() => {
     if (!data) return [];

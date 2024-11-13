@@ -101,8 +101,8 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
       ...(estatus ? { estatus: estatus } : {}),
       ...(pasadas === "true" ? { fechaHoraFin: { lte: fechaHoyMenos1Dia } } : {}),
       ...(aprobadas === "true" ? { fechaHoraFin: { gte: fechaHoyMenos1Dia } } : {}),
-      ...(desde ? { fechaHoraInicio: { gte: new Date(desde) } } : {}),
-      ...(hasta ? { fechaHoraFin: { lte: new Date(hasta) } } : {}),
+      ...(desde ? { fechaHoraInicio: { gte: construirFechaReservaSinOffset(desde) } } : {}),
+      ...(hasta ? { fechaHoraFin: { lte: construirFechaReservaSinOffset(hasta) } } : {}),
     },
     ...(searchText
       ? {
