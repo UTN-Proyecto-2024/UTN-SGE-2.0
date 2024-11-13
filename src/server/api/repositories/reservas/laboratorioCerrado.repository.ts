@@ -13,7 +13,7 @@ import type { z } from "zod";
 import { informacionUsuario } from "../usuario-helper";
 import { construirOrderByDinamico } from "@/shared/dynamic-orderby";
 // import { lanzarErrorSiLaboratorioOcupado } from "./laboratorioEnUso.repository";
-import { obtenerHoraInicioFin, armarFechaReserva, armarFechaReservaSinHora } from "@/shared/get-date";
+import { obtenerHoraInicioFin, armarFechaReserva, armarFechaSinHorasALas0000 } from "@/shared/get-date";
 
 type InputGetPorUsuarioID = z.infer<typeof inputGetReservaLaboratorioPorUsuarioId>;
 export const getReservaPorUsuarioId = async (ctx: { db: PrismaClient }, input: InputGetPorUsuarioID) => {
@@ -644,7 +644,7 @@ function obtenerFechaHoraInicio(
   input: InputCrearReserva,
 ) {
   // Obtener el día de la fecha de reserva
-  const fechaReserva = armarFechaReservaSinHora(input.fechaReserva);
+  const fechaReserva = armarFechaSinHorasALas0000(input.fechaReserva);
   const diaReserva = fechaReserva.getDay(); // Esto devolverá 0-6
   const diaReservaFinal = obtenerCursoDia(diaReserva);
 
@@ -680,7 +680,7 @@ function obtenerFechaHoraInicio(
     throw new Error(`El curso no tiene clases el día ${diaReservaFinal}`);
   }
 
-  const horaInicioNumero = parseInt(curso.horaInicio1); // '1'
+  const horaInicioNumero = parseInt(curso.horaInicio1);
   const duracionNumero = parseInt(duracionStr);
   const { horaInicio, horaFin } = obtenerHoraInicioFin(horaInicioNumero, curso.turno, duracionNumero);
 
