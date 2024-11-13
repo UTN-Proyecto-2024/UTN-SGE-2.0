@@ -99,6 +99,25 @@ export const esFechaPasada = (fecha: string | Date | undefined) => {
 /**
  * Devuelve una fecha en formato Date
  * @param fecha Fecha en formato yyyy-MM-dd
+ * @returns fecha en formato Date
+ * @example
+ * armarFechaReserva("2023-01-01"); // Devuelve Date("2023-01-01T00:00:00")
+ */
+export const armarFechaReservaSinHora = (fecha: string) => {
+  const nuevaFecha = new Date(`${fecha}`);
+
+  const timeZoneOffset = new Date().getTimezoneOffset() / 60; // Obtener el offset en horas
+
+  const ajusteHoras = 3 - timeZoneOffset;
+
+  nuevaFecha.setHours(nuevaFecha.getHours() + ajusteHoras);
+
+  return nuevaFecha;
+};
+
+/**
+ * Devuelve una fecha en formato Date
+ * @param fecha Fecha en formato yyyy-MM-dd
  * @param hora Hora en formato HH:mm
  * @returns fecha en formato Date
  * @example

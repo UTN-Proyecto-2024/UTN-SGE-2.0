@@ -13,7 +13,7 @@ import type { z } from "zod";
 import { informacionUsuario } from "../usuario-helper";
 import { construirOrderByDinamico } from "@/shared/dynamic-orderby";
 // import { lanzarErrorSiLaboratorioOcupado } from "./laboratorioEnUso.repository";
-import { obtenerHoraInicioFin, addMinutes, setHours, setMinutes, armarFechaReserva } from "@/shared/get-date";
+import { obtenerHoraInicioFin, armarFechaReserva, armarFechaReservaSinHora } from "@/shared/get-date";
 
 type InputGetPorUsuarioID = z.infer<typeof inputGetReservaLaboratorioPorUsuarioId>;
 export const getReservaPorUsuarioId = async (ctx: { db: PrismaClient }, input: InputGetPorUsuarioID) => {
@@ -644,7 +644,7 @@ function obtenerFechaHoraInicio(
   input: InputCrearReserva,
 ) {
   // Obtener el día de la fecha de reserva
-  const fechaReserva = new Date(input.fechaReserva);
+  const fechaReserva = armarFechaReservaSinHora(input.fechaReserva);
   const diaReserva = fechaReserva.getDay(); // Esto devolverá 0-6
   const diaReservaFinal = obtenerCursoDia(diaReserva);
 
@@ -672,8 +672,9 @@ function obtenerFechaHoraInicio(
   const { horaInicio, horaFin } = obtenerHoraInicioFin(horaInicioNumero, curso.turno, duracionNumero);
 
   // Calcular las fechas finales basadas en la hora de inicio y duración
-  const fechaHoraInicio = calcularFechaHora(fechaReserva, horaInicio);
-  const fechaHoraFin = calcularFechaHora(fechaReserva, horaFin);
+  const fechaHoraInicio = armarFechaReserva(input.fechaReserva, horaInicio);
+  const fechaHoraFin = armarFechaReserva(input.fechaReserva, horaFin);
+
   return { fechaHoraInicio, fechaHoraFin };
 }
 
@@ -681,30 +682,4 @@ function obtenerFechaHoraInicio(
 function obtenerCursoDia(dia: number): CursoDia {
   const dias = ["LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO", "DOMINGO"];
   return dias[dia] as CursoDia;
-}
-
-function calcularFechaHora(fechaReserva: Date, horaInicio: string): Date {
-  // Verificar si la fecha de reserva es válida
-  if (isNaN(fechaReserva.getTime())) {
-    throw new Error(`Fecha de reserva inválida: ${fechaReserva.toISOString()}`);
-  }
-
-  // Verificar si la hora de inicio está en el formato correcto (HH:mm)
-  const [horas, minutos] = horaInicio.split(":").map(Number);
-  if (horas === undefined || minutos === undefined) {
-    throw new Error(`Hora de inicio inválida: ${horaInicio}`);
-  }
-
-  if (isNaN(horas) || isNaN(minutos)) {
-    throw new Error(`Hora de inicio inválida: ${horaInicio}`);
-  }
-
-  // Ajustar la fecha con la hora y minutos
-  const fechaHoraInicio = addMinutes(setHours(setMinutes(fechaReserva, minutos), horas), 1440);
-
-  if (isNaN(fechaHoraInicio.getTime())) {
-    throw new Error(`Error al calcular fecha de inicio con hora: ${fechaHoraInicio.toISOString()}`);
-  }
-
-  return fechaHoraInicio;
 }
