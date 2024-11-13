@@ -653,6 +653,7 @@ function obtenerFechaHoraInicio(
   const diaReserva = fechaReserva.getDay(); // Esto devolverá 0-6
   const diaReservaFinal = obtenerCursoDia(diaReserva);
 
+  const timeZoneOffset = new Date().getTimezoneOffset() / 60;
   console.log(`
   ################################################
   ################################################
@@ -662,6 +663,7 @@ function obtenerFechaHoraInicio(
   diaReservaFinal: ${diaReservaFinal}
   CursoDia1: ${curso.dia1}
   CursoDia2: ${curso.dia2}
+  TimeZoneOffset: ${timeZoneOffset}
   ################################################
   ################################################
   `);
