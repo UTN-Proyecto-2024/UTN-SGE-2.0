@@ -649,7 +649,7 @@ function obtenerFechaHoraInicio(
   input: InputCrearReserva,
 ) {
   // Obtener el día de la fecha de reserva
-  const fechaReserva = construirFechaReservaSinOffset(input.fechaReserva, "00:00");
+  const fechaReserva = construirFechaReservaSinOffset(input.fechaReserva);
   const diaReserva = fechaReserva.getDay(); // Esto devolverá 0-6
   const diaReservaFinal = obtenerCursoDia(diaReserva);
 
@@ -685,7 +685,7 @@ function obtenerFechaHoraInicio(
     throw new Error(`El curso no tiene clases el día ${diaReservaFinal}`);
   }
 
-  const horaInicioNumero = parseInt(curso.horaInicio1);
+  const horaInicioNumero = parseInt(horaInicioStr);
   const duracionNumero = parseInt(duracionStr);
   const { horaInicio, horaFin } = obtenerHoraInicioFin(horaInicioNumero, curso.turno, duracionNumero);
 

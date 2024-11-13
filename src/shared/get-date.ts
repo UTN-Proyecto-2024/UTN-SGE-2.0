@@ -133,14 +133,16 @@ export const armarFechaReserva = (fecha: string, hora: string) => {
   return nuevaFecha;
 };
 
-export const construirFechaReservaSinOffset = (fecha: string, hora: string) => {
-  if (!fecha || !hora) return new Date();
+export const construirFechaReservaSinOffset = (fecha: string) => {
+  if (!fecha) return new Date();
 
-  const nuevaFecha = new Date(`${fecha}T${hora}`);
+  const nuevaFecha = new Date(`${fecha}`);
 
   const timeZoneOffset = new Date().getTimezoneOffset() / 60; // Obtener el offset en horas
 
-  nuevaFecha.setHours(nuevaFecha.getHours() - timeZoneOffset);
+  const ajusteHoras = timeZoneOffset - 3;
+
+  nuevaFecha.setHours(nuevaFecha.getHours() - ajusteHoras);
 
   return nuevaFecha;
 };
