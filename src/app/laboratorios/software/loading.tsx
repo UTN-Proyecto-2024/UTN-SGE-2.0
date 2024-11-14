@@ -10,7 +10,7 @@ export default function BibliotecaLoading() {
     <PageLayout route={LABORATORIO_ROUTE} buttons={<SoftwareNuevoEditar />}>
       <div className="relative flex w-full flex-col items-center justify-between space-y-2 md:flex-row-reverse  md:space-x-1.5 md:space-y-0">
         <div className="relative flex w-full flex-row justify-end md:w-auto md:basis-1/3">
-          <Button color={"primary"} isLoading>
+          <Button color={"primary"} isLoading className="h-auto">
             Nueva aplicación
           </Button>
         </div>

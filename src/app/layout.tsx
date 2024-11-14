@@ -28,7 +28,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <TRPCReactProvider>
           <PermisosProvider session={session}>
-            <header className="sticky top-0 z-40 bg-white print:hidden">
+            <header className="sticky top-0 z-50 bg-white print:hidden">
               <Navbar />
             </header>
             <Toaster position="top-right" duration={3000} />
