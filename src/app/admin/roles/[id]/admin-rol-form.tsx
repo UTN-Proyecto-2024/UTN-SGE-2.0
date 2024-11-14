@@ -1,13 +1,11 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { type RouterOutputs, api } from "@/trpc/react";
 import { Button, FormInput, toast } from "@/components/ui";
+import { Checkbox } from "@/components/ui/checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
 import { useEffect, useState } from "react";
 import { inputEditarRol } from "@/shared/filters/admin-roles-filter.schema";
-import { Badge } from "@/components/ui/badge";
-import { XIcon } from "lucide-react";
-import { PermisosSelector } from "../_components/filtros/permisos-selector";
 
 type Props = {
   id?: string;
@@ -27,8 +25,8 @@ export const AdminRolForm = ({ id, onSubmit, onCancel }: Props) => {
   const { data: todosLosPermisos } = api.admin.roles.getAllPermisos.useQuery();
   const { data: rol, isLoading, isError } = api.admin.roles.getRolById.useQuery({ id: rolId }, { enabled: !!id });
 
-  const editarRol = api.admin.roles.editarRol.useMutation(); // Se llama si existe rolId
-  const agregarRol = api.admin.roles.nuevoRol.useMutation(); // Se llama si no existe rolId
+  const editarRol = api.admin.roles.editarRol.useMutation();
+  const agregarRol = api.admin.roles.nuevoRol.useMutation();
 
   const formHook = useForm<FormEditarRolType>({
     mode: "onChange",
@@ -41,10 +39,8 @@ export const AdminRolForm = ({ id, onSubmit, onCancel }: Props) => {
   });
 
   const { handleSubmit, control, setValue, getValues, watch } = formHook;
-
   const currentPermisos = watch("permisos");
 
-  // TODO: Separar componente de formulario y logica de carga y actualización de rol
   useEffect(() => {
     if (rol) {
       formHook.reset({
@@ -58,14 +54,27 @@ export const AdminRolForm = ({ id, onSubmit, onCancel }: Props) => {
   useEffect(() => {
     if (todosLosPermisos) {
       const newPermisos: Record<string, PermisoType> = {};
-
       todosLosPermisos.forEach((permiso) => {
         newPermisos[String(permiso.id)] = permiso;
       });
-
       setPermisosDictionario(newPermisos);
     }
   }, [todosLosPermisos]);
+
+  const permisosPorGrupo: Record<string, string[]> = Object.keys(permisosDictionario).reduce(
+    (acc, permisoId) => {
+      const permiso = permisosDictionario[permisoId];
+      if (permiso) {
+        const grupo = permiso.grupo;
+        if (!acc[grupo]) {
+          acc[grupo] = [];
+        }
+        acc[grupo].push(permisoId);
+      }
+      return acc;
+    },
+    {} as Record<string, string[]>,
+  );
 
   if (!esNuevo && isNaN(rolId)) {
     return <div>Error al cargar...</div>;
@@ -109,24 +118,17 @@ export const AdminRolForm = ({ id, onSubmit, onCancel }: Props) => {
     onCancel();
   };
 
-  const onPermissionChange = (permiso: string) => {
+  const onPermissionChange = (permisoId: string) => {
     const permisos = getValues("permisos");
 
-    if (permisos.includes(permiso)) {
-      return;
+    if (permisos.includes(permisoId)) {
+      setValue(
+        "permisos",
+        permisos.filter((id) => id !== permisoId),
+      );
     } else {
-      setValue("permisos", [...permisos, permiso]);
-      return;
+      setValue("permisos", [...permisos, permisoId]);
     }
-  };
-
-  const onRolPermisoDelete = (id: string) => {
-    const permisos = getValues("permisos");
-
-    setValue(
-      "permisos",
-      permisos.filter((permiso) => permiso !== id),
-    );
   };
 
   return (
@@ -148,37 +150,26 @@ export const AdminRolForm = ({ id, onSubmit, onCancel }: Props) => {
             </div>
 
             <div className="flex w-full flex-col lg:justify-between">
-              <div className="mt-4 w-full">
-                {/* TODO: Pasar permisos actuales para que elimine de la lista*/}
-                <PermisosSelector onPermisoChange={onPermissionChange} label={"Permisos"} />
-              </div>
-
-              <div className="mb-2 grid w-full grid-cols-2 gap-2">
-                {currentPermisos.map((permiso) => (
-                  <Badge
-                    key={permiso}
-                    label={permisosDictionario[permiso]?.nombre ?? "Error"}
-                    variant={"default"}
-                    color={"aqua"}
-                    className="cursor-pointer justify-between text-sm"
-                    onClick={() => onRolPermisoDelete(permiso)}
-                    title={`Eliminar ${permisosDictionario[permiso]?.nombre ?? ""} rol`}
-                  >
-                    <Button
-                      title="Eliminar"
-                      type="button"
-                      variant={"icon"}
-                      icon={XIcon}
-                      size="sm"
-                      color={"ghost"}
-                      className="rounded-full border-none hover:bg-[transparent]"
-                    />
-                  </Badge>
-                ))}
-              </div>
+              {Object.entries(permisosPorGrupo).map(([grupo, permisos]) => (
+                <div key={grupo} className="mt-4 w-full">
+                  <h3 className="mb-2 text-lg font-semibold">{grupo}</h3>
+                  <div className="mb-2 grid w-full grid-cols-2 gap-2">
+                    {permisos.map((permisoId) => (
+                      <label key={permisoId} className="flex items-center space-x-2">
+                        <Checkbox
+                          checked={currentPermisos.includes(permisoId)}
+                          onCheckedChange={() => onPermissionChange(permisoId)}
+                        />
+                        <span>{permisosDictionario[permisoId]?.nombre ?? "Error"}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
+
         <div className="sticky bottom-0 flex w-full flex-row items-end justify-end space-x-4 bg-white p-2 pb-8">
           <Button
             className="w-full lg:w-auto"
