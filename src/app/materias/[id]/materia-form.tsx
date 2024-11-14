@@ -227,7 +227,7 @@ export const MateriaForm = ({ id, onSubmit, onCancel }: Props) => {
                 </div>
 
                 {/* Jefes de Trabajos Prácticos */}
-                <div className="mt-4 basis-1/2">
+                <div className="mt-6 basis-1/2">
                   <label htmlFor="jefesTrabajoPracticoUserId">
                     Jefes de Trabajos Prácticos:
                     <SelectMultipleProfesorForm
