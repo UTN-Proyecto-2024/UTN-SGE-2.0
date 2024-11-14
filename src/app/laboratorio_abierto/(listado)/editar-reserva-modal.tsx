@@ -1,6 +1,6 @@
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { Button } from "@/components/ui";
-import { EditIcon } from "lucide-react";
+import { PencilIcon } from "lucide-react";
 import { useState } from "react";
 import { LaboratorioAbiertoForm } from "../reservar/[tipo]/reserva-form";
 
@@ -28,7 +28,7 @@ export default function EditarReservaModal({ id, onSubmit }: ModalProps) {
       description="Sí modifica la reserva, volverá al estado pendiente de aprobación"
       trigger={
         <Button color={"outline"} className="h-8 w-8 px-1 py-1">
-          <EditIcon size={16} />
+          <PencilIcon size={16} />
         </Button>
       }
       open={open}

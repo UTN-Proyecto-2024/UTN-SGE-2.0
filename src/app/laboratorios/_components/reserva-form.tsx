@@ -480,7 +480,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
             </Button>
           )}
           {!estaEstatusCancelada && !esReservaPasada && (
-            <Button title="Guardar" type="submit" variant="default" color="primary" className="mb-3">
+            <Button title="Guardar" type="submit" variant="default" color="primary" className="">
               {estaEstatusAprobada
                 ? "Modificar"
                 : haSidoRechazada

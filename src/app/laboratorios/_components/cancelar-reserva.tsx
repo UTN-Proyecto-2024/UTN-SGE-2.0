@@ -36,7 +36,7 @@ export const CancelarReservaLaboratorio = ({ reservaId, refresh }: Props) => {
   return (
     <ModalDrawer
       titulo={"Cancelar solicitud"}
-      description={"Confirmar cancelación de solicitud"}
+      //description={"Confirmar cancelación de solicitud"}
       open={open}
       onOpenChange={setOpen}
       trigger={<Button title="Cancelar reserva" variant="icon" color="danger" icon={TrashIcon} isLoading={isPending} />}
