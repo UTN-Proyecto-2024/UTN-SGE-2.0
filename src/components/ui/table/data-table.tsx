@@ -157,9 +157,9 @@ export function DataTable<T>({
   });
 
   return (
-    <>
+    <div className="flex flex-col w-full max-h-[70vh]">
       <Table containerClass={config?.containerClass}>
-        <TableHeader>
+        <TableHeader className="sticky z-30 top-0">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id} className="sticky -top-6 ">
               {headerGroup.headers.map((header) => {
@@ -277,6 +277,6 @@ export function DataTable<T>({
       </Table>
 
       {paginationConfig && <DataTablePagination table={table} config={paginationConfig} />}
-    </>
+    </div>
   );
 }

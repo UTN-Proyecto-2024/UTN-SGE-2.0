@@ -26,7 +26,7 @@ export const AgregarAPantallaModal = () => {
       open={open}
       onOpenChange={setOpen}
       trigger={
-        <Button type="button" color={"primary"} variant={"default"} className="flex flex-row gap-x-2">
+        <Button type="button" color={"primary"} variant={"default"} className="flex flex-row gap-x-2 h-auto">
           <ScreenShareIcon className="h-4 w-4" />
           Agregar a pantalla
         </Button>
