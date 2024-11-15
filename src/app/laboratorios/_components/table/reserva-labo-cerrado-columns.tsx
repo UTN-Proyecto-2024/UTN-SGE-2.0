@@ -1,7 +1,9 @@
-import { type RouterOutputs } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { esFechaPasada, getDateISOString, getTimeISOString } from "@/shared/get-date";
 import { BadgeEstatusReserva } from "@/app/_components/badge-estatus-reserva";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Loader2 } from "lucide-react";
 
 type LaboratorioCerradoReservaData =
   RouterOutputs["reservas"]["reservarLaboratorioCerrado"]["getAll"]["reservas"][number];
@@ -86,7 +88,24 @@ export const getColumnasReservasLaboratorioCerrado = ({ filterByUser }: { filter
         return laboratorio.nombre;
       },
     }),
+    colHelper.display({
+      header: "Reservas no asistidas",
+      cell: (info) => {
+        const { data: reservasQueNoAsistio = 0, isLoading } = api.admin.usuarios.reservasQueNoAsistioEsteAnno.useQuery(
+          { userId: info.row.original.reserva.usuarioSolicito.id },
+          { refetchOnWindowFocus: false, refetchOnMount: false, refetchOnReconnect: false },
+        );
 
+        if (isLoading) return <Loader2 className={"size-4 animate-spin"} />;
+
+        return reservasQueNoAsistio;
+      },
+      meta: {
+        header: {
+          hideSort: true,
+        },
+      },
+    }),
     colHelper.accessor("reserva.estatus", {
       header: "Estado",
       cell: ({ row }) => {
