@@ -74,6 +74,9 @@ model Software {
 
     estado String
 
+    windows Boolean @default(true)
+    linux   Boolean @default(false)
+
     laboratorios SoftwareLaboratorio[]
 
     fechaCreacion        DateTime @default(now())

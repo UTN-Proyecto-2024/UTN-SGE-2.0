@@ -29,7 +29,7 @@ export default function PageLayout({ route, buttons, children }: PageLayoutProps
 
   return (
     <>
-      <header className="border-b border-slate-200">
+      <header className="border-b border-slate-200 sticky top-[calc(4rem_+_1px)] z-40 bg-white overflow-x-auto">
         <div className="mx-auto flex flex-col justify-between px-4 py-6 sm:px-6 lg:flex-row lg:px-8">
           <div className="flex flex-col items-start lg:flex-row lg:items-center">
             <h1 className="text-gray-90 truncate text-3xl font-bold tracking-tight lg:mr-8 lg:border-r lg:border-slate-200 lg:pr-8">
