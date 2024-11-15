@@ -17,6 +17,7 @@ export const MobileNavigation = ({ isLogged }: { isLogged: boolean }) => {
           <DisclosureButton
             as="a"
             href={item.href}
+            target={(!!item?.esExterna) ? "_blank" : undefined}
             className="group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base leading-7 text-gray-900 hover:bg-gray-50"
           >
             {item.label}
@@ -29,6 +30,7 @@ export const MobileNavigation = ({ isLogged }: { isLogged: boolean }) => {
                 key={item.label}
                 as="a"
                 href={item.href}
+                target={(!!item?.esExterna) ? "_blank" : undefined}
                 className="block rounded-lg py-2 pl-6 pr-3 text-sm leading-7 text-gray-900 hover:bg-gray-50"
               >
                 {item.label}
