@@ -1,4 +1,4 @@
-import { FormProvider, useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import { type RouterOutputs, api } from "@/trpc/react";
 import { Button, Input, ScrollArea, toast } from "@/components/ui";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
 import { useEffect, useState } from "react";
 import { inputEditarUsuario } from "@/shared/filters/admin-usuarios-filter.schema";
+import { Switch } from "@/components/ui/switch";
 
 type Props = {
   id: string;
@@ -18,6 +19,7 @@ type FormEditarUsuarioType = z.infer<typeof inputEditarUsuario>;
 
 export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
   const [rolesDiccionario, setRolesDiccionario] = useState<Record<string, RolType>>({});
+  const [showMessage, setShowMessage] = useState(false);
 
   const { data: todosLosRoles } = api.admin.roles.getAllRoles.useQuery();
   const { data: usuario, isLoading, isError } = api.admin.usuarios.getUsuarioPorId.useQuery({ id }, { enabled: !!id });
@@ -35,7 +37,7 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
     resolver: zodResolver(inputEditarUsuario),
   });
 
-  const { handleSubmit, setValue, getValues, watch } = formHook;
+  const { handleSubmit, control, setValue, getValues, watch } = formHook;
   const currentRoles = watch("roles");
 
   useEffect(() => {
@@ -121,6 +123,53 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
                     value={usuario?.apellido ?? ""}
                     autoComplete="off"
                     readOnly
+                  />
+                </div>
+              </div>
+
+              <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
+                <div className="mt-4 w-full">
+                  <Controller
+                    control={control}
+                    name="esDocente"
+                    render={({ field }) => (
+                      <div className="flex items-center justify-between rounded-md border border-white p-2">
+                        <label htmlFor="esDocente" className="text-base">
+                          Es docente
+                        </label>
+                        <Switch
+                          id="esDocente"
+                          checked={field.value}
+                          onCheckedChange={(checked) => {
+                            field.onChange(checked);
+                            const mostrarMensaje = !checked && usuario?.tieneMaterias;
+                            setShowMessage(!!mostrarMensaje);
+                          }}
+                        />
+                      </div>
+                    )}
+                  />
+                </div>
+                <div className="mt-4 w-full">
+                  <Controller
+                    control={control}
+                    name="esTutor"
+                    render={({ field }) => (
+                      <div className="flex items-center justify-between rounded-md border border-white p-2">
+                        <label htmlFor="esTutor" className="text-base">
+                          Es docente
+                        </label>
+                        <Switch
+                          id="esTutor"
+                          checked={field.value}
+                          onCheckedChange={(checked) => {
+                            field.onChange(checked);
+                            const mostrarMensaje = !checked && usuario?.tieneMaterias;
+                            setShowMessage(!!mostrarMensaje);
+                          }}
+                        />
+                      </div>
+                    )}
                   />
                 </div>
               </div>
