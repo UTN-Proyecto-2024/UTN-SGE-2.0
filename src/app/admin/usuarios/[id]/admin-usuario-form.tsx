@@ -157,7 +157,7 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
                     render={({ field }) => (
                       <div className="flex items-center justify-between rounded-md border border-white p-2">
                         <label htmlFor="esTutor" className="text-base">
-                          Es docente
+                          Es tutor
                         </label>
                         <Switch
                           id="esTutor"
