@@ -127,7 +127,7 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
 
               <div className="mt-4 flex w-full flex-col">
                 <h3 className="mb-2 text-lg font-semibold">Roles</h3>
-                <div className="grid w-full grid-cols-2 gap-2">
+                <div className="grid w-full cursor-pointer grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-2">
                   {Object.entries(rolesDiccionario).map(([rolId, rol]) => (
                     <div className="hover:bg-slate-100" key={rol.id}>
                       <Checkbox
