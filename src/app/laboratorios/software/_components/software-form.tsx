@@ -1,4 +1,4 @@
-import { FormProvider, useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import { api } from "@/trpc/react";
 import { Button, FormInput, ScrollArea, toast } from "@/components/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -6,6 +6,7 @@ import { useEffect, useMemo } from "react";
 import { inputEditarSoftware } from "@/shared/filters/laboratorio-filter.schema";
 import { LaboratorioDropdownMultipleForm } from "@/app/_components/form/laboratorios-dropdown-multiple";
 import { type z } from "zod";
+import { Switch } from "@/components/ui/switch";
 
 type Props = {
   softwareId?: number;
@@ -35,6 +36,8 @@ export const SoftwareForm = ({ softwareId, onSubmit, onCancel }: Props) => {
       version: software.version,
       estado: software.estado,
       laboratorios: software.laboratorios.map((laboratorio) => String(laboratorio.laboratorioId)),
+      windows: software.windows,
+      linux: software.linux,
     };
   }, [software]);
 
@@ -107,6 +110,43 @@ export const SoftwareForm = ({ softwareId, onSubmit, onCancel }: Props) => {
                 </div>
                 <div className="mt-4 w-full">
                   <FormInput label={"Estado"} control={control} name="estado" type={"text"} className="mt-2" />
+                </div>
+              </div>
+
+              <div className="flex w-full flex-row gap-x-4 md:flex-row">
+                <div className="mt-4 w-full md:basis-1/2">
+                  <div className="items-top flex space-x-2">
+                    <Controller
+                      control={control}
+                      name="windows"
+                      render={({ field }) => (
+                        <label
+                          htmlFor="windows"
+                          className="flex w-full items-center justify-between rounded-md border p-2 hover:cursor-pointer hover:bg-gray-100/20"
+                        >
+                          <div className="flex flex-row justify-center text-base">Windows</div>
+                          <Switch id="windows" checked={field.value} onCheckedChange={field.onChange} />
+                        </label>
+                      )}
+                    />
+                  </div>
+                </div>
+                <div className="mt-4 w-full md:basis-1/2">
+                  <div className="items-top flex space-x-2">
+                    <Controller
+                      control={control}
+                      name="linux"
+                      render={({ field }) => (
+                        <label
+                          htmlFor="linux"
+                          className="flex w-full items-center justify-between rounded-md border p-2 hover:cursor-pointer hover:bg-gray-100/20"
+                        >
+                          <div className="flex flex-row justify-center text-base">Linux</div>
+                          <Switch id="linux" checked={field.value} onCheckedChange={field.onChange} />
+                        </label>
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
 
