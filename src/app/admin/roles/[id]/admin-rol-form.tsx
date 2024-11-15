@@ -155,7 +155,7 @@ export const AdminRolForm = ({ id, onSubmit, onCancel }: Props) => {
                   <h3 className="mb-2 text-lg font-semibold">{grupo}</h3>
                   <div className="mb-2 grid w-full grid-cols-2 gap-2">
                     {permisos.map((permisoId) => (
-                      <label key={permisoId} className="flex items-center space-x-2">
+                      <label key={permisoId} className="flex items-center space-x-2 hover:bg-slate-100">
                         <Checkbox
                           checked={currentPermisos.includes(permisoId)}
                           onCheckedChange={() => onPermissionChange(permisoId)}
