@@ -13,3 +13,25 @@ export const UTNLogo = ({ className }: { className?: string }) => (
     color="white"
   />
 );
+
+export const LinuxLogo = ({ className }: { className?: string }) => (
+  <Image
+    src={"/linux-logo.svg"}
+    alt={"Logo Linux"}
+    className={cn("h-9 w-auto", className)}
+    width={32}
+    height={32}
+    color="white"
+  />
+);
+
+export const WindowsLogo = ({ className }: { className?: string }) => (
+  <Image
+    src={"/windows-logo.svg"}
+    alt={"Logo Windows"}
+    className={cn("h-9 w-auto", className)}
+    width={32}
+    height={32}
+    color="white"
+  />
+);

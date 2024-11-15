@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { APP_ROUTES } from "@/shared/server-routes";
 import { Bell } from "lucide-react";
 import { MenuItem } from "@headlessui/react";
+import Link from "next/link";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -16,17 +17,19 @@ export const DesktopNavigation = ({ isLogged }: { isLogged: boolean }) => {
       {APP_ROUTES.filter((item) => isLogged || item.isPublic).map((item) => {
         const current = item.href.split("/")[1] === pathname.split("/")[1];
         return (
-          <a
-            key={item.label}
+          <Link
+            key={item.href}
             href={item.href}
             aria-current={current ? "page" : undefined}
+            target={(!!item?.esExterna) ? "_blank" : undefined}
+            prefetch={true}
             className={classNames(
               current ? "bg-slate-100 text-black" : "text-gray-300 hover:bg-slate-50 hover:text-black",
               "rounded-md px-3 py-2 text-sm font-medium",
             )}
           >
             {item.label}
-          </a>
+          </Link>
         );
       })}
     </div>

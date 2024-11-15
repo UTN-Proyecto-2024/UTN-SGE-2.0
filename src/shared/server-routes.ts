@@ -4,6 +4,7 @@ export type AppRoute = {
   isPublic: boolean;
   inConstruction?: boolean;
   subRutas?: AppRoute[];
+  esExterna?: boolean;
 };
 
 export const INICIO_ROUTE: AppRoute = {
@@ -227,6 +228,27 @@ export const REPORTES_ROUTE = {
   ],
 };
 
+export const SGE_1_ROUTE = [
+  {
+    href: "https://sge.frba.utn.edu.ar/sge2/ventanilla/ventanilla.php",
+    label: "Ventanilla",
+    esExterna: true,
+    isPublic: false,
+  },
+  {
+    href: "https://sge.frba.utn.edu.ar/sge2/consejeros/index.php",
+    label: "Consejeros",
+    esExterna: true,
+    isPublic: false,
+  },
+  {
+    href: "https://sge.frba.utn.edu.ar/sge2/inscripciones_especiales/index.php",
+    label: "Inscripciones especiales",
+    esExterna: true,
+    isPublic: false,
+  }
+]
+
 export const APP_ROUTES: AppRoute[] = [
   INICIO_ROUTE,
   LABORATORIO_ROUTE,
@@ -237,6 +259,7 @@ export const APP_ROUTES: AppRoute[] = [
   BIBLIOTECA_ROUTE,
   ADMIN_ROUTE,
   REPORTES_ROUTE,
+  ...SGE_1_ROUTE
 ];
 
 export const USER_ROUTES = (id: string): AppRoute[] => [
