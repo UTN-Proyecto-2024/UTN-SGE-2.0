@@ -5,6 +5,8 @@ export const inputAddSoftware = z.object({
   version: z.string().min(1, { message: "Requerido" }),
   estado: z.string().min(1, { message: "Requerido" }),
   laboratorios: z.array(z.string()).default([]),
+  windows: z.boolean().default(true),
+  linux: z.boolean().default(false),
 });
 
 export const inputGetBooks = z.object({});
