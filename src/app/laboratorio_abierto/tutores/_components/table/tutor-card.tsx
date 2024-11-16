@@ -7,7 +7,7 @@ import { cn } from "@/components/utils";
 import Image from "next/image";
 import RemoveTutorModal from "../action-buttons/remove-tutor";
 import { EditTutorModal } from "../action-buttons/edit-tutor";
-import { EditIcon } from "lucide-react";
+import { PencilIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type CardProps = React.ComponentProps<typeof Card>;
@@ -67,7 +67,7 @@ export function TutorCard({ className, ...props }: CardProps & TutorData) {
         </div>
         <div className="mt-4 flex justify-between">
           <Button onClick={handleEditClick} title="Editar" color={"outline"} className="h-8 w-8 px-1 py-1">
-            <EditIcon size={16} />
+            <PencilIcon size={16} />
           </Button>
           <RemoveTutorModal
             tutorId={tutor.usuario.id}

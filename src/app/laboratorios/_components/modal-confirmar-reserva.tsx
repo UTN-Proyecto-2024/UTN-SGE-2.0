@@ -20,7 +20,7 @@ export const ConfirmarCambioEstadoModal = ({ open, onOpenChange, handleModificar
   return (
     <ModalDrawer
       titulo="Confirmar cambio de estado"
-      description="Al modificar la solicitud, pasará a estado pendiente. ¿Estás seguro de que deseas modificar la reserva?"
+      description="Al modificar la solicitud, pasará a estado Pendiente. ¿Estás seguro de que deseas modificar la reserva?"
       open={open} // Usar el estado abierto del prop
       onOpenChange={onOpenChange} // Usar la función de cambio de apertura del prop
       className="max-h-[calc(100vh_-_300px)]"

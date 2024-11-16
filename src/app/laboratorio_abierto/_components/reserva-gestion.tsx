@@ -166,7 +166,7 @@ export const ReservaAprobacion = ({ reservaId, onAprobar, onCancel, onRechazar }
           </CardContent>
         </Card>
 
-        <div className="flex flex-row justify-end space-x-4">
+        <div className="sticky bottom-0 flex w-full flex-row items-end justify-end space-x-4 bg-white p-2 pb-2">
           <Button
             title="Cancelar"
             type="button"

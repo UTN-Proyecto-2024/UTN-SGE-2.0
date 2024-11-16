@@ -1,15 +1,12 @@
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { type RouterOutputs, api } from "@/trpc/react";
 import { Button, Input, ScrollArea, toast } from "@/components/ui";
+import { Checkbox } from "@/components/ui/checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
 import { useEffect, useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { XIcon } from "lucide-react";
 import { inputEditarUsuario } from "@/shared/filters/admin-usuarios-filter.schema";
-import { RolesSelector } from "../../usuarios/_components/filtros/roles-selector";
 import { Switch } from "@/components/ui/switch";
-import ModalDrawer from "@/app/_components/modal/modal-drawer";
 
 type Props = {
   id: string;
@@ -27,7 +24,7 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
   const { data: todosLosRoles } = api.admin.roles.getAllRoles.useQuery();
   const { data: usuario, isLoading, isError } = api.admin.usuarios.getUsuarioPorId.useQuery({ id }, { enabled: !!id });
 
-  const editarUsuario = api.admin.usuarios.editarUsuario.useMutation(); // Se llama si existe rolId
+  const editarUsuario = api.admin.usuarios.editarUsuario.useMutation();
 
   const formHook = useForm<FormEditarUsuarioType>({
     mode: "onChange",
@@ -41,7 +38,6 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
   });
 
   const { handleSubmit, control, setValue, getValues, watch } = formHook;
-
   const currentRoles = watch("roles");
 
   useEffect(() => {
@@ -58,32 +54,12 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
   useEffect(() => {
     if (todosLosRoles?.roles) {
       const newRoles: Record<string, RolType> = {};
-
       todosLosRoles.roles.forEach((rol) => {
         newRoles[String(rol.id)] = rol;
       });
-
       setRolesDiccionario(newRoles);
     }
   }, [todosLosRoles]);
-
-  // Hack porque al presionar `Escape` dentro del modal se activa primero el return antes que se pueda volver a activar el switch
-  useEffect(() => {
-    const handleEscPress = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setShowMessage(false);
-        formHook.setValue("esDocente", true);
-      }
-    };
-
-    if (showMessage) {
-      window.addEventListener("keydown", handleEscPress);
-    }
-
-    return () => {
-      setTimeout(() => window.removeEventListener("keydown", handleEscPress), 0);
-    };
-  }, [showMessage, formHook]);
 
   if (isLoading) {
     return <div>Cargando...</div>;
@@ -110,25 +86,16 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
     onCancel();
   };
 
-  const onRolChange = (rol: string) => {
-    if (!rol || !rolesDiccionario[rol]) {
-      return;
-    }
-
+  const onRolChange = (rolId: string) => {
     const roles = getValues("roles");
-
-    if (!roles.includes(rol)) {
-      setValue("roles", [...roles, rol]);
+    if (roles.includes(rolId)) {
+      setValue(
+        "roles",
+        roles.filter((id) => id !== rolId),
+      );
+    } else {
+      setValue("roles", [...roles, rolId]);
     }
-  };
-
-  const onRolDelete = (id: string) => {
-    const roles = getValues("roles");
-
-    setValue(
-      "roles",
-      roles.filter((rolId) => rolId !== id),
-    );
   };
 
   return (
@@ -137,13 +104,12 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
         <ScrollArea className="max-h-[calc(100vh_-_300px)] w-full pr-4">
           <div className="flex w-full flex-col items-center justify-center">
             <div className="flex w-full flex-col space-y-4 px-0 md:px-6">
-              <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
+              <div className="flex w-full flex-row lg:justify-between lg:gap-x-4">
                 <div className="mt-4 w-full">
                   <Input
                     label={"Nombre"}
                     name="nombre"
                     type={"text"}
-                    className="mt-2"
                     value={usuario?.nombre ?? ""}
                     autoComplete="off"
                     readOnly
@@ -152,38 +118,10 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
                 <div className="mt-4 w-full">
                   <Input
                     label={"Apellido"}
+                    name="apellido"
                     type={"text"}
-                    className="mt-2"
-                    autoComplete="off"
                     value={usuario?.apellido ?? ""}
-                    readOnly
-                  />
-                </div>
-              </div>
-
-              <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
-                <div className="mt-4 w-full">
-                  <Input
-                    label={"Email"}
-                    name="email"
-                    type={"text"}
-                    className="mt-2"
                     autoComplete="off"
-                    value={usuario?.email ?? ""}
-                    readOnly
-                  />
-                </div>
-              </div>
-
-              <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
-                <div className="mt-4 w-full">
-                  <Input
-                    label={"Legajo"}
-                    name="legajo"
-                    type={"text"}
-                    className="mt-2"
-                    autoComplete="off"
-                    value={usuario?.legajo ?? ""}
                     readOnly
                   />
                 </div>
@@ -211,90 +149,59 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
                       </div>
                     )}
                   />
-                  {showMessage && (
-                    <ModalDrawer
-                      titulo={"Confirmación"}
-                      open={showMessage}
-                      onOpenChange={(open) => setShowMessage(open)}
-                      submitText="Confirmar"
-                      onSubmit={() => {
-                        setShowMessage(false);
-                        formHook.setValue("esDocente", false);
-                      }}
-                      cancelText="Cancelar"
-                      onCancel={() => {
-                        setShowMessage(false);
-                        formHook.setValue("esDocente", true);
-                      }}
-                      isAlertDialog
-                    >
-                      <div>
-                        <span className="font-bold">El usuario tiene materias a cargo.</span> ¿esta seguro de esta
-                        acción?
-                      </div>
-                    </ModalDrawer>
-                  )}
                 </div>
-
                 <div className="mt-4 w-full">
                   <Controller
                     control={control}
                     name="esTutor"
                     render={({ field }) => (
-                      <div className="flex items-center justify-between rounded-md border border-white  p-2">
+                      <div className="flex items-center justify-between rounded-md border border-white p-2">
                         <label htmlFor="esTutor" className="text-base">
                           Es tutor
                         </label>
-                        <Switch id="esTutor" checked={field.value} onCheckedChange={field.onChange} />
+                        <Switch
+                          id="esTutor"
+                          checked={field.value}
+                          onCheckedChange={(checked) => {
+                            field.onChange(checked);
+                            const mostrarMensaje = !checked && usuario?.tieneMaterias;
+                            setShowMessage(!!mostrarMensaje);
+                          }}
+                        />
                       </div>
                     )}
                   />
                 </div>
               </div>
 
-              <div className="flex w-full flex-col lg:justify-between">
-                <div className="mt-4 w-full">
-                  {/* TODO: Pasar permisos actuales para que elimine de la lista*/}
-                  <RolesSelector onRolChange={onRolChange} label={"Roles actuales"} />
+              <div className="mt-4 flex w-full flex-col">
+                <h3 className="mb-2 text-lg font-semibold">Roles</h3>
+                <div className="grid w-full cursor-pointer grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-2">
+                  {Object.entries(rolesDiccionario).map(([rolId, rol]) => (
+                    <div className="hover:bg-slate-100" key={rol.id}>
+                      <Checkbox
+                        className="mt-1"
+                        checked={currentRoles.includes(rolId)}
+                        onCheckedChange={() => onRolChange(rolId)}
+                      />
+                      <span className="ms-1">{rol.nombre}</span>
+                    </div>
+                  ))}
                 </div>
-
-                <ScrollArea className="mt-4 max-h-80 w-full pr-4">
-                  <div className="grid w-full grid-cols-2 gap-2">
-                    {currentRoles?.map((rol) => (
-                      <Badge
-                        key={rol}
-                        label={rolesDiccionario[rol]?.nombre ?? "Error"}
-                        variant={"default"}
-                        color={"aqua"}
-                        className="cursor-pointer justify-between text-sm"
-                        onClick={() => onRolDelete(rol)}
-                        title={`Eliminar ${rolesDiccionario[rol]?.nombre ?? ""} rol`}
-                      >
-                        <Button
-                          title="Eliminar"
-                          type="button"
-                          variant={"icon"}
-                          icon={XIcon}
-                          size="sm"
-                          color={"ghost"}
-                          className="rounded-full border-none hover:bg-[transparent]"
-                        />
-                      </Badge>
-                    ))}
-                  </div>
-                </ScrollArea>
               </div>
             </div>
           </div>
-          <div className="mt-2 flex w-full flex-row items-end justify-end space-x-4">
-            <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
-              Cancelar
-            </Button>
-            <Button title="Guardar" type="submit" variant="default" color="primary">
-              Guardar
-            </Button>
-          </div>
         </ScrollArea>
+
+        {/* Botones */}
+        <div className="sticky bottom-0 flex w-full flex-row items-end justify-end space-x-4 bg-white p-2 pb-8">
+          <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
+            Cancelar
+          </Button>
+          <Button title="Guardar" type="submit" variant="default" color="primary">
+            Guardar
+          </Button>
+        </div>
       </form>
     </FormProvider>
   );
