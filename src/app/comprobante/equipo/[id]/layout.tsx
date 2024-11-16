@@ -13,11 +13,10 @@ export default async function Layout({ children, modal }: LayoutProps) {
   if (!puedeVer) {
     redirect(INICIO_ROUTE.href);
   }
-
   return (
-    <>
+    <div className="flex w-full flex-col">
       {children}
       {modal}
-    </>
+    </div>
   );
 }
