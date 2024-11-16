@@ -2,7 +2,7 @@
 
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { Button } from "@/components/ui";
-import { EditIcon } from "lucide-react";
+import { PencilIcon } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LaboratorioCerradoForm } from "./reserva-form";
@@ -31,7 +31,7 @@ export default function EditarReservaModal({ params: { id, cursoId } }: PageProp
     <ModalDrawer
       titulo={esDiscrecional ? "Editar reserva discrecional" : "Editar reserva"}
       description="Sí modifica la reserva, volverá al estado pendiente de aprobación"
-      trigger={<Button title="Editar reserva" variant="icon" color="ghost" icon={EditIcon} />}
+      trigger={<Button title="Editar reserva" variant="icon" color="ghost" icon={PencilIcon} />}
       open={open}
       onOpenChange={setOpen}
       className="max-h-[calc(100vh_-_10%)]"

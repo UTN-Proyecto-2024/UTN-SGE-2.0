@@ -230,7 +230,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(handleFormSubmit)} className="relative flex w-full flex-col gap-4">
-        <ScrollArea className="max-h-[calc(100vh_-_300px)]">
+        <ScrollArea className="max-h-[calc(100vh_-_320px)]">
           <div className="flex w-full flex-col items-center justify-center">
             {haSidoRechazada && <MotivoRechazo motivoRechazo={reservaData?.reserva.motivoRechazo ?? ""} />}
             <div className="flex flex-col space-y-4 px-0 md:px-6">
@@ -480,7 +480,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
             </Button>
           )}
           {!estaEstatusCancelada && !esReservaPasada && (
-            <Button title="Guardar" type="submit" variant="default" color="primary" className="mb-3">
+            <Button title="Guardar" type="submit" variant="default" color="primary" className="">
               {estaEstatusAprobada
                 ? "Modificar"
                 : haSidoRechazada
