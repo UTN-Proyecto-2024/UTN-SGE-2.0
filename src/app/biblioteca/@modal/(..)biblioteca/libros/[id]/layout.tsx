@@ -5,18 +5,12 @@ import { redirect } from "next/navigation";
 
 type LayoutProps = {
   children: React.ReactNode;
-  modal: React.ReactNode;
 };
 
-export default async function Layout({ children, modal }: LayoutProps) {
+export default async function Layout({ children }: LayoutProps) {
   const puedeVer = await estaLogueadoYConPermiso([SgeNombre.BIBLIOTECA_ABM_LIBRO]);
   if (!puedeVer) {
     redirect(INICIO_ROUTE.href);
   }
-  return (
-    <div className="flex w-full flex-col">
-      {children}
-      {modal}
-    </div>
-  );
+  return <div className="flex w-full flex-col">{children}</div>;
 }
