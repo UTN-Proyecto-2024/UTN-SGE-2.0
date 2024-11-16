@@ -11,15 +11,15 @@ type LayoutProps = {
 };
 
 export default async function RootLayout({ children, modal }: LayoutProps) {
-  const puedeVer = await estaLogueadoYConPermiso([SgeNombre.RES_LAB_VER_RESERVAS_GENERALES_DOCENTES]);
+  const puedeVer = await estaLogueadoYConPermiso([SgeNombre.LAB_ABIERTO_RESERVAR]);
   if (!puedeVer) {
     redirect(INICIO_ROUTE.href);
   }
 
   return (
-    <>
+    <main className="flex flex-col">
       {children}
       {modal}
-    </>
+    </main>
   );
 }
