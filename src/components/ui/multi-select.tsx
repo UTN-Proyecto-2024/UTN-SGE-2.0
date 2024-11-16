@@ -94,7 +94,7 @@ const MultiSelectFormField = React.forwardRef<HTMLButtonElement, MultiSelectForm
             ref={ref}
             {...props}
             onClick={() => setIsPopoverOpen(!isPopoverOpen)}
-            className="hover:bg-card mt-2 flex h-fit min-h-12 w-full items-center justify-between rounded-md border bg-input p-2"
+            className="hover:bg-card mt-2 flex h-fit min-h-10 w-full items-center justify-between rounded-md border bg-input p-2"
             color={"secondary"}
           >
             {selectedValues.length > 0 ? (

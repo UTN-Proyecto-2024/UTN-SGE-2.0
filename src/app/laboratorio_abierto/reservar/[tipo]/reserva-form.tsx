@@ -265,7 +265,7 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
                   label="Fecha de reserva"
                   control={control}
                   name="fechaReserva"
-                  className="mt-2"
+                  className=""
                   disabledDays={diasDeshabilitados}
                 />
               </div>

@@ -71,7 +71,7 @@ export default function CustomDatePicker<T extends FieldValues>({
                 className={cn(
                   "flex items-center justify-between",
                   "shadow-none outline-none transition-colors focus:!ring-0",
-                  "focus:border-input-active hover:border-input-hover rounded-md border border-input bg-input px-4 py-[9px] focus:rounded-md",
+                  "focus:border-input-active hover:border-input-hover rounded-md border border-input bg-input px-4 py-[7px] focus:rounded-md",
                   "cursor-pointer",
                 )}
                 onClick={() => setIsOpen(!isOpen)}
@@ -84,7 +84,7 @@ export default function CustomDatePicker<T extends FieldValues>({
                       onChange(format(date, "yyyy-MM-dd"));
                     }
                   }}
-                  placeholder="Seleccione o ingrese fecha"
+                  placeholder="Selecciona una fecha"
                   className="w-full border-none bg-transparent p-0 outline-none focus:shadow-none focus:outline-none"
                   readOnly
                 />
