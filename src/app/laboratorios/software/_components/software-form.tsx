@@ -5,8 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo } from "react";
 import { inputEditarSoftware } from "@/shared/filters/laboratorio-filter.schema";
 import { LaboratorioDropdownMultipleForm } from "@/app/_components/form/laboratorios-dropdown-multiple";
-import { type z } from "zod";
+import { z } from "zod";
 import { Switch } from "@/components/ui/switch";
+import { LinuxLogo, WindowsLogo } from "@/app/_components/utn-logo";
 
 type Props = {
   softwareId?: number;
@@ -44,14 +45,34 @@ export const SoftwareForm = ({ softwareId, onSubmit, onCancel }: Props) => {
   const formHook = useForm<FormEditarSoftware>({
     mode: "onChange",
     defaultValues: softwareBase,
-    resolver: zodResolver(inputEditarSoftware),
+    resolver: zodResolver(
+      inputEditarSoftware.superRefine(({ linux, windows }, ctx) => {
+        if (!linux && !windows) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Debe seleccionar al menos un sistema operativo",
+            path: ["windows"],
+          });
+
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Debe seleccionar al menos un sistema operativo",
+            path: ["linux"],
+          });
+
+          return z.NEVER;
+        }
+      }),
+    ),
   });
 
-  const { handleSubmit, control } = formHook;
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = formHook;
 
   useEffect(() => formHook.reset(softwareBase), [formHook, softwareBase]);
-
-  console.log(formHook.formState.errors);
 
   const onFormSubmit = (formData: FormEditarSoftware) => {
     if (esNuevo) {
@@ -120,13 +141,19 @@ export const SoftwareForm = ({ softwareId, onSubmit, onCancel }: Props) => {
                       control={control}
                       name="windows"
                       render={({ field }) => (
-                        <label
-                          htmlFor="windows"
-                          className="flex w-full items-center justify-between rounded-md border p-2 hover:cursor-pointer hover:bg-gray-100/20"
-                        >
-                          <div className="flex flex-row justify-center text-base">Windows</div>
-                          <Switch id="windows" checked={field.value} onCheckedChange={field.onChange} />
-                        </label>
+                        <div className="flex w-full flex-col">
+                          <label
+                            htmlFor="windows"
+                            className="flex w-full items-center justify-between rounded-md border p-2 hover:cursor-pointer hover:bg-gray-100/20"
+                          >
+                            <div className="flex flex-row justify-center text-base">
+                              <WindowsLogo className="m-auto mr-2 h-4 w-4" />
+                              Windows
+                            </div>
+                            <Switch id="windows" checked={field.value} onCheckedChange={field.onChange} />
+                          </label>
+                          {errors.windows && <p className="text-red-500">{errors.windows.message}</p>}
+                        </div>
                       )}
                     />
                   </div>
@@ -137,13 +164,19 @@ export const SoftwareForm = ({ softwareId, onSubmit, onCancel }: Props) => {
                       control={control}
                       name="linux"
                       render={({ field }) => (
-                        <label
-                          htmlFor="linux"
-                          className="flex w-full items-center justify-between rounded-md border p-2 hover:cursor-pointer hover:bg-gray-100/20"
-                        >
-                          <div className="flex flex-row justify-center text-base">Linux</div>
-                          <Switch id="linux" checked={field.value} onCheckedChange={field.onChange} />
-                        </label>
+                        <div className="flex w-full flex-col">
+                          <label
+                            htmlFor="linux"
+                            className="flex w-full items-center justify-between rounded-md border p-2 hover:cursor-pointer hover:bg-gray-100/20"
+                          >
+                            <div className="flex flex-row justify-center text-base">
+                              <LinuxLogo className="m-auto mr-2 h-4 w-4" />
+                              Linux
+                            </div>
+                            <Switch id="linux" checked={field.value} onCheckedChange={field.onChange} />
+                          </label>
+                          {errors.linux && <p className="text-red-500">{errors.linux.message}</p>}
+                        </div>
                       )}
                     />
                   </div>

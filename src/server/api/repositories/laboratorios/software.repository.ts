@@ -110,6 +110,8 @@ export const editarSoftware = async (ctx: { db: PrismaClient }, input: InputEdit
         nombre: input.nombre,
         version: input.version,
         estado: input.estado,
+        windows: input.windows,
+        linux: input.linux,
         laboratorios: {
           deleteMany: {},
           createMany: {
@@ -138,6 +140,8 @@ export const agregarSoftware = async (ctx: { db: PrismaClient }, input: InputAdd
         nombre: input.nombre,
         version: input.version,
         estado: input.estado,
+        windows: input.windows,
+        linux: input.linux,
         laboratorios: {
           createMany: {
             data: input.laboratorios.map((laboratorioId) => ({

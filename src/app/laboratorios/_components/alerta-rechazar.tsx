@@ -32,7 +32,7 @@ export const AdminLaboratoriosNuevoLaboratorio = ({ estaRechazando, handleRechaz
   return (
     <ModalDrawer
       titulo={"Rechazar solicitud"}
-      description={"Confirmar rechazo de solicitud"}
+      //description={"Confirmar rechazo de solicitud"}
       open={open}
       onOpenChange={setOpen}
       trigger={
