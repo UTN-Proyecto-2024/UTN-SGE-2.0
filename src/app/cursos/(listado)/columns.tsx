@@ -31,6 +31,11 @@ export const getColumns = () => {
     colHelper.accessor("materia.nombre", {
       id: "materia",
       header: "Materia",
+      meta: {
+        header: {
+          hideSort: true,
+        },
+      },
     }),
     colHelper.accessor("division.nombre", {
       header: "División",
@@ -90,13 +95,9 @@ export const getColumns = () => {
         },
       },
     }),
-    // colHelper.accessor("activo", {
-    //   header: "Activo",
-    //   cell: (info) => (info.row.original.activo ? <Check size={20} /> : <X size={20} />),
-    // }),
   ] as ColumnDef<CursosData>[];
 };
 
 export const getColumnsNames = () => {
-  return ["Año", "Materia", "Activo", "Sede", "Duración", "Turno", "Division", "Profesor", "Ayudante/s"];
+  return ["Año", "Materia", "División", "Duración", "Turno", "Division", "Profesor", "Ayudante/s"];
 };
