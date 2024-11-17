@@ -12,8 +12,9 @@ export const ReservarLaboratorioCerradoModal = (props: EditCursoModalProps) => {
 
   return (
     <Link key={props.cursoId} href={`${pathname}/${props.cursoId}`} passHref prefetch={true} title="Reservar curso">
-      <Button type="button" color={"outline"} className="" variant={"default"} icon={CalendarCheck}>
-        <div className="flex flex-row gap-x-2 ">reservar</div>{" "}
+      <Button type="button" color={"outline"} className="space-x-1 px-2" variant={"default"}>
+        <CalendarCheck className="h-4 w-4" />
+        <div className="flex flex-row gap-x-1 ">reservar</div>{" "}
       </Button>
     </Link>
   );

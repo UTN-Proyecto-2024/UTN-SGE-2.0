@@ -2,7 +2,6 @@ import { api, type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { esFechaPasada, getDateISOString, getTimeISOString } from "@/shared/get-date";
 import { BadgeEstatusReserva } from "@/app/_components/badge-estatus-reserva";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2 } from "lucide-react";
 
 type LaboratorioCerradoReservaData =
