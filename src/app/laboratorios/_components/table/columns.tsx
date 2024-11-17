@@ -1,10 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { DatoUsuarioReserva } from "@/app/_components/datos-usuario";
+import { HoraDia } from "@/app/_components/hora-dia-curso";
 import { CursoTurno } from "@/app/_components/turno-text";
 import { type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
 type CursosData = RouterOutputs["cursos"]["getAll"]["cursos"][number];
+
+const dayMapper = {
+  LUNES: "Lunes",
+  MARTES: "Martes",
+  MIERCOLES: "Miércoles",
+  JUEVES: "Jueves",
+  VIERNES: "Viernes",
+  SABADO: "Sábado",
+};
 
 export const getColumns = () => {
   const colHelper = createColumnHelper<CursosData>();
@@ -34,76 +44,26 @@ export const getColumns = () => {
     colHelper.accessor("sede.nombre", {
       header: "Sede",
     }),
-    colHelper.display({
-      header: "Lunes",
-      cell: (info) => {
-        return <HoraDia {...info.row.original} diaDeHoy={"LUNES"} />;
-      },
-      meta: {
-        header: {
-          hideSort: true,
+    ...Object.entries(dayMapper).map(([key, value]) =>
+      colHelper.display({
+        header: value,
+        meta: {
+          header: {
+            hideSort: true,
+          },
         },
-      },
-    }),
-    colHelper.display({
-      header: "Martes",
-      cell: (info) => {
-        return <HoraDia {...info.row.original} diaDeHoy={"MARTES"} />;
-      },
-      meta: {
-        header: {
-          hideSort: true,
+        cell: (info) => {
+          return <HoraDia {...info.row.original} diaDeHoy={key} />;
         },
-      },
-    }),
-    colHelper.display({
-      header: "Miércoles",
-      cell: (info) => {
-        return <HoraDia {...info.row.original} diaDeHoy={"MIERCOLES"} />;
-      },
-      meta: {
-        header: {
-          hideSort: true,
-        },
-      },
-    }),
-    colHelper.display({
-      header: "Jueves",
-      cell: (info) => {
-        return <HoraDia {...info.row.original} diaDeHoy={"JUEVES"} />;
-      },
-      meta: {
-        header: {
-          hideSort: true,
-        },
-      },
-    }),
-    colHelper.display({
-      header: "Viernes",
-      cell: (info) => {
-        return <HoraDia {...info.row.original} diaDeHoy={"VIERNES"} />;
-      },
-      meta: {
-        header: {
-          hideSort: true,
-        },
-      },
-    }),
-    colHelper.display({
-      header: "Sábado",
-      cell: (info) => {
-        return <HoraDia {...info.row.original} diaDeHoy={"SABADO"} />;
-      },
-      meta: {
-        header: {
-          hideSort: true,
-        },
-      },
-    }),
+      }),
+    ),
     colHelper.display({
       header: "Profesor",
       cell: (info) => {
         const profesor = info.row.original.profesor;
+
+        if (!profesor) return <span className="hidden">Sin profesor</span>;
+
         return <DatoUsuarioReserva usuario={profesor} key={profesor.id} />;
       },
       meta: {
@@ -120,9 +80,9 @@ export const getColumns = () => {
         if (!ayudantes.length) return <span className="hidden">Sin ayudantes</span>;
 
         return (
-          <div className="flex -space-x-2 overflow-hidden">
+          <div className="flex flex-col overflow-hidden">
             {ayudantes.map((ayudante) => (
-              <DatoUsuarioReserva mostrarNombre={false} usuario={ayudante.usuario} key={ayudante.userId} />
+              <DatoUsuarioReserva usuario={ayudante.usuario} key={ayudante.userId} />
             ))}
           </div>
         );
@@ -151,58 +111,4 @@ export const getColumnsNames = () => {
     "Profesor",
     "Ayudante/s",
   ];
-};
-
-type HoraDiaProps = {
-  dia1: string;
-  dia2?: string | null;
-  horaInicio1: string | number;
-  horaInicio2?: string | number | null;
-  duracion1: string | number;
-  duracion2?: string | number | null;
-  diaDeHoy: string;
-};
-const HoraDia = ({ dia1, dia2, horaInicio1, horaInicio2, duracion1, duracion2, diaDeHoy }: HoraDiaProps) => {
-  horaInicio1 = Number(horaInicio1);
-  horaInicio2 = Number(horaInicio2);
-  duracion1 = Number(duracion1);
-  duracion2 = Number(duracion2);
-
-  const horas = [0, 1, 2, 3, 4, 5, 6];
-
-  const esHoyDia1 = dia1 === diaDeHoy;
-  const esHoyDia2 = dia2 === diaDeHoy;
-
-  const finClase1 = esHoyDia1 ? horaInicio1 + duracion1 : 0;
-  const finClase2 = esHoyDia2 ? horaInicio2 + duracion2 : 0;
-
-  return (
-    <div className="flex flex-row space-x-0">
-      {horas.map((hora) => {
-        if (esHoyDia1) {
-          if (esHoyDia1 && hora >= horaInicio1 && hora < finClase1) {
-            return (
-              <div key={hora} className="flex h-5 w-5  justify-center rounded-full bg-primary">
-                {hora}
-              </div>
-            );
-          }
-        }
-
-        if (esHoyDia2 && hora >= horaInicio2 && hora < finClase2) {
-          return (
-            <div key={`hora2-${hora}`} className="flex h-5 w-5 justify-center rounded-full bg-primary">
-              {hora}
-            </div>
-          );
-        }
-
-        return (
-          <div key={hora} className="flex h-5 w-5 justify-center rounded-full bg-slate-300">
-            {hora}
-          </div>
-        );
-      })}
-    </div>
-  );
 };

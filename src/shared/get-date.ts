@@ -148,7 +148,7 @@ export const construirFechaReservaSinOffset = (fecha: string) => {
 };
 
 // Mapeo de horarios por turno
-const horariosTurnos: Record<string, Record<number, string>> = {
+export const horariosTurnos: Record<string, Record<number, string>> = {
   MANANA: {
     0: "07:45",
     1: "08:30",
