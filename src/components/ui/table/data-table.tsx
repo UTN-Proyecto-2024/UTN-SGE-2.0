@@ -24,6 +24,7 @@ import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { cn } from "@/components/utils";
 import { DataTablePagination, type PaginationConfig } from "./table-pagination";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./table";
+import { Button } from "../button";
 
 interface DataTableProps<TData> {
   manualSorting?: boolean;
@@ -163,7 +164,7 @@ export function DataTable<T>({
           <TableHeader className="sticky top-0 z-30">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="sticky -top-6 ">
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map((header, index) => {
                   const { column } = header;
                   const sortDir = column.getIsSorted();
                   const meta = getMeta(column);
@@ -171,6 +172,24 @@ export function DataTable<T>({
                   const headerValue = flexRender(column.columnDef.header, header.getContext());
                   return (
                     <TableHead key={header.id} className={cn("px-1", alignment)}>
+                      {index === 0 && table.getCanSomeRowsExpand() && (
+                        <Button
+                          variant={"default"}
+                          color={"ghost"}
+                          type="button"
+                          className="px-1 py-0"
+                          onClick={table.getToggleAllRowsExpandedHandler()}
+                          title={table.getIsAllRowsExpanded() ? "Agrupar todas" : "Mostrar todas"}
+                        >
+                          <ChevronDown
+                            className={cn("flex-shrink-0 transition duration-200", {
+                              "-rotate-90": !table.getIsAllRowsExpanded(),
+                            })}
+                            size={15}
+                            strokeWidth={2}
+                          />
+                        </Button>
+                      )}
                       {header.isPlaceholder || !column.columnDef.header || header.id === "action" ? null : (
                         <div
                           className={cn(
