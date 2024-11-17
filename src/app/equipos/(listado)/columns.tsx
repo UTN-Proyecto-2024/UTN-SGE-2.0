@@ -1,6 +1,6 @@
 import { type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { EstadoEquipo, PrestarDevolverEquipo } from "./estado-equipo";
+import { PrestarDevolverEquipo } from "./estado-equipo";
 
 type EquipoData = RouterOutputs["equipos"]["getAll"]["equipos"][number];
 
@@ -30,14 +30,6 @@ export const getEquiposColumnas = () => {
     colHelper.accessor("estado.nombre", {
       header: "Estado",
     }),
-    colHelper.accessor("disponible", {
-      header: "Estado préstamo",
-      cell: ({ row }) => {
-        const { disponible, id } = row.original;
-
-        return <EstadoEquipo disponible={disponible} id={id} />;
-      },
-    }),
     colHelper.display({
       header: "Prestar / Devolver",
       cell: ({ row }) => {
@@ -48,6 +40,7 @@ export const getEquiposColumnas = () => {
       meta: {
         header: {
           hideSort: true,
+          align: "center",
         },
       },
     }),
