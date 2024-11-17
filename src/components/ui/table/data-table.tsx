@@ -247,6 +247,7 @@ export function DataTable<T>({
                   {row.getVisibleCells().map((cell) => {
                     const meta = getMeta(cell.column);
                     const alignment = getAlignment(meta?.cell?.align);
+
                     return (
                       <TableCell
                         key={cell.id}
