@@ -16,9 +16,10 @@ import { construirOrderByDinamico } from "@/shared/dynamic-orderby";
 import {
   obtenerHoraInicioFin,
   armarFechaReserva,
-  construirFechaReservaSinOffset
+  construirFechaReservaSinOffset,
+  getFechaddddDDMMYYYY,
+  getTurnoTexto,
 } from "@/shared/get-date";
-
 
 type InputGetPorUsuarioID = z.infer<typeof inputGetReservaLaboratorioPorUsuarioId>;
 export const getReservaPorUsuarioId = async (ctx: { db: PrismaClient }, input: InputGetPorUsuarioID) => {
@@ -219,9 +220,20 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
     }),
   ]);
 
+  const reservasConFecha = reservas.map((reserva) => {
+    const fechaTexto = getFechaddddDDMMYYYY(reserva.reserva.fechaHoraInicio);
+    const turnoTexto = getTurnoTexto(reserva.curso?.turno);
+
+    return {
+      ...reserva,
+      fechaTexto,
+      turnoTexto,
+    };
+  });
+
   return {
     count,
-    reservas,
+    reservas: reservasConFecha,
   };
 };
 

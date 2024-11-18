@@ -12,6 +12,9 @@ export const getColumnasReservasLaboratorioAbierto = ({ filterByUser }: { filter
   const colHelper = createColumnHelper<LaboratorioAbiertoReservaData>();
 
   const columnasBasicas = [
+    colHelper.accessor("fechaTexto", {
+      header: "",
+    }),
     colHelper.accessor("id", {
       header: "#",
     }),
@@ -134,7 +137,7 @@ export const getColumnasReservasLaboratorioAbierto = ({ filterByUser }: { filter
 
 export const getColumnasResevaNames = () => {
   return [
-    "Reserva #",
+    "#",
     "Solicitante",
     "Laboratorio",
     "Nombre Laboratorio",

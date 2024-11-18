@@ -69,7 +69,7 @@ export const LABORATORIO_ROUTE = {
       isPublic: false,
     },
     {
-      href: "/laboratorios/solicitudes",
+      href: "/laboratorios/solicitudes?estatus=PENDIENTE",
       label: "Administrar reservas",
       isPublic: false,
     },
@@ -88,7 +88,7 @@ export const LABORATORIO_ABIERTO_ROUTE = {
       isPublic: false,
     },
     {
-      href: "/laboratorio_abierto/solicitudes",
+      href: "/laboratorio_abierto/solicitudes?estatus=PENDIENTE",
       label: "Administrar reservas",
       isPublic: false,
     },
@@ -246,8 +246,8 @@ export const SGE_1_ROUTE = [
     label: "Inscripciones especiales",
     esExterna: true,
     isPublic: false,
-  }
-]
+  },
+];
 
 export const APP_ROUTES: AppRoute[] = [
   INICIO_ROUTE,
@@ -259,7 +259,7 @@ export const APP_ROUTES: AppRoute[] = [
   BIBLIOTECA_ROUTE,
   ADMIN_ROUTE,
   REPORTES_ROUTE,
-  ...SGE_1_ROUTE
+  ...SGE_1_ROUTE,
 ];
 
 export const USER_ROUTES = (id: string): AppRoute[] => [
