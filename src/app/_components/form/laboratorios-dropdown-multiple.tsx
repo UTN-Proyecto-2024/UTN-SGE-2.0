@@ -23,11 +23,10 @@ type LaboratorioDropdownType = {
   error?: string;
 };
 
-/*TEST aMMend     */
 export const LaboratorioDropdownMultiple = (props: LaboratorioDropdownType): ReactElement => {
   const { className, defaultValue, onValueChange, error } = props;
 
-  const { data, isLoading, isError } = api.admin.laboratorios.getAllReservables.useQuery({});
+  const { data, isLoading, isError } = api.admin.laboratorios.getAll.useQuery({});
 
   const laboratorios = useMemo(() => {
     if (!data) return [];

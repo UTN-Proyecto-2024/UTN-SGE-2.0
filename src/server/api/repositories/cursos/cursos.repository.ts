@@ -32,10 +32,10 @@ export const getAllCursos = async (ctx: { db: PrismaClient }, input: InputGetAll
     : [
         { anioDeCarrera: "asc" },
         { materia: { nombre: "asc" } },
+        { division: { nombre: "asc" } },
         { sede: { nombre: "desc" } },
         { ac: "asc" },
         { turno: "asc" },
-        { division: { nombre: "asc" } },
       ];
 
   const where: Prisma.CursoWhereInput = {
