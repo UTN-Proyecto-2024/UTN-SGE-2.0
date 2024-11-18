@@ -13,7 +13,7 @@ export const getColumnasReservasLaboratorioAbierto = ({ filterByUser }: { filter
 
   const columnasBasicas = [
     colHelper.accessor("id", {
-      header: "Reserva #",
+      header: "#",
     }),
     ...(filterByUser
       ? []
@@ -40,6 +40,11 @@ export const getColumnasReservasLaboratorioAbierto = ({ filterByUser }: { filter
         const fecha = getTimeISOString(reserva.fechaHoraInicio);
         return fecha;
       },
+      meta: {
+        cell: {
+          align: "center",
+        },
+      },
     }),
     colHelper.accessor("reserva.fechaHoraFin", {
       header: "Hora Fin",
@@ -47,6 +52,11 @@ export const getColumnasReservasLaboratorioAbierto = ({ filterByUser }: { filter
         const { reserva } = row.original;
         const fecha = getTimeISOString(reserva.fechaHoraFin);
         return fecha;
+      },
+      meta: {
+        cell: {
+          align: "center",
+        },
       },
     }),
     colHelper.accessor("concurrentes", {
