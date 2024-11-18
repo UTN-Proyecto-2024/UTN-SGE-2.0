@@ -11,7 +11,8 @@ export default function PageLibroDetails({ params: { id } }: PageProps) {
   const router = useRouter();
 
   const handleClickCancel = () => {
-    router.back();
+    router.refresh();
+    setTimeout(() => router.back(), 100);
   };
 
   const handleClickAprobar = () => {
