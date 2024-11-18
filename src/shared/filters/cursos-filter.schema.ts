@@ -59,16 +59,10 @@ export const inputAgregarCursoBulkInsert = z
   );
 
 export const inputGetCursos = z.object({
-  // pageSize: z.enum(["10", "20", "30", "40", "50"]).default("20").catch("20"),
-  // pageIndex: z
-  //   .string()
-  //   .default("0")
-  //   .refine((value) => parseInt(value) >= 0, { message: "Debe ser mayor o igual a 0" })
-  //   .catch("0"),
   orderBy: z
-    .enum(["anioDeCarrera", "materia_nombre", "sede_nombre", "ac", "turno", "division_nombre"])
-    .default("anioDeCarrera")
-    .catch("anioDeCarrera"),
+    .enum(["division_nombre", "duracion", "turno", "sede_nombre", "ac"])
+    .default("division_nombre")
+    .catch("division_nombre"),
   orderDirection: z.enum(["asc", "desc"]).default("asc").catch("asc"),
   searchText: z.string().default(""),
   materia: z
