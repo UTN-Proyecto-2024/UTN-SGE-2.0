@@ -161,10 +161,6 @@ export const inputGetAllSolicitudesReservaLaboratorioCerrado = z.object({
   filtrByUserId: z.enum(["true", "false"]).optional(),
   pasadas: z.enum(["true", "false"]).optional(),
   aprobadas: z.enum(["true", "false"]).optional(),
-  sede: z.string().optional(),
-  turno: z.enum(["MANANA", "TARDE", "NOCHE"]).optional(),
-  desde: z.string().optional(),
-  hasta: z.string().optional(),
 });
 
 export const inputRechazarReservaLaboratorioCerrado = z.object({

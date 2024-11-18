@@ -2,23 +2,24 @@ import { type ReadonlyURLSearchParams } from "next/navigation";
 import React, { Suspense, useMemo } from "react";
 import PageLayout from "@/components/ui/page-template";
 import { REPORTES_ROUTE } from "@/shared/server-routes";
-import ReservasCalendarContainer from "./(listado)/reservas";
-import { inputGetAllSolicitudesReservaLaboratorioCerrado } from "@/shared/filters/reserva-laboratorio-filter.schema";
-import { ActionButtons } from "./(listado)/action-buttons";
+import { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.schema";
+import { ActionButtons } from "../_actions/action-buttons";
+import Calendar from "./calendar";
 
 type PageProps = {
   searchParams: ReadonlyURLSearchParams;
 };
 
 export default function Page({ searchParams }: PageProps) {
-  const filters = inputGetAllSolicitudesReservaLaboratorioCerrado.parse(searchParams);
+  const filters = inputGetAllLaboratorios.parse(searchParams);
   const filter_as_key = useMemo(() => JSON.stringify(filters), [filters]);
+
   return (
     <PageLayout route={REPORTES_ROUTE}>
       <ActionButtons filters={filters} />
       <div className="w-full">
         <Suspense key={filter_as_key}>
-          <ReservasCalendarContainer filters={filters} />
+          <Calendar filters={filters} />
         </Suspense>
       </div>
     </PageLayout>

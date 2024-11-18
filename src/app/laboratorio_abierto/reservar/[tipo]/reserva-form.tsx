@@ -79,7 +79,7 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
     mode: "onChange",
     defaultValues: {
       id: reservaId,
-      tipo: esNuevo ? tipo! : reservaData?.laboratorioAbiertoTipo,
+      tipo: esNuevo ? tipo : reservaData?.laboratorioAbiertoTipo,
       aceptoTerminos: false,
       concurrentes: esNuevo ? "1" : reservaData?.concurrentes.toString(),
       equipoReservado: esNuevo ? [] : (reservaData?.equipoReservado ?? []),
@@ -162,7 +162,7 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
 
       formHook.reset({
         id: reservaId,
-        tipo: esNuevo ? tipo! : reservaData?.laboratorioAbiertoTipo,
+        tipo: esNuevo ? tipo : reservaData?.laboratorioAbiertoTipo,
         aceptoTerminos: false,
         concurrentes: esNuevo ? "1" : reservaData?.concurrentes.toString(),
         equipoReservado: esNuevo ? [] : (reservaData?.equipoReservado ?? []),
@@ -176,7 +176,7 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
 
   useEffect(() => {
     if (esNuevo) {
-      setValue("tipo", tipo!);
+      setValue("tipo", tipo);
     }
   }, [esNuevo, tipo, setValue]);
 

@@ -4,8 +4,7 @@ model Laboratorio {
     nombre  String
     tienePc Boolean @default(false)
 
-    esReservable           Boolean                 @default(false)
-    laboratorioAbiertoTipo LaboratorioAbiertoTipo?
+    esReservable Boolean @default(false)
 
     sedeId Int
     sede   Sede @relation(fields: [sedeId], references: [id], onDelete: Cascade)
@@ -27,7 +26,6 @@ model Laboratorio {
     @@index([nombre(sort: Asc)])
     @@index([tienePc], type: Hash)
     @@index([esReservable], type: Hash)
-    @@index([laboratorioAbiertoTipo])
 }
 
 model Armario {
@@ -96,10 +94,4 @@ model SoftwareLaboratorio {
     usuarioCreadorId String
 
     @@id([softwareId, laboratorioId])
-}
-
-enum LaboratorioAbiertoTipo {
-    LA
-    TLA_BASICA
-    TLA
 }
