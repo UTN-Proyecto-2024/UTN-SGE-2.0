@@ -175,9 +175,10 @@ export function DataTable<T>({
                       {index === 0 && table.getCanSomeRowsExpand() && (
                         <Button
                           variant={"default"}
-                          color={"ghost"}
+                          color={"white"}
                           type="button"
-                          className="px-1 py-0"
+                          size={"sm"}
+                          className="w-8 px-1 py-0"
                           onClick={table.getToggleAllRowsExpandedHandler()}
                           title={table.getIsAllRowsExpanded() ? "Agrupar todas" : "Mostrar todas"}
                         >
@@ -251,7 +252,7 @@ export function DataTable<T>({
                     return (
                       <TableCell
                         key={cell.id}
-                        className={cn("px-0 py-1 first:pl-1 last:pr-1", alignment, meta?.cell?.className)}
+                        className={cn(`px-0 py-1 first:pl-1 last:pr-1`, alignment, meta?.cell?.className)}
                       >
                         {cell.getIsGrouped() ? (
                           <div className="flex h-8 flex-row items-center gap-1 text-center">

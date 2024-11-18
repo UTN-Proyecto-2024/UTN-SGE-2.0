@@ -21,7 +21,7 @@ export const getColumns = () => {
 
   return [
     colHelper.accessor("anioDeCarrera", {
-      header: "Año",
+      header: "",
       cell: ({ row }) => {
         const { anioDeCarrera } = row.original;
 
@@ -30,7 +30,7 @@ export const getColumns = () => {
     }),
     colHelper.accessor("materia.nombre", {
       id: "materia",
-      header: "Materia",
+      header: "",
       meta: {
         header: {
           hideSort: true,
