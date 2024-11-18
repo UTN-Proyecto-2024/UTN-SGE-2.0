@@ -1,10 +1,10 @@
 import { type z } from "zod";
-import { ReportesFilterSede } from "./filtros/reportes-filter-sede";
-import { ReportesFilterTurno } from "./filtros/reportes-filter-turno";
-import type { inputGetAllSolicitudesReservaLaboratorioCerrado } from "@/shared/filters/reserva-laboratorio-filter.schema";
-import { ReportesFilterFecha } from "./filtros/reportes-filter-fecha";
+import { ReportesFilterSede } from "../_filters/reportes-filter-sede";
+import { ReportesFilterTurno } from "../_filters/reportes-filter-turno";
+import { ReportesFilterFecha } from "../_filters/reportes-filter-fecha";
+import type { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.schema";
 
-type ReportesFilters = z.infer<typeof inputGetAllSolicitudesReservaLaboratorioCerrado>;
+type ReportesFilters = z.infer<typeof inputGetAllLaboratorios>;
 
 type ActionButtonsProps = {
   filters: ReportesFilters;

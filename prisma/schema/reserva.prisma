@@ -203,7 +203,7 @@ model Pantalla {
 }
 
 enum ReservaEstatus {
-    PENDIENTE // Cuando el usuario creo y esta pendiente de aprobacion
+    PENDIENTE // Cuando el usuario creo y esta pendiente de aprobación
     FINALIZADA // Cuando el usuario devuelve el equipo o libro / Cuando se aprueba la reserva de laboratorio
     CANCELADA // Cuando el usuario que creo la reserva cancela la reserva (solo aplica a laboratorios abierto/cerrado no a equipo/bibioteca)
     RECHAZADA // Cuando el administrador rechaza la reserva
@@ -214,9 +214,9 @@ enum ReservaEstatus {
 // 2. FINALIZADA => El usuario ya devolvió el equipo o libro
 
 // Reservas de LABORATORIO ABIERTO o CERRADO
-// 1. PENDIENTE => El usuario creó una solicit de reserva de laboratorio abierto o cerrado
-// 2. FINALIZADA => El administador aproba la reserva
-// 3. CANCELADA => El usuario que creó la reserva cancela la reserva (no puede volver a modificar
+// 1. PENDIENTE => El usuario creó una solicitud de reserva de laboratorio abierto o cerrado
+// 2. FINALIZADA => El administador aprueba la reserva
+// 3. CANCELADA => El usuario que creó la reserva cancela la reserva (no puede volver a modificar)
 // 4. RECHAZADA => El administrador rechaza la reserva (el usuario creador puede modificarla y volver a pendiente)
 
 enum ReservaTipo {
@@ -224,4 +224,10 @@ enum ReservaTipo {
     LABORATORIO_CERRADO
     INVENTARIO
     LIBRO
+}
+
+enum LaboratorioAbiertoTipo {
+    LA
+    TLA_BASICA
+    TLA
 }
