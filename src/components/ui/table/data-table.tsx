@@ -249,12 +249,16 @@ export function DataTable<T>({
                     const meta = getMeta(cell.column);
                     const alignment = getAlignment(meta?.cell?.align);
 
+                    const isGrouped = cell.getIsGrouped();
+                    const isAggregated = cell.getIsAggregated();
+                    const isPlaceholder = cell.getIsPlaceholder();
+
                     return (
                       <TableCell
                         key={cell.id}
                         className={cn(`px-0 py-1 first:pl-1 last:pr-1`, alignment, meta?.cell?.className)}
                       >
-                        {cell.getIsGrouped() ? (
+                        {isGrouped ? (
                           <div className="flex h-8 flex-row items-center gap-1 text-center">
                             <span className="absolute flex flex-row items-center gap-1 text-center font-bold">
                               <ChevronDown
@@ -267,12 +271,9 @@ export function DataTable<T>({
                               {flexRender(cell.column.columnDef.cell, cell.getContext())} ({row.subRows.length})
                             </span>
                           </div>
-                        ) : cell.getIsAggregated() ? (
-                          flexRender(
-                            cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )
-                        ) : cell.getIsPlaceholder() ? null : (
+                        ) : isAggregated ? null : //   cell.getContext(), //   cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell, // flexRender(
+                        // )
+                        isPlaceholder ? null : (
                           flexRender(cell.column.columnDef.cell, cell.getContext())
                         )}
                       </TableCell>
