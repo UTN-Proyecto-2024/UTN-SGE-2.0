@@ -41,14 +41,6 @@ export const getColumns = () => {
         );
       },
     }),
-    colHelper.accessor("laboratorioAbiertoTipo", {
-      header: "Tipo de laboratorio",
-      cell: (info) => {
-        const tipoLaboratorio = info.row.original.laboratorioAbiertoTipo;
-
-        return tipoLaboratorio ?? "Normal";
-      },
-    }),
     colHelper.accessor("sede.nombre", {
       header: "Sede",
     }),

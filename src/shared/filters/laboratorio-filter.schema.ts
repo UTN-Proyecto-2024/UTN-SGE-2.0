@@ -30,3 +30,10 @@ export const inputEditarSoftware = z
     id: z.number().optional(), // Si viene significa que se va a usar para editar, si no significa que se va a usar para crear
   })
   .merge(inputAddSoftware);
+
+export const inputGetAllLaboratorios = z.object({
+  sede: z.string().optional(),
+  turno: z.enum(["MANANA", "TARDE", "NOCHE"]).optional(),
+  desde: z.string().optional(),
+  hasta: z.string().optional(),
+});
