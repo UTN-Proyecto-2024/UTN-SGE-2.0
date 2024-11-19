@@ -33,9 +33,8 @@ export const verificarPermisoUsuario = async (
 ) => {
   const permisos = Array.isArray(sgePermisoNombre) ? sgePermisoNombre : [sgePermisoNombre];
 
-  const result = await ctx.db.$queryRaw<{ existe: boolean }[]>`
-    SELECT EXISTS
-    (
+  const result = await ctx.db.$queryRaw<{ existe: boolean }[]>`SELECT 
+  EXISTS (
       SELECT 1
         FROM "User" u
       JOIN "UsuarioRol" ur ON ur."userId" = u.id
