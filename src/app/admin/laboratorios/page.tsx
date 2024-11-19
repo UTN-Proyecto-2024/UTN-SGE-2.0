@@ -8,6 +8,7 @@ import { inputGetLaboratorios } from "@/shared/filters/admin-laboratorios-filter
 import PageLayout from "@/components/ui/page-template";
 import { ADMIN_ROUTE } from "@/shared/server-routes";
 import { AdminLaboratoriosNuevoLaboratorio } from "./_components/action-button/nuevo-laboratorio-button";
+import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
 
 type PageProps = {
   searchParams: ReadonlyURLSearchParams;
@@ -19,7 +20,15 @@ export default async function Page({ searchParams }: PageProps) {
   const filter_as_key = JSON.stringify(filters);
 
   return (
-    <PageLayout route={ADMIN_ROUTE} buttons={<AdminLaboratoriosNuevoLaboratorio />}>
+    <PageLayout
+      route={ADMIN_ROUTE}
+      buttons={
+        <TienePermiso permisos={[]}>
+          {/* TODO: no se cual seria el permiso que va??*/}
+          <AdminLaboratoriosNuevoLaboratorio />
+        </TienePermiso>
+      }
+    >
       <AdminActionButtons filters={filters} />
       <Suspense key={filter_as_key} fallback={<LoadingAdminTable columns={adminLaboratoriosColumnas} />}>
         <AdminLaboratoriosTableContainer filters={filters} />
