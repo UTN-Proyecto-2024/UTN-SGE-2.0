@@ -1,5 +1,6 @@
 export type AppRoute = {
   href: string;
+  redirectClick?: string;
   label: string;
   isPublic: boolean;
   inConstruction?: boolean;
@@ -69,7 +70,8 @@ export const LABORATORIO_ROUTE = {
       isPublic: false,
     },
     {
-      href: "/laboratorios/solicitudes?estatus=PENDIENTE",
+      redirectClick: "/laboratorios/solicitudes?estatus=PENDIENTE",
+      href: "/laboratorios/solicitudes",
       label: "Administrar reservas",
       isPublic: false,
     },
@@ -88,7 +90,8 @@ export const LABORATORIO_ABIERTO_ROUTE = {
       isPublic: false,
     },
     {
-      href: "/laboratorio_abierto/solicitudes?estatus=PENDIENTE",
+      redirectClick: "/laboratorio_abierto/solicitudes?estatus=PENDIENTE",
+      href: "/laboratorio_abierto/solicitudes",
       label: "Administrar reservas",
       isPublic: false,
     },

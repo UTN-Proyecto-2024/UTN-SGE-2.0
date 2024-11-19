@@ -38,18 +38,18 @@ export default function PageLayout({ route, buttons, children }: PageLayoutProps
             <Tabs defaultValue="" className="hidden space-x-8 rounded-lg bg-[#F1F5F9] p-2 text-sm lg:flex">
               <TabsList className="flex w-full flex-row gap-x-4">
                 {route.subRutas?.map((subRuta) => {
-                  const hrefSinQueryParams = subRuta.href.split("?")[0] ?? "";
+                  const hrefSinQueryParams = subRuta.redirectClick ? subRuta.redirectClick : subRuta.href;
 
                   return (
                     <TabsTrigger
                       value={subRuta.href}
                       key={subRuta.href}
                       className={cn(
-                        { " bg-[#FFFFFF]": hrefSinQueryParams === pathname },
+                        { "bg-[#FFFFFF]": subRuta.href === pathname },
                         "rounded-lg px-3 py-1.5 hover:bg-slate-200",
                       )}
                     >
-                      <Link href={subRuta.href}>{subRuta.label}</Link>
+                      <Link href={hrefSinQueryParams}>{subRuta.label}</Link>
                     </TabsTrigger>
                   );
                 })}
