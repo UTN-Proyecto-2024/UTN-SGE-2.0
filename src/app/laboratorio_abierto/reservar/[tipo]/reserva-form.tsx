@@ -70,7 +70,7 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
     mode: "onChange",
     defaultValues: {
       id: reservaId,
-      tipo: esNuevo ? tipo! : reservaData?.laboratorioAbiertoTipo,
+      tipo: esNuevo ? tipo : reservaData?.laboratorioAbiertoTipo,
       aceptoTerminos: false,
       concurrentes: esNuevo ? "1" : reservaData?.concurrentes.toString(),
       equipoReservado: esNuevo ? [] : (reservaData?.equipoReservado ?? []),
@@ -153,7 +153,7 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
 
       formHook.reset({
         id: reservaId,
-        tipo: esNuevo ? tipo! : reservaData?.laboratorioAbiertoTipo,
+        tipo: esNuevo ? tipo : reservaData?.laboratorioAbiertoTipo,
         aceptoTerminos: false,
         concurrentes: esNuevo ? "1" : reservaData?.concurrentes.toString(),
         equipoReservado: esNuevo ? [] : (reservaData?.equipoReservado ?? []),
@@ -167,7 +167,7 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
 
   useEffect(() => {
     if (esNuevo) {
-      setValue("tipo", tipo!);
+      setValue("tipo", tipo);
     }
   }, [esNuevo, tipo, setValue]);
 
@@ -251,15 +251,13 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
                 label={"¿Cuántas personas concurrirán al laboratorio?"}
                 clearable
               />
-              <div>
-                <CustomDatePicker
-                  label="Fecha de reserva"
-                  control={control}
-                  name="fechaReserva"
-                  className=""
-                  disabledDays={diasDeshabilitados}
-                />
-              </div>
+              <CustomDatePicker
+                label="Fecha de reserva"
+                control={control}
+                name="fechaReserva"
+                className=""
+                disabledDays={diasDeshabilitados}
+              />
               <FormSelect
                 name="turno"
                 label="Seleccionar Turno"
@@ -267,6 +265,11 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
                 items={turnos.map((turno) => turno.label)}
                 onChange={handleTurnoChange}
               />
+              <p className="text-sm text-gray-500">
+                Si necesita utilizar el Laboratorio Abierto por un período superior a dos horas, reserve dos turnos
+                consecutivos. En estos casos, tendrán prioridad los estudiantes que aún no hayan hecho uso del
+                laboratorio durante el día.
+              </p>
             </div>
             <div className="mx-auto space-y-6">
               {esTLA && (

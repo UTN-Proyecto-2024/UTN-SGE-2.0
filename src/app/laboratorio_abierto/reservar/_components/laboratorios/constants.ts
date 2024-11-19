@@ -1,7 +1,6 @@
-import { type RouterOutputs } from "@/trpc/react";
+import type Prisma from "@prisma/client";
 
-export type LaboratorioAbiertoType =
-  RouterOutputs["admin"]["laboratorios"]["getAll"]["laboratorios"][number]["laboratorioAbiertoTipo"];
+export type LaboratorioAbiertoType = Prisma.$Enums.LaboratorioAbiertoTipo;
 
 export type ReservaLaboratorioAbiertoType = {
   tipo: LaboratorioAbiertoType;

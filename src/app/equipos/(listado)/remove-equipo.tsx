@@ -42,15 +42,7 @@ export default function RemoveEquipoModal({ equipoId, nombre, disponible, onSubm
   if (!disponible) {
     return (
       <ModalDrawer
-        trigger={
-          <Button
-            title="Eliminar equipo"
-            variant="icon"
-            color="danger"
-            className="h-8 w-8 px-2 py-2"
-            icon={TrashIcon}
-          />
-        }
+        trigger={<Button title="Eliminar equipo" variant="icon" color="danger" size="xs" icon={TrashIcon} />}
         titulo={`El equipo ${nombre ?? ""} tiene un préstamo activo`}
         cancelText="Cerrar"
         open={open}
@@ -67,9 +59,7 @@ export default function RemoveEquipoModal({ equipoId, nombre, disponible, onSubm
 
   return (
     <ModalDrawer
-      trigger={
-        <Button title="Eliminar equipo" variant="icon" color="danger" className="h-8 w-8 px-2 py-2" icon={TrashIcon} />
-      }
+      trigger={<Button title="Eliminar equipo" variant="icon" color="danger" size="xs" icon={TrashIcon} />}
       titulo={`Eliminar equipo ${nombre ?? ""}`}
       cancelText="Cancelar"
       submitText="Sí, eliminar"

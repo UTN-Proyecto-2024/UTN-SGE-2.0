@@ -22,7 +22,10 @@ export default function VerReservaModal({ params: { id } }: PageProps) {
   };
 
   const handleClickCancel = () => {
-    handleOpenChange(false);
+    router.back();
+    setTimeout(() => {
+      window.location.reload();
+    }, 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
   };
 
   const handleClickAprobar = () => {

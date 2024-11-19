@@ -22,9 +22,9 @@ export default function PrestarEquipoModal({ equipoId }: PrestarEquipoModalProps
   return (
     <ModalDrawer
       trigger={
-        <span>
+        <div className="flex flex-row justify-center">
           <PrestarButton />
-        </span>
+        </div>
       }
       titulo={`Prestar Equipo`}
       open={open}

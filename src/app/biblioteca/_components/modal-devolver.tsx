@@ -40,9 +40,9 @@ export default function DevolverLibroModal({ libroId }: DevolverLibroModalProps)
   return (
     <ModalDrawer
       trigger={
-        <span>
+        <div className="flex flex-row justify-center">
           <DevolverButton />
-        </span>
+        </div>
       }
       titulo={`Devolver libro`}
       open={open}

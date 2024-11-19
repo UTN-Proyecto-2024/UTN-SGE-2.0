@@ -16,9 +16,10 @@ import { construirOrderByDinamico } from "@/shared/dynamic-orderby";
 import {
   obtenerHoraInicioFin,
   armarFechaReserva,
-  construirFechaReservaSinOffset
+  construirFechaReservaSinOffset,
+  getFechaddddDDMMYYYY,
+  getTurnoTexto,
 } from "@/shared/get-date";
-
 
 type InputGetPorUsuarioID = z.infer<typeof inputGetReservaLaboratorioPorUsuarioId>;
 export const getReservaPorUsuarioId = async (ctx: { db: PrismaClient }, input: InputGetPorUsuarioID) => {
@@ -80,34 +81,17 @@ export const getReservaPorId = async (ctx: { db: PrismaClient }, input: InputGet
 
 type InputGetAllReservas = z.infer<typeof inputGetAllSolicitudesReservaLaboratorioCerrado>;
 export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetAllReservas, userId: string) => {
-  const {
-    pageIndex,
-    pageSize,
-    searchText,
-    orderDirection,
-    orderBy,
-    estatus,
-    filtrByUserId,
-    pasadas,
-    aprobadas,
-    sede,
-    turno,
-    desde,
-    hasta,
-  } = input;
+  const { pageIndex, pageSize, searchText, orderDirection, orderBy, estatus, filtrByUserId, pasadas, aprobadas } =
+    input;
 
   const fechaHoyMenos1Dia = new Date();
   fechaHoyMenos1Dia.setHours(0, 0, 0, 0);
   const filtrosWhereReservaLaboratorioCerrado: Prisma.ReservaLaboratorioCerradoWhereInput = {
-    ...(sede ? { sedeId: parseInt(sede) } : {}),
-    ...(turno ? { curso: { turno: turno } } : {}),
     reserva: {
       ...(filtrByUserId === "true" ? { usuarioSolicitoId: userId } : {}),
       ...(estatus ? { estatus: estatus } : {}),
       ...(pasadas === "true" ? { fechaHoraFin: { lte: fechaHoyMenos1Dia } } : {}),
       ...(aprobadas === "true" ? { fechaHoraFin: { gte: fechaHoyMenos1Dia } } : {}),
-      ...(desde ? { fechaHoraInicio: { gte: construirFechaReservaSinOffset(desde) } } : {}),
-      ...(hasta ? { fechaHoraFin: { lte: construirFechaReservaSinOffset(hasta) } } : {}),
     },
     ...(searchText
       ? {
@@ -219,9 +203,20 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
     }),
   ]);
 
+  const reservasConFecha = reservas.map((reserva) => {
+    const fechaTexto = getFechaddddDDMMYYYY(reserva.reserva.fechaHoraInicio);
+    const turnoTexto = getTurnoTexto(reserva.curso?.turno);
+
+    return {
+      ...reserva,
+      fechaTexto,
+      turnoTexto,
+    };
+  });
+
   return {
     count,
-    reservas,
+    reservas: reservasConFecha,
   };
 };
 

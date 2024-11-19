@@ -24,6 +24,7 @@ import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { cn } from "@/components/utils";
 import { DataTablePagination, type PaginationConfig } from "./table-pagination";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./table";
+import { Button } from "../button";
 
 interface DataTableProps<TData> {
   manualSorting?: boolean;
@@ -157,126 +158,150 @@ export function DataTable<T>({
   });
 
   return (
-    <div className="flex flex-col w-full max-h-[70vh]">
-      <Table containerClass={config?.containerClass}>
-        <TableHeader className="sticky z-30 top-0">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="sticky -top-6 ">
-              {headerGroup.headers.map((header) => {
-                const { column } = header;
-                const sortDir = column.getIsSorted();
-                const meta = getMeta(column);
-                const alignment = getAlignment(meta?.header?.align);
-                const headerValue = flexRender(column.columnDef.header, header.getContext());
-                return (
-                  <TableHead key={header.id} className={cn(alignment)}>
-                    {header.isPlaceholder || !column.columnDef.header || header.id === "action" ? null : (
-                      <div
-                        className={cn(
-                          "inline-flex h-8 cursor-pointer items-center gap-2 rounded px-2",
-                          meta?.header?.className,
-                          {
-                            "-translate-x-2": (meta?.header?.align ?? "left") === "left",
-                            "translate-x-2": (meta?.header?.align ?? "left") === "right",
-                          },
-                        )}
-                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                      >
-                        {headerValue}
-                        <div className={cn("flex h-6 flex-col", meta?.header?.hideSort && "hidden")}>
-                          <ChevronUp
-                            className={cn("w-3 translate-y-[2px] opacity-50", sortDir === "asc" && "opacity-100")}
-                          />
-                          <ChevronDown
-                            className={cn("w-3 -translate-y-[2px] opacity-50", sortDir === "desc" && "opacity-100")}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row, index) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-                onClick={
-                  (onRowClick ?? row.getIsGrouped())
-                    ? () => {
-                        if (onRowClick) {
-                          onRowClick(row);
-                        }
-
-                        console.log("Parent: ", row.parentId);
-
-                        if (row.getIsGrouped()) {
-                          row.getToggleExpandedHandler()();
-                        }
-                      }
-                    : undefined
-                }
-                className={cn({
-                  "bg-slate-100": index % 2 === 0 && !row.getIsGrouped(), // Color default para todas las rows que solo son hijos
-                  "bg-slate-200 hover:bg-slate-400": row.getIsGrouped() && row.parentId === undefined, // Color para las rows de primer nivel que son grupos
-                  "bg-slate-300 hover:bg-slate-400": row.getIsGrouped() && row.parentId !== undefined, // Color para las rows de segundo nivel que son grupos
-                })}
-              >
-                {row.getVisibleCells().map((cell) => {
-                  const meta = getMeta(cell.column);
-                  const alignment = getAlignment(meta?.cell?.align);
+    <div className="flex w-full flex-row justify-center">
+      <div className="flex max-h-[70vh] min-w-[60vw] flex-col">
+        <Table containerClass={config?.containerClass}>
+          <TableHeader className="sticky top-0 z-30">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id} className="sticky -top-6 ">
+                {headerGroup.headers.map((header, index) => {
+                  const { column } = header;
+                  const sortDir = column.getIsSorted();
+                  const meta = getMeta(column);
+                  const alignment = getAlignment(meta?.header?.align);
+                  const headerValue = flexRender(column.columnDef.header, header.getContext());
                   return (
-                    <TableCell key={cell.id} className={cn(alignment, meta?.cell?.className)}>
-                      {cell.getIsGrouped() ? (
-                        <div className="flex h-8 flex-row items-center gap-1 text-left">
-                          <span className="absolute flex flex-row items-center gap-1 text-left font-bold">
-                            <ChevronDown
-                              className={cn("flex-shrink-0 transition duration-200", {
-                                "-rotate-90": !row.getIsExpanded(),
-                              })}
-                              size={15}
-                              strokeWidth={2}
-                            />
-                            {flexRender(cell.column.columnDef.cell, cell.getContext())} ({row.subRows.length})
-                          </span>
-                        </div>
-                      ) : cell.getIsAggregated() ? (
-                        flexRender(
-                          cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )
-                      ) : cell.getIsPlaceholder() ? null : (
-                        flexRender(cell.column.columnDef.cell, cell.getContext())
+                    <TableHead key={header.id} className={cn("px-1", alignment)}>
+                      {index === 0 && table.getCanSomeRowsExpand() && (
+                        <Button
+                          variant={"default"}
+                          color={"white"}
+                          type="button"
+                          size={"sm"}
+                          className="w-8 px-1 py-0"
+                          onClick={table.getToggleAllRowsExpandedHandler()}
+                          title={table.getIsAllRowsExpanded() ? "Agrupar todas" : "Mostrar todas"}
+                        >
+                          <ChevronDown
+                            className={cn("flex-shrink-0 transition duration-200", {
+                              "-rotate-90": !table.getIsAllRowsExpanded(),
+                            })}
+                            size={15}
+                            strokeWidth={2}
+                          />
+                        </Button>
                       )}
-                    </TableCell>
+                      {header.isPlaceholder || !column.columnDef.header || header.id === "action" ? null : (
+                        <div
+                          className={cn(
+                            "inline-flex h-8 cursor-pointer items-center rounded px-0",
+                            meta?.header?.className,
+                            {
+                              "-translate-x-2": meta?.header?.align === "left",
+                              "translate-x-2": meta?.header?.align === "right",
+                            },
+                          )}
+                          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                        >
+                          {headerValue}
+                          <div className={cn("flex h-6 flex-col", meta?.header?.hideSort && "hidden")}>
+                            <ChevronUp
+                              className={cn("w-3 translate-y-[2px] opacity-50", sortDir === "asc" && "opacity-100")}
+                            />
+                            <ChevronDown
+                              className={cn("w-3 -translate-y-[2px] opacity-50", sortDir === "desc" && "opacity-100")}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </TableHead>
                   );
                 })}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                {config?.isLoading ? (
-                  <div className="mx-auto flex w-min items-center space-x-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Cargando...</span>
-                  </div>
-                ) : config?.emptyComponent ? (
-                  config.emptyComponent
-                ) : (
-                  "Sin resultados."
-                )}
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row, index) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  onClick={
+                    (onRowClick ?? row.getIsGrouped())
+                      ? () => {
+                          if (onRowClick) {
+                            onRowClick(row);
+                          }
 
-      {paginationConfig && <DataTablePagination table={table} config={paginationConfig} />}
+                          if (row.getIsGrouped()) {
+                            row.getToggleExpandedHandler()();
+                          }
+                        }
+                      : undefined
+                  }
+                  className={cn({
+                    "bg-slate-100": index % 2 === 0 && !row.getIsGrouped(), // Color default para todas las rows que solo son hijos
+                    "bg-slate-200 hover:bg-slate-400": row.getIsGrouped() && row.parentId === undefined, // Color para las rows de primer nivel que son grupos
+                    "bg-slate-300 hover:bg-slate-400": row.getIsGrouped() && row.parentId !== undefined, // Color para las rows de segundo nivel que son grupos
+                  })}
+                >
+                  {row.getVisibleCells().map((cell) => {
+                    const meta = getMeta(cell.column);
+                    const alignment = getAlignment(meta?.cell?.align);
+
+                    const isGrouped = cell.getIsGrouped();
+                    const isAggregated = cell.getIsAggregated();
+                    const isPlaceholder = cell.getIsPlaceholder();
+
+                    return (
+                      <TableCell
+                        key={cell.id}
+                        className={cn(`px-0 py-1 first:pl-1 last:pr-1`, alignment, meta?.cell?.className)}
+                      >
+                        {isGrouped ? (
+                          <div className="flex h-8 flex-row items-center gap-1 text-center">
+                            <span className="absolute flex flex-row items-center gap-1 text-center font-bold">
+                              <ChevronDown
+                                className={cn("flex-shrink-0 transition duration-200", {
+                                  "-rotate-90": !row.getIsExpanded(),
+                                })}
+                                size={15}
+                                strokeWidth={2}
+                              />
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())} ({row.subRows.length})
+                            </span>
+                          </div>
+                        ) : isAggregated ? null : //   cell.getContext(), //   cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell, // flexRender(
+                        // )
+                        isPlaceholder ? null : (
+                          flexRender(cell.column.columnDef.cell, cell.getContext())
+                        )}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  {config?.isLoading ? (
+                    <div className="mx-auto flex w-min items-center space-x-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>Cargando...</span>
+                    </div>
+                  ) : config?.emptyComponent ? (
+                    config.emptyComponent
+                  ) : (
+                    "Sin resultados."
+                  )}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+
+        {paginationConfig && <DataTablePagination table={table} config={paginationConfig} />}
+      </div>
     </div>
   );
 }

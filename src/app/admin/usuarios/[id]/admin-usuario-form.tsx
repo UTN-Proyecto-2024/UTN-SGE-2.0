@@ -7,6 +7,7 @@ import { type z } from "zod";
 import { useEffect, useState } from "react";
 import { inputEditarUsuario } from "@/shared/filters/admin-usuarios-filter.schema";
 import { Switch } from "@/components/ui/switch";
+import ModalDrawer from "@/app/_components/modal/modal-drawer";
 
 type Props = {
   id: string;
@@ -60,6 +61,22 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
       setRolesDiccionario(newRoles);
     }
   }, [todosLosRoles]);
+
+  // Hack porque al presionar `Escape` dentro del modal se activa primero el return antes que se pueda volver a activar el switch
+  useEffect(() => {
+    const handleEscPress = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setShowMessage(false);
+        formHook.setValue("esDocente", true);
+      }
+    };
+    if (showMessage) {
+      window.addEventListener("keydown", handleEscPress);
+    }
+    return () => {
+      setTimeout(() => window.removeEventListener("keydown", handleEscPress), 0);
+    };
+  }, [showMessage, formHook]);
 
   if (isLoading) {
     return <div>Cargando...</div>;
@@ -149,6 +166,29 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
                       </div>
                     )}
                   />
+                  {showMessage && (
+                    <ModalDrawer
+                      titulo={"Confirmación"}
+                      open={showMessage}
+                      onOpenChange={(open) => setShowMessage(open)}
+                      submitText="Confirmar"
+                      onSubmit={() => {
+                        setShowMessage(false);
+                        formHook.setValue("esDocente", false);
+                      }}
+                      cancelText="Cancelar"
+                      onCancel={() => {
+                        setShowMessage(false);
+                        formHook.setValue("esDocente", true);
+                      }}
+                      isAlertDialog
+                    >
+                      <div>
+                        <span className="font-bold">El usuario tiene materias a cargo.</span> ¿esta seguro de esta
+                        acción?
+                      </div>
+                    </ModalDrawer>
+                  )}
                 </div>
                 <div className="mt-4 w-full">
                   <Controller

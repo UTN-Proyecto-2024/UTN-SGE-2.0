@@ -15,7 +15,7 @@ export const VerEquipoModal = (props: VerEquipoModalProps) => {
       prefetch={false}
       title="Detalles de equipo"
     >
-      <Button color={"outline"} className="h-8 w-8 px-1 py-1" variant={"icon"} icon={EyeIcon} type="button" />
+      <Button color={"outline"} size="xs" variant={"icon"} icon={EyeIcon} type="button" />
     </Link>
   );
 };

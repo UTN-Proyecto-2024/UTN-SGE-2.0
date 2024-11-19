@@ -12,7 +12,7 @@ export const getColumns = () => {
       header: "Código",
     }),
     colHelper.accessor("anio", {
-      header: "Año",
+      header: "",
       cell: ({ row }) => {
         const { anio } = row.original;
 

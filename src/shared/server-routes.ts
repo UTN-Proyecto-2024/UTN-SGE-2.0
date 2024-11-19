@@ -1,5 +1,6 @@
 export type AppRoute = {
   href: string;
+  redirectClick?: string;
   label: string;
   isPublic: boolean;
   inConstruction?: boolean;
@@ -69,6 +70,7 @@ export const LABORATORIO_ROUTE = {
       isPublic: false,
     },
     {
+      redirectClick: "/laboratorios/solicitudes?estatus=PENDIENTE",
       href: "/laboratorios/solicitudes",
       label: "Administrar reservas",
       isPublic: false,
@@ -88,6 +90,7 @@ export const LABORATORIO_ABIERTO_ROUTE = {
       isPublic: false,
     },
     {
+      redirectClick: "/laboratorio_abierto/solicitudes?estatus=PENDIENTE",
       href: "/laboratorio_abierto/solicitudes",
       label: "Administrar reservas",
       isPublic: false,
@@ -206,23 +209,18 @@ export const COMPROBANTE_ROUTE = {
 };
 
 export const REPORTES_ROUTE = {
-  href: "/reportes",
+  href: "/reportes/mes",
   label: "Reportes",
   isPublic: false,
   subRutas: [
     {
-      href: "/reportes",
-      label: "Asignaciones",
+      href: "/reportes/mes",
+      label: "Mes",
       isPublic: false,
     },
     {
-      href: "/reportes/bedelialab",
-      label: "BedelíaLab",
-      isPublic: false,
-    },
-    {
-      href: "/reportes/calendario",
-      label: "Calendario",
+      href: "/reportes/hoy",
+      label: "Hoy",
       isPublic: false,
     },
   ],
@@ -246,8 +244,8 @@ export const SGE_1_ROUTE = [
     label: "Inscripciones especiales",
     esExterna: true,
     isPublic: false,
-  }
-]
+  },
+];
 
 export const APP_ROUTES: AppRoute[] = [
   INICIO_ROUTE,
@@ -259,7 +257,7 @@ export const APP_ROUTES: AppRoute[] = [
   BIBLIOTECA_ROUTE,
   ADMIN_ROUTE,
   REPORTES_ROUTE,
-  ...SGE_1_ROUTE
+  ...SGE_1_ROUTE,
 ];
 
 export const USER_ROUTES = (id: string): AppRoute[] => [
