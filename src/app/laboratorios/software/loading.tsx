@@ -4,10 +4,19 @@ import LoadingSoftwareTable from "./_components/loading-software";
 import PageLayout from "@/components/ui/page-template";
 import { LABORATORIO_ROUTE } from "@/shared/server-routes";
 import { SoftwareNuevoEditar } from "./_components/actions/software-nuevo";
+import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
+import { SgeNombre } from "@prisma/client";
 
 export default function BibliotecaLoading() {
   return (
-    <PageLayout route={LABORATORIO_ROUTE} buttons={<SoftwareNuevoEditar />}>
+    <PageLayout
+      route={LABORATORIO_ROUTE}
+      buttons={
+        <TienePermiso permisos={[SgeNombre.APLICACIONES_ABM]}>
+          <SoftwareNuevoEditar />
+        </TienePermiso>
+      }
+    >
       <div className="relative flex w-full flex-col items-center justify-between space-y-2 md:flex-row-reverse  md:space-x-1.5 md:space-y-0">
         <div className="relative flex w-full flex-row justify-end md:w-auto md:basis-1/3">
           <Button color={"primary"} isLoading className="h-auto">

@@ -57,7 +57,10 @@ export const EquiposTable = ({ data, filters }: EquiposTableProps) => {
                 <TienePermiso permisos={[SgeNombre.EQUIPOS_ABM]}>
                   <EditarEquipoModal equipoId={original.id} />
                 </TienePermiso>
-                <VerEquipoModal equipoId={original.id} /> {/* TODO: ver que permiso poner */}
+                <TienePermiso permisos={[]}>
+                  {/* TODO: ver que permiso poner */}
+                  <VerEquipoModal equipoId={original.id} />
+                </TienePermiso>
               </>
             );
           },
