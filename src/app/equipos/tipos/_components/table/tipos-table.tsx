@@ -10,6 +10,8 @@ import { getColumns } from "./columns";
 import { useTiposQueryParam } from "../../_hooks/use-tipos-query-param";
 import { DataTablePaginationStandalone } from "@/components/ui/table/table-pagination-standalone";
 import { type inputGetTipos } from "@/shared/filters/equipos-tipos-filter.schema";
+import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
+import { SgeNombre } from "@prisma/client";
 
 type TiposData = RouterOutputs["equipos"]["getAllTipos"];
 type TiposFilters = z.infer<typeof inputGetTipos>;
@@ -42,13 +44,18 @@ export const TiposTable = ({ data, filters }: TiposTableProps) => {
           cell({ original }) {
             return (
               <>
-                <RemoverTipoModal
-                  tipoId={original.id}
-                  nombre={original.nombre ?? ""}
-                  imagen={original.imagen ?? ""}
-                  onSubmit={refresh}
-                />
-                <EditarTipoModal tipoId={original.id} />
+                <TienePermiso permisos={[SgeNombre.EQUIPOS_TIPO_ABM]}>
+                  <RemoverTipoModal
+                    tipoId={original.id}
+                    nombre={original.nombre ?? ""}
+                    imagen={original.imagen ?? ""}
+                    onSubmit={refresh}
+                  />
+                </TienePermiso>
+
+                <TienePermiso permisos={[SgeNombre.EQUIPOS_TIPO_ABM]}>
+                  <EditarTipoModal tipoId={original.id} />
+                </TienePermiso>
               </>
             );
           },
