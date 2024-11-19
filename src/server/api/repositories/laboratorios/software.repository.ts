@@ -10,9 +10,9 @@ import { type z } from "zod";
 
 type InputGetAll = z.infer<typeof inputGetSoftwareFilter>;
 export const getAllSoftware = async (ctx: { db: PrismaClient }, input: InputGetAll) => {
-  const { searchText } = input;
+  const { searchText, sedeId } = input;
 
-  const whereClause = Prisma.raw(searchText ? `s.nombre ILIKE '%${searchText}%'` : `1=1`);
+  const whereText = Prisma.raw(searchText ? `s.nombre ILIKE '%${searchText}%'` : `1=1`);
 
   const [software, laboratorios] = await ctx.db.$transaction([
     ctx.db.$queryRaw<
@@ -38,15 +38,18 @@ export const getAllSoftware = async (ctx: { db: PrismaClient }, input: InputGetA
             CASE WHEN sl."softwareId" IS NOT NULL THEN true ELSE false END
           ) AS laboratorios
         FROM "Software" s
-        CROSS JOIN "Laboratorio" l
+        ${Prisma.raw(sedeId ? `INNER JOIN "Laboratorio" l ON l."sedeId" = ${sedeId}` : `CROSS JOIN "Laboratorio" l`)}
         LEFT JOIN "SoftwareLaboratorio" sl ON s.id = sl."softwareId" AND l.id = sl."laboratorioId"
-        WHERE l."esReservable" = true AND ${whereClause}
+        WHERE l."esReservable" = true AND ${whereText}
         GROUP BY s.id, s.nombre;
       `,
     ctx.db.laboratorio.findMany({
       select: {
         id: true,
         nombre: true,
+      },
+      where: {
+        sedeId: sedeId ? { equals: Number(sedeId) } : undefined,
       },
     }),
   ]);

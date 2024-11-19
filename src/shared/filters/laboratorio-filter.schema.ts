@@ -20,6 +20,7 @@ export const inputGetSoftwareFilter = z.object({
   orderDirection: z.enum(["asc", "desc"]).default("asc").catch("asc"),
   searchText: z.string().default(""),
   nombre: z.string().optional(),
+  sedeId: z.string().optional(),
 });
 
 export const inputEliminarSoftware = inputGetSoftware;
