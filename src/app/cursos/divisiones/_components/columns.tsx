@@ -23,11 +23,9 @@ export const getColumns = () => {
       header: "Divisiones",
       cell: (info) => (
         <div className="flex flex-wrap items-center gap-x-2 gap-y-2">
+          {/* TODO: si pongo <TienePermiso> hay error de compilacion. */}
           {info.row.original.divisiones.map((division) => (
-            <TienePermiso permisos={[SgeNombre.DIVISIONES_ABM]}>
-              {/* TODO: si no tiene permisos, no va a ver ninguna division. No se si esta tan bien */}
-              <EditDivisionModal key={division.id} divisionId={division.id.toString()} divisionName={division.nombre} />
-            </TienePermiso>
+            <EditDivisionModal key={division.id} divisionId={division.id.toString()} divisionName={division.nombre} />
           ))}
         </div>
       ),
