@@ -2,13 +2,13 @@
 
 import React, { useState } from "react";
 import { type z } from "zod";
-import { useReportesQueryParam } from "../../_hooks/use-reportes-query-param";
-import type { inputGetAllSolicitudesReservaLaboratorioCerrado } from "@/shared/filters/reserva-laboratorio-filter.schema";
+import { useReportesQueryParam } from "../_hooks/use-reportes-query-param";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { addMonths, format, subMonths } from "date-fns";
+import { addMonths, format, subMonths, startOfMonth } from "date-fns";
 import { es } from "date-fns/locale";
+import type { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.schema";
 
-type ReportesFilters = z.infer<typeof inputGetAllSolicitudesReservaLaboratorioCerrado>;
+type ReportesFilters = z.infer<typeof inputGetAllLaboratorios>;
 
 type Props = {
   filters: ReportesFilters;
@@ -16,7 +16,7 @@ type Props = {
 
 export const ReportesFilterFecha = ({ filters }: Props) => {
   const { onFechaChange } = useReportesQueryParam(filters);
-  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [currentMonth, setCurrentMonth] = useState(startOfMonth(new Date()));
 
   const handlePreviousMonth = () => {
     const previousMonth = subMonths(currentMonth, 1);

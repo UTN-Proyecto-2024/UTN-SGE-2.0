@@ -4,10 +4,10 @@ import React, { useMemo, useState } from "react";
 import { Autocomplete } from "@/components/ui";
 import { type z } from "zod";
 import { estaDentroDe } from "@/shared/string-compare";
-import { useReportesQueryParam } from "../../_hooks/use-reportes-query-param";
-import type { inputGetAllSolicitudesReservaLaboratorioCerrado } from "@/shared/filters/reserva-laboratorio-filter.schema";
+import { useReportesQueryParam } from "../_hooks/use-reportes-query-param";
+import type { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.schema";
 
-type ReportesFilters = z.infer<typeof inputGetAllSolicitudesReservaLaboratorioCerrado>;
+type ReportesFilters = z.infer<typeof inputGetAllLaboratorios>;
 
 type Props = {
   filters: ReportesFilters;

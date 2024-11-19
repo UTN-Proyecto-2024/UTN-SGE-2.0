@@ -206,23 +206,18 @@ export const COMPROBANTE_ROUTE = {
 };
 
 export const REPORTES_ROUTE = {
-  href: "/reportes",
+  href: "/reportes/mes",
   label: "Reportes",
   isPublic: false,
   subRutas: [
     {
-      href: "/reportes",
-      label: "Asignaciones",
+      href: "/reportes/mes",
+      label: "Mes",
       isPublic: false,
     },
     {
-      href: "/reportes/bedelialab",
-      label: "BedelíaLab",
-      isPublic: false,
-    },
-    {
-      href: "/reportes/calendario",
-      label: "Calendario",
+      href: "/reportes/hoy",
+      label: "Hoy",
       isPublic: false,
     },
   ],

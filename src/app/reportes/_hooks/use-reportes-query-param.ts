@@ -1,11 +1,11 @@
 import { usePathname, useRouter } from "next/navigation";
 import { type z } from "zod";
 import { useCallback } from "react";
-import { inputGetAllSolicitudesReservaLaboratorioCerrado } from "@/shared/filters/reserva-laboratorio-filter.schema";
 import { endOfMonth, startOfMonth } from "date-fns";
 import _ from "lodash";
+import { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.schema";
 
-type ReservasFilters = z.infer<typeof inputGetAllSolicitudesReservaLaboratorioCerrado>;
+type ReservasFilters = z.infer<typeof inputGetAllLaboratorios>;
 
 const createQueryString = (filters: ReservasFilters) => {
   const params = new URLSearchParams(_.omitBy(filters, (value) => _.isUndefined(value)));
@@ -14,12 +14,12 @@ const createQueryString = (filters: ReservasFilters) => {
 
 const changeSede = (filters: ReservasFilters, sede: string): ReservasFilters => {
   const newFilters: ReservasFilters = { ...filters, sede };
-  return inputGetAllSolicitudesReservaLaboratorioCerrado.parse(newFilters);
+  return inputGetAllLaboratorios.parse(newFilters);
 };
 
 const changeTurno = (filters: ReservasFilters, turno?: "MANANA" | "TARDE" | "NOCHE"): ReservasFilters => {
   const newFilters: ReservasFilters = { ...filters, turno };
-  return inputGetAllSolicitudesReservaLaboratorioCerrado.parse(newFilters);
+  return inputGetAllLaboratorios.parse(newFilters);
 };
 
 const changeFecha = (filters: ReservasFilters, fecha: Date): ReservasFilters => {
@@ -28,7 +28,7 @@ const changeFecha = (filters: ReservasFilters, fecha: Date): ReservasFilters => 
     desde: startOfMonth(fecha).toISOString().split("T")[0],
     hasta: endOfMonth(fecha).toISOString().split("T")[0],
   };
-  return inputGetAllSolicitudesReservaLaboratorioCerrado.parse(newFilters);
+  return inputGetAllLaboratorios.parse(newFilters);
 };
 
 export const useReportesQueryParam = (filters: ReservasFilters) => {

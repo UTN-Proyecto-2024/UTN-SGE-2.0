@@ -9,6 +9,7 @@ import { divisionRouter } from "./routers/division";
 import { softwareRouter } from "./routers/software";
 import { notificacionRouter } from "./routers/notificaciones";
 import { usuarioPermiso } from "./routers/permisos";
+import { laboratoriosRouter } from "./routers/laboratorios";
 
 /**
  * This is the primary router for your server.
@@ -22,6 +23,7 @@ export const appRouter = createTRPCRouter({
   cursos: cursosRouter,
   admin: adminRouter,
   reservas: reservasRouter,
+  laboratorios: laboratoriosRouter,
   division: divisionRouter,
   software: softwareRouter,
   notificacion: notificacionRouter,
