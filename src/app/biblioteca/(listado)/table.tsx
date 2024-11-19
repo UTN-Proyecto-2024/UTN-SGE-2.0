@@ -11,6 +11,8 @@ import { EditLibroModal } from "./edit-libro";
 import { type SortingState } from "@tanstack/react-table";
 import { getColumns } from "./columns";
 import { VerLibroModal } from "./ver-libro";
+import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
+import { SgeNombre } from "@prisma/client";
 
 type LibroData = RouterOutputs["biblioteca"]["getAll"];
 type BibliotecaFilters = z.infer<typeof inputGetBooks>;
@@ -45,14 +47,20 @@ export const BibliotecaTable = ({ data, filters }: BibliotecaTableProps) => {
           cell({ original }) {
             return (
               <>
-                <RemoveLibroModal
-                  libroId={original.id}
-                  nombre={original.titulo}
-                  disponible={original.disponible}
-                  onSubmit={refresh}
-                />
-                <EditLibroModal libroId={original.id} />
-                <VerLibroModal libroId={original.id} />
+                <TienePermiso permisos={[SgeNombre.BIBLIOTECA_ABM_LIBRO]}>
+                  <RemoveLibroModal
+                    libroId={original.id}
+                    nombre={original.titulo}
+                    disponible={original.disponible}
+                    onSubmit={refresh}
+                  />
+                </TienePermiso>
+                <TienePermiso permisos={[SgeNombre.BIBLIOTECA_ABM_LIBRO]}>
+                  <EditLibroModal libroId={original.id} />
+                </TienePermiso>
+                <TienePermiso permisos={[SgeNombre.BIBLIOTECA_VER_DETALLES_LIBRO]}>
+                  <VerLibroModal libroId={original.id} />
+                </TienePermiso>
               </>
             );
           },
