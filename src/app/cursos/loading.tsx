@@ -6,6 +6,8 @@ import PageLayout from "@/components/ui/page-template";
 import { CURSOS_ROUTE } from "@/shared/server-routes";
 import { CursosNuevoCurso } from "./(listado)/cursos-new-curso";
 import { CargarCursos } from "./(listado)/cursos-bulk-insert";
+import { TienePermiso } from "../_components/permisos/tienePermiso";
+import { SgeNombre } from "@prisma/client";
 
 export default function CursoLoading() {
   return (
@@ -13,8 +15,12 @@ export default function CursoLoading() {
       route={CURSOS_ROUTE}
       buttons={
         <>
-          <CursosNuevoCurso />
-          <CargarCursos />
+          <TienePermiso permisos={[SgeNombre.CURSOS_ABM]}>
+            <CursosNuevoCurso />
+          </TienePermiso>
+          <TienePermiso permisos={[SgeNombre.CURSOS_ABM]}>
+            <CargarCursos />
+          </TienePermiso>
         </>
       }
     >

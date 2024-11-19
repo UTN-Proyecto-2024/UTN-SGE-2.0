@@ -7,6 +7,8 @@ import { type ReadonlyURLSearchParams } from "next/navigation";
 import PageLayout from "@/components/ui/page-template";
 import { CURSOS_ROUTE } from "@/shared/server-routes";
 import { CursosNuevoCurso } from "../(listado)/cursos-new-curso";
+import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
+import { SgeNombre } from "@prisma/client";
 
 type PageProps = {
   searchParams: ReadonlyURLSearchParams;
@@ -17,7 +19,14 @@ export default function Page({ searchParams }: PageProps) {
   const filter_as_key = useMemo(() => JSON.stringify(filters), [filters]);
 
   return (
-    <PageLayout buttons={<CursosNuevoCurso />} route={CURSOS_ROUTE}>
+    <PageLayout
+      buttons={
+        <TienePermiso permisos={[SgeNombre.CURSOS_ABM]}>
+          <CursosNuevoCurso />
+        </TienePermiso>
+      }
+      route={CURSOS_ROUTE}
+    >
       <ActionButtons filters={filters} />
       <Suspense key={filter_as_key} fallback={<LoadingCursosTable />}>
         <CursoTableContainer filters={filters} filterByUser={true} />
