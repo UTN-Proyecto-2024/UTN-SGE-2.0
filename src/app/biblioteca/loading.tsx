@@ -3,10 +3,19 @@ import LoadingBibliotecaTable from "./(listado)/loading-biblioteca-table";
 import PageLayout from "@/components/ui/page-template";
 import { BIBLIOTECA_ROUTE } from "@/shared/server-routes";
 import { BibliotecaNewLibro } from "./(listado)/biblioteca-new-book";
+import { TienePermiso } from "../_components/permisos/tienePermiso";
+import { SgeNombre } from "@prisma/client";
 
 export default function BibliotecaLoading() {
   return (
-    <PageLayout route={BIBLIOTECA_ROUTE} buttons={<BibliotecaNewLibro />}>
+    <PageLayout
+      route={BIBLIOTECA_ROUTE}
+      buttons={
+        <TienePermiso permisos={[SgeNombre.BIBLIOTECA_ABM_LIBRO]}>
+          <BibliotecaNewLibro />
+        </TienePermiso>
+      }
+    >
       <div className="relative flex w-full flex-col items-center justify-between space-y-2 md:flex-row-reverse  md:space-x-1.5 md:space-y-0">
         <div className="w-full md:basis-1/3">
           <Skeleton className="h-10 w-full" />

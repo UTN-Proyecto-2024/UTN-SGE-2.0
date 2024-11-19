@@ -7,6 +7,8 @@ import { inputGetEquipos } from "@/shared/filters/equipos-filter.schema";
 import PageLayout from "@/components/ui/page-template";
 import { EQUIPOS_ROUTE } from "@/shared/server-routes";
 import { EquiposNuevoEquipoModal } from "./(listado)/equipos-nuevo-equipo";
+import { TienePermiso } from "../_components/permisos/tienePermiso";
+import { SgeNombre } from "@prisma/client";
 
 type PageProps = {
   searchParams: ReadonlyURLSearchParams;
@@ -18,7 +20,14 @@ export default function Page({ searchParams }: PageProps) {
   const filter_as_key = useMemo(() => JSON.stringify(filters), [filters]);
 
   return (
-    <PageLayout route={EQUIPOS_ROUTE} buttons={<EquiposNuevoEquipoModal />}>
+    <PageLayout
+      route={EQUIPOS_ROUTE}
+      buttons={
+        <TienePermiso permisos={[SgeNombre.EQUIPOS_ABM]}>
+          <EquiposNuevoEquipoModal />
+        </TienePermiso>
+      }
+    >
       <ActionButtons filters={filters} />
       <div className="w-full">
         <Suspense key={filter_as_key} fallback={<LoadingEquiposTable />}>
