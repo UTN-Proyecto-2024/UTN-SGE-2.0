@@ -87,7 +87,7 @@ const sgePlugin = plugin(
             secondary: "hsl(var(--charcoal))",
           },
           primary: {
-            DEFAULT: "hsl(var(--primary))",
+            DEFAULT: colors.blue[100],
             foreground: "hsl(var(--primary-foreground))",
           },
           danger: {

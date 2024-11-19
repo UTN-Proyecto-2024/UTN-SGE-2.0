@@ -1,4 +1,3 @@
-import { construirOrderByDinamico } from "@/shared/dynamic-orderby";
 import type {
   inputAddSoftware,
   inputEditarSoftware,
@@ -6,70 +5,53 @@ import type {
   inputGetSoftware,
   inputGetSoftwareFilter,
 } from "@/shared/filters/laboratorio-filter.schema";
-import { type Prisma, type PrismaClient } from "@prisma/client";
+import { Prisma, type PrismaClient } from "@prisma/client";
 import { type z } from "zod";
 
 type InputGetAll = z.infer<typeof inputGetSoftwareFilter>;
 export const getAllSoftware = async (ctx: { db: PrismaClient }, input: InputGetAll) => {
-  const { pageIndex, pageSize, searchText } = input;
+  const { searchText } = input;
 
-  const softwareWhereLibro: Prisma.SoftwareWhereInput = {
-    ...(input?.searchText
-      ? {
-          OR: [
-            {
-              nombre: {
-                contains: searchText ?? undefined,
-                mode: "insensitive",
-              },
-            },
-            {
-              estado: {
-                contains: searchText ?? undefined,
-                mode: "insensitive",
-              },
-            },
-            {
-              version: {
-                contains: searchText ?? undefined,
-                mode: "insensitive",
-              },
-            },
-          ],
-        }
-      : {}),
-  };
+  const whereClause = Prisma.raw(searchText ? `s.nombre ILIKE '%${searchText}%'` : `1=1`);
 
-  const ordenSoftware: Prisma.SoftwareOrderByWithRelationInput = construirOrderByDinamico(
-    input?.orderBy ?? "",
-    input?.orderDirection ?? "",
-  );
-
-  const [count, software] = await ctx.db.$transaction([
-    ctx.db.software.count({
-      where: softwareWhereLibro,
-    }),
-    ctx.db.software.findMany({
-      where: softwareWhereLibro,
-      include: {
-        laboratorios: {
-          include: {
-            laboratorio: {
-              select: {
-                id: true,
-                nombre: true,
-              },
-            },
-          },
-        },
+  const [software, laboratorios] = await ctx.db.$transaction([
+    ctx.db.$queryRaw<
+      {
+        id: number;
+        nombre: string;
+        version: string;
+        estado: string;
+        windows: boolean;
+        linux: boolean;
+        laboratorios: Record<string, boolean>;
+      }[]
+    >`
+        SELECT
+          s.id AS id,
+          s.nombre AS nombre,
+          s.version AS version,
+          s.estado AS estado,
+          s.windows AS windows,
+          s.linux AS linux,
+          json_object_agg(
+            l.id,
+            CASE WHEN sl."softwareId" IS NOT NULL THEN true ELSE false END
+          ) AS laboratorios
+        FROM "Software" s
+        CROSS JOIN "Laboratorio" l
+        LEFT JOIN "SoftwareLaboratorio" sl ON s.id = sl."softwareId" AND l.id = sl."laboratorioId"
+        WHERE l."esReservable" = true AND ${whereClause}
+        GROUP BY s.id, s.nombre;
+      `,
+    ctx.db.laboratorio.findMany({
+      select: {
+        id: true,
+        nombre: true,
       },
-      orderBy: ordenSoftware,
-      skip: parseInt(pageIndex) * parseInt(pageSize),
-      take: parseInt(pageSize),
     }),
   ]);
 
-  return { count, software };
+  return { software, laboratorios };
 };
 
 type InputGetSoftware = z.infer<typeof inputGetSoftware>;
