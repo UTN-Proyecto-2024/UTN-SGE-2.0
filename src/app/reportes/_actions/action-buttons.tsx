@@ -8,13 +8,14 @@ type ReportesFilters = z.infer<typeof inputGetAllLaboratorios>;
 
 type ActionButtonsProps = {
   filters: ReportesFilters;
+  monthly?: boolean;
 };
 
-export const ActionButtons = ({ filters }: ActionButtonsProps) => {
+export const ActionButtons = ({ filters, monthly }: ActionButtonsProps) => {
   return (
     <div className="relative flex w-full flex-col items-center justify-between space-y-3 md:space-x-1.5 lg:flex-row lg:space-y-0">
       <div className="w-full space-y-3 md:flex md:flex-row md:space-x-3 md:space-y-0">
-        <ReportesFilterFecha filters={filters} />
+        {monthly && <ReportesFilterFecha filters={filters} />}
         <div className="md:basis-1/5">
           <ReportesFilterSede filters={filters} />
         </div>

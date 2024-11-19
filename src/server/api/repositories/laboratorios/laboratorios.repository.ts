@@ -6,41 +6,37 @@ import { construirFechaReservaSinOffset } from "@/shared/get-date";
 type InputGetAllReservas = z.infer<typeof inputGetAllLaboratorios>;
 export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetAllReservas) => {
   const { sede, turno, desde, hasta } = input;
-  const [laboratorios] = await ctx.db.$transaction([
-    ctx.db.laboratorio.findMany({
-      include: {
-        reservaLaboratorioCerrado: {
-          include: {
-            reserva: true,
-            curso: {
-              include: {
-                division: true,
-                materia: true,
-                profesor: true,
-              },
-            },
-          },
-          where: {
-            reserva: {
-              fechaHoraInicio: {
-                gte: desde ? construirFechaReservaSinOffset(desde) : undefined,
-                lte: hasta ? construirFechaReservaSinOffset(hasta) : undefined,
-              },
-            },
-            curso: {
-              turno,
+  return await ctx.db.laboratorio.findMany({
+    include: {
+      reservaLaboratorioCerrado: {
+        include: {
+          reserva: true,
+          curso: {
+            include: {
+              division: true,
+              materia: true,
+              profesor: true,
             },
           },
         },
-      },
-      where: {
-        sedeId: sede ? parseInt(sede) : undefined,
-        nombre: {
-          in: ["LAB101", "LAB104", "LAB105", "LAB108", "LAB109", "LAB110", "LAB061", "LAB062", "LAB063", "LAB064"],
+        where: {
+          reserva: {
+            fechaHoraInicio: {
+              gte: desde ? construirFechaReservaSinOffset(desde) : undefined,
+              lte: hasta ? construirFechaReservaSinOffset(hasta) : undefined,
+            },
+          },
+          curso: {
+            turno,
+          },
         },
       },
-    }),
-  ]);
-
-  return laboratorios;
+    },
+    where: {
+      sedeId: sede ? parseInt(sede) : undefined,
+      nombre: {
+        in: ["LAB101", "LAB104", "LAB105", "LAB108", "LAB109", "LAB110", "LAB061", "LAB062", "LAB063", "LAB064"],
+      },
+    },
+  });
 };
