@@ -33,12 +33,6 @@ export const verificarPermisoUsuario = async (
 ) => {
   const permisos = Array.isArray(sgePermisoNombre) ? sgePermisoNombre : [sgePermisoNombre];
 
-  console.log(`
-    #########################################
-    Permisos: ${JSON.stringify(permisos)}
-    #########################################
-    `);
-
   const result = await ctx.db.$queryRaw<{ existe: boolean }[]>`
     SELECT EXISTS
     (
