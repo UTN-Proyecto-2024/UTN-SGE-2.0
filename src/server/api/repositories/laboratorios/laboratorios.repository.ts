@@ -34,9 +34,10 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
     },
     where: {
       sedeId: sede ? parseInt(sede) : undefined,
-      nombre: {
-        in: ["LAB101", "LAB104", "LAB105", "LAB108", "LAB109", "LAB110", "LAB061", "LAB062", "LAB063", "LAB064"],
-      },
+      incluirEnReporte: true,
+    },
+    orderBy: {
+      nombre: "asc",
     },
   });
 };

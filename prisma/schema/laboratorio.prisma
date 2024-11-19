@@ -4,7 +4,8 @@ model Laboratorio {
     nombre  String
     tienePc Boolean @default(false)
 
-    esReservable Boolean @default(false)
+    esReservable     Boolean @default(false)
+    incluirEnReporte Boolean @default(false)
 
     sedeId Int
     sede   Sede @relation(fields: [sedeId], references: [id], onDelete: Cascade)
