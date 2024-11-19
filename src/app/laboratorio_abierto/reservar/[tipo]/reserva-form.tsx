@@ -34,12 +34,12 @@ export type DataLaboratorioAbiertoBack = z.infer<typeof inputEditarReservaLabora
 const cantidadPersonas = [...Array(8).keys()].map((i) => (i + 1).toString());
 
 const turnos = [
-  { start: "10:00", end: "12:00", label: "10:00 - 12:00" },
-  { start: "12:00", end: "14:00", label: "12:00 - 14:00" },
-  { start: "14:00", end: "16:00", label: "14:00 - 16:00" },
-  { start: "16:00", end: "18:00", label: "16:00 - 18:00" },
-  { start: "18:00", end: "20:00", label: "18:00 - 20:00" },
-  { start: "20:00", end: "22:00", label: "20:00 - 22:00" },
+  { label: "10:00 - 12:00", start: "10:00", end: "12:00" },
+  { label: "12:00 - 14:00", start: "12:00", end: "14:00" },
+  { label: "14:00 - 16:00", start: "14:00", end: "16:00" },
+  { label: "16:00 - 18:00", start: "16:00", end: "18:00" },
+  { label: "18:00 - 20:00", start: "18:00", end: "20:00" },
+  { label: "20:00 - 22:00", start: "20:00", end: "22:00" },
 ];
 
 export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: Props) => {
