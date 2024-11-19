@@ -7,7 +7,6 @@ import { SoftwareNuevoEditar } from "../actions/software-nuevo";
 import EliminarSoftwareModal from "../actions/software-eliminar";
 import { useSoftwareQueryParam } from "@/app/laboratorios/_hooks/use-software-query-param";
 import { type SortingState } from "@tanstack/react-table";
-import { DataTablePaginationStandalone } from "@/components/ui/table/table-pagination-standalone";
 import { type z } from "zod";
 import { type inputGetSoftwareFilter } from "@/shared/filters/laboratorio-filter.schema";
 
@@ -20,19 +19,19 @@ type BibliotecaTableProps = {
 };
 
 export const SoftwareTable = ({ data, filters }: BibliotecaTableProps) => {
-  const { refresh, pagination, sorting, onSortingChange, onPaginationChange } = useSoftwareQueryParam(filters);
-  const columns = getColumns();
+  const { refresh, onSortingChange } = useSoftwareQueryParam(filters);
+
+  const { software, laboratorios } = data;
+
+  const columns = getColumns(laboratorios);
 
   return (
     <>
       <DataTable
-        data={data.software ?? []}
+        data={software ?? []}
         columns={columns}
         manualSorting
-        pageSize={pagination.pageSize}
-        pageIndex={pagination.pageIndex}
         config={{
-          sorting,
           onSortingChange: (updaterOrValue: SortingState | ((prevState: SortingState) => SortingState)) => {
             return onSortingChange(typeof updaterOrValue === "function" ? updaterOrValue([]) : updaterOrValue);
           },
@@ -48,12 +47,6 @@ export const SoftwareTable = ({ data, filters }: BibliotecaTableProps) => {
             );
           },
         }}
-      />
-      <DataTablePaginationStandalone
-        pageIndex={pagination.pageIndex}
-        pageSize={pagination.pageSize}
-        rowCount={data.count}
-        onChange={onPaginationChange}
       />
     </>
   );
