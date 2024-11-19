@@ -11,6 +11,8 @@ import { type SortingState } from "@tanstack/react-table";
 import { getEquiposColumnas } from "./columns";
 import { type inputGetEquipos } from "@/shared/filters/equipos-filter.schema";
 import { VerEquipoModal } from "./ver-equipo";
+import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
+import { SgeNombre } from "@prisma/client";
 
 type EquiposData = RouterOutputs["equipos"]["getAll"];
 type EquiposFilters = z.infer<typeof inputGetEquipos>;
@@ -44,14 +46,21 @@ export const EquiposTable = ({ data, filters }: EquiposTableProps) => {
           cell({ original }) {
             return (
               <>
-                <RemoveEquipoModal
-                  equipoId={original.id}
-                  nombre={original.inventarioId}
-                  disponible={original.disponible}
-                  onSubmit={refresh}
-                />
-                <EditarEquipoModal equipoId={original.id} />
-                <VerEquipoModal equipoId={original.id} />
+                <TienePermiso permisos={[SgeNombre.EQUIPOS_ABM]}>
+                  <RemoveEquipoModal
+                    equipoId={original.id}
+                    nombre={original.inventarioId}
+                    disponible={original.disponible}
+                    onSubmit={refresh}
+                  />
+                </TienePermiso>
+                <TienePermiso permisos={[SgeNombre.EQUIPOS_ABM]}>
+                  <EditarEquipoModal equipoId={original.id} />
+                </TienePermiso>
+                <TienePermiso permisos={[]}>
+                  {/* TODO: ver que permiso poner */}
+                  <VerEquipoModal equipoId={original.id} />
+                </TienePermiso>
               </>
             );
           },

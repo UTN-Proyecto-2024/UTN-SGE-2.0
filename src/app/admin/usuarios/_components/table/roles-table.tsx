@@ -10,6 +10,8 @@ import { useAdminUsuariosQueryParam } from "../../_hooks/use-admin-usuarios-quer
 import { type inputGetUsuarios } from "@/shared/filters/admin-usuarios-filter.schema";
 import { DataTablePaginationStandalone } from "@/components/ui/table/table-pagination-standalone";
 import { DetallesUsuarioPage } from "@/app/admin/usuarios/_components/table/detalles-usuario";
+import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
+import { SgeNombre } from "@prisma/client";
 
 type UsuariosData = RouterOutputs["admin"]["usuarios"]["getAll"];
 type AdminUsuariosFilters = z.infer<typeof inputGetUsuarios>;
@@ -43,8 +45,13 @@ export const AdminUsuariosTable = ({ data, filters }: Props) => {
           cell({ original }) {
             return (
               <>
-                <EditarUsuarioModal usuarioId={original.id} />
-                <DetallesUsuarioPage usuarioId={original.id} />
+                <TienePermiso permisos={[]}>
+                  {/* TODO: no se cual seria el permiso que va??*/}
+                  <EditarUsuarioModal usuarioId={original.id} />
+                </TienePermiso>
+                <TienePermiso permisos={[SgeNombre.ADMIN_VER_FICHA_USUARIO]}>
+                  <DetallesUsuarioPage usuarioId={original.id} />
+                </TienePermiso>
               </>
             );
           },

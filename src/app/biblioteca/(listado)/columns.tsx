@@ -1,6 +1,8 @@
 import { type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { PrestarDevolverLibro } from "./estado-libro";
+import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
+import { SgeNombre } from "@prisma/client";
 
 type LibroData = RouterOutputs["biblioteca"]["getAll"]["libros"][number];
 
@@ -56,7 +58,11 @@ export const getColumns = () => {
       cell: ({ row }) => {
         const { disponible, id } = row.original;
 
-        return <PrestarDevolverLibro disponible={disponible} id={id} />;
+        return (
+          <TienePermiso permisos={[SgeNombre.BIBLIOTECA_PRESTAMO_PRESTAR]}>
+            <PrestarDevolverLibro disponible={disponible} id={id} />
+          </TienePermiso>
+        );
       },
       meta: {
         header: {

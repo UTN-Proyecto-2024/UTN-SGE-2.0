@@ -8,6 +8,8 @@ import { inputGetTipos } from "@/shared/filters/equipos-tipos-filter.schema";
 import { EQUIPOS_ROUTE } from "@/shared/server-routes";
 import { EquiposTiposNuevoTipo } from "./_components/buttons/nuevo-tipo-button";
 import PageLayout from "@/components/ui/page-template";
+import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
+import { SgeNombre } from "@prisma/client";
 
 type PageProps = {
   searchParams: ReadonlyURLSearchParams;
@@ -19,7 +21,14 @@ export default function Page({ searchParams }: PageProps) {
   const filter_as_key = useMemo(() => JSON.stringify(filters), [filters]);
 
   return (
-    <PageLayout route={EQUIPOS_ROUTE} buttons={<EquiposTiposNuevoTipo />}>
+    <PageLayout
+      route={EQUIPOS_ROUTE}
+      buttons={
+        <TienePermiso permisos={[SgeNombre.EQUIPOS_TIPO_ABM]}>
+          <EquiposTiposNuevoTipo />
+        </TienePermiso>
+      }
+    >
       <EquiposTiposActionButtons filters={filters} />
       <Suspense key={filter_as_key} fallback={<LoadingTiposTable columns={equiposColumnas} />}>
         <TiposTableContainer filters={filters} />

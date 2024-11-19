@@ -8,6 +8,7 @@ import { EditarLaboratorioModal } from "./edit-laboratorio";
 import { getColumns } from "./columns";
 import { useAdminLaboratoriosQueryParam } from "../../_hooks/use-admin-laboratorios-query-param";
 import { type inputGetLaboratorios } from "@/shared/filters/admin-laboratorios-filter.schema";
+import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
 
 type LaboratoriosData = RouterOutputs["admin"]["laboratorios"]["getAll"];
 type AdminLaboratoriosFilters = z.infer<typeof inputGetLaboratorios>;
@@ -33,8 +34,12 @@ export const AdminLaboratoriosTable = ({ data, filters }: LaboratorioTableProps)
           cell({ original }) {
             return (
               <>
-                <RemoverLaboratorioModal laboratorioId={original.id} nombre={original.nombre} onSubmit={refresh} />
-                <EditarLaboratorioModal laboratorioId={original.id} />
+                <TienePermiso permisos={[]}>
+                  <RemoverLaboratorioModal laboratorioId={original.id} nombre={original.nombre} onSubmit={refresh} />
+                </TienePermiso>
+                <TienePermiso permisos={[]}>
+                  <EditarLaboratorioModal laboratorioId={original.id} />
+                </TienePermiso>
               </>
             );
           },

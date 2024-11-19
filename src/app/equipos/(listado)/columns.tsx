@@ -1,6 +1,8 @@
 import { type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { PrestarDevolverEquipo } from "./estado-equipo";
+import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
+import { SgeNombre } from "@prisma/client";
 
 type EquipoData = RouterOutputs["equipos"]["getAll"]["equipos"][number];
 
@@ -35,7 +37,11 @@ export const getEquiposColumnas = () => {
       cell: ({ row }) => {
         const { disponible, id } = row.original;
 
-        return <PrestarDevolverEquipo disponible={disponible} id={id} />;
+        return (
+          <TienePermiso permisos={[SgeNombre.EQUIPOS_PRESTAMO_PRESTAR]}>
+            <PrestarDevolverEquipo disponible={disponible} id={id} />
+          </TienePermiso>
+        );
       },
       meta: {
         header: {
