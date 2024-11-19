@@ -22,9 +22,9 @@ export default function RenovarPrestamoEquipoModal({ equipoId }: RenovarPrestamo
   return (
     <ModalDrawer
       trigger={
-        <span>
+        <div className="flex flex-row justify-center">
           <RenovarButton />
-        </span>
+        </div>
       }
       titulo={`Renovar equipo`}
       open={open}

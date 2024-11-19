@@ -82,7 +82,14 @@ export const EditTutorModal = ({ isOpen, onClose, tutor }: Props) => {
                   <div className="flex flex-col space-y-4 px-0 md:px-6">
                     <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
                       <div className="mt-4 w-full">
-                        <FormInput label={"Nombre"} control={control} name="nombre" type={"text"} className="mt-2" />
+                        <FormInput
+                          readOnly
+                          label={"Nombre"}
+                          control={control}
+                          name="nombre"
+                          type={"text"}
+                          className="mt-2"
+                        />
                       </div>
                     </div>
 

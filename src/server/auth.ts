@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email", placeholder: "juanperez@frba.utn.edu.ar" },
       },
       async authorize(credentials) {
-        if (credentials && credentials.email.split("@")[1] === "frba.utn.edu.ar") {
+        if (credentials) {
           const user = await db.user.findUnique({ where: { email: credentials.email } });
           return user;
         }

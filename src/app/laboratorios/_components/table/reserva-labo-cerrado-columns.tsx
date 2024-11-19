@@ -1,8 +1,7 @@
 import { api, type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { esFechaPasada, getDateISOString, getTimeISOString } from "@/shared/get-date";
+import { esFechaPasada, getTimeISOString } from "@/shared/get-date";
 import { BadgeEstatusReserva } from "@/app/_components/badge-estatus-reserva";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2 } from "lucide-react";
 
 type LaboratorioCerradoReservaData =
@@ -12,18 +11,14 @@ export const getColumnasReservasLaboratorioCerrado = ({ filterByUser }: { filter
   const colHelper = createColumnHelper<LaboratorioCerradoReservaData>();
 
   const columnasBasicas = [
-    colHelper.accessor("id", {
-      header: "Reserva #",
+    colHelper.accessor("fechaTexto", {
+      header: "",
     }),
-    colHelper.display({
-      header: "Fecha",
-      cell: ({ row }) => {
-        const { reserva } = row.original;
-
-        const fecha = getDateISOString(reserva.fechaHoraInicio);
-
-        return `${fecha}`;
-      },
+    colHelper.accessor("turnoTexto", {
+      header: "",
+    }),
+    colHelper.accessor("id", {
+      header: "#",
     }),
     colHelper.accessor("reserva.fechaHoraInicio", {
       header: "Hora Inicio",
@@ -34,6 +29,11 @@ export const getColumnasReservasLaboratorioCerrado = ({ filterByUser }: { filter
 
         return fecha;
       },
+      meta: {
+        cell: {
+          align: "center",
+        },
+      },
     }),
     colHelper.accessor("reserva.fechaHoraFin", {
       header: "Hora Fin",
@@ -43,6 +43,11 @@ export const getColumnasReservasLaboratorioCerrado = ({ filterByUser }: { filter
         const fecha = getTimeISOString(reserva.fechaHoraFin);
 
         return fecha;
+      },
+      meta: {
+        cell: {
+          align: "center",
+        },
       },
     }),
     colHelper.accessor("curso.division.nombre", {
@@ -123,7 +128,7 @@ export const getColumnasReservasLaboratorioCerrado = ({ filterByUser }: { filter
 
 export const getColumnasResevaNames = () => {
   return [
-    "Prestamo #",
+    "#",
     "Laboratorio",
     "Nombre Laboratorio",
     "Sede",

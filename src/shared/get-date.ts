@@ -1,3 +1,5 @@
+import { TurnoCurso } from "@prisma/client";
+
 /**
  * Devuelve una fecha con el formato yyyy-MM-dd
  * @param plusExtraDays cantidad de dias a añadir a la fecha actual, por defecto es 0
@@ -148,7 +150,7 @@ export const construirFechaReservaSinOffset = (fecha: string) => {
 };
 
 // Mapeo de horarios por turno
-const horariosTurnos: Record<string, Record<number, string>> = {
+export const horariosTurnos: Record<string, Record<number, string>> = {
   MANANA: {
     0: "07:45",
     1: "08:30",
@@ -261,4 +263,34 @@ export const getFechaHumanoTexto = (fecha: Date | undefined) => {
   const year = fecha.getFullYear();
 
   return `${nombreDia} ${day} de ${nombreMes} de ${year}`;
+};
+
+/**
+ * Devuelve una fecha en formato dddd DD de MMMM de YYYY
+ * @param fecha Fecha en formato Date (Contiene hora, minutos y segundos)
+ * @returns Fecha en formato dddd DD de MMMM de YYYY
+ */
+export const getFechaddddDDMMYYYY = (fecha: Date | undefined) => {
+  if (!fecha) return "";
+
+  const dayName = fecha.toLocaleString("es-ES", { weekday: "long" });
+  const nombreDia = dayName[0]?.toUpperCase() + dayName.slice(1);
+
+  const day = fecha.getDate();
+  const month = fecha.getMonth() + 1;
+  const year = fecha.getFullYear();
+
+  return `${nombreDia} ${day}/${month}/${year}`;
+};
+
+const mapCurso = new Map<TurnoCurso, string>([
+  [TurnoCurso.MANANA, "Mañana"],
+  [TurnoCurso.TARDE, "Tarde"],
+  [TurnoCurso.NOCHE, "Noche"],
+]);
+
+export const getTurnoTexto = (turno: TurnoCurso | undefined) => {
+  if (!turno) return "";
+
+  return mapCurso.get(turno) ?? "";
 };

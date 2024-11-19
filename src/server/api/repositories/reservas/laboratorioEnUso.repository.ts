@@ -1,4 +1,4 @@
-import { type PrismaClient, type LaboratorioAbiertoTipo, Prisma, ReservaEstatus } from "@prisma/client";
+import { type PrismaClient, Prisma, ReservaEstatus } from "@prisma/client";
 import type { DefaultArgs } from "@prisma/client/runtime/library";
 import { getErrorLaboratorioOcupado } from "../../services/helper";
 import { type inputGetReservasExistentesDeLaboratorio } from "@/shared/filters/laboratorio-en-uso.schema";
@@ -134,7 +134,6 @@ type Laboratorio = {
   nombre: string;
   tienePc: boolean;
   esReservable: boolean;
-  laboratorioAbiertoTipo: LaboratorioAbiertoTipo;
   sedeId: number;
   estaOcupado: boolean;
   armarios: {
@@ -173,7 +172,6 @@ export const obtenerTodasLasReservasEnHorario = async (
         "l"."sedeId",
         "l"."tienePc",
         "l"."esReservable",
-        "l"."laboratorioAbiertoTipo",
         CASE
             WHEN "r"."laboratorioId" IS NOT NULL THEN true
             ELSE false

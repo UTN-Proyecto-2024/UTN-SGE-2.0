@@ -2,10 +2,12 @@ import { type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { LinuxLogo, WindowsLogo } from "@/app/_components/utn-logo";
+import { CheckIcon, MinusIcon } from "lucide-react";
 
 type SoftwareData = RouterOutputs["software"]["getAll"]["software"][number];
+type LaboratorioData = RouterOutputs["software"]["getAll"]["laboratorios"];
 
-export const getColumns = () => {
+export const getColumns = (laboratorios: LaboratorioData) => {
   const colHelper = createColumnHelper<SoftwareData>();
 
   return [
@@ -42,24 +44,25 @@ export const getColumns = () => {
     colHelper.accessor("estado", {
       header: "Estado",
     }),
-    colHelper.display({
-      header: "Laboratorios",
-      cell: (info) => {
-        const laboratorios = info.row.original.laboratorios;
-        return (
-          <div className="flex flex-row ">
-            {laboratorios.map((lab) => (
-              <Badge key={lab.laboratorio.id} color="aqua" label={lab.laboratorio.nombre} />
-            ))}
-          </div>
-        );
-      },
-      meta: {
-        header: {
-          hideSort: true,
+    ...laboratorios.map((lab) =>
+      colHelper.display({
+        header: lab.nombre,
+        cell: (info) => {
+          const laboratorio = info.row.original.laboratorios[lab.id];
+
+          if (laboratorio) {
+            return <Badge key={lab.id} color={"success"} label={<CheckIcon className="text-success" />} />;
+          }
+
+          return <MinusIcon className="text-gray-950" />;
         },
-      },
-    }),
+        meta: {
+          header: {
+            hideSort: true,
+          },
+        },
+      }),
+    ),
   ] as ColumnDef<SoftwareData>[];
 };
 
