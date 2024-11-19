@@ -1,11 +1,14 @@
 import type { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.schema";
-import { armarFechaSinHorasALas0000, getDate } from "@/shared/get-date";
 import type { PrismaClient } from "@prisma/client";
 import type { z } from "zod";
 
 type InputGetAllReservas = z.infer<typeof inputGetAllLaboratorios>;
 export const getAllReservasToday = async (ctx: { db: PrismaClient }, input: InputGetAllReservas) => {
   const { sede, turno } = input;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date();
+  tomorrow.setDate(today.getDate() + 1);
   return await ctx.db.reserva.findMany({
     include: {
       usuarioTutor: true,
@@ -48,8 +51,8 @@ export const getAllReservasToday = async (ctx: { db: PrismaClient }, input: Inpu
     },
     where: {
       fechaHoraInicio: {
-        gte: armarFechaSinHorasALas0000(getDate()),
-        lte: armarFechaSinHorasALas0000(getDate(1)),
+        gte: today,
+        lte: tomorrow,
       },
     },
     orderBy: {
