@@ -7,6 +7,8 @@ import LoadingBibliotecaTable from "./(listado)/loading-biblioteca-table";
 import PageLayout from "@/components/ui/page-template";
 import { BIBLIOTECA_ROUTE } from "@/shared/server-routes";
 import { BibliotecaNewLibro } from "./(listado)/biblioteca-new-book";
+import { TienePermiso } from "../_components/permisos/tienePermiso";
+import { SgeNombre } from "@prisma/client";
 
 type PageProps = {
   searchParams: ReadonlyURLSearchParams;
@@ -18,7 +20,14 @@ export default function Page({ searchParams }: PageProps) {
   const filter_as_key = useMemo(() => JSON.stringify(filters), [filters]);
 
   return (
-    <PageLayout route={BIBLIOTECA_ROUTE} buttons={<BibliotecaNewLibro />}>
+    <PageLayout
+      route={BIBLIOTECA_ROUTE}
+      buttons={
+        <TienePermiso permisos={[SgeNombre.BIBLIOTECA_ABM_LIBRO]}>
+          <BibliotecaNewLibro />
+        </TienePermiso>
+      }
+    >
       <ActionButtons filters={filters} />
       <Suspense key={filter_as_key} fallback={<LoadingBibliotecaTable />}>
         <BibliotecaTableContainer filters={filters} />
