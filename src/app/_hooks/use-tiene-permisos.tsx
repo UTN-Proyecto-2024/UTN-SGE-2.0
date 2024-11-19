@@ -22,7 +22,7 @@ export const useTienePermisos = (permisos: SgeNombre[] = []) => {
     };
   }
 
-  const tieneAlguno = permisos.some((permiso) => tienePermisosResponse[permiso]);
+  const tieneAlguno = permisos.length === 0 ? true : permisos.some((permiso) => tienePermisosResponse[permiso]);
 
   return {
     tienePermisos: tieneAlguno,

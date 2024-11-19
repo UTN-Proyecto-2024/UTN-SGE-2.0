@@ -3,6 +3,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { cn } from "@/components/utils";
 import { type ReservaLaboratorioAbiertoType } from "./constants";
 import { ReservarLaboratorioAbiertoModal } from "../table/reservar-laboratorio-abierto";
+import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
+import { SgeNombre } from "@prisma/client";
 
 type CardProps = React.ComponentProps<typeof Card>;
 
@@ -31,7 +33,9 @@ export function LaboratorioCard({ className, ...props }: CardProps & Laboratorio
       <CardFooter className="flex flex-col gap-4">
         {alerta && <AlertaLaboratorio alerta={alerta} />}
 
-        <ReservarLaboratorioAbiertoModal tipo={laboratorio.tipo} />
+        <TienePermiso permisos={[SgeNombre.LAB_ABIERTO_RESERVAR]}>
+          <ReservarLaboratorioAbiertoModal tipo={laboratorio.tipo} />
+        </TienePermiso>
       </CardFooter>
     </Card>
   );

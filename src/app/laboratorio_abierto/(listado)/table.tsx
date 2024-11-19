@@ -14,6 +14,7 @@ import { type inputGetAllSolicitudesReservaLaboratorioAbierto } from "@/shared/f
 import { ReservaEstatus } from "@prisma/client";
 import { CancelarReservaLaboratorioAbierto } from "../_components/cancelar-reserva";
 import { useState } from "react";
+import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
 
 type LaboratorioAbiertoReservaData = RouterOutputs["reservas"]["reservaLaboratorioAbierto"]["getAll"];
 type reservaFilters = z.infer<typeof inputGetAllSolicitudesReservaLaboratorioAbierto>;
@@ -54,12 +55,22 @@ export const LaboratorioAbiertoReservaTable = ({ data, filters, filterByUser }: 
             return (
               <>
                 {filterByUser && !estaCancelada && (
-                  <CancelarReservaLaboratorioAbierto reservaId={original.reserva.id} refresh={refresh} />
+                  <TienePermiso permisos={[]}>
+                    <CancelarReservaLaboratorioAbierto reservaId={original.reserva.id} refresh={refresh} />
+                  </TienePermiso>
                 )}
 
-                {!filterByUser && <VerReservaModal reservaID={original.reserva.id} />}
+                {!filterByUser && (
+                  <TienePermiso permisos={[]}>
+                    <VerReservaModal reservaID={original.reserva.id} />
+                  </TienePermiso>
+                )}
 
-                {filterByUser && !estaCancelada && <EditarReservaModal id={original.reserva.id} onSubmit={refresh} />}
+                {filterByUser && !estaCancelada && (
+                  <TienePermiso permisos={[]}>
+                    <EditarReservaModal id={original.reserva.id} onSubmit={refresh} />
+                  </TienePermiso>
+                )}
               </>
             );
           },
