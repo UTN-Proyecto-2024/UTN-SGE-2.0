@@ -2,20 +2,20 @@ import { estaLogueadoYConPermiso } from "@/server/permisos";
 import { INICIO_ROUTE } from "@/shared/server-routes";
 import { SgeNombre } from "@prisma/client";
 import { redirect } from "next/navigation";
-import React from "react";
+
 type LayoutProps = {
   children: React.ReactNode;
 };
 
 export default async function Layout({ children }: LayoutProps) {
-  const puedeVer = await estaLogueadoYConPermiso([SgeNombre.CURSOS_ABM]);
+  const puedeVer = await estaLogueadoYConPermiso([
+    SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS_ADMIN,
+    SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS,
+    SgeNombre.ADMIN_AGREGAR_USUARIOS_A_GRUPOS,
+    SgeNombre.ADMIN_VER_FICHA_USUARIO,
+  ]);
   if (!puedeVer) {
     redirect(INICIO_ROUTE.href);
   }
-  return (
-    <>
-      <h3 className="text-5xl font-extrabold tracking-tight sm:text-[3rem]">Editar - Division</h3>
-      <div className="flex flex-col items-center justify-center gap-12 px-4 ">{children}</div>
-    </>
-  );
+  return <div className="flex w-full flex-col">{children}</div>;
 }
