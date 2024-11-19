@@ -25,6 +25,14 @@ const changeSorting = (filters: SoftwareFilters, newSorting: SortingState): Soft
   return filtersTyped;
 };
 
+const changeSede = (filters: SoftwareFilters, sedeId: string): SoftwareFilters => {
+  const newFilters: SoftwareFilters = { ...filters, sedeId };
+
+  const filtersTyped = inputGetSoftwareFilter.parse(newFilters);
+
+  return filtersTyped;
+};
+
 const changeSearchText = (filters: SoftwareFilters, searchText: string): SoftwareFilters => {
   const newFilters: SoftwareFilters = {
     ...filters,
@@ -47,7 +55,7 @@ export const useSoftwareQueryParam = (filters: SoftwareFilters) => {
   const router = useRouter();
 
   const sorting = getSorting(filters);
-  const searchText = filters.searchText;
+  const { searchText, sedeId } = filters;
 
   const changeQueryParams = useCallback(
     (filters: SoftwareFilters) => {
@@ -74,10 +82,21 @@ export const useSoftwareQueryParam = (filters: SoftwareFilters) => {
     [filters, changeQueryParams],
   );
 
+  const onSedeChange = useCallback(
+    (sede: string) => {
+      const newFilters = changeSede(filters, sede);
+
+      changeQueryParams({ ...newFilters });
+    },
+    [filters, changeQueryParams],
+  );
+
   return {
     refresh: () => router.refresh(),
     sorting,
     searchText,
+    sedeId,
+    onSedeChange,
     onSortingChange,
     onSearchTextChange,
   };
