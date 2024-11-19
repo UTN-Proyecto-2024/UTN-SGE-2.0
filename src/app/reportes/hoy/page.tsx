@@ -1,10 +1,10 @@
 import { type ReadonlyURLSearchParams } from "next/navigation";
-import React, { Suspense, useMemo } from "react";
+import { Suspense, useMemo } from "react";
 import PageLayout from "@/components/ui/page-template";
+import { ActionButtons } from "../_actions/action-buttons";
 import { REPORTES_ROUTE } from "@/shared/server-routes";
 import { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.schema";
-import { ActionButtons } from "../_actions/action-buttons";
-import Calendar from "./calendar";
+import { ReservasHoyTableContainer } from "./table-container";
 
 type PageProps = {
   searchParams: ReadonlyURLSearchParams;
@@ -16,9 +16,9 @@ export default function Page({ searchParams }: PageProps) {
 
   return (
     <PageLayout route={REPORTES_ROUTE}>
-      <ActionButtons filters={filters} monthly={true} />
+      <ActionButtons filters={filters} />
       <Suspense key={filter_as_key}>
-        <Calendar filters={filters} />
+        <ReservasHoyTableContainer filters={filters} />
       </Suspense>
     </PageLayout>
   );

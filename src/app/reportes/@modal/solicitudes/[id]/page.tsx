@@ -48,7 +48,6 @@ export default function VerReservaModal({ params: { id } }: PageProps) {
       description="Detalles de la reserva de laboratorio."
       open={open}
       onOpenChange={handleOpenChange}
-      trigger={<></>}
       className="max-h-[calc(100vh_-_10%)]"
     >
       <div className="flex max-h-max w-full flex-col gap-4">
