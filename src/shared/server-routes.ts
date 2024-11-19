@@ -69,7 +69,7 @@ export const LABORATORIO_ROUTE = {
       isPublic: false,
     },
     {
-      href: "/laboratorios/solicitudes",
+      href: "/laboratorios/solicitudes?estatus=PENDIENTE",
       label: "Administrar reservas",
       isPublic: false,
     },
@@ -88,7 +88,7 @@ export const LABORATORIO_ABIERTO_ROUTE = {
       isPublic: false,
     },
     {
-      href: "/laboratorio_abierto/solicitudes",
+      href: "/laboratorio_abierto/solicitudes?estatus=PENDIENTE",
       label: "Administrar reservas",
       isPublic: false,
     },

@@ -13,7 +13,13 @@ import type { z } from "zod";
 import { informacionUsuario } from "../usuario-helper";
 import { construirOrderByDinamico } from "@/shared/dynamic-orderby";
 // import { lanzarErrorSiLaboratorioOcupado } from "./laboratorioEnUso.repository";
-import { obtenerHoraInicioFin, armarFechaReserva, construirFechaReservaSinOffset } from "@/shared/get-date";
+import {
+  obtenerHoraInicioFin,
+  armarFechaReserva,
+  construirFechaReservaSinOffset,
+  getFechaddddDDMMYYYY,
+  getTurnoTexto,
+} from "@/shared/get-date";
 
 type InputGetPorUsuarioID = z.infer<typeof inputGetReservaLaboratorioPorUsuarioId>;
 export const getReservaPorUsuarioId = async (ctx: { db: PrismaClient }, input: InputGetPorUsuarioID) => {
@@ -197,9 +203,20 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
     }),
   ]);
 
+  const reservasConFecha = reservas.map((reserva) => {
+    const fechaTexto = getFechaddddDDMMYYYY(reserva.reserva.fechaHoraInicio);
+    const turnoTexto = getTurnoTexto(reserva.curso?.turno);
+
+    return {
+      ...reserva,
+      fechaTexto,
+      turnoTexto,
+    };
+  });
+
   return {
     count,
-    reservas,
+    reservas: reservasConFecha,
   };
 };
 

@@ -34,21 +34,12 @@ export type DataLaboratorioAbiertoBack = z.infer<typeof inputEditarReservaLabora
 const cantidadPersonas = [...Array(8).keys()].map((i) => (i + 1).toString());
 
 const turnos = [
-  { label: "08:00 - 09:00", start: "08:00", end: "09:00" },
-  { label: "09:00 - 10:00", start: "09:00", end: "10:00" },
-  { label: "10:00 - 11:00", start: "10:00", end: "11:00" },
-  { label: "11:00 - 12:00", start: "11:00", end: "12:00" },
-  { label: "12:00 - 13:00", start: "12:00", end: "13:00" },
-  { label: "13:00 - 14:00", start: "13:00", end: "14:00" },
-  { label: "14:00 - 15:00", start: "14:00", end: "15:00" },
-  { label: "15:00 - 16:00", start: "15:00", end: "16:00" },
-  { label: "16:00 - 17:00", start: "16:00", end: "17:00" },
-  { label: "17:00 - 18:00", start: "17:00", end: "18:00" },
-  { label: "18:00 - 19:00", start: "18:00", end: "19:00" },
-  { label: "19:00 - 20:00", start: "19:00", end: "20:00" },
-  { label: "20:00 - 21:00", start: "20:00", end: "21:00" },
-  { label: "21:00 - 22:00", start: "21:00", end: "22:00" },
-  { label: "22:00 - 23:00", start: "22:00", end: "23:00" },
+  { start: "10:00", end: "12:00", label: "10:00 - 12:00" },
+  { start: "12:00", end: "14:00", label: "12:00 - 14:00" },
+  { start: "14:00", end: "16:00", label: "14:00 - 16:00" },
+  { start: "16:00", end: "18:00", label: "16:00 - 18:00" },
+  { start: "18:00", end: "20:00", label: "18:00 - 20:00" },
+  { start: "20:00", end: "22:00", label: "20:00 - 22:00" },
 ];
 
 export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: Props) => {
@@ -260,15 +251,13 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
                 label={"¿Cuántas personas concurrirán al laboratorio?"}
                 clearable
               />
-              <div>
-                <CustomDatePicker
-                  label="Fecha de reserva"
-                  control={control}
-                  name="fechaReserva"
-                  className=""
-                  disabledDays={diasDeshabilitados}
-                />
-              </div>
+              <CustomDatePicker
+                label="Fecha de reserva"
+                control={control}
+                name="fechaReserva"
+                className=""
+                disabledDays={diasDeshabilitados}
+              />
               <FormSelect
                 name="turno"
                 label="Seleccionar Turno"
@@ -276,6 +265,11 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
                 items={turnos.map((turno) => turno.label)}
                 onChange={handleTurnoChange}
               />
+              <p className="text-sm text-gray-500">
+                Si necesita utilizar el Laboratorio Abierto por un período superior a dos horas, reserve dos turnos
+                consecutivos. En estos casos, tendrán prioridad los estudiantes que aún no hayan hecho uso del
+                laboratorio durante el día.
+              </p>
             </div>
             <div className="mx-auto space-y-6">
               {esTLA && (

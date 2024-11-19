@@ -4,7 +4,7 @@ import { DataTable } from "@/components/ui";
 import { type RouterOutputs } from "@/trpc/react";
 import { type z } from "zod";
 import { DataTablePaginationStandalone } from "@/components/ui/table/table-pagination-standalone";
-import { type SortingState } from "@tanstack/react-table";
+import { type GroupingState, type SortingState } from "@tanstack/react-table";
 import type { inputGetAllSolicitudesReservaLaboratorioCerrado } from "@/shared/filters/reserva-laboratorio-filter.schema";
 import { ReservaEstatus } from "@prisma/client";
 import { getColumnasReservasLaboratorioCerrado } from "./reserva-labo-cerrado-columns";
@@ -12,6 +12,7 @@ import { useReservasLaboratorioCerradoQueryParam } from "../../_hooks/use-reserv
 import { VerReservaModal } from "../ver-reserva";
 import EditarReservaModal from "../editar-reserva-modal";
 import { CancelarReservaLaboratorio } from "../cancelar-reserva";
+import { useState } from "react";
 
 type LaboratorioCerradoReservaData = RouterOutputs["reservas"]["reservarLaboratorioCerrado"]["getAll"];
 type reservaFilters = z.infer<typeof inputGetAllSolicitudesReservaLaboratorioCerrado>;
@@ -28,9 +29,13 @@ export const LaboratorioCerradoReservaTable = ({ data, filters, filterByUser }: 
 
   const columns = getColumnasReservasLaboratorioCerrado({ filterByUser });
 
+  const [grouping, setGrouping] = useState<GroupingState>(["fechaTexto", "turnoTexto"]);
+
   return (
     <>
       <DataTable
+        grouping={grouping}
+        setGrouping={setGrouping}
         data={data.reservas ?? []}
         columns={columns}
         manualSorting
