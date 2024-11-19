@@ -9,6 +9,8 @@ import { useSoftwareQueryParam } from "@/app/laboratorios/_hooks/use-software-qu
 import { type SortingState } from "@tanstack/react-table";
 import { type z } from "zod";
 import { type inputGetSoftwareFilter } from "@/shared/filters/laboratorio-filter.schema";
+import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
+import { SgeNombre } from "@prisma/client";
 
 type SoftwareData = RouterOutputs["software"]["getAll"];
 type SoftwareFilters = z.infer<typeof inputGetSoftwareFilter>;
@@ -41,8 +43,13 @@ export const SoftwareTable = ({ data, filters }: BibliotecaTableProps) => {
           cell({ original }) {
             return (
               <>
-                <EliminarSoftwareModal softwareId={original.id} nombre={original.nombre} onSubmit={refresh} />
-                <SoftwareNuevoEditar softwareId={original.id} />
+                <TienePermiso permisos={[SgeNombre.APLICACIONES_ABM]}>
+                  <EliminarSoftwareModal softwareId={original.id} nombre={original.nombre} onSubmit={refresh} />
+                </TienePermiso>
+
+                <TienePermiso permisos={[SgeNombre.APLICACIONES_ABM]}>
+                  <SoftwareNuevoEditar softwareId={original.id} />
+                </TienePermiso>
               </>
             );
           },

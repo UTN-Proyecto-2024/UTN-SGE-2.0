@@ -11,6 +11,8 @@ import type { GroupingState, SortingState } from "@tanstack/react-table";
 import { getColumns } from "./columns";
 import { type inputGetCursos } from "@/shared/filters/cursos-filter.schema";
 import { useState } from "react";
+import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
+import { SgeNombre } from "@prisma/client";
 
 type CursoData = RouterOutputs["cursos"]["getAll"];
 type CursosFilters = z.infer<typeof inputGetCursos>;
@@ -47,8 +49,12 @@ export const CursosTable = ({ data, filters }: CursosTableProps) => {
           cell({ original }) {
             return (
               <>
-                <RemoveCursoModal cursoId={original.id} nombre={original.division.nombre} onSubmit={refresh} />
-                <EditCursoModal cursoId={original.id} />
+                <TienePermiso permisos={[SgeNombre.CURSOS_ABM]}>
+                  <RemoveCursoModal cursoId={original.id} nombre={original.division.nombre} onSubmit={refresh} />
+                </TienePermiso>
+                <TienePermiso permisos={[SgeNombre.CURSOS_ABM]}>
+                  <EditCursoModal cursoId={original.id} />
+                </TienePermiso>
               </>
             );
           },

@@ -9,6 +9,7 @@ import { type SortingState } from "@tanstack/react-table";
 import { getColumns } from "./columns";
 import { useAdminRolesQueryParam } from "../../_hooks/use-admin-roles-query-param";
 import { type inputGetRoles } from "@/shared/filters/admin-roles-filter.schema";
+import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
 
 type RolesData = RouterOutputs["admin"]["roles"]["getAllRoles"];
 type AdminRolesFilters = z.infer<typeof inputGetRoles>;
@@ -40,8 +41,14 @@ export const RolesTable = ({ data, filters }: BibliotecaTableProps) => {
           cell({ original }) {
             return (
               <>
-                <RemoverRolModal rolId={original.id} nombre={original.nombre} onSubmit={refresh} />
-                <EditarRolModal rolId={original.id} />
+                <TienePermiso permisos={[]}>
+                  {/* TODO: no se cual seria el permiso que va??*/}
+                  <RemoverRolModal rolId={original.id} nombre={original.nombre} onSubmit={refresh} />
+                </TienePermiso>
+                <TienePermiso permisos={[]}>
+                  {/* TODO: no se cual seria el permiso que va??*/}
+                  <EditarRolModal rolId={original.id} />
+                </TienePermiso>
               </>
             );
           },
