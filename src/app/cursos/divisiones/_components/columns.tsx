@@ -2,8 +2,6 @@ import { type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import EditDivisionModal from "./edit-division";
 import { AnnoTexto } from "@/app/_components/anno-texto";
-import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
 
 type DivisionesData = RouterOutputs["division"]["getFiltered"][number];
 
@@ -23,7 +21,6 @@ export const getColumns = () => {
       header: "Divisiones",
       cell: (info) => (
         <div className="flex flex-wrap items-center gap-x-2 gap-y-2">
-          {/* TODO: si pongo <TienePermiso> hay error de compilacion. */}
           {info.row.original.divisiones.map((division) => (
             <EditDivisionModal key={division.id} divisionId={division.id.toString()} divisionName={division.nombre} />
           ))}
