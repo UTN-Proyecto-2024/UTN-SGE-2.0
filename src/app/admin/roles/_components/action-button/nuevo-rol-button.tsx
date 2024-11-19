@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { useState } from "react";
 import { AdminRolForm } from "../../[id]/admin-rol-form";
+import { ScrollArea } from "@/components/ui";
 
 export const AdminRolesNuevoRol = () => {
   const [open, setOpen] = useState(false);
@@ -31,10 +32,11 @@ export const AdminRolesNuevoRol = () => {
           <Plus size={16} className="ml-2" />
         </Button>
       }
-      className={"max-h-[calc(100vh_-_10%)]"}
     >
       <div className="flex max-h-max w-full flex-col  gap-4">
-        <AdminRolForm onCancel={handleCancel} onSubmit={handleSave} />
+        <ScrollArea className="mt-4 max-h-[calc(100vh_-_300px)] w-full pr-4">
+          <AdminRolForm onCancel={handleCancel} onSubmit={handleSave} />
+        </ScrollArea>
       </div>
     </ModalDrawer>
   );

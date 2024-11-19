@@ -53,9 +53,6 @@ export function TutorCard({ className, ...props }: CardProps & TutorData) {
       <CardContent className="grid items-start gap-4">
         <div className="text-left">
           <CardDescription>
-            <span className="font-bold">Nombre:</span> {nombre} {apellido}
-          </CardDescription>
-          <CardDescription>
             <span className="font-bold">Email:</span> {tutor.usuario.email}
           </CardDescription>
           <CardDescription>
