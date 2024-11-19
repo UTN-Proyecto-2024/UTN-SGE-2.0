@@ -5,7 +5,7 @@ import PageLayout from "@/components/ui/page-template";
 import { ADMIN_ROUTE } from "@/shared/server-routes";
 import { AdminLaboratoriosNuevoLaboratorio } from "./_components/action-button/nuevo-laboratorio-button";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+// import { SgeNombre } from "@prisma/client";
 
 export default function BibliotecaLoading() {
   return (
