@@ -62,6 +62,7 @@ export default async function Calendar({ filters }: Props) {
   }, [filters]);
 
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 rounded bg-white">
