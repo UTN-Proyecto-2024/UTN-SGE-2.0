@@ -23,7 +23,7 @@ export const ReservaViewAdmin = ({ reservaId, onCancel, onAprobar, onRechazar }:
   const cancelarReservaLaboratorio = api.reservas.reservarLaboratorioCerrado.cancelarReserva.useMutation();
   const handleCancelReserva = () => {
     cancelarReservaLaboratorio.mutate(
-      { id: reservaId, motivo: "Cancelada por Cancelada por expiración" },
+      { id: reservaId, motivo: "Cancelada por expiración" },
       {
         onSuccess: () => {
           toast.success("Reserva cancelada con éxito.");

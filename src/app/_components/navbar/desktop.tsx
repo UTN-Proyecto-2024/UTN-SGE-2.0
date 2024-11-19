@@ -15,13 +15,13 @@ export const DesktopNavigation = ({ isLogged }: { isLogged: boolean }) => {
   return (
     <div className="flex items-baseline space-x-4">
       {APP_ROUTES.filter((item) => isLogged || item.isPublic).map((item) => {
-        const current = item.href.split("/")[1] === pathname.split("/")[1];
+        const current = item.href.split("/")[1] === pathname.split("/")[1] && !item.href.startsWith("http");
         return (
           <Link
             key={item.href}
             href={item.href}
             aria-current={current ? "page" : undefined}
-            target={(!!item?.esExterna) ? "_blank" : undefined}
+            target={!!item?.esExterna ? "_blank" : undefined}
             prefetch={true}
             className={classNames(
               current ? "bg-slate-100 text-black" : "text-gray-300 hover:bg-slate-50 hover:text-black",
