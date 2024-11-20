@@ -21,6 +21,8 @@ import {
   enviarMailRenovarLibroProcedure,
   enviarMailDevolverLibroProcedure,
 } from "../mails/emailBiblioteca.service";
+import { verificarPermisos } from "@/server/permisos";
+import { SgeNombre } from "@prisma/client";
 
 export const getTodasLasReservasProcedure = protectedProcedure
   .input(inputGetAllPrestamosLibros)
@@ -81,6 +83,7 @@ export const verReservasProcedure = protectedProcedure
 export const devolverLibroProcedure = protectedProcedure
   .input(inputGetReservasLibroPorLibroId)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.BIBLIOTECA_ABM_LIBRO]);
     validarInput(inputGetReservasLibroPorLibroId, input);
 
     const userId = ctx.session.user.id;
@@ -92,6 +95,7 @@ export const devolverLibroProcedure = protectedProcedure
     return reserva;
   });
 export const renovarLibroProcedure = protectedProcedure.input(inputPrestarLibro).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.BIBLIOTECA_ABM_LIBRO]);
   validarInput(inputPrestarLibro, input);
 
   const userId = ctx.session.user.id;

@@ -26,6 +26,8 @@ import {
   getNumeroReservasQueNoAsistioEsteAnno,
   cambiarAsistioReserva,
 } from "../../repositories/admin/usuarios-admin.repository";
+import { verificarPermisos } from "@/server/permisos";
+import { SgeNombre } from "@prisma/client";
 
 export const getTodosLosUsuariosProcedure = protectedProcedure.input(inputGetUsuarios).query(async ({ ctx, input }) => {
   validarInput(inputGetUsuarios, input);
@@ -60,6 +62,7 @@ export const getTutorPorIdProcedure = protectedProcedure.input(inputGetTutor).qu
 export const eliminarUsuarioProcedure = protectedProcedure
   .input(inputEliminarUsuario)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS]);
     validarInput(inputEliminarUsuario, input);
 
     const usuario = await eliminarUsuario(ctx, input);
@@ -68,6 +71,7 @@ export const eliminarUsuarioProcedure = protectedProcedure
   });
 
 export const editarUsuarioProcedure = protectedProcedure.input(inputEditarUsuario).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS]);
   validarInput(inputEditarUsuario, input);
 
   const userId = ctx.session.user.id;
@@ -78,6 +82,7 @@ export const editarUsuarioProcedure = protectedProcedure.input(inputEditarUsuari
 });
 
 export const editarTutorProcedure = protectedProcedure.input(inputEditarTutor).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.LAB_ABIERTO_TUTORES_ABM]);
   validarInput(inputEditarTutor, input);
 
   const tutor = await editarTutor(ctx, input);
@@ -100,6 +105,7 @@ export const getAllTutoresEspecialidadesProcedure = protectedProcedure.query(asy
 export const eliminarTutorProcedure = protectedProcedure
   .input(inputEliminarUsuario)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.LAB_ABIERTO_TUTORES_ABM]);
     validarInput(inputEliminarUsuario, input);
 
     const usuario = await eliminarTutor(ctx, input);

@@ -1,6 +1,7 @@
 import { api } from "@/trpc/server";
 import { getServerAuthSession } from "./auth";
 import { type SgeNombre } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 
 export const tienePermisoBack = async (permisos: SgeNombre[]) => {
   const tienePermiso = await api.permisos.usuarioTienePermisos({ permisos });
@@ -29,4 +30,15 @@ export const estaLogueadoYConPermiso = async (permisos: SgeNombre[]) => {
   }
 
   return true;
+};
+
+export const verificarPermisos = async (permisosRequeridos: SgeNombre[]) => {
+  const tienePermiso = await tienePermisoBack(permisosRequeridos);
+
+  if (!tienePermiso) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "No tienes permiso para realizar esta operación",
+    });
+  }
 };

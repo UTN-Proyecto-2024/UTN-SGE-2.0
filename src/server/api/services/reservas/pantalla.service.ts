@@ -11,6 +11,8 @@ import {
   inputGetReservasEnPntallaActivas,
 } from "@/shared/filters/reserva-pantalla-filter.schema";
 import { validarInput } from "../helper";
+import { verificarPermisos } from "@/server/permisos";
+import { SgeNombre } from "@prisma/client";
 
 export const getReservasEnPntallaActivasProcedure = protectedProcedure
   .input(inputGetReservasEnPntallaActivas)
@@ -25,6 +27,7 @@ export const getReservasEnPntallaActivasProcedure = protectedProcedure
 export const removerReservaPantallaProcedure = protectedProcedure
   .input(inputEliminarReservaPantallas)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.RES_LAB_ABM_PANTALLA]);
     validarInput(inputEliminarReservaPantallas, input);
 
     const reservasPantallaEliminadas = await removerReservaPantalla(ctx, input);
@@ -35,6 +38,7 @@ export const removerReservaPantallaProcedure = protectedProcedure
 export const agregarReservaPantallaProcedure = protectedProcedure
   .input(inputAgregarReservaPantalla)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.RES_LAB_ABM_PANTALLA]);
     validarInput(inputAgregarReservaPantalla, input);
 
     const userId = ctx.session.user.id;

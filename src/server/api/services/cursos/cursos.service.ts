@@ -1,3 +1,5 @@
+import { verificarPermisos } from "@/server/permisos";
+import { SgeNombre } from "@prisma/client";
 import {
   agregarCurso,
   agregarCursoBulkInsert,
@@ -36,6 +38,7 @@ export const cursoPorIdProcedure = protectedProcedure.input(inputGetCurso).query
 });
 
 export const nuevoCursoProcedure = protectedProcedure.input(inputAgregarCurso).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.CURSOS_ABM]);
   validarInput(inputAgregarCurso, input);
 
   const userId = ctx.session.user.id;
@@ -48,6 +51,7 @@ export const nuevoCursoProcedure = protectedProcedure.input(inputAgregarCurso).m
 export const nuevoCursoBulkInsertProcedure = protectedProcedure
   .input(inputAgregarCursoBulkInsert)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.CURSOS_ABM]);
     validarInput(inputAgregarCursoBulkInsert, input);
     const userId = ctx.session.user.id;
     const curso = await agregarCursoBulkInsert(ctx, input, userId);
@@ -55,6 +59,7 @@ export const nuevoCursoBulkInsertProcedure = protectedProcedure
   });
 
 export const editarCursoProcedure = protectedProcedure.input(inputEditarCurso).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.CURSOS_ABM]);
   validarInput(inputEditarCurso, input);
 
   const userId = ctx.session.user.id;
@@ -65,6 +70,7 @@ export const editarCursoProcedure = protectedProcedure.input(inputEditarCurso).m
 });
 
 export const eliminarCursoProcedure = protectedProcedure.input(inputEliminarCurso).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.CURSOS_ABM]);
   validarInput(inputEliminarCurso, input);
 
   const curso = await eliminarCurso(ctx, input);

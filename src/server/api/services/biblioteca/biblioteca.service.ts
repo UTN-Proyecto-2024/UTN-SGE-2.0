@@ -21,6 +21,8 @@ import {
   inputGetLibro,
 } from "@/shared/filters/biblioteca-filter.schema";
 import { validarInput } from "../helper";
+import { verificarPermisos } from "@/server/permisos";
+import { SgeNombre } from "@prisma/client";
 
 export const getTodosLosLibrosProcedure = protectedProcedure.input(inputGetBooks).query(async ({ ctx, input }) => {
   validarInput(inputGetBooks, input);
@@ -51,6 +53,7 @@ export const libroPorIdProcedure = protectedProcedure.input(inputGetLibro).query
 });
 
 export const nuevoLibroProcedure = protectedProcedure.input(inputAddBooks).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.BIBLIOTECA_ABM_LIBRO]);
   validarInput(inputAddBooks, input);
 
   const userId = ctx.session.user.id;
@@ -61,6 +64,7 @@ export const nuevoLibroProcedure = protectedProcedure.input(inputAddBooks).mutat
 });
 
 export const editarLibroProcedure = protectedProcedure.input(inputEditBooks).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.BIBLIOTECA_ABM_LIBRO]);
   validarInput(inputEditBooks, input);
 
   const userId = ctx.session.user.id;
@@ -71,6 +75,7 @@ export const editarLibroProcedure = protectedProcedure.input(inputEditBooks).mut
 });
 
 export const eliminarLibroProcedure = protectedProcedure.input(inputEliminarLibro).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.BIBLIOTECA_ABM_LIBRO]);
   validarInput(inputEliminarLibro, input);
 
   const libro = await deleteLibro(ctx, input);
@@ -85,6 +90,7 @@ export const getTodosLosAutoresProcedure = protectedProcedure.query(async ({ ctx
 });
 
 export const crearAutorProcedure = protectedProcedure.input(inputAgregarAutor).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.BIBLIOTECA_ABM_LIBRO]);
   validarInput(inputAgregarAutor, input);
 
   const userId = ctx.session.user.id;
@@ -97,6 +103,7 @@ export const crearAutorProcedure = protectedProcedure.input(inputAgregarAutor).m
 export const crearEditorialProcedure = protectedProcedure
   .input(inputAgregarEditorial)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.BIBLIOTECA_ABM_LIBRO]);
     validarInput(inputAgregarEditorial, input);
 
     const userId = ctx.session.user.id;

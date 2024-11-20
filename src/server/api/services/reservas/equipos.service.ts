@@ -21,6 +21,8 @@ import {
   enviarMailRenovarEquipoProcedure,
   enviarMailReservaEquipoProcedure,
 } from "../mails/emailEquipos.service";
+import { verificarPermisos } from "@/server/permisos";
+import { SgeNombre } from "@prisma/client";
 
 export const getTodasLasReservasProcedure = protectedProcedure
   .input(inputGetAllPrestamosEquipos)
@@ -47,6 +49,7 @@ export const getReservaEquipoPorUserProcedure = protectedProcedure
 export const crearPrestamoEquipoProcedure = protectedProcedure
   .input(inputPrestarEquipo)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.EQUIPOS_PRESTAMO_PRESTAR]);
     validarInput(inputPrestarEquipo, input);
 
     const userId = ctx.session.user.id;
@@ -71,6 +74,7 @@ export const verReservasProcedure = protectedProcedure
 export const devolverEquipoProcedure = protectedProcedure
   .input(inputGetReservasEquiposPorEquipoId)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.EQUIPOS_PRESTAMO_PRESTAR]);
     validarInput(inputGetReservasEquiposPorEquipoId, input);
 
     const userId = ctx.session.user.id;
@@ -83,6 +87,7 @@ export const devolverEquipoProcedure = protectedProcedure
   });
 
 export const renovarEquipoProcedure = protectedProcedure.input(inputPrestarEquipo).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.EQUIPOS_PRESTAMO_PRESTAR]);
   validarInput(inputPrestarEquipo, input);
 
   const userId = ctx.session.user.id;

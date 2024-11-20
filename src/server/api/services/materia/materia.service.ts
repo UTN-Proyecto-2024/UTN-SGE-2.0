@@ -1,3 +1,4 @@
+import { verificarPermisos } from "@/server/permisos";
 import {
   inputEliminarMateria,
   inputEditarMateria,
@@ -15,7 +16,7 @@ import {
 
 import { protectedProcedure } from "../../trpc";
 import { validarInput } from "../helper";
-import { Prisma } from "@prisma/client";
+import { Prisma, SgeNombre } from "@prisma/client";
 
 export const getAllMateriasProcedure = protectedProcedure.query(async ({ ctx }) => {
   return await getAllMaterias(ctx);
@@ -32,6 +33,7 @@ export const getMateriaByIdProcedure = protectedProcedure.input(inputGetMateria)
 export const eliminarMateriaProcedure = protectedProcedure
   .input(inputEliminarMateria)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.MATERIAS_ABM]);
     validarInput(inputEliminarMateria, input);
 
     const materia = await eliminarMateria(ctx, input);
@@ -40,6 +42,7 @@ export const eliminarMateriaProcedure = protectedProcedure
   });
 
 export const editarMateriaProcedure = protectedProcedure.input(inputEditarMateria).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.MATERIAS_ABM]);
   validarInput(inputEditarMateria, input);
 
   const userId = ctx.session.user.id;
@@ -65,6 +68,7 @@ export const editarMateriaProcedure = protectedProcedure.input(inputEditarMateri
 });
 
 export const nuevaMateriaProcedure = protectedProcedure.input(inputAgregarMateria).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.MATERIAS_ABM]);
   validarInput(inputAgregarMateria, input);
 
   const userId = ctx.session.user.id;

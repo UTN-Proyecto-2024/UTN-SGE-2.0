@@ -28,6 +28,8 @@ import {
   enviarMailReservaLaboratorioCerradoProcedure,
 } from "../mails/emailLaboratorioCerrado.service";
 import { revalidatePath } from "next/cache";
+import { verificarPermisos } from "@/server/permisos";
+import { SgeNombre } from "@prisma/client";
 
 export const getReservaLaboratorioCerradoPorUserProcedure = protectedProcedure
   .input(inputGetReservaLaboratorioPorUsuarioId)
@@ -64,6 +66,7 @@ export const getReservaLaboratorioCerradoPorIdProcedure = protectedProcedure
 export const aprobarReservaProcedure = protectedProcedure
   .input(inputAprobarReservaLaboratorioCerradoSchema)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.RES_LAB_CONFIRMAR_RESERVAS]);
     validarInput(inputAprobarReservaLaboratorioCerradoSchema, input);
 
     const userId = ctx.session.user.id;
@@ -80,6 +83,7 @@ export const aprobarReservaProcedure = protectedProcedure
 export const rechazarReservaProcedure = protectedProcedure
   .input(inputRechazarReservaLaboratorioCerrado)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.RES_LAB_CONFIRMAR_RESERVAS]);
     validarInput(inputRechazarReservaLaboratorioCerrado, input);
 
     const userId = ctx.session.user.id;
@@ -96,6 +100,7 @@ export const rechazarReservaProcedure = protectedProcedure
 export const cancelarReservaProcedure = protectedProcedure
   .input(inputRechazarReservaLaboratorioCerrado)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.RES_LAB_CONFIRMAR_RESERVAS]);
     validarInput(inputRechazarReservaLaboratorioCerrado, input);
 
     const userId = ctx.session.user.id;
@@ -110,6 +115,7 @@ export const cancelarReservaProcedure = protectedProcedure
 export const editarReservaProcedure = protectedProcedure
   .input(inputEditarReservaLaboratorioCerradoSchema)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.RES_LAB_CONFIRMAR_RESERVAS]);
     validarInput(inputEditarReservaLaboratorioCerradoSchema, input);
 
     const userId = ctx.session.user.id;
