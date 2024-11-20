@@ -1,6 +1,6 @@
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { type RouterOutputs, api } from "@/trpc/react";
-import { Button, Input, ScrollArea, toast } from "@/components/ui";
+import { Button, Input, toast } from "@/components/ui";
 import { Checkbox } from "@/components/ui/checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
@@ -118,120 +118,117 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
-        <ScrollArea className="max-h-[calc(100vh_-_300px)] w-full pr-4">
-          <div className="flex w-full flex-col items-center justify-center">
-            <div className="flex w-full flex-col space-y-4 px-0 md:px-6">
-              <div className="flex w-full flex-row lg:justify-between lg:gap-x-4">
-                <div className="mt-4 w-full">
-                  <Input
-                    label={"Nombre"}
-                    name="nombre"
-                    type={"text"}
-                    value={usuario?.nombre ?? ""}
-                    autoComplete="off"
-                    readOnly
-                  />
-                </div>
-                <div className="mt-4 w-full">
-                  <Input
-                    label={"Apellido"}
-                    name="apellido"
-                    type={"text"}
-                    value={usuario?.apellido ?? ""}
-                    autoComplete="off"
-                    readOnly
-                  />
-                </div>
+        <div className="flex w-full flex-col items-center justify-center">
+          <div className="flex w-full flex-col space-y-4 px-0 md:px-6">
+            <div className="flex w-full flex-row lg:justify-between lg:gap-x-4">
+              <div className="mt-4 w-full">
+                <Input
+                  label={"Nombre"}
+                  name="nombre"
+                  type={"text"}
+                  value={usuario?.nombre ?? ""}
+                  autoComplete="off"
+                  readOnly
+                />
               </div>
-
-              <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
-                <div className="mt-4 w-full">
-                  <Controller
-                    control={control}
-                    name="esDocente"
-                    render={({ field }) => (
-                      <div className="flex items-center justify-between rounded-md border border-white p-2">
-                        <label htmlFor="esDocente" className="text-base">
-                          Es docente
-                        </label>
-                        <Switch
-                          id="esDocente"
-                          checked={field.value}
-                          onCheckedChange={(checked) => {
-                            field.onChange(checked);
-                            const mostrarMensaje = !checked && usuario?.tieneMaterias;
-                            setShowMessage(!!mostrarMensaje);
-                          }}
-                        />
-                      </div>
-                    )}
-                  />
-                  {showMessage && (
-                    <ModalDrawer
-                      titulo={"Confirmación"}
-                      open={showMessage}
-                      onOpenChange={(open) => setShowMessage(open)}
-                      submitText="Confirmar"
-                      onSubmit={() => {
-                        setShowMessage(false);
-                        formHook.setValue("esDocente", false);
-                      }}
-                      cancelText="Cancelar"
-                      onCancel={() => {
-                        setShowMessage(false);
-                        formHook.setValue("esDocente", true);
-                      }}
-                      isAlertDialog
-                    >
-                      <div>
-                        <span className="font-bold">El usuario tiene materias a cargo.</span> ¿esta seguro de esta
-                        acción?
-                      </div>
-                    </ModalDrawer>
-                  )}
-                </div>
-                <div className="mt-4 w-full">
-                  <Controller
-                    control={control}
-                    name="esTutor"
-                    render={({ field }) => (
-                      <div className="flex items-center justify-between rounded-md border border-white p-2">
-                        <label htmlFor="esTutor" className="text-base">
-                          Es tutor
-                        </label>
-                        <Switch
-                          id="esTutor"
-                          checked={field.value}
-                          onCheckedChange={(checked) => {
-                            field.onChange(checked);
-                            const mostrarMensaje = !checked && usuario?.tieneMaterias;
-                            setShowMessage(!!mostrarMensaje);
-                          }}
-                        />
-                      </div>
-                    )}
-                  />
-                </div>
+              <div className="mt-4 w-full">
+                <Input
+                  label={"Apellido"}
+                  name="apellido"
+                  type={"text"}
+                  value={usuario?.apellido ?? ""}
+                  autoComplete="off"
+                  readOnly
+                />
               </div>
+            </div>
 
-              <div className="mt-4 flex w-full flex-col">
-                <h3 className="mb-2 text-lg font-semibold">Roles</h3>
-                <div className="grid w-full cursor-pointer grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-2">
-                  {Object.entries(rolesDiccionario).map(([rolId, rol]) => (
-                    <div className="hover:bg-slate-100" key={rol.id}>
-                      <Checkbox
-                        className="mt-1"
-                        checked={currentRoles.includes(rolId)}
-                        onCheckedChange={() => onRolChange(rolId)}
+            <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
+              <div className="mt-4 w-full">
+                <Controller
+                  control={control}
+                  name="esDocente"
+                  render={({ field }) => (
+                    <div className="flex items-center justify-between rounded-md border border-white p-2">
+                      <label htmlFor="esDocente" className="text-base">
+                        Es docente
+                      </label>
+                      <Switch
+                        id="esDocente"
+                        checked={field.value}
+                        onCheckedChange={(checked) => {
+                          field.onChange(checked);
+                          const mostrarMensaje = !checked && usuario?.tieneMaterias;
+                          setShowMessage(!!mostrarMensaje);
+                        }}
                       />
-                      <span className="ms-1">{rol.nombre}</span>
                     </div>
-                  ))}
-                </div>
+                  )}
+                />
+                {showMessage && (
+                  <ModalDrawer
+                    titulo={"Confirmación"}
+                    open={showMessage}
+                    onOpenChange={(open) => setShowMessage(open)}
+                    submitText="Confirmar"
+                    onSubmit={() => {
+                      setShowMessage(false);
+                      formHook.setValue("esDocente", false);
+                    }}
+                    cancelText="Cancelar"
+                    onCancel={() => {
+                      setShowMessage(false);
+                      formHook.setValue("esDocente", true);
+                    }}
+                    isAlertDialog
+                  >
+                    <div>
+                      <span className="font-bold">El usuario tiene materias a cargo.</span> ¿esta seguro de esta acción?
+                    </div>
+                  </ModalDrawer>
+                )}
+              </div>
+              <div className="mt-4 w-full">
+                <Controller
+                  control={control}
+                  name="esTutor"
+                  render={({ field }) => (
+                    <div className="flex items-center justify-between rounded-md border border-white p-2">
+                      <label htmlFor="esTutor" className="text-base">
+                        Es tutor
+                      </label>
+                      <Switch
+                        id="esTutor"
+                        checked={field.value}
+                        onCheckedChange={(checked) => {
+                          field.onChange(checked);
+                          const mostrarMensaje = !checked && usuario?.tieneMaterias;
+                          setShowMessage(!!mostrarMensaje);
+                        }}
+                      />
+                    </div>
+                  )}
+                />
+              </div>
+            </div>
+
+            <div className="mt-4 flex w-full flex-col">
+              <h3 className="mb-2 text-lg font-semibold">Roles</h3>
+              <div className="grid w-full cursor-pointer grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-2">
+                {Object.entries(rolesDiccionario).map(([rolId, rol]) => (
+                  <div className="hover:bg-slate-100" key={rol.id}>
+                    <Checkbox
+                      className="mt-1"
+                      checked={currentRoles.includes(rolId)}
+                      onCheckedChange={() => onRolChange(rolId)}
+                    />
+                    <span className="ms-1">{rol.nombre}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
-        </ScrollArea>
+        </div>
 
         {/* Botones */}
         <div className="sticky bottom-0 flex w-full flex-row items-end justify-end space-x-4 bg-white p-2 pb-8">

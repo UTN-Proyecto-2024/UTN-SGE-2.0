@@ -127,7 +127,9 @@ export const DivisionForm = ({ id, name, onSubmit, onCancel }: Props) => {
           <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
             Cancelar
           </Button>
-          <RemoveDivisionModal divisionId={id} nombre={name} onSubmit={onDeleteDivision}></RemoveDivisionModal>
+          {!esNuevo && (
+            <RemoveDivisionModal divisionId={id} nombre={name} onSubmit={onDeleteDivision}></RemoveDivisionModal>
+          )}
           <Button title="Guardar" type="submit" variant="default" color="primary">
             Guardar
           </Button>
