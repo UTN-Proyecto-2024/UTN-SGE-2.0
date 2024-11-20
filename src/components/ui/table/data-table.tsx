@@ -271,9 +271,7 @@ export function DataTable<T>({
                               {flexRender(cell.column.columnDef.cell, cell.getContext())} ({row.subRows.length})
                             </span>
                           </div>
-                        ) : isAggregated ? null : //   cell.getContext(), //   cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell, // flexRender(
-                        // )
-                        isPlaceholder ? null : (
+                        ) : isAggregated ? null : isPlaceholder ? null : ( // ) //   cell.getContext(), //   cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell, // flexRender(
                           flexRender(cell.column.columnDef.cell, cell.getContext())
                         )}
                       </TableCell>

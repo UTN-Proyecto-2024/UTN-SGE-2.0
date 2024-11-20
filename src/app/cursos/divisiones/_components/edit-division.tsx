@@ -8,6 +8,7 @@ import { DivisionForm } from "../[id]/division-form";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
+import { SgeNombre } from "@prisma/client";
 
 interface EditDivisionProps {
   divisionId: string;
@@ -26,7 +27,7 @@ export const EditDivisionModal = ({ divisionId, divisionName }: EditDivisionProp
   const handleCancel = () => setOpen(false);
 
   return (
-    <TienePermiso permisos={[]} fallback={<Badge key={divisionId} />}>
+    <TienePermiso permisos={[SgeNombre.DIVISIONES_ABM]} fallback={<Badge key={divisionId} />}>
       <ModalDrawer
         titulo={"Editar División"}
         description={"Modifica los detalles de la división"}

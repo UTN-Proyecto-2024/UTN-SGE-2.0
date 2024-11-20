@@ -44,11 +44,10 @@ export const SoftwareTable = ({ data, filters }: BibliotecaTableProps) => {
             return (
               <>
                 <TienePermiso permisos={[SgeNombre.APLICACIONES_ABM]}>
-                  <EliminarSoftwareModal softwareId={original.id} nombre={original.nombre} onSubmit={refresh} />
-                </TienePermiso>
-
-                <TienePermiso permisos={[SgeNombre.APLICACIONES_ABM]}>
-                  <SoftwareNuevoEditar softwareId={original.id} />
+                  <>
+                    <EliminarSoftwareModal softwareId={original.id} nombre={original.nombre} onSubmit={refresh} />
+                    <SoftwareNuevoEditar softwareId={original.id} />
+                  </>
                 </TienePermiso>
               </>
             );
