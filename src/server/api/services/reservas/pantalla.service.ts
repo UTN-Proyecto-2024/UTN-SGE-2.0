@@ -4,7 +4,7 @@ import {
   crearReservaPantalla,
   getSedePorId,
 } from "../../repositories/reservas/pantalla.repository";
-import { protectedProcedure } from "../../trpc";
+import { protectedProcedure, publicProcedure } from "../../trpc";
 import {
   inputAgregarReservaPantalla,
   inputEliminarReservaPantallas,
@@ -14,7 +14,7 @@ import { validarInput } from "../helper";
 import { verificarPermisos } from "@/server/permisos";
 import { SgeNombre } from "@prisma/client";
 
-export const getReservasEnPntallaActivasProcedure = protectedProcedure
+export const getReservasEnPntallaActivasProcedure = publicProcedure
   .input(inputGetReservasEnPntallaActivas)
   .query(async ({ ctx, input }) => {
     validarInput(inputGetReservasEnPntallaActivas, input);
@@ -48,7 +48,7 @@ export const agregarReservaPantallaProcedure = protectedProcedure
     return reservaPantallaCreada;
   });
 
-export const getSedeByIdProcedure = protectedProcedure
+export const getSedeByIdProcedure = publicProcedure
   .input(inputGetReservasEnPntallaActivas)
   .query(async ({ ctx, input }) => {
     validarInput(inputGetReservasEnPntallaActivas, input);

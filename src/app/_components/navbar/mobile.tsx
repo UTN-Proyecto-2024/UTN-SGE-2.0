@@ -3,9 +3,16 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
 import { APP_ROUTES, USER_ROUTES } from "@/shared/server-routes";
 import { Bell, ChevronDownIcon } from "lucide-react";
+import { usePuedeVerSSR } from "@/app/_hooks/use-tiene-permisos";
 
 export const MobileNavigation = ({ isLogged }: { isLogged: boolean }) => {
-  return APP_ROUTES.filter((link) => isLogged || link.isPublic).map((item) => {
+  const { shouldRender, puedeVerLink } = usePuedeVerSSR();
+
+  if (!shouldRender) {
+    return null; // No renderiza nada durante el SSR
+  }
+
+  return APP_ROUTES.filter((link) => (isLogged || link.isPublic) && puedeVerLink(link.permisos)).map((item) => {
     return (
       <Disclosure key={item.label} as="div" className="-mx-1">
         {item.subRutas ? (
@@ -17,7 +24,7 @@ export const MobileNavigation = ({ isLogged }: { isLogged: boolean }) => {
           <DisclosureButton
             as="a"
             href={item.href}
-            target={(!!item?.esExterna) ? "_blank" : undefined}
+            target={!!item?.esExterna ? "_blank" : undefined}
             className="group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base leading-7 text-gray-900 hover:bg-gray-50"
           >
             {item.label}
@@ -25,17 +32,19 @@ export const MobileNavigation = ({ isLogged }: { isLogged: boolean }) => {
         )}
         {item.subRutas && (
           <DisclosurePanel className="mt-2 space-y-2">
-            {item.subRutas?.map((item) => (
-              <DisclosureButton
-                key={item.label}
-                as="a"
-                href={item.href}
-                target={(!!item?.esExterna) ? "_blank" : undefined}
-                className="block rounded-lg py-2 pl-6 pr-3 text-sm leading-7 text-gray-900 hover:bg-gray-50"
-              >
-                {item.label}
-              </DisclosureButton>
-            ))}
+            {item.subRutas
+              ?.filter((item) => puedeVerLink(item.permisos))
+              .map((item) => (
+                <DisclosureButton
+                  key={item.label}
+                  as="a"
+                  href={item.href}
+                  target={!!item?.esExterna ? "_blank" : undefined}
+                  className="block rounded-lg py-2 pl-6 pr-3 text-sm leading-7 text-gray-900 hover:bg-gray-50"
+                >
+                  {item.label}
+                </DisclosureButton>
+              ))}
           </DisclosurePanel>
         )}
       </Disclosure>

@@ -31,7 +31,7 @@ export const ReportesFilterFecha = ({ filters }: Props) => {
   };
 
   return (
-    <div className="flex w-full items-center gap-x-6 px-4">
+    <div className="flex w-full items-center gap-x-6">
       <button onClick={handlePreviousMonth} className="text-2xl font-bold">
         <ChevronLeft />
       </button>

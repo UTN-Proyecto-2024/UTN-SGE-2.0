@@ -4,7 +4,7 @@ import { PrestarDevolverLibro } from "./estado-libro";
 
 type LibroData = RouterOutputs["biblioteca"]["getAll"]["libros"][number];
 
-export const getColumns = () => {
+export const getColumns = ({ tienePrestar }: { tienePrestar: boolean }) => {
   const colHelper = createColumnHelper<LibroData>();
 
   return [
@@ -51,20 +51,24 @@ export const getColumns = () => {
         },
       },
     }),
-    colHelper.display({
-      header: "Prestar / Devolver",
-      cell: ({ row }) => {
-        const { disponible, id } = row.original;
+    ...(tienePrestar
+      ? [
+          colHelper.display({
+            header: "Prestar / Devolver",
+            cell: ({ row }) => {
+              const { disponible, id } = row.original;
 
-        return <PrestarDevolverLibro disponible={disponible} id={id} />;
-      },
-      meta: {
-        header: {
-          hideSort: true,
-          align: "center",
-        },
-      },
-    }),
+              return <PrestarDevolverLibro disponible={disponible} id={id} />;
+            },
+            meta: {
+              header: {
+                hideSort: true,
+                align: "center",
+              },
+            },
+          }),
+        ]
+      : []),
   ] as ColumnDef<LibroData>[];
 };
 

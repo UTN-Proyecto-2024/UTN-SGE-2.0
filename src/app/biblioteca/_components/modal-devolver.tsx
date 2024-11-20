@@ -38,22 +38,24 @@ export default function DevolverLibroModal({ libroId }: DevolverLibroModalProps)
   };
 
   return (
-    <ModalDrawer
-      trigger={
-        <div className="flex flex-row justify-center">
-          <DevolverButton />
-        </div>
-      }
-      titulo={`Devolver libro`}
-      open={open}
-      onOpenChange={setOpen}
-      onCancel={handleCancel}
-      onSubmit={handleDevolverLibro}
-      isAlertDialog
-      cancelText="Cancelar"
-      submitText="Sí, devolver"
-    >
-      <div>¿Está seguro que desea devolver el libro?</div>
-    </ModalDrawer>
+    <div className="flex flex-row justify-center">
+      <ModalDrawer
+        trigger={
+          <div className="flex flex-row justify-center">
+            <DevolverButton />
+          </div>
+        }
+        titulo={`Devolver libro`}
+        open={open}
+        onOpenChange={setOpen}
+        onCancel={handleCancel}
+        onSubmit={handleDevolverLibro}
+        isAlertDialog
+        cancelText="Cancelar"
+        submitText="Sí, devolver"
+      >
+        <div>¿Está seguro que desea devolver el libro?</div>
+      </ModalDrawer>
+    </div>
   );
 }
