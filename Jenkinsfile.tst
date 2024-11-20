@@ -6,7 +6,7 @@ node {
     }
 
     stage('Build image') {
-        app = docker.build('ext/sge2', '--pull .')
+        sh 'docker --context ext-c04 compose -f docker-compose.yaml --build'
     }
 
     stage('Push image') {
