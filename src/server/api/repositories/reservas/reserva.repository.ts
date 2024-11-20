@@ -9,6 +9,7 @@ export const getAllReservasToday = async (ctx: { db: PrismaClient }, input: Inpu
   today.setHours(0, 0, 0, 0);
   const tomorrow = new Date();
   tomorrow.setDate(today.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0);
   return await ctx.db.reserva.findMany({
     include: {
       usuarioTutor: true,
