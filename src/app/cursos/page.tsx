@@ -25,10 +25,10 @@ export default function Page({ searchParams }: PageProps) {
       buttons={
         <>
           <TienePermiso permisos={[SgeNombre.CURSOS_ABM]}>
-            <CursosNuevoCurso />
-          </TienePermiso>
-          <TienePermiso permisos={[SgeNombre.CURSOS_ABM]}>
-            <CargarCursos />
+            <>
+              <CursosNuevoCurso />
+              <CargarCursos />
+            </>
           </TienePermiso>
         </>
       }

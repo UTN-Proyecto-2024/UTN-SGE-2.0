@@ -6,17 +6,21 @@ import { useRouter } from "next/navigation";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { LibroForm } from "../libros/[id]/libro-form";
 import { useState } from "react";
+import { SgeNombre } from "@prisma/client";
+import { useTienePermisos } from "@/app/_hooks/use-tiene-permisos";
 
 export const BibliotecaNewLibro = () => {
+  const tienePermiso = useTienePermisos([SgeNombre.BIBLIOTECA_ABM_LIBRO]);
+
   const [open, setOpen] = useState(false);
 
   const router = useRouter();
 
+  if (!tienePermiso) return null;
+
   const handleSave = () => {
-    // void utils.biblioteca.getAll.refetch();
     router.refresh();
     setOpen(false);
-    // router.push("/biblioteca"); // ENVIAR AL USUARIO A LA PAGINA DE DETALLE DEL LIBRO NUEVO
   };
 
   const handleCancel = () => setOpen(false);

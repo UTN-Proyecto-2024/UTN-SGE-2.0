@@ -9,8 +9,9 @@ import { LaboratorioOcupado } from "../laboratorio-ocupado";
 import { LABORATORIO_ABIERTO_ROUTE, LABORATORIO_ROUTE } from "@/shared/server-routes";
 import { Switch } from "@/components/ui/switch";
 
-const RUTA_RESERVA_ABIERTO = LABORATORIO_ABIERTO_ROUTE.subRutas[1]?.href ?? "";
-const RUTA_RESERVA_CERRADO = LABORATORIO_ROUTE.subRutas[5]?.href ?? "";
+const RUTA_RESERVA_ABIERTO =
+  LABORATORIO_ABIERTO_ROUTE.subRutas !== undefined ? LABORATORIO_ABIERTO_ROUTE?.subRutas[1]?.href : "";
+const RUTA_RESERVA_CERRADO = LABORATORIO_ROUTE.subRutas !== undefined ? LABORATORIO_ROUTE?.subRutas[5]?.href : "";
 
 type Props = RouterInputs["admin"]["laboratorios"]["getAll"];
 export const SelectLaboratorioConArmariosForm = <T extends FieldValues, TType extends string>({

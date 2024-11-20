@@ -37,10 +37,10 @@ export const MateriasTable = ({ data }: MateriasTableProps) => {
             return (
               <>
                 <TienePermiso permisos={[SgeNombre.MATERIAS_ABM]}>
-                  <RemoveMateriaModal materiaId={original.id} nombre={original.nombre} onSubmit={onDeleteMateria} />
-                </TienePermiso>
-                <TienePermiso permisos={[SgeNombre.MATERIAS_ABM]}>
-                  <EditMateriaModal materiaId={original.id.toString()} />
+                  <>
+                    <RemoveMateriaModal materiaId={original.id} nombre={original.nombre} onSubmit={onDeleteMateria} />
+                    <EditMateriaModal materiaId={original.id.toString()} />
+                  </>
                 </TienePermiso>
               </>
             );

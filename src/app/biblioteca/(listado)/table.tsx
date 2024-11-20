@@ -13,6 +13,7 @@ import { getColumns } from "./columns";
 import { VerLibroModal } from "./ver-libro";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
 import { SgeNombre } from "@prisma/client";
+import { useTienePermisos } from "@/app/_hooks/use-tiene-permisos";
 
 type LibroData = RouterOutputs["biblioteca"]["getAll"];
 type BibliotecaFilters = z.infer<typeof inputGetBooks>;
@@ -23,11 +24,12 @@ type BibliotecaTableProps = {
 };
 
 export const BibliotecaTable = ({ data, filters }: BibliotecaTableProps) => {
+  const { tienePermisos: tienePrestar } = useTienePermisos([SgeNombre.BIBLIOTECA_PRESTAMO_PRESTAR]);
+
   const { refresh, pagination, sorting, onSortingChange, onPaginationChange } = useBibliotecaQueryParam(filters);
 
-  const columns = getColumns();
+  const columns = getColumns({ tienePrestar: tienePrestar });
 
-  // TODO: Implement resizing
   return (
     <>
       <DataTable
@@ -46,22 +48,22 @@ export const BibliotecaTable = ({ data, filters }: BibliotecaTableProps) => {
           header: "Acciones",
           cell({ original }) {
             return (
-              <>
-                <TienePermiso permisos={[SgeNombre.BIBLIOTECA_ABM_LIBRO]}>
-                  <RemoveLibroModal
-                    libroId={original.id}
-                    nombre={original.titulo}
-                    disponible={original.disponible}
-                    onSubmit={refresh}
-                  />
+              <div>
+                <TienePermiso permisos={[SgeNombre.BIBLIOTECA_ABM_LIBRO]} fallback={null}>
+                  <>
+                    <RemoveLibroModal
+                      libroId={original.id}
+                      nombre={original.titulo}
+                      disponible={original.disponible}
+                      onSubmit={refresh}
+                    />
+                    <EditLibroModal libroId={original.id} />
+                  </>
                 </TienePermiso>
-                <TienePermiso permisos={[SgeNombre.BIBLIOTECA_ABM_LIBRO]}>
-                  <EditLibroModal libroId={original.id} />
-                </TienePermiso>
-                <TienePermiso permisos={[SgeNombre.BIBLIOTECA_VER_DETALLES_LIBRO]}>
+                <TienePermiso permisos={[SgeNombre.BIBLIOTECA_VER_DETALLES_LIBRO]} fallback={null}>
                   <VerLibroModal libroId={original.id} />
                 </TienePermiso>
-              </>
+              </div>
             );
           },
         }}

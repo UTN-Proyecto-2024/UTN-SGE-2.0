@@ -7,7 +7,7 @@ import React from "react";
 type PageProps = {
   params: { id?: string };
 };
-const rutaCurso = CURSOS_ROUTE.subRutas[2];
+const rutaCurso = CURSOS_ROUTE.subRutas !== undefined ? CURSOS_ROUTE?.subRutas[2] : undefined;
 export default function PageDivisionDetails({ params: { id } }: PageProps) {
   const router = useRouter();
 

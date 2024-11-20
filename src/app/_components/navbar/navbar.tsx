@@ -16,7 +16,7 @@ const UserIcon = ({ image, size }: { image: string | undefined | null; size: num
 const MobileMenuButton = () => (
   <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-black focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2">
     <span className="absolute -inset-0.5" />
-    <span className="sr-only">Open main menu</span>
+    <span className="sr-only">Abrir menu principal</span>
     <AlignJustify aria-hidden="true" strokeWidth={2} className="block h-8 w-8 group-data-[open]:hidden" />
     <X aria-hidden="true" className="hidden h-8 w-8 group-data-[open]:block" />
   </DisclosureButton>
@@ -27,7 +27,7 @@ const DesktopProfileMenu = (user: Session["user"]) => (
     <div>
       <MenuButton className="relative flex max-w-xs items-center rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
         <span className="absolute -inset-1.5" />
-        <span className="sr-only">Open user menu</span>
+        <span className="sr-only">Abrir menu de usuario</span>
         <UserIcon image={user.image} size={32} />
       </MenuButton>
     </div>
