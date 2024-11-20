@@ -42,6 +42,9 @@ export const getAllLaboratorios = async (ctx: { db: PrismaClient }, input: Input
           }
         : {}),
     },
+    orderBy: {
+      nombre: "asc",
+    },
   });
 
   return {
@@ -174,34 +177,47 @@ export const eliminarLaboratorio = async (ctx: { db: PrismaClient }, input: Inpu
 
 type InputEditarLaboratorio = z.infer<typeof inputEditarLaboratorio>;
 export const editarLaboratorio = async (ctx: { db: PrismaClient }, input: InputEditarLaboratorio, userId: string) => {
-  try {
-    const laboratorio = await ctx.db.$transaction(async (tx) => {
-      const laboratorio = await ctx.db.laboratorio.update({
-        data: {
-          nombre: input.nombre,
-          sedeId: parseInt(input.sedeId),
-          esReservable: input.esReservable,
-          tienePc: input.tienePc,
-          armarios: {
-            deleteMany: {},
+  const laboratorio = await ctx.db.$transaction(async (tx) => {
+    // UPDATE DEL LABORATORIO
+    const laboratorioConArmariosYEstante = await ctx.db.laboratorio.update({
+      data: {
+        nombre: input.nombre,
+        sedeId: parseInt(input.sedeId),
+        esReservable: input.esReservable,
+        tienePc: input.tienePc,
+        usuarioModificadorId: userId,
+      },
+      where: {
+        id: input.id,
+      },
+      select: {
+        id: true,
+        armarios: {
+          select: {
+            id: true,
+            estantes: {
+              select: {
+                id: true,
+              },
+            },
           },
-          usuarioModificadorId: userId,
         },
-        where: {
-          id: input.id,
-        },
-      });
+      },
+    });
 
-      const armariosCreados = (input.armarios ?? []).map((armario) => {
+    // Creo los armarios que no estan en el laboratorioActual
+    const armariosNuevos = (input.armarios ?? [])
+      .filter((armario) => !armario.id)
+      .map((armario) => {
         return tx.armario.create({
           data: {
             nombre: armario.nombre,
             usuarioCreadorId: userId,
             usuarioModificadorId: userId,
-            laboratorioId: laboratorio.id,
+            laboratorioId: laboratorioConArmariosYEstante.id,
             estantes: {
               createMany: {
-                data: armario.estantes.map((estante) => ({
+                data: (armario.estantes ?? []).map((estante) => ({
                   nombre: estante.nombre,
                   usuarioCreadorId: userId,
                   usuarioModificadorId: userId,
@@ -212,15 +228,142 @@ export const editarLaboratorio = async (ctx: { db: PrismaClient }, input: InputE
         });
       });
 
-      await Promise.all(armariosCreados);
+    // Elimino los armarios que existen en la base de datos pero no en el input
+    // Nota @Alex: Va a fallar si tiene equipos en el laboratorio
+    const armariosEliminados = laboratorioConArmariosYEstante.armarios
+      .filter((armario) => {
+        return !input.armarios?.find((inputArmario) => inputArmario.id === armario.id);
+      })
+      .map(async (armario) => {
+        const armarioAEliminar = await tx.equipo.findFirst({
+          where: {
+            OR: [
+              {
+                estante: {
+                  armarioId: armario.id,
+                },
+              },
+              {
+                armarioId: armario.id,
+              },
+            ],
+          },
+          select: {
+            id: true,
+          },
+        });
 
-      return laboratorio;
-    });
+        if (armarioAEliminar) {
+          throw new Error(`Error: No se puede eliminar el armario porque contiene equipos`);
+        }
 
-    return laboratorio;
-  } catch (error) {
-    throw new Error(`Error modificando laboratorio ${input.id}`);
-  }
+        return tx.armario.delete({
+          where: {
+            id: armario.id,
+          },
+        });
+      });
+
+    // Modifico los armarios que existen en la base y que se encuentran en el input
+    const armariosModificados = (input.armarios ?? [])
+      .filter((armario) => armario.id)
+      .map((armario) => {
+        return tx.armario.update({
+          data: {
+            nombre: armario.nombre,
+            usuarioModificadorId: userId,
+          },
+          where: {
+            id: armario.id,
+          },
+        });
+      });
+
+    // Modifico los estantes de los armarios que existen en la base y que se encuentran en el input
+    const estantesModificados = (input.armarios ?? [])
+      .filter((armario) => armario.id)
+      .map(async (armario) => {
+        const armarioId = armario.id;
+
+        if (!armarioId) return {};
+
+        const estantesACrear = (armario.estantes ?? []).filter((estante) => !estante.id);
+        const estantesAModificar = (armario.estantes ?? []).filter((estante) => estante.id);
+        const estantesAEliminar = laboratorioConArmariosYEstante.armarios
+          .find((armario) => {
+            return armario.id === armarioId;
+          })
+          ?.estantes.filter((estante) => {
+            return !input.armarios
+              ?.find((inputArmario) => inputArmario.id === armarioId)
+              ?.estantes?.find((inputEstante) => inputEstante.id === estante.id);
+          });
+
+        // Estantes nuevos de armario existente
+        const estantesNuevos = estantesACrear.map((estante) => {
+          return tx.estante.create({
+            data: {
+              nombre: estante.nombre,
+              usuarioCreadorId: userId,
+              usuarioModificadorId: userId,
+              armarioId: armarioId,
+            },
+          });
+        });
+
+        // Estantes que existen en la base de datos, pero no en el input
+        const estantesEliminados = (estantesAEliminar ?? []).map(async (estante) => {
+          const estanteAEliminar = await tx.equipo.findFirst({
+            where: {
+              estanteId: estante.id,
+            },
+            select: {
+              id: true,
+              estante: {
+                select: {
+                  nombre: true,
+                },
+              },
+            },
+          });
+
+          if (estanteAEliminar) {
+            throw new Error(
+              `Error: No se puede eliminar el estante ${estanteAEliminar?.estante?.nombre} porque contiene equipos`,
+            );
+          }
+
+          return tx.estante.delete({
+            where: {
+              id: estante.id,
+            },
+          });
+        });
+
+        // Estantes que existen en la base de datos y que se encuentran en el input
+        const estantesModificados = estantesAModificar.map((estante) => {
+          return tx.estante.update({
+            data: {
+              nombre: estante.nombre,
+              usuarioModificadorId: userId,
+            },
+            where: {
+              id: estante.id,
+            },
+          });
+        });
+
+        await Promise.all([...estantesNuevos, ...estantesEliminados, ...estantesModificados]);
+
+        return [...estantesNuevos, ...estantesEliminados, ...estantesModificados];
+      });
+
+    await Promise.all([...armariosNuevos, ...armariosEliminados, ...armariosModificados, ...estantesModificados]);
+
+    return laboratorioConArmariosYEstante;
+  });
+
+  return laboratorio;
 };
 
 type InputAgregarLaboratorio = z.infer<typeof inputAgregarLaboratorio>;
