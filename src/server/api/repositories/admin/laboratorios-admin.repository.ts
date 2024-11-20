@@ -147,7 +147,14 @@ export const getLaboratorioPorId = async (ctx: { db: PrismaClient }, input: Inpu
     include: {
       armarios: {
         include: {
-          estantes: true,
+          estantes: {
+            orderBy: {
+              id: "asc",
+            },
+          },
+        },
+        orderBy: {
+          id: "asc",
         },
       },
       sede: true,
