@@ -6,7 +6,7 @@ node {
     }
 
     stage('Build image') {
-        sh 'docker --context ext-c04 compose -f docker-compose.yaml --build'
+        sh 'docker --context ext-c04 compose up -f docker-compose.yaml build'
     }
 
     stage('Push image') {
