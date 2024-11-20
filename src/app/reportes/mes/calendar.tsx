@@ -7,7 +7,7 @@ import Link from "next/link";
 import { api } from "@/trpc/server";
 
 type ReportesFilters = z.infer<typeof inputGetAllLaboratorios>;
-type Reserva = { id: number; materia?: string; division?: string; profesor: string };
+type Reserva = { id: number; materia?: string; division?: string; profesor: string; esDiscrecional: boolean };
 
 type Props = {
   filters: ReportesFilters;
@@ -53,7 +53,10 @@ export default async function Calendar({ filters }: Props) {
               id: reserva.reserva.id,
               materia: reserva.curso?.materia.nombre,
               division: reserva.curso?.division.nombre,
-              profesor: `${reserva.curso?.profesor.nombre} ${reserva.curso?.profesor.apellido}`,
+              profesor: reserva.esDiscrecional
+                ? `${reserva.reserva.usuarioSolicito.nombre} ${reserva.reserva.usuarioSolicito.apellido}`
+                : `${reserva.curso?.profesor.nombre} ${reserva.curso?.profesor.apellido}`,
+              esDiscrecional: reserva.esDiscrecional,
             },
           ],
         };
@@ -65,8 +68,8 @@ export default async function Calendar({ filters }: Props) {
   today.setHours(0, 0, 0, 0);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 rounded bg-white">
-      <div className="grid w-full grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr] overflow-hidden rounded-md border">
+    <div className="flex flex-col items-center justify-center gap-4 rounded">
+      <div className="grid w-full grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr] overflow-auto rounded-md border">
         {WEEKDAYS.map((day) => (
           <div key={day} className={clsx("bg-gray-900 p-3 text-center text-sm text-white")}>
             {day}
@@ -120,7 +123,12 @@ export default async function Calendar({ filters }: Props) {
                                   !isBefore(date, today) && COLORS[color],
                                 )}
                               >
-                                {reserva.materia} ({reserva.division}) {reserva.profesor}
+                                <strong>
+                                  {reserva.esDiscrecional
+                                    ? "Reserva discrecional"
+                                    : `${reserva.materia} (${reserva.division})`}
+                                </strong>{" "}
+                                {reserva.profesor}
                               </div>
                             </Link>
                           ))

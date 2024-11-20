@@ -10,7 +10,11 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
     include: {
       reservaLaboratorioCerrado: {
         include: {
-          reserva: true,
+          reserva: {
+            include: {
+              usuarioSolicito: true,
+            },
+          },
           curso: {
             include: {
               division: true,
