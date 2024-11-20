@@ -5,23 +5,32 @@ import { APP_ROUTES } from "@/shared/server-routes";
 import { Bell } from "lucide-react";
 import { MenuItem } from "@headlessui/react";
 import Link from "next/link";
+import { usePuedeVerSSR } from "@/app/_hooks/use-tiene-permisos";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 export const DesktopNavigation = ({ isLogged }: { isLogged: boolean }) => {
+  const { shouldRender, puedeVerLink } = usePuedeVerSSR();
+
   const pathname = usePathname();
+
+  if (!shouldRender) {
+    return null; // No renderiza nada durante el SSR
+  }
+
   return (
     <div className="flex items-baseline space-x-4">
-      {APP_ROUTES.filter((item) => isLogged || item.isPublic).map((item) => {
+      {APP_ROUTES.filter((item) => (isLogged || item.isPublic) && puedeVerLink(item.permisos)).map((item) => {
         const current = item.href.split("/")[1] === pathname.split("/")[1] && !item.href.startsWith("http");
+
         return (
           <Link
             key={item.href}
             href={item.href}
             aria-current={current ? "page" : undefined}
-            target={!!item?.esExterna ? "_blank" : undefined}
+            target={!!item.esExterna ? "_blank" : undefined}
             prefetch={true}
             className={classNames(
               current ? "bg-slate-100 text-black" : "text-gray-300 hover:bg-slate-50 hover:text-black",

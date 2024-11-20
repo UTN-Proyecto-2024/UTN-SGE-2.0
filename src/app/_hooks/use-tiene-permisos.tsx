@@ -2,7 +2,7 @@
 
 import { type SgeNombre } from "@prisma/client";
 import { usePermisos } from "./use-context-tiene-permisos";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 
 export const useTienePermisos = (permisos: SgeNombre[] = []) => {
   const { permisos: tienePermisosResponse, isLoading, isError } = usePermisos();
@@ -55,4 +55,28 @@ export const useTienePermisos = (permisos: SgeNombre[] = []) => {
   }, [isLoading, isError, permisos, tienePermisosResponse]);
 
   return puedeVer;
+};
+
+export const usePuedeVerSSR = () => {
+  const [shouldRender, setShouldRender] = useState(false);
+
+  useEffect(() => setShouldRender(true), []); // Solo renderizar despues del SSR, o sea en CSR
+
+  const { permisos, isLoading, isError } = usePermisos();
+
+  const puedeVerLink = useCallback(
+    (permisosPregunta: SgeNombre[]) => {
+      if (isLoading || isError) return false;
+
+      if (permisosPregunta.length === 0) return true;
+
+      return permisosPregunta.some((permiso) => permisos[permiso]);
+    },
+    [isError, isLoading, permisos],
+  );
+
+  return {
+    shouldRender,
+    puedeVerLink,
+  };
 };
