@@ -21,13 +21,13 @@ type LaboratorioTableProps = {
 export const AdminLaboratoriosTable = ({ data, filters }: LaboratorioTableProps) => {
   const { refresh } = useAdminLaboratoriosQueryParam(filters);
 
+  const sortedData = [...(data.laboratorios ?? [])].sort((a, b) => a.nombre.localeCompare(b.nombre));
   const columns = getColumns();
 
-  // TODO: Implement resizing
   return (
     <>
       <DataTable
-        data={data.laboratorios ?? []}
+        data={sortedData ?? []}
         columns={columns}
         action={{
           header: "Acciones",
