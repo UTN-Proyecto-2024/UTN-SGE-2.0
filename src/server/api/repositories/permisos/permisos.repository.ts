@@ -33,17 +33,19 @@ export const verificarPermisoUsuario = async (
 ) => {
   const permisos = Array.isArray(sgePermisoNombre) ? sgePermisoNombre : [sgePermisoNombre];
 
-  // Utilizamos queryRaw porque es una consulta de SQL que se realiza muchas veces y de esta forma la hacemos mas eficiente
-  const result = await ctx.db.$queryRaw<{ existe: boolean }[]>`SELECT EXISTS(
-    SELECT 1
-    FROM "User" u
-    JOIN "UsuarioRol" ur ON ur."userId" = u.id
-    JOIN "Rol" r ON r.id = ur."rolId"
-    JOIN "RolPermiso" rp ON rp."rolId" = r.id
-    JOIN "Permiso" p ON p.id = rp."permisoId"
-    WHERE u.id = ${usuarioId}
-      AND p."sgeNombre" = ANY(${permisos})
-  ) AS "existe";`;
+  const result = await ctx.db.$queryRaw<{ existe: boolean }[]>`SELECT 
+  EXISTS (
+      SELECT 1
+        FROM "User" u
+      JOIN "UsuarioRol" ur ON ur."userId" = u.id
+      JOIN "Rol" r ON r.id = ur."rolId"
+      JOIN "RolPermiso" rp ON rp."rolId" = r.id
+      JOIN "Permiso" p ON p.id = rp."permisoId"
+        WHERE 
+          u.id = ${usuarioId} AND 
+          p."sgeNombre" = ANY(ARRAY[${permisos}]::"SgeNombre"[])
+    ) AS "existe";
+  `;
 
   return result[0]?.existe ?? false;
 };

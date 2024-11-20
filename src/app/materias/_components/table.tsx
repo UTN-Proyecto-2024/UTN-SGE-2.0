@@ -8,6 +8,8 @@ import EditMateriaModal from "./edit-materia";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import type { GroupingState } from "@tanstack/react-table";
+import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
+import { SgeNombre } from "@prisma/client";
 
 type MateriaData = RouterOutputs["materia"]["getAll"];
 
@@ -34,8 +36,12 @@ export const MateriasTable = ({ data }: MateriasTableProps) => {
           cell({ original }) {
             return (
               <>
-                <RemoveMateriaModal materiaId={original.id} nombre={original.nombre} onSubmit={onDeleteMateria} />
-                <EditMateriaModal materiaId={original.id.toString()} />
+                <TienePermiso permisos={[SgeNombre.MATERIAS_ABM]}>
+                  <>
+                    <RemoveMateriaModal materiaId={original.id} nombre={original.nombre} onSubmit={onDeleteMateria} />
+                    <EditMateriaModal materiaId={original.id.toString()} />
+                  </>
+                </TienePermiso>
               </>
             );
           },

@@ -1,13 +1,15 @@
+"use client";
+
 import React, { useMemo } from "react";
 import { format, startOfMonth, addDays, isBefore } from "date-fns";
 import { clsx } from "clsx";
 import type { z } from "zod";
 import type { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.schema";
 import Link from "next/link";
-import { api } from "@/trpc/server";
+import { api } from "@/trpc/react";
 
 type ReportesFilters = z.infer<typeof inputGetAllLaboratorios>;
-type Reserva = { id: number; materia?: string; division?: string; profesor: string };
+type Reserva = { id: number; materia?: string; division?: string; profesor: string; esDiscrecional: boolean };
 
 type Props = {
   filters: ReportesFilters;
@@ -28,7 +30,9 @@ const COLORS = [
   "bg-lime-200",
 ];
 
-export default async function Calendar({ filters }: Props) {
+export default function Calendar({ filters }: Props) {
+  const { data: laboratorios } = api.laboratorios.getAll.useQuery(filters);
+
   const startOfCurrentMonth = useMemo(() => {
     return filters.desde ? new Date(filters.desde + "T07:00:00.000Z") : startOfMonth(new Date());
   }, [filters.desde]);
@@ -39,9 +43,8 @@ export default async function Calendar({ filters }: Props) {
     );
   }, [startOfCurrentMonth]);
 
-  const laboratoriosMap = await useMemo(async () => {
-    const laboratorios = await api.laboratorios.getAll(filters);
-    return laboratorios.map((laboratorio) => ({
+  const laboratoriosMap = useMemo(() => {
+    return (laboratorios ?? []).map((laboratorio) => ({
       ...laboratorio,
       reservas: laboratorio.reservaLaboratorioCerrado.reduce<Record<string, Reserva[]>>((acc, reserva) => {
         const dateKey = format(reserva.reserva.fechaHoraInicio, "yyyy-MM-dd");
@@ -53,20 +56,27 @@ export default async function Calendar({ filters }: Props) {
               id: reserva.reserva.id,
               materia: reserva.curso?.materia.nombre,
               division: reserva.curso?.division.nombre,
-              profesor: `${reserva.curso?.profesor.nombre} ${reserva.curso?.profesor.apellido}`,
+              profesor: reserva.esDiscrecional
+                ? `${reserva.reserva.usuarioSolicito.nombre} ${reserva.reserva.usuarioSolicito.apellido}`
+                : `${reserva.curso?.profesor.nombre} ${reserva.curso?.profesor.apellido}`,
+              esDiscrecional: reserva.esDiscrecional,
             },
           ],
         };
       }, {}),
     }));
-  }, [filters]);
+  }, [laboratorios]);
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = useMemo(() => {
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    return hoy;
+  }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 rounded bg-white">
-      <div className="grid w-full grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr] overflow-hidden rounded-md border">
+    <div className="flex flex-col items-center justify-center gap-4 rounded">
+      <div className="grid w-full grid-cols-[auto,1fr,1fr,1fr,1fr,1fr,1fr] overflow-auto rounded-md border">
         {WEEKDAYS.map((day) => (
           <div key={day} className={clsx("bg-gray-900 p-3 text-center text-sm text-white")}>
             {day}
@@ -120,7 +130,12 @@ export default async function Calendar({ filters }: Props) {
                                   !isBefore(date, today) && COLORS[color],
                                 )}
                               >
-                                {reserva.materia} ({reserva.division}) {reserva.profesor}
+                                <strong>
+                                  {reserva.esDiscrecional
+                                    ? "Reserva discrecional"
+                                    : `${reserva.materia} (${reserva.division})`}
+                                </strong>{" "}
+                                {reserva.profesor}
                               </div>
                             </Link>
                           ))
