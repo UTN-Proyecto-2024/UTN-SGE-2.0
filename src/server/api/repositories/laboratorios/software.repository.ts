@@ -38,9 +38,9 @@ export const getAllSoftware = async (ctx: { db: PrismaClient }, input: InputGetA
             CASE WHEN sl."softwareId" IS NOT NULL THEN true ELSE false END
           ) AS laboratorios
         FROM "Software" s
-        ${Prisma.raw(sedeId ? `INNER JOIN "Laboratorio" l ON l."sedeId" = ${sedeId}` : `CROSS JOIN "Laboratorio" l`)}
+        INNER JOIN "Laboratorio" l ON l."tienePc" = true AND ${Prisma.raw(sedeId ? `l."sedeId" = ${sedeId}` : `1=1`)}
         LEFT JOIN "SoftwareLaboratorio" sl ON s.id = sl."softwareId" AND l.id = sl."laboratorioId"
-        WHERE l."esReservable" = true AND ${whereText}
+        WHERE ${whereText}
         GROUP BY s.id, s.nombre;
       `,
     ctx.db.laboratorio.findMany({
@@ -49,6 +49,7 @@ export const getAllSoftware = async (ctx: { db: PrismaClient }, input: InputGetA
         nombre: true,
       },
       where: {
+        tienePc: true,
         sedeId: sedeId ? { equals: Number(sedeId) } : undefined,
       },
     }),
