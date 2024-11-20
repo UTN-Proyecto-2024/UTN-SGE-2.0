@@ -15,7 +15,8 @@ import {
   getAllRoles,
   getRolById,
 } from "../../repositories/admin/roles-admin.repository";
-import { Prisma } from "@prisma/client";
+import { Prisma, SgeNombre } from "@prisma/client";
+import { verificarPermisos } from "@/server/permisos";
 
 export const getTodosLosRolesProcedure = protectedProcedure
   .input(inputGetRoles.optional())
@@ -36,6 +37,7 @@ export const getRolByIdProcedure = protectedProcedure.input(inputGetRol).query(a
 });
 
 export const eliminarRolProcedure = protectedProcedure.input(inputEliminarRol).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS]);
   validarInput(inputEliminarRol, input);
 
   const role = await eliminarRol(ctx, input);
@@ -50,6 +52,7 @@ export const getTodosLosPermisosProcedure = protectedProcedure.query(async ({ ct
 });
 
 export const editarRolProcedure = protectedProcedure.input(inputEditarRol).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS]);
   validarInput(inputEditarRol, input);
 
   const userId = ctx.session.user.id;
@@ -75,6 +78,7 @@ export const editarRolProcedure = protectedProcedure.input(inputEditarRol).mutat
 });
 
 export const nuevoRolProcedure = protectedProcedure.input(inputAgregarRol).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS]);
   validarInput(inputAgregarRol, input);
 
   const userId = ctx.session.user.id;

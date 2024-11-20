@@ -27,6 +27,8 @@ import {
   enviarMailReservaLaboratorioAbiertoProcedure,
   enviarMailRechazoLaboratorioAbiertoProcedure,
 } from "../mails/emailLaboratorioAbierto.service";
+import { verificarPermisos } from "@/server/permisos";
+import { SgeNombre } from "@prisma/client";
 
 export const getReservaLaboratorioAbiertoPorUserProcedure = protectedProcedure
   .input(inputGetReservaLaboratorioPorUsuarioId)
@@ -63,6 +65,7 @@ export const getReservaLaboratorioAbiertoPorIdProcedure = protectedProcedure
 export const aprobarReservaProcedure = protectedProcedure
   .input(inputAprobarReservaLaboratorioAbiertoSchema)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.LAB_ABIERTO_CONFIRMAR_RESERVAS]);
     validarInput(inputAprobarReservaLaboratorioAbiertoSchema, input);
 
     const userId = ctx.session.user.id;
@@ -77,6 +80,7 @@ export const aprobarReservaProcedure = protectedProcedure
 export const rechazarReservaProcedure = protectedProcedure
   .input(inputRechazarReservaLaboratorioAbierto)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.LAB_ABIERTO_CONFIRMAR_RESERVAS]);
     validarInput(inputRechazarReservaLaboratorioAbierto, input);
 
     const userId = ctx.session.user.id;
@@ -91,6 +95,7 @@ export const rechazarReservaProcedure = protectedProcedure
 export const cancelarReservaProcedure = protectedProcedure
   .input(inputCancelarReservaLaboratorioAbierto)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.LAB_ABIERTO_CONFIRMAR_RESERVAS]);
     validarInput(inputCancelarReservaLaboratorioAbierto, input);
 
     const userId = ctx.session.user.id;
@@ -105,6 +110,7 @@ export const cancelarReservaProcedure = protectedProcedure
 export const editarReservaProcedure = protectedProcedure
   .input(inputEditarReservaLaboratorioAbiertoSchema)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.LAB_ABIERTO_CONFIRMAR_RESERVAS]);
     validarInput(inputEditarReservaLaboratorioAbiertoSchema, input);
     validarFechaReserva(input.fechaReserva);
 

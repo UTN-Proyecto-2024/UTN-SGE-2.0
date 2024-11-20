@@ -24,6 +24,8 @@ import {
   getAllLaboratoriosReservables,
   getAllSedesConLaboratorios,
 } from "../../repositories/admin/laboratorios-admin.repository";
+import { verificarPermisos } from "@/server/permisos";
+import { SgeNombre } from "@prisma/client";
 
 export const getTodosLosLaboratoriosProcedure = protectedProcedure
   .input(inputGetLaboratorios)
@@ -106,6 +108,7 @@ export const getLaboratorioPorIdProcedure = protectedProcedure
 export const eliminarLaboratorioProcedure = protectedProcedure
   .input(inputEliminarLaboratorio)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS]);
     validarInput(inputEliminarLaboratorio, input);
 
     const laboratorio = await eliminarLaboratorio(ctx, input);
