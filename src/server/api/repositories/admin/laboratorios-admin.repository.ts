@@ -175,18 +175,46 @@ export const eliminarLaboratorio = async (ctx: { db: PrismaClient }, input: Inpu
 type InputEditarLaboratorio = z.infer<typeof inputEditarLaboratorio>;
 export const editarLaboratorio = async (ctx: { db: PrismaClient }, input: InputEditarLaboratorio, userId: string) => {
   try {
-    const laboratorio = await ctx.db.laboratorio.update({
-      data: {
-        nombre: input.nombre,
-        sedeId: parseInt(input.sedeId),
-        esReservable: input.esReservable,
-        tienePc: input.tienePc,
+    const laboratorio = await ctx.db.$transaction(async (tx) => {
+      const laboratorio = await ctx.db.laboratorio.update({
+        data: {
+          nombre: input.nombre,
+          sedeId: parseInt(input.sedeId),
+          esReservable: input.esReservable,
+          tienePc: input.tienePc,
+          armarios: {
+            deleteMany: {},
+          },
+          usuarioModificadorId: userId,
+        },
+        where: {
+          id: input.id,
+        },
+      });
 
-        usuarioModificadorId: userId,
-      },
-      where: {
-        id: input.id,
-      },
+      const armariosCreados = (input.armarios ?? []).map((armario) => {
+        return tx.armario.create({
+          data: {
+            nombre: armario.nombre,
+            usuarioCreadorId: userId,
+            usuarioModificadorId: userId,
+            laboratorioId: laboratorio.id,
+            estantes: {
+              createMany: {
+                data: armario.estantes.map((estante) => ({
+                  nombre: estante.nombre,
+                  usuarioCreadorId: userId,
+                  usuarioModificadorId: userId,
+                })),
+              },
+            },
+          },
+        });
+      });
+
+      await Promise.all(armariosCreados);
+
+      return laboratorio;
     });
 
     return laboratorio;
@@ -198,15 +226,41 @@ export const editarLaboratorio = async (ctx: { db: PrismaClient }, input: InputE
 type InputAgregarLaboratorio = z.infer<typeof inputAgregarLaboratorio>;
 export const agregarLaboratorio = async (ctx: { db: PrismaClient }, input: InputAgregarLaboratorio, userId: string) => {
   try {
-    const laboratorio = await ctx.db.laboratorio.create({
-      data: {
-        nombre: input.nombre,
-        sedeId: parseInt(input.sedeId),
-        esReservable: input.esReservable,
+    const laboratorio = await ctx.db.$transaction(async (tx) => {
+      const laboratorio = await ctx.db.laboratorio.create({
+        data: {
+          nombre: input.nombre,
+          sedeId: parseInt(input.sedeId),
+          esReservable: input.esReservable,
+          tienePc: input.tienePc,
+          usuarioCreadorId: userId,
+          usuarioModificadorId: userId,
+        },
+      });
 
-        usuarioCreadorId: userId,
-        usuarioModificadorId: userId,
-      },
+      const armariosCreados = (input.armarios ?? []).map((armario) => {
+        return tx.armario.create({
+          data: {
+            nombre: armario.nombre,
+            usuarioCreadorId: userId,
+            usuarioModificadorId: userId,
+            laboratorioId: laboratorio.id,
+            estantes: {
+              createMany: {
+                data: armario.estantes.map((estante) => ({
+                  nombre: estante.nombre,
+                  usuarioCreadorId: userId,
+                  usuarioModificadorId: userId,
+                })),
+              },
+            },
+          },
+        });
+      });
+
+      await Promise.all(armariosCreados);
+
+      return laboratorio;
     });
 
     return laboratorio;

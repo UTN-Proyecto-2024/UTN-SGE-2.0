@@ -33,8 +33,19 @@ export const inputAgregarLaboratorio = z.object({
   esReservable: z.boolean().default(false),
   sedeId: z.string().min(1, { message: "Requerido" }),
   tienePc: z.boolean().default(false),
+  armarios: z
+    .array(
+      z.object({
+        nombre: z.string(),
+        estantes: z.array(
+          z.object({
+            nombre: z.string(),
+          }),
+        ),
+      }),
+    )
+    .optional(),
 });
-
 export const inputEditarLaboratorio = z
   .object({
     id: z.number().optional(), // Si viene significa que se va a usar para editar, si no significa que se va a usar para crear
