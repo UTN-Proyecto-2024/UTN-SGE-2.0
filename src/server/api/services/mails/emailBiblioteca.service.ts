@@ -16,7 +16,7 @@ export const enviarMailReservaLibroProcedure = async (ctx: { db: PrismaClient },
       apellido: reservaData.usuarioSolicitante.apellido ?? "",
     },
     textoMail: `<strong>Has reservado el libro</strong> <br/> <em>${reservaData.libroNombre}</em>`,
-    hipervinculo: BIBLIOTECA_ROUTE.misPrestamosRuta,
+    hipervinculo: BIBLIOTECA_ROUTE.misPrestamosRuta !== undefined ? String(BIBLIOTECA_ROUTE?.misPrestamosRuta) : "",
   });
 };
 
@@ -35,7 +35,7 @@ export const enviarMailRenovarLibroProcedure = async (ctx: { db: PrismaClient },
       apellido: reservaData.usuarioSolicitante.apellido ?? "",
     },
     textoMail: `<strong>Has renovado el préstamo del libro</strong> <br/> <em>${reservaData.libroNombre}</em>`,
-    hipervinculo: BIBLIOTECA_ROUTE.misPrestamosRuta,
+    hipervinculo: BIBLIOTECA_ROUTE.misPrestamosRuta !== undefined ? String(BIBLIOTECA_ROUTE?.misPrestamosRuta) : "",
   });
 };
 
@@ -50,6 +50,6 @@ export const enviarMailDevolverLibroProcedure = async (ctx: { db: PrismaClient }
       apellido: reservaData.usuarioSolicitante.apellido ?? "",
     },
     textoMail: `<strong>Has devuelto el libro</strong> <br/> <em>${reservaData.libroNombre}</em>`,
-    hipervinculo: BIBLIOTECA_ROUTE.misPrestamosRuta,
+    hipervinculo: BIBLIOTECA_ROUTE.misPrestamosRuta !== undefined ? String(BIBLIOTECA_ROUTE?.misPrestamosRuta) : "",
   });
 };

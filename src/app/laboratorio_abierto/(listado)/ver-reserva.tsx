@@ -7,7 +7,8 @@ type VerReservaModalProps = {
   reservaID: number;
 };
 
-const rutaSolicitud = LABORATORIO_ABIERTO_ROUTE.subRutas[1];
+const rutaSolicitud =
+  LABORATORIO_ABIERTO_ROUTE.subRutas !== undefined ? LABORATORIO_ABIERTO_ROUTE?.subRutas[1] : undefined;
 
 export const VerReservaModal = (props: VerReservaModalProps) => {
   return (

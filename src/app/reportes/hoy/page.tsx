@@ -1,5 +1,5 @@
 import { type ReadonlyURLSearchParams } from "next/navigation";
-import { Suspense, useMemo } from "react";
+import { Suspense } from "react";
 import PageLayout from "@/components/ui/page-template";
 import { ActionButtons } from "../_actions/action-buttons";
 import { REPORTES_ROUTE } from "@/shared/server-routes";
@@ -12,7 +12,8 @@ type PageProps = {
 
 export default function Page({ searchParams }: PageProps) {
   const filters = inputGetAllLaboratorios.parse(searchParams);
-  const filter_as_key = useMemo(() => JSON.stringify(filters), [filters]);
+
+  const filter_as_key = JSON.stringify(filters);
 
   return (
     <PageLayout route={REPORTES_ROUTE}>
