@@ -34,7 +34,7 @@ export default function ComprobanteContent({ datosLibro, datosEquipo }: Comproba
     <section className="mx-auto flex h-[297mm] w-[210mm] flex-col justify-around gap-y-4 overflow-hidden px-8 py-2">
       {/* Titulo */}
       <div className="flex-initial items-center justify-between">
-        <UTNLogo className="h-7" />
+        <UTNLogo className="absolute h-7" />
         <TituloPrestamo
           esLibro={!!datosLibro}
           reservaId={datosGenericos?.id ?? 0}

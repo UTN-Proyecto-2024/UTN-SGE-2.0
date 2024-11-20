@@ -66,16 +66,17 @@ export function TutorCard({ className, ...props }: CardProps & TutorData) {
         </div>
         <div className="mt-4 flex justify-between">
           <TienePermiso permisos={[SgeNombre.LAB_ABIERTO_TUTORES_ABM]}>
-            <Button onClick={handleEditClick} title="Editar" color={"outline"} className="h-8 w-8 px-1 py-1">
-              <PencilIcon size={16} />
-            </Button>
-          </TienePermiso>
-          <TienePermiso permisos={[SgeNombre.LAB_ABIERTO_TUTORES_ABM]}>
-            <RemoveTutorModal
-              tutorId={tutor.usuario.id}
-              nombre={`${nombre} ${apellido}`}
-              onSubmit={() => console.log("Tutor eliminado")}
-            />
+            <>
+              <Button onClick={handleEditClick} title="Editar" color={"outline"} className="h-8 w-8 px-1 py-1">
+                <PencilIcon size={16} />
+              </Button>
+              <RemoveTutorModal
+                tutorId={tutor.usuario.id}
+                nombre={`${nombre} ${apellido}`}
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                onSubmit={() => {}}
+              />
+            </>
           </TienePermiso>
         </div>
       </CardContent>
@@ -85,11 +86,9 @@ export function TutorCard({ className, ...props }: CardProps & TutorData) {
         isOpen={isEditModalOpen}
         onClose={handleModalClose}
         id={tutor.usuario.id}
-        onSubmit={() => {
-          console.log("Tutor editado");
-        }}
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        onSubmit={() => {}}
         onEditSuccess={() => {
-          console.log("Tutor editado");
           handleModalClose();
         }}
         tutor={tutor}

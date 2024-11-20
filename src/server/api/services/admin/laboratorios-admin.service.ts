@@ -1,4 +1,4 @@
-import { protectedProcedure } from "../../trpc";
+import { protectedProcedure, publicProcedure } from "../../trpc";
 import { validarInput } from "../helper";
 import {
   inputAgregarLaboratorio,
@@ -87,7 +87,7 @@ export const getTodosLosEstantesProcedure = protectedProcedure.input(inputGetEst
   return estantes;
 });
 
-export const getTodosLosSedesConLaboratoriosProcedure = protectedProcedure.query(async ({ ctx }) => {
+export const getTodosLosSedesConLaboratoriosProcedure = publicProcedure.query(async ({ ctx }) => {
   const sedes = await getAllSedesConLaboratorios(ctx);
 
   return sedes;

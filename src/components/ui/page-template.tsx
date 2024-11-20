@@ -6,7 +6,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { cn } from "../utils";
-import { usePermisos } from "@/app/_hooks/use-context-tiene-permisos";
 
 type PageLayoutProps = {
   route: AppRoute;
@@ -16,7 +15,6 @@ type PageLayoutProps = {
 
 export default function PageLayout({ route, buttons, children }: PageLayoutProps) {
   const pathname = usePathname();
-  const { permisos: tienePermisosResponse } = usePermisos();
 
   const subpathTitle = route.subRutas?.find((route) => route.href === pathname)?.label;
   const pathTitle = route.label;
@@ -40,27 +38,22 @@ export default function PageLayout({ route, buttons, children }: PageLayoutProps
             </h1>
             <Tabs defaultValue="" className="hidden space-x-8 rounded-lg bg-[#F1F5F9] p-2 text-sm lg:flex">
               <TabsList className="flex w-full flex-row gap-x-4">
-                {route.subRutas
-                  ?.filter(
-                    (link) =>
-                      link.permisos.length === 0 || link.permisos.some((permiso) => tienePermisosResponse[permiso]),
-                  )
-                  .map((subRuta) => {
-                    const hrefSinQueryParams = subRuta.redirectClick ? subRuta.redirectClick : subRuta.href;
+                {route.subRutas?.map((subRuta) => {
+                  const hrefSinQueryParams = subRuta.redirectClick ? subRuta.redirectClick : subRuta.href;
 
-                    return (
-                      <TabsTrigger
-                        value={subRuta.href}
-                        key={subRuta.href}
-                        className={cn(
-                          { "bg-[#FFFFFF]": subRuta.href === pathname },
-                          "rounded-lg px-3 py-1.5 hover:bg-slate-200",
-                        )}
-                      >
-                        <Link href={hrefSinQueryParams}>{subRuta.label}</Link>
-                      </TabsTrigger>
-                    );
-                  })}
+                  return (
+                    <TabsTrigger
+                      value={subRuta.href}
+                      key={subRuta.href}
+                      className={cn(
+                        { "bg-[#FFFFFF]": subRuta.href === pathname },
+                        "rounded-lg px-3 py-1.5 hover:bg-slate-200",
+                      )}
+                    >
+                      <Link href={hrefSinQueryParams}>{subRuta.label}</Link>
+                    </TabsTrigger>
+                  );
+                })}
               </TabsList>
             </Tabs>
           </div>

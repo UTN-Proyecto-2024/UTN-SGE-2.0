@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import { useTienePermisos } from "@/app/_hooks/use-tiene-permisos";
 import { type SgeNombre } from "@prisma/client";
 
@@ -12,9 +13,21 @@ type TienePermisoProps = {
 export const TienePermiso = ({ permisos, fallback = null, children }: TienePermisoProps) => {
   const { tienePermisos, isLoading, isError } = useTienePermisos(permisos);
 
-  if (isLoading || isError) {
-    return null;
-  }
+  const [puedeVer, setPuedeVer] = useState(false);
 
-  return tienePermisos ? <>{children}</> : <>{fallback}</>;
+  useEffect(() => {
+    if (permisos.length === 0) {
+      setPuedeVer(true);
+      return;
+    }
+
+    if (isLoading || isError) {
+      setPuedeVer(false);
+      return;
+    }
+
+    setPuedeVer(tienePermisos);
+  }, [isLoading, isError, tienePermisos, permisos.length]);
+
+  return puedeVer ? <>{children}</> : <>{fallback}</>;
 };
