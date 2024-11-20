@@ -20,7 +20,7 @@ export const enviarMailReservaEquipoProcedure = async (ctx: { db: PrismaClient }
       apellido: reservaData.usuarioSolicitante.apellido ?? "",
     },
     textoMail: `<strong>Has reservado el equipo</strong> <br/> <em>${reservaData.equipoModelo}</em>`,
-    hipervinculo: EQUIPOS_ROUTE.misPrestamosRuta,
+    hipervinculo: EQUIPOS_ROUTE.misPrestamosRuta !== undefined ? String(EQUIPOS_ROUTE?.misPrestamosRuta) : "",
   });
 };
 
@@ -39,7 +39,7 @@ export const enviarMailRenovarEquipoProcedure = async (
     },
 
     textoMail: `<strong>Has renovado el préstamo del equipo</strong> <br/> <em>${renovacionData.equipoModelo}</em> <br> desde ${getDateISOString(input.fechaInicio)} hasta ${getDateISOString(input.fechaFin)}`,
-    hipervinculo: EQUIPOS_ROUTE.misPrestamosRuta,
+    hipervinculo: EQUIPOS_ROUTE.misPrestamosRuta !== undefined ? String(EQUIPOS_ROUTE?.misPrestamosRuta) : "",
   });
 };
 
@@ -54,6 +54,6 @@ export const enviarMailDevolverEquipoProcedure = async (ctx: { db: PrismaClient 
       apellido: reservaData.usuarioSolicitante.apellido ?? "",
     },
     textoMail: `<strong>Has devuelto el equipo</strong> <br/> <em>${reservaData.equipoModelo}</em>`,
-    hipervinculo: EQUIPOS_ROUTE.misPrestamosRuta,
+    hipervinculo: EQUIPOS_ROUTE.misPrestamosRuta !== undefined ? String(EQUIPOS_ROUTE?.misPrestamosRuta) : "",
   });
 };

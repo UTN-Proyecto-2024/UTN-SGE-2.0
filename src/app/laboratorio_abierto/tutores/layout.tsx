@@ -10,7 +10,7 @@ type LayoutProps = {
 };
 
 export default async function Layout({ children }: LayoutProps) {
-  const puedeVer = await estaLogueadoYConPermiso([SgeNombre.LAB_ABIERTO_TUTORES_ABM]);
+  const puedeVer = await estaLogueadoYConPermiso([SgeNombre.LAB_ABIERTO_VER_PLANILLA_TUTORES]);
   if (!puedeVer) {
     redirect(INICIO_ROUTE.href);
   }
