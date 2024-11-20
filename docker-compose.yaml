@@ -20,21 +20,8 @@ services:
 
   app:
     image: registry.frba.utn.edu.ar/ext/sge2
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
-      NEXTAUTH_URL: ${NEXTAUTH_URL}
-      RUTA_ACTUAL: ${RUTA_ACTUAL}
-      DISCORD_CLIENT_ID: ${DISCORD_CLIENT_ID}
-      DISCORD_CLIENT_SECRET: ${DISCORD_CLIENT_SECRET}
-      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
-      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
-      KEYCLOAK_ISSUER: ${KEYCLOAK_ISSUER}
-      SMTP_EMAIL_USER: ${SMTP_EMAIL_USER}
-      SMTP_EMAIL_PASSWORD: ${SMTP_EMAIL_PASSWORD}
-      SMTP_HOST: ${SMTP_HOST}
-      SMTP_PORT: ${SMTP_PORT}
-      SMTP_SECURE: ${SMTP_SECURE}
+    env_file:
+      - /opt/sge2/.env
     hostname: app
     networks:
       - sge2
