@@ -36,9 +36,11 @@ export const inputAgregarLaboratorio = z.object({
   armarios: z
     .array(
       z.object({
+        id: z.number().optional(),
         nombre: z.string(),
         estantes: z.array(
           z.object({
+            id: z.number().optional(),
             nombre: z.string(),
           }),
         ),
