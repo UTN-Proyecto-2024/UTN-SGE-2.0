@@ -35,6 +35,8 @@ import {
   getAllTipos,
   getTipoPorId,
 } from "../../repositories/equipos/equipos-tipos.repository";
+import { verificarPermisos } from "@/server/permisos";
+import { SgeNombre } from "@prisma/client";
 
 export const getTodosLosEquiposProcedure = protectedProcedure.input(inputGetEquipos).query(async ({ ctx, input }) => {
   validarInput(inputGetEquipos, input);
@@ -53,6 +55,7 @@ export const equipoPorIdProcedure = protectedProcedure.input(inputGetEquipo).que
 });
 
 export const nuevoEquipoProcedure = protectedProcedure.input(inputAgregarEquipo).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.EQUIPOS_ABM]);
   validarInput(inputAgregarEquipo, input);
 
   const userId = ctx.session.user.id;
@@ -63,6 +66,7 @@ export const nuevoEquipoProcedure = protectedProcedure.input(inputAgregarEquipo)
 });
 
 export const editarEquipoProcedure = protectedProcedure.input(inputEditarEquipos).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.EQUIPOS_ABM]);
   validarInput(inputEditarEquipos, input);
 
   const userId = ctx.session.user.id;
@@ -75,6 +79,7 @@ export const editarEquipoProcedure = protectedProcedure.input(inputEditarEquipos
 export const eliminarEquipoProcedure = protectedProcedure
   .input(inputEliminarEquipo)
   .mutation(async ({ ctx, input }) => {
+    await verificarPermisos([SgeNombre.EQUIPOS_ABM]);
     validarInput(inputEliminarEquipo, input);
 
     const equipo = await eliminarEquipo(ctx, input);
@@ -83,6 +88,7 @@ export const eliminarEquipoProcedure = protectedProcedure
   });
 
 export const eliminarTipoProcedure = protectedProcedure.input(inputEliminarTipo).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.EQUIPOS_ABM]);
   validarInput(inputEliminarEquipo, input);
 
   const tipo = await eliminarTipo(ctx, input);
@@ -107,6 +113,7 @@ export const tipoPorIdProcedure = protectedProcedure.input(inputGetTipo).query(a
 });
 
 export const editarTipoProcedure = protectedProcedure.input(inputEditarTipo).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.EQUIPOS_ABM]);
   validarInput(inputEditarTipo, input);
 
   const userId = ctx.session.user.id;
@@ -117,6 +124,7 @@ export const editarTipoProcedure = protectedProcedure.input(inputEditarTipo).mut
 });
 
 export const nuevoTipoProcedure = protectedProcedure.input(inputAgregarTipo).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.EQUIPOS_ABM]);
   validarInput(inputAgregarTipo, input);
 
   const userId = ctx.session.user.id;
@@ -153,6 +161,7 @@ export const getTodosLosModelosProcedure = protectedProcedure.query(async ({ ctx
 });
 
 export const nuevaMarcaProcedure = protectedProcedure.input(inputAgregarMarca).mutation(async ({ ctx, input }) => {
+  await verificarPermisos([SgeNombre.EQUIPOS_ABM]);
   validarInput(inputAgregarMarca, input);
 
   const userId = ctx.session.user.id;
