@@ -3,15 +3,13 @@ services:
     image: postgres:14-alpine
     hostname: db
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${PGUSER}"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 2s
       timeout: 15s
       retries: 5
       start_period: 3s
-    environment:
-      POSTGRES_DB: ${PGDATABASE}
-      POSTGRES_USER: ${PGUSER}
-      POSTGRES_PASSWORD: ${PGPASSWORD}
+    env_file:
+      - /opt/sge2/.env
     volumes:
       - /opt/sge2/data:/var/lib/postgresql/data
       - /opt/sge2/pg_dump.sql:/docker-entrypoint-initdb.d/pg_dump.sql
@@ -20,6 +18,7 @@ services:
 
   app:
     image: registry.frba.utn.edu.ar/ext/sge2
+    build: .
     env_file:
       - /opt/sge2/.env
     hostname: app
