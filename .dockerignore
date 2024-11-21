@@ -8,5 +8,4 @@ README.md
 .vscode
 docker-compose.yaml
 Jenkinsfile.tst
-.env*
 .gitignore
