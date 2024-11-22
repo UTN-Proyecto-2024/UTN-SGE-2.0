@@ -28,7 +28,11 @@ export const inputReservaLaboratorioDiscrecional = z
     laboratorioId: z.string().refine((value) => parseInt(value) >= 0, { message: "Debe seleccionar un laboratorio" }),
     agregarAPantalla: z.boolean().default(false),
   })
-  .merge(inputReservaLaboratorioDiscrecionalBase);
+  .merge(inputReservaLaboratorioDiscrecionalBase)
+  .refine((data) => new Date(`1970-01-01T${data.horaInicio}:00Z`) < new Date(`1970-01-01T${data.horaFin}:00Z`), {
+    message: "La hora de inicio debe ser menor que la hora de fin",
+    path: ["horaInicio"], // Indica el campo que causa el error
+  });
 
 export const inputReservaLaboratorioCerrado = z
   .object({
