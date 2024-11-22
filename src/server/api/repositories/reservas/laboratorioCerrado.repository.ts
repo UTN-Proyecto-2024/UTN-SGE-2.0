@@ -168,7 +168,9 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
             sede: true,
             division: true,
             materia: true,
-            profesor: true,
+            profesor: {
+              select: informacionUsuario,
+            },
           },
         },
         equipoReservado: true,

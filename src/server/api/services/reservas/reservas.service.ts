@@ -41,9 +41,7 @@ export const getReservasToday = protectedProcedure.input(inputGetAllLaboratorios
         sede: reserva.reservaLaboratorioCerrado.sede?.nombre,
         division: reserva.reservaLaboratorioCerrado.curso?.division.nombre,
         materia: reserva.reservaLaboratorioCerrado.curso?.materia.nombre,
-        profesor:
-          reserva.reservaLaboratorioCerrado.curso &&
-          `${reserva.reservaLaboratorioCerrado.curso?.profesor.nombre} ${reserva.reservaLaboratorioCerrado.curso?.profesor.apellido}`,
+        profesor: reserva.reservaLaboratorioCerrado.curso && reserva.reservaLaboratorioCerrado.curso?.profesor,
       }),
       ...(reserva.reservaLaboratorioAbierto && {
         id: reserva.reservaLaboratorioAbierto.id,
@@ -54,7 +52,7 @@ export const getReservasToday = protectedProcedure.input(inputGetAllLaboratorios
           (equipo) => `${equipo.cantidad} ${equipo.equipoTipo.nombre}`,
         ),
         sede: reserva.reservaLaboratorioAbierto.sede?.nombre,
-        profesor: reserva.usuarioTutor && `${reserva.usuarioTutor.nombre} ${reserva.usuarioTutor.apellido}`,
+        profesor: reserva?.usuarioTutor && reserva.usuarioTutor,
       }),
     }))
     .filter((reserva) => reserva.laboratorio);
