@@ -24,7 +24,7 @@ export default function PageDetails({ params: { id } }: PageProps) {
 
   const handleClickSave = () => {
     router.refresh();
-    // handleOpenChange(false);
+    setTimeout(() => router.back(), 100);
   };
 
   const handleClickCancel = () => handleOpenChange(false);
