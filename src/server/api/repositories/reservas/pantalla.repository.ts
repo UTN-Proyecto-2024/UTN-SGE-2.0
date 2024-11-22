@@ -3,7 +3,7 @@ import type {
   inputEliminarReservaPantallas,
   inputGetReservasEnPntallaActivas,
 } from "@/shared/filters/reserva-pantalla-filter.schema";
-import { armarFechaReserva, getDateISOString } from "@/shared/get-date";
+import { armarFechaReserva, calcularTurnoTexto, getDateISOString } from "@/shared/get-date";
 import { ReservaEstatus, ReservaTipo, type PrismaClient } from "@prisma/client";
 import { type z } from "zod";
 
@@ -146,7 +146,14 @@ export const getReservasEnPantalla = async (ctx: { db: PrismaClient }, input: In
 
   const reservasParaPantalla: ReservaEnPantalla[] = [...reservaLaboratorioComoPantalla, ...reservasPantallaMap];
 
-  return reservasParaPantalla;
+  const reservasMap = reservasParaPantalla.map((r) => {
+    return {
+      ...r,
+      turnoTexto: calcularTurnoTexto(r.fechaHoraInicio),
+    };
+  });
+
+  return reservasMap;
 };
 
 type InputEliminarReservaPantalla = z.infer<typeof inputEliminarReservaPantallas>;

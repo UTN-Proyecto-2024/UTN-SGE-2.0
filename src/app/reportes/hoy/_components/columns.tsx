@@ -1,7 +1,6 @@
 import { getDateISOString, getTimeISOString } from "@/shared/get-date";
 import { type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { Fragment } from "react";
 
 type Reserva = RouterOutputs["reservas"]["reservasLaboratorio"]["getAll"][number];
 
@@ -9,6 +8,9 @@ export const getColumnasReservas = () => {
   const colHelper = createColumnHelper<Reserva>();
 
   return [
+    colHelper.accessor("turnoTexto", {
+      header: "",
+    }),
     colHelper.accessor("id", {
       header: "Reserva #",
     }),
@@ -45,14 +47,11 @@ export const getColumnasReservas = () => {
     }),
     colHelper.accessor("equipos", {
       header: "Equipos",
-      cell: ({ row }) =>
-        row.original.equipos && (
-          <Fragment>
-            {row.original.equipos.map((equipo, index) => (
-              <div key={index}>{equipo}</div>
-            ))}
-          </Fragment>
-        ),
+      cell: ({ row }) => {
+        if (!row.original.equipos) return null;
+
+        return row.original.equipos.map((equipo) => <div key={equipo}>{equipo}</div>);
+      },
     }),
     colHelper.accessor("descripcion", {
       header: "Observaciones",

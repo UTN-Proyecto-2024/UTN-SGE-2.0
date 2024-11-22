@@ -9,6 +9,9 @@ export const getColumns = () => {
   const colHelper = createColumnHelper<ReservaPantallaData>();
 
   return [
+    colHelper.accessor("turnoTexto", {
+      header: "",
+    }),
     colHelper.display({
       header: "Tipo",
       cell: ({ row }) => {

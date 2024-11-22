@@ -294,3 +294,34 @@ export const getTurnoTexto = (turno: TurnoCurso | undefined) => {
 
   return mapCurso.get(turno) ?? "";
 };
+
+// Función para convertir una cadena de hora en minutos desde la medianoche
+function parseTimeToMinutes(timeStr: string): number {
+  const [hoursStr, minutesStr] = timeStr.split(":");
+  const hours = parseInt(hoursStr!, 10);
+  const minutes = parseInt(minutesStr!, 10);
+  return hours * 60 + minutes;
+}
+
+const MANANA_START = parseTimeToMinutes("07:45");
+const TARDE_START = parseTimeToMinutes("13:30");
+const NOCHE_START = parseTimeToMinutes("18:15");
+
+// Tu función calcularTurnoTexto
+export const calcularTurnoTexto = (fecha: Date): string => {
+  const minutosDesdeMediaNoche = fecha.getHours() * 60 + fecha.getMinutes();
+
+  if (minutosDesdeMediaNoche >= NOCHE_START) {
+    return getTurnoTexto(TurnoCurso.NOCHE);
+  }
+
+  if (minutosDesdeMediaNoche >= TARDE_START) {
+    return getTurnoTexto(TurnoCurso.TARDE);
+  }
+
+  if (minutosDesdeMediaNoche >= MANANA_START) {
+    return getTurnoTexto(TurnoCurso.MANANA);
+  }
+
+  return getTurnoTexto(TurnoCurso.MANANA);
+};

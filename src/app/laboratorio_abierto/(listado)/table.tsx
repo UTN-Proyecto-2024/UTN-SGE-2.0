@@ -29,7 +29,7 @@ export const LaboratorioAbiertoReservaTable = ({ data, filters, filterByUser }: 
   const { refresh, pagination, sorting, onSortingChange, onPaginationChange } =
     useReservasLaboratorioAbiertoQueryParam(filters);
 
-  const [grouping, setGrouping] = useState<GroupingState>(["fechaTexto"]);
+  const [grouping, setGrouping] = useState<GroupingState>(["fechaTexto", "turnoTexto"]);
   const columns = getColumnasReservasLaboratorioAbierto({ filterByUser });
 
   return (

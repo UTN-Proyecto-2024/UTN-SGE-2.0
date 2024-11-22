@@ -27,7 +27,6 @@ import {
   enviarMailReservaLaboratorioAbiertoProcedure,
   enviarMailRechazoLaboratorioAbiertoProcedure,
 } from "../mails/emailLaboratorioAbierto.service";
-import { construirFechaReservaSinOffset } from "@/shared/get-date";
 
 export const getReservaLaboratorioAbiertoPorUserProcedure = protectedProcedure
   .input(inputGetReservaLaboratorioPorUsuarioId)
