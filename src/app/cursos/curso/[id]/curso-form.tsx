@@ -168,7 +168,7 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col md:px-4">
         <ScrollArea className="max-h-[calc(100vh_-_300px)] w-full">
           <div className="space-y-6">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <SelectMateriasForm
                 label={"Materia"}
                 control={control}
@@ -181,6 +181,8 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
                 name="divisionId"
                 placeholder={"Seleccione una división"}
               />
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-1">
               <SelectProfesorForm
                 label={"Profesor"}
                 control={control}
@@ -188,6 +190,8 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
                 realNameId="profesorUserId"
                 className="bg-white text-gray-900"
               />
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               <SelectSedeForm label={"Sede"} control={control} name="sedeId" placeholder={"Seleccione una sede"} />
               <FormSelect label={"Turno"} control={control} name="turno" items={turnosValues} />
               <FormSelect label={"Duración"} control={control} name="ac" items={ac} />
