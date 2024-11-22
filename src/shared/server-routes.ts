@@ -242,6 +242,9 @@ export const COMPROBANTE_ROUTE = {
   inventarioRuta: {
     href: "/comprobante/equipo",
   },
+  laboratorioAbiertoRuta: {
+    href: "/comprobante/laboratorio_abierto",
+  },
 };
 
 export const REPORTES_ROUTE: AppRoute = {
