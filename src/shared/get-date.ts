@@ -135,10 +135,10 @@ export const armarFechaReserva = (fecha: string, hora: string) => {
   return nuevaFecha;
 };
 
-export const construirFechaReservaSinOffset = (fecha: string) => {
+export const construirFechaReservaSinOffset = (fecha?: string | undefined) => {
   if (!fecha) return new Date();
 
-  const nuevaFecha = new Date(`${fecha}`);
+  const nuevaFecha = fecha ? new Date(`${fecha}`) : new Date();
 
   const timeZoneOffset = new Date().getTimezoneOffset() / 60; // Obtener el offset en horas
 
