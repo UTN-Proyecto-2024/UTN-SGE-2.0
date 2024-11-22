@@ -50,8 +50,6 @@ export const BibliotecaPrestamosTable = ({ data, filters, filterByUser }: Biblio
                     <Button title="Imprimir" variant="icon" color="ghost" icon={PrinterIcon} />
                   </Link>
                 )}
-                {/* <VerLibroModal libroId={original.id} />
-                <EditLibroModal libroId={original.id} /> */}
               </>
             );
           },
