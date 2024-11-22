@@ -12,7 +12,7 @@ import type {
   inputRechazarReservaLaboratorioAbierto,
   inputCancelarReservaLaboratorioAbierto,
 } from "@/shared/filters/reserva-laboratorio-filter.schema";
-import { armarFechaReserva, getFechaddddDDMMYYYY } from "@/shared/get-date";
+import { armarFechaReserva, calcularTurnoTexto, getFechaddddDDMMYYYY } from "@/shared/get-date";
 // import { lanzarErrorSiLaboratorioOcupado } from "./laboratorioEnUso.repository";
 
 type InputGetPorUsuarioID = z.infer<typeof inputGetReservaLaboratorioPorUsuarioId>;
@@ -146,10 +146,12 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
 
   const reservasConFecha = reservas.map((reserva) => {
     const fechaTexto = getFechaddddDDMMYYYY(reserva.reserva.fechaHoraInicio);
+    const turnoTexto = calcularTurnoTexto(reserva.reserva.fechaHoraInicio);
 
     return {
       ...reserva,
       fechaTexto,
+      turnoTexto,
     };
   });
 

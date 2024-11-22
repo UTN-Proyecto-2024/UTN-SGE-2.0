@@ -2,28 +2,31 @@ import { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.sch
 import { protectedProcedure } from "../../trpc";
 import { validarInput } from "../helper";
 import { getAllReservasToday } from "../../repositories/reservas/reserva.repository";
+import { calcularTurnoTexto } from "@/shared/get-date";
 
-type Reserva = {
-  id: number;
-  tipo: string;
-  laboratorio: string;
-  descripcion: string;
-  sede: string;
-  equipos: string[];
-  division: string;
-  materia: string;
-  profesor: string | null;
-  fechaHoraInicio: Date;
-  fechaHoraFin: Date;
-};
+// type Reserva = {
+//   id: number;
+//   tipo: string;
+//   laboratorio: string;
+//   descripcion: string;
+//   sede: string;
+//   equipos: string[];
+//   division: string;
+//   materia: string;
+//   profesor: string | null;
+//   // fechaHoraInicio: Date;
+//   // fechaHoraFin: Date;
+// };
 
 export const getReservasToday = protectedProcedure.input(inputGetAllLaboratorios).query(async ({ ctx, input }) => {
   validarInput(inputGetAllLaboratorios, input);
   const reservas = await getAllReservasToday(ctx, input);
-  return reservas
-    .map<Partial<Reserva>>((reserva) => ({
+
+  const reservasMaped = reservas
+    .map((reserva) => ({
       fechaHoraInicio: reserva.fechaHoraInicio,
       fechaHoraFin: reserva.fechaHoraFin,
+      turnoTexto: calcularTurnoTexto(reserva.fechaHoraInicio),
       ...(reserva.reservaLaboratorioCerrado && {
         id: reserva.reservaLaboratorioCerrado.id,
         tipo: "CERRADO",
@@ -55,4 +58,6 @@ export const getReservasToday = protectedProcedure.input(inputGetAllLaboratorios
       }),
     }))
     .filter((reserva) => reserva.laboratorio);
+
+  return reservasMaped;
 });

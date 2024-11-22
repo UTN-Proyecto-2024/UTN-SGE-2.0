@@ -4,7 +4,7 @@ import PageLayout from "@/components/ui/page-template";
 import { ActionButtons } from "../_actions/action-buttons";
 import { REPORTES_ROUTE } from "@/shared/server-routes";
 import { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.schema";
-import { ReservasHoyTableContainer } from "./table-container";
+import { ReservasHoyTableContainer } from "./_components/table-container";
 
 type PageProps = {
   searchParams: ReadonlyURLSearchParams;
