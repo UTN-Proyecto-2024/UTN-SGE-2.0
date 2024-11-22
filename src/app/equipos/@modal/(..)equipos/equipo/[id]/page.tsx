@@ -4,6 +4,7 @@ import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { EquipoForm } from "@/app/equipos/equipo/[id]/equipo-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ScrollArea } from "@/components/ui";
 
 type PageProps = {
   params: { id: string };
@@ -38,7 +39,9 @@ export default function PageDetails({ params: { id } }: PageProps) {
       className={"max-h-[calc(100vh_-_10%)]"}
     >
       <div className="flex max-h-max w-full flex-col  gap-4">
-        <EquipoForm id={id} onCancel={handleClickCancel} onSubmit={handleClickSave} />
+        <ScrollArea className="mt-4 max-h-[calc(100vh_-_300px)] w-full pr-4">
+          <EquipoForm id={id} onCancel={handleClickCancel} onSubmit={handleClickSave} />
+        </ScrollArea>
       </div>
     </ModalDrawer>
   );
