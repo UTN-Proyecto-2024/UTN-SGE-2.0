@@ -44,19 +44,19 @@ export const getColumns = () => {
     colHelper.accessor("sede.nombre", {
       header: "Sede",
     }),
-    colHelper.display({
-      header: "Cantidad de armarios",
-      cell: (info) => {
-        const armarios = info.row.original.armarios;
+    // colHelper.display({
+    //   header: "Cantidad de armarios",
+    //   cell: (info) => {
+    //     const armarios = info.row.original.armarios;
 
-        return armarios.length;
-      },
-      meta: {
-        header: {
-          hideSort: true,
-        },
-      },
-    }),
+    //     return armarios.length;
+    //   },
+    //   meta: {
+    //     header: {
+    //       hideSort: true,
+    //     },
+    //   },
+    // }),
   ] as ColumnDef<LaboratorioData>[];
 };
 

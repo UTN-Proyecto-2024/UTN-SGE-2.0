@@ -23,7 +23,6 @@ export const AdminLaboratoriosTable = ({ data, filters }: LaboratorioTableProps)
 
   const columns = getColumns();
 
-  // TODO: Implement resizing
   return (
     <>
       <DataTable
