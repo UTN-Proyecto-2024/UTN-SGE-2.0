@@ -17,7 +17,7 @@ export const getColumnasReservasLaboratorioCerrado = ({ filterByUser }: { filter
     colHelper.accessor("turnoTexto", {
       header: "",
     }),
-    colHelper.accessor("id", {
+    colHelper.accessor("reserva.id", {
       header: "#",
     }),
     colHelper.accessor("reserva.fechaHoraInicio", {
