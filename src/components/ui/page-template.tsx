@@ -56,7 +56,7 @@ export default function PageLayout({ route, buttons, children }: PageLayoutProps
                               "rounded-lg px-3 py-1.5 hover:bg-slate-200",
                             )}
                           >
-                            <Link href={hrefSinQueryParams}>{subRuta.label} asd</Link>
+                            <Link href={hrefSinQueryParams}>{subRuta.label}</Link>
                           </TabsTrigger>
                         </Link>
                       );
