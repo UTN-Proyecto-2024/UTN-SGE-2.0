@@ -4,7 +4,7 @@ import PageLayout from "@/components/ui/page-template";
 import { REPORTES_ROUTE } from "@/shared/server-routes";
 import { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.schema";
 import { ActionButtons } from "../_actions/action-buttons";
-import Calendar from "./calendar";
+import Calendar from "./_components/calendar";
 
 type PageProps = {
   searchParams: ReadonlyURLSearchParams;
