@@ -180,6 +180,43 @@ export const horariosTurnos: Record<string, Record<number, string>> = {
   },
 };
 
+const getHoraCon45MinutosMas = (horaString: string): string => {
+  const horaSplit = horaString.split(":");
+  if (horaSplit.length !== 2) {
+    return "";
+  }
+
+  let hora = parseInt(horaSplit[0]!, 10);
+  let minuto = parseInt(horaSplit[1]!, 10);
+
+  // Sumar 45 minutos
+  minuto += 45;
+
+  // Ajustar hora y minutos si es necesario
+  if (minuto >= 60) {
+    hora += Math.floor(minuto / 60);
+    minuto = minuto % 60;
+  }
+
+  // Ajustar la hora si es necesario
+  if (hora >= 24) {
+    hora = hora % 24;
+  }
+
+  // Formatear con ceros a la izquierda
+  const horaFormateada = hora.toString().padStart(2, "0");
+  const minutoFormateado = minuto.toString().padStart(2, "0");
+
+  return `${horaFormateada}:${minutoFormateado}`;
+};
+
+export const calcularTurnoHora = (turno: string, horaInicio: number, horaFin: number) => {
+  const horaInicioTexto = horariosTurnos[turno]?.[horaInicio];
+  const horaFinTexto = getHoraCon45MinutosMas(horariosTurnos[turno]?.[horaFin] ?? "");
+
+  return `${horaInicioTexto} a ${horaFinTexto}`;
+};
+
 // Función para obtener la hora en formato HH:mm según el turno y la hora (entero)
 export function obtenerHoraInicioFin(
   hora: number,
