@@ -1,4 +1,4 @@
-import { getTimeISOString } from "@/shared/get-date";
+import { armarFechaSinHorasALas0000, construirFechaReservaSinOffset, getTimeISOString } from "@/shared/get-date";
 import { TRPCError } from "@trpc/server";
 import { type z } from "zod";
 
@@ -16,11 +16,19 @@ export const validarInput = (schema: z.ZodTypeAny, input: unknown) => {
   return result.data;
 };
 
-export const validarFechaReserva = (fecha: string | Date) => {
-  const fechaHoy = new Date();
-  const fechaReserva = new Date(fecha);
+export const validarFechaReserva = (fecha: string) => {
+  const [anioReserva, mesReserva, diaReserva] = fecha.split("-").map(Number);
 
-  if (fechaReserva < fechaHoy) {
+  const ahora = new Date();
+  const anioHoy = ahora.getFullYear();
+  const mesHoy = ahora.getMonth() + 1;
+  const diaHoy = ahora.getDate();
+
+  if (
+    anioReserva! < anioHoy ||
+    (anioReserva === anioHoy && mesReserva! < mesHoy) ||
+    (anioReserva === anioHoy && mesReserva === mesHoy && diaReserva! < diaHoy)
+  ) {
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: `La fecha de reserva no puede ser anterior a la fecha actual`,
