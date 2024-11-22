@@ -27,6 +27,7 @@ import {
   enviarMailReservaLaboratorioAbiertoProcedure,
   enviarMailRechazoLaboratorioAbiertoProcedure,
 } from "../mails/emailLaboratorioAbierto.service";
+import { construirFechaReservaSinOffset } from "@/shared/get-date";
 
 export const getReservaLaboratorioAbiertoPorUserProcedure = protectedProcedure
   .input(inputGetReservaLaboratorioPorUsuarioId)
@@ -106,7 +107,7 @@ export const editarReservaProcedure = protectedProcedure
   .input(inputEditarReservaLaboratorioAbiertoSchema)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputEditarReservaLaboratorioAbiertoSchema, input);
-    validarFechaReserva(new Date(`${input.fechaReserva}T${input.horaInicio}`));
+    validarFechaReserva(input.fechaReserva);
 
     const userId = ctx.session.user.id;
 
@@ -119,7 +120,7 @@ export const inputCrearReservaLaboratorioAbiertoProcedure = protectedProcedure
   .input(inputReservaLaboratorioAbierto)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputReservaLaboratorioAbierto, input);
-    validarFechaReserva(new Date(`${input.fechaReserva}T${input.horaInicio}`));
+    validarFechaReserva(input.fechaReserva);
 
     const userId = ctx.session.user.id;
 
