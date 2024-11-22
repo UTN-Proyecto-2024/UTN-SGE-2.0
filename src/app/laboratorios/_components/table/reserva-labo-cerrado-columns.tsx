@@ -3,6 +3,7 @@ import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { esFechaPasada, getTimeISOString } from "@/shared/get-date";
 import { BadgeEstatusReserva } from "@/app/_components/badge-estatus-reserva";
 import { Loader2 } from "lucide-react";
+import { DatoUsuarioReserva } from "@/app/_components/datos-usuario";
 
 type LaboratorioCerradoReservaData =
   RouterOutputs["reservas"]["reservarLaboratorioCerrado"]["getAll"]["reservas"][number];
@@ -67,6 +68,27 @@ export const getColumnasReservasLaboratorioCerrado = ({ filterByUser }: { filter
       header: "Sede",
       cell: ({ row }) => {
         return row.original.sede.nombre;
+      },
+    }),
+    colHelper.display({
+      header: "Docente",
+      cell: ({ row }) => {
+        const { esDiscrecional, curso } = row.original;
+        if (esDiscrecional) {
+          return "N / A";
+        }
+
+        const profesor = curso?.profesor;
+        if (!profesor) {
+          return "-";
+        }
+
+        return <DatoUsuarioReserva usuario={profesor} />;
+      },
+      meta: {
+        header: {
+          hideSort: true,
+        },
       },
     }),
     colHelper.accessor("laboratorio.nombre", {

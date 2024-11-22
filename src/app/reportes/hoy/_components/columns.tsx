@@ -1,3 +1,4 @@
+import { DatoUsuarioReserva } from "@/app/_components/datos-usuario";
 import { getDateISOString, getTimeISOString } from "@/shared/get-date";
 import { type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
@@ -41,9 +42,21 @@ export const getColumnasReservas = () => {
     colHelper.accessor("laboratorio", {
       header: "Laboratorio",
     }),
-    colHelper.accessor("profesor", {
-      header: "Profesor",
-      cell: ({ row }) => row.original.profesor ?? "N / A",
+    colHelper.display({
+      header: "Docente",
+      cell: ({ row }) => {
+        const profesor = row.original.profesor;
+        if (!profesor) {
+          return "N / A";
+        }
+
+        return <DatoUsuarioReserva usuario={profesor} />;
+      },
+      meta: {
+        header: {
+          hideSort: true,
+        },
+      },
     }),
     colHelper.accessor("equipos", {
       header: "Equipos",
