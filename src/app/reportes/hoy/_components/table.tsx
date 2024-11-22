@@ -10,7 +10,7 @@ import { getColumnasReservas } from "./columns";
 
 type Reserva = RouterOutputs["reservas"]["reservasLaboratorio"]["getAll"][number];
 
-export const ReservasHoy = async ({ reservas }: { reservas: Reserva[] }) => {
+export const ReservasHoy = ({ reservas }: { reservas: Reserva[] }) => {
   const columns = getColumnasReservas();
 
   const [grouping, setGrouping] = useState<GroupingState>(["turnoTexto"]);
