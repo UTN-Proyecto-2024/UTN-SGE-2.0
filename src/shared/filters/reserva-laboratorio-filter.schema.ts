@@ -56,7 +56,7 @@ export const inputReservaLaboratorioAbiertoForm = z.object({
   concurrentes: z.string().min(1, { message: "Requerido" }),
   sedeId: z.string().refine((value) => parseInt(value) >= 0, { message: "Debe seleccionar una sede" }),
   equipoReservado: z.array(inputEquipoReservado).default([]),
-  observaciones: z.string().default(""),
+  observaciones: z.string().min(1, { message: "Requerido" }),
   especialidad: z.string().optional().default(""),
   aceptoTerminos: z.boolean().refine((value) => value === true, { message: "Debe aceptar los términos y condiciones" }),
 });
