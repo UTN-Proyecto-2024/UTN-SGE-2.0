@@ -15,7 +15,9 @@ export default function PageAdminRolDetails({ params: { id } }: PageProps) {
 
   const handleClickCancel = () => router.back();
 
-  const handleClickSave = () => router.push(rutaAdmin.href);
+  const handleClickSave = () => {
+    router.push(rutaAdmin.href);
+  };
 
   return (
     <>
