@@ -78,7 +78,7 @@ export const inputAprobarReservaLaboratorioAbiertoSchema = z.object({
   id: z.number().positive().min(1, { message: "Requerido" }),
   tutorId: z.string().optional(),
   inventarioRevisado: z.array(z.string()),
-  laboratorioId: z.string().optional(),
+  laboratorioId: z.string().min(1, { message: "Requerido" }),
   equipoReservado: z.array(inputEquipoReservado).default([]),
 });
 
@@ -126,7 +126,7 @@ export const inputCancelarReservaLaboratorioAbierto = z.object({
 export const inputAprobarReservaLaboratorioCerradoSchema = z.object({
   id: z.number().positive().min(1, { message: "Requerido" }),
   inventarioRevisado: z.array(z.string()),
-  laboratorioId: z.string().optional(),
+  laboratorioId: z.string().min(1, { message: "Requerido" }),
   equipoRequerido: z.array(inputEquipoReservado).default([]),
   equipoReservado: z.array(inputEquipoReservado).default([]),
 });
