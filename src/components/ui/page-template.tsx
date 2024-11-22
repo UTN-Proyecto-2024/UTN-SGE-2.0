@@ -48,16 +48,17 @@ export default function PageLayout({ route, buttons, children }: PageLayoutProps
                       const hrefSinQueryParams = subRuta.redirectClick ? subRuta.redirectClick : subRuta.href;
 
                       return (
-                        <TabsTrigger
-                          value={subRuta.href}
-                          key={subRuta.href}
-                          className={cn(
-                            { "bg-[#FFFFFF]": subRuta.href === pathname },
-                            "rounded-lg px-3 py-1.5 hover:bg-slate-200",
-                          )}
-                        >
-                          <Link href={hrefSinQueryParams}>{subRuta.label}</Link>
-                        </TabsTrigger>
+                        <Link href={hrefSinQueryParams} key={subRuta.href}>
+                          <TabsTrigger
+                            value={subRuta.href}
+                            className={cn(
+                              { "bg-[#FFFFFF]": subRuta.href === pathname },
+                              "rounded-lg px-3 py-1.5 hover:bg-slate-200",
+                            )}
+                          >
+                            <Link href={hrefSinQueryParams}>{subRuta.label} asd</Link>
+                          </TabsTrigger>
+                        </Link>
                       );
                     })}
                 </TabsList>
