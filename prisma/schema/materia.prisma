@@ -10,11 +10,12 @@ model Materia {
     directorUsuarioId String?
     directorUsuario   User?   @relation(fields: [directorUsuarioId], references: [id], name: "materiasDirector")
 
-    jefeTrabajoPracticos MateriaJefeTp[]
-    cursos               Curso[]
-    libros               LibroMateria[]
-    materiaPrerequisito  MateriaCorrelativa[] @relation(name: "materiaPrerequisito")
-    correlativa          MateriaCorrelativa[] @relation(name: "correlativa")
+    jefeTrabajoPracticos      MateriaJefeTp[]
+    cursos                    Curso[]
+    libros                    LibroMateria[]
+    materiaPrerequisito       MateriaCorrelativa[]        @relation(name: "materiaPrerequisito")
+    correlativa               MateriaCorrelativa[]        @relation(name: "correlativa")
+    reservaLaboratorioCerrado ReservaLaboratorioCerrado[]
 
     fechaCreacion        DateTime @default(now())
     fechaModificacion    DateTime @default(now()) @updatedAt

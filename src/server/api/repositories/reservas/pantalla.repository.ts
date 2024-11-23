@@ -6,6 +6,7 @@ import type {
 import { armarFechaReserva, calcularTurnoTexto, getDateISOString } from "@/shared/get-date";
 import { ReservaEstatus, ReservaTipo, type PrismaClient } from "@prisma/client";
 import { type z } from "zod";
+import { informacionUsuario } from "../usuario-helper";
 
 export const HelperReserva = {
   RESERVA: "RESERVA_LABORATORIO",
@@ -22,6 +23,11 @@ type ReservaEnPantalla = {
   fechaHoraFin: Date;
   sede: string | null;
   tipo: HelperReservaTipo;
+
+  esDiscrecional?: boolean;
+  discrecionalMateria?: null | { nombre: string };
+  discrecionalTitulo?: null | string;
+  discrecionalDocente?: null | string;
 };
 
 type InputGetReservasEnPntallaActivas = z.infer<typeof inputGetReservasEnPntallaActivas>;
@@ -81,6 +87,16 @@ export const getReservasEnPantalla = async (ctx: { db: PrismaClient }, input: In
               nombre: true,
             },
           },
+          discrecionalTitulo: true,
+          esDiscrecional: true,
+          discrecionalDocente: {
+            select: informacionUsuario,
+          },
+          discrecionalMateria: {
+            select: {
+              nombre: true,
+            },
+          },
         },
       },
     },
@@ -123,6 +139,12 @@ export const getReservasEnPantalla = async (ctx: { db: PrismaClient }, input: In
 
     const laboratorio = reservaLaboratorioCerrado?.laboratorio?.nombre ?? "";
 
+    const esDiscrecional = reservaLaboratorioCerrado?.esDiscrecional ?? false;
+    const discrecionalMateria = reservaLaboratorioCerrado?.discrecionalMateria ?? null;
+    const discrecionalTitulo = reservaLaboratorioCerrado?.discrecionalTitulo ?? null;
+    const discrecionalDocenteNombre = reservaLaboratorioCerrado?.discrecionalDocente?.nombre ?? "";
+    const discrecionalDocenteApellido = reservaLaboratorioCerrado?.discrecionalDocente?.apellido ?? "";
+
     return {
       id: `${HelperReserva.RESERVA}_${reserva.id}`,
       docente: docenteNombre + " " + docenteApellido,
@@ -132,6 +154,10 @@ export const getReservasEnPantalla = async (ctx: { db: PrismaClient }, input: In
       fechaHoraFin: reserva.fechaHoraFin,
       sede: reservaLaboratorioCerrado?.sede?.nombre ?? "",
       tipo: HelperReserva.RESERVA,
+      esDiscrecional,
+      discrecionalMateria,
+      discrecionalTitulo,
+      discrecionalDocente: discrecionalDocenteNombre + " " + discrecionalDocenteApellido,
     };
   });
 

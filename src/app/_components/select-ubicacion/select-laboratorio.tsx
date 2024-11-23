@@ -3,11 +3,12 @@ import type { FieldValues } from "react-hook-form";
 import { api, type RouterInputs } from "@/trpc/react";
 import { FormSelect, type ISelectItem, type FormSelectProps } from "@/components/ui/autocomplete";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Select, SelectTrigger, SelectValue } from "@/components/ui";
+import { Label, Select, SelectTrigger, SelectValue } from "@/components/ui";
 import { CheckIcon, XIcon } from "lucide-react";
 import { LaboratorioOcupado } from "../laboratorio-ocupado";
 import { LABORATORIO_ABIERTO_ROUTE, LABORATORIO_ROUTE } from "@/shared/server-routes";
 import { Switch } from "@/components/ui/switch";
+import { cn } from "@/components/utils";
 
 const RUTA_RESERVA_ABIERTO =
   LABORATORIO_ABIERTO_ROUTE.subRutas !== undefined ? LABORATORIO_ABIERTO_ROUTE?.subRutas[1]?.href : "";
@@ -36,7 +37,7 @@ export const SelectLaboratorioConArmariosForm = <T extends FieldValues, TType ex
   }, [data]);
 
   if (isLoading) {
-    return <SelectLoading />;
+    return <SelectLoading label={props.label ?? ""} className={className} />;
   }
 
   if (isError) {
@@ -108,7 +109,7 @@ export const SelectLaboratorioFormConEstadoReservaForm = <T extends FieldValues,
   }, [data, props.laboratorioId]);
 
   if (isLoading) {
-    return <SelectLoading />;
+    return <SelectLoading label={props.label ?? ""} className={className} />;
   }
 
   if (isError) {
@@ -152,10 +153,19 @@ export const SelectLaboratorioFormConEstadoReservaForm = <T extends FieldValues,
   );
 };
 
-const SelectLoading = () => {
+const SelectLoading = ({ label, className }: { label: string; className?: string }) => {
   return (
-    <div className="flex flex-row items-center space-x-2">
-      <Skeleton className="h-10 w-full" />
+    <div className="flex flex-col gap-x-2">
+      <div className={cn("relative", className)}>
+        <Label className="mb-3 block text-sm">{label}</Label>
+        <Skeleton className="h-10 w-full" />
+        <div className="mt-2 flex flex-row gap-x-2 text-base">
+          <Skeleton className="h-6 w-11 rounded-full" />
+          <label htmlFor="ignorarSede">
+            <span className="text-base">Ignorar sede</span>
+          </label>
+        </div>
+      </div>
     </div>
   );
 };
