@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import Link from "next/link";
 import { Button } from "@/components/ui";
+import { materiaReservaLaboratorio } from "@/app/_components/reserva-cerrada-textos";
 
 type PantallaInput = RouterInputs["reservas"]["pantalla"]["getAllActivas"];
 
@@ -69,7 +70,16 @@ export const PantallaTableContainer = (props: PantallaTableContainerProps) => {
                   return (
                     <tr className="rounded-lg  bg-white" key={reserva.id}>
                       <td className="rounded-l-lg px-4 py-2 text-center">
-                        {reserva.materia && reserva.materia?.trim().length > 0 ? reserva.materia : "Sin informar"}
+                        {materiaReservaLaboratorio({
+                          esDiscrecional: reserva.esDiscrecional,
+                          discrecionalMateria: reserva.discrecionalMateria,
+                          discrecionalTitulo: reserva.discrecionalTitulo,
+                          curso: {
+                            materia: {
+                              nombre: reserva.materia,
+                            },
+                          },
+                        })}
                       </td>
                       <td className="px-4 py-2 text-center">
                         <a href="#" className="font-semibold text-blue-600">
@@ -77,7 +87,13 @@ export const PantallaTableContainer = (props: PantallaTableContainerProps) => {
                         </a>
                       </td>
                       <td className="px-4 py-2 text-center">
-                        {reserva.docente && reserva.docente?.trim().length > 0 ? reserva.docente : "Sin informar"}
+                        {reserva.esDiscrecional
+                          ? reserva.discrecionalDocente && reserva.discrecionalDocente.trim().length > 0
+                            ? reserva.discrecionalDocente
+                            : "Sin informar"
+                          : reserva.docente && reserva.docente?.trim().length > 0
+                            ? reserva.docente
+                            : "Sin informar"}
                       </td>
                       <td className="px-4 py-2 text-center">
                         <div className="w-full rounded-full bg-blue-100 px-3 py-1 font-semibold text-blue-600">

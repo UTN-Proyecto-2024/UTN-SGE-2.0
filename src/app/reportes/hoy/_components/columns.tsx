@@ -1,3 +1,4 @@
+import { BadgeDiscrecionalReserva } from "@/app/_components/badge-estatus-reserva";
 import { DatoUsuarioReserva } from "@/app/_components/datos-usuario";
 import { getDateISOString, getTimeISOString } from "@/shared/get-date";
 import { type RouterOutputs } from "@/trpc/react";
@@ -29,12 +30,37 @@ export const getColumnasReservas = () => {
     }),
     colHelper.accessor("division", {
       header: "Division",
-      cell: ({ row }) => row.original.division ?? "N / A",
+      cell: ({ row }) => {
+        const { esDiscrecional } = row.original;
+
+        if (esDiscrecional) {
+          return <BadgeDiscrecionalReserva esDiscrecional />;
+        }
+
+        return row.original.division ?? "N / A";
+      },
     }),
     colHelper.accessor("materia", {
       header: "Materia",
-      // Puede ser reserva discrecional
-      cell: ({ row }) => row.original.materia ?? "N / A",
+      cell: ({ row }) => {
+        const { esDiscrecional } = row.original;
+
+        if (esDiscrecional) {
+          const { discrecionalMateria, discrecionalTitulo } = row.original;
+
+          if (discrecionalMateria && discrecionalMateria.nombre) {
+            return discrecionalMateria.nombre;
+          }
+
+          if (discrecionalTitulo) {
+            return discrecionalTitulo;
+          }
+
+          return "-";
+        }
+
+        return row.original.materia ?? "N / A";
+      },
     }),
     colHelper.accessor("sede", {
       header: "Sede",
@@ -45,6 +71,15 @@ export const getColumnasReservas = () => {
     colHelper.display({
       header: "Docente",
       cell: ({ row }) => {
+        const { esDiscrecional, discrecionalDocente } = row.original;
+        if (esDiscrecional) {
+          if (discrecionalDocente) {
+            return <DatoUsuarioReserva usuario={discrecionalDocente} />;
+          }
+
+          return "-";
+        }
+
         const profesor = row.original.profesor;
         if (!profesor) {
           return "N / A";

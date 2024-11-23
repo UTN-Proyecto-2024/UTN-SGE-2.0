@@ -72,6 +72,15 @@ export const getReservaPorId = async (ctx: { db: PrismaClient }, input: InputGet
           },
         },
       },
+      discrecionalDocente: {
+        select: {
+          id: true,
+          nombre: true,
+          name: true,
+          apellido: true,
+          legajo: true,
+        },
+      },
     },
   });
 
@@ -193,6 +202,15 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
           },
         },
         laboratorio: true,
+
+        discrecionalDocente: {
+          select: informacionUsuario,
+        },
+        discrecionalMateria: {
+          select: {
+            nombre: true,
+          },
+        },
       },
       where: filtrosWhereReservaLaboratorioCerrado,
       orderBy: orden,
@@ -539,6 +557,10 @@ export const crearReservaLaboratorioCerradoDiscrecional = async (
           reservaLaboratorioCerrado: {
             create: {
               esDiscrecional: true,
+              discrecionalDocenteId: input.discrecionalDocenteId,
+              discrecionalTitulo: input.discrecionalTitulo,
+              discrecionalMateriaId: Number(input.discrecionalMateriaId),
+
               sedeId: Number(input.sedeId),
               cursoId: null,
               laboratorioId: Number(input.laboratorioId),
