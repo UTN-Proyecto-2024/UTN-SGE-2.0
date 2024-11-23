@@ -42,6 +42,11 @@ export const getReservasToday = protectedProcedure.input(inputGetAllLaboratorios
         division: reserva.reservaLaboratorioCerrado.curso?.division.nombre,
         materia: reserva.reservaLaboratorioCerrado.curso?.materia.nombre,
         profesor: reserva.reservaLaboratorioCerrado.curso && reserva.reservaLaboratorioCerrado.curso?.profesor,
+
+        esDiscrecional: reserva.reservaLaboratorioCerrado.esDiscrecional,
+        discrecionalDocente: reserva.reservaLaboratorioCerrado.discrecionalDocente,
+        discrecionalMateria: reserva.reservaLaboratorioCerrado.discrecionalMateria,
+        discrecionalTitulo: reserva.reservaLaboratorioCerrado.discrecionalTitulo,
       }),
       ...(reserva.reservaLaboratorioAbierto && {
         id: reserva.reservaLaboratorioAbierto.id,

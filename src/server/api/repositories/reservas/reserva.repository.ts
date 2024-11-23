@@ -34,6 +34,14 @@ export const getAllReservasToday = async (ctx: { db: PrismaClient }, input: Inpu
             },
           },
           sede: true,
+          discrecionalDocente: {
+            select: informacionUsuario,
+          },
+          discrecionalMateria: {
+            select: {
+              nombre: true,
+            },
+          },
         },
         where: {
           curso: { turno },

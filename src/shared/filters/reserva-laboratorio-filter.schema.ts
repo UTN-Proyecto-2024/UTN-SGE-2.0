@@ -27,6 +27,9 @@ export const inputReservaLaboratorioDiscrecional = z
     horaFin: z.string().min(1, { message: "Requerido" }),
     laboratorioId: z.string().refine((value) => parseInt(value) >= 0, { message: "Debe seleccionar un laboratorio" }),
     agregarAPantalla: z.boolean().default(false),
+    discrecionalTitulo: z.string().default(""),
+    discrecionalMateriaId: z.string().optional(),
+    discrecionalDocenteId: z.string().optional(),
   })
   .merge(inputReservaLaboratorioDiscrecionalBase)
   .refine((data) => new Date(`1970-01-01T${data.horaInicio}:00Z`) < new Date(`1970-01-01T${data.horaFin}:00Z`), {
