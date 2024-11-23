@@ -6,6 +6,11 @@ tr {
   border-bottom: 1pt solid black;
 }
 
+/* Stripped table */
+tr:nth-child(even) {
+  background-color: #f5f5f5;
+}
+
 header {
   display: none;
 }
