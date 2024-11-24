@@ -4,7 +4,7 @@ import CursoTableContainer from "../(listado)/curso-table-container";
 import { ActionButtons } from "../(listado)/action-buttons";
 import { inputGetCursos } from "@/shared/filters/cursos-filter.schema";
 import { type ReadonlyURLSearchParams } from "next/navigation";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { CURSOS_ROUTE } from "@/shared/server-routes";
 import { CursosNuevoCurso } from "../(listado)/cursos-new-curso";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";

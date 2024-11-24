@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadingPantallaTable from "./_components/loading-pantalla";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { LABORATORIO_ROUTE } from "@/shared/server-routes";
 import ReservaDiscrecionalModal from "../_components/reserva-discrecional-form";
 import { AgregarAPantallaModal } from "./_components/actions/agregar-pantalla";

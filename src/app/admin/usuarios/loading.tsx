@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadingAdminUsuariosTable from "./_components/table/loading-admin-table";
 import { adminUsuariosColumnas } from "./_components/table/columns";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { ADMIN_ROUTE } from "@/shared/server-routes";
 
 export default function BibliotecaLoading() {

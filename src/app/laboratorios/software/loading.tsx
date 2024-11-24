@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui";
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadingSoftwareTable from "./_components/loading-software";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { LABORATORIO_ROUTE } from "@/shared/server-routes";
 
 export default function BibliotecaLoading() {

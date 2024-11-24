@@ -1,6 +1,6 @@
 import { type ReadonlyURLSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { REPORTES_ROUTE } from "@/shared/server-routes";
 import { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.schema";
 import { ActionButtons } from "../_actions/action-buttons";
