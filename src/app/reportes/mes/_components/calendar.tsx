@@ -9,7 +9,7 @@ import Link from "next/link";
 import { api } from "@/trpc/react";
 
 type ReportesFilters = z.infer<typeof inputGetAllLaboratorios>;
-type Reserva = { id: number; materia?: string; division?: string; profesor: string; esDiscrecional: boolean };
+type Reserva = { id: number; materia?: string; division: string; profesor: string };
 
 type Props = {
   filters: ReportesFilters;
@@ -54,12 +54,11 @@ export default function Calendar({ filters }: Props) {
             ...(acc[dateKey] ?? []),
             {
               id: reserva.reserva.id,
-              materia: reserva.curso?.materia.nombre,
-              division: reserva.curso?.division.nombre,
+              materia: reserva.esDiscrecional ? reserva.discrecionalMateria?.nombre : reserva.curso?.materia.nombre,
+              division: reserva.esDiscrecional ? "" : ` ${reserva.curso?.division.nombre}`,
               profesor: reserva.esDiscrecional
-                ? `${reserva.reserva.usuarioSolicito.nombre} ${reserva.reserva.usuarioSolicito.apellido}`
+                ? `${reserva.discrecionalDocente?.nombre} ${reserva.discrecionalDocente?.apellido}`
                 : `${reserva.curso?.profesor.nombre} ${reserva.curso?.profesor.apellido}`,
-              esDiscrecional: reserva.esDiscrecional,
             },
           ],
         };
@@ -73,6 +72,8 @@ export default function Calendar({ filters }: Props) {
 
     return hoy;
   }, []);
+
+  console.log(laboratoriosMap);
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 rounded">
@@ -127,15 +128,10 @@ export default function Calendar({ filters }: Props) {
                                 className={clsx(
                                   "mx-1 mb-1 rounded-md px-2 py-1",
                                   !color && "mt-1",
-                                  !isBefore(date, today) && COLORS[color],
+                                  isBefore(date, today) ? "border border-gray-100" : COLORS[color],
                                 )}
                               >
-                                <strong>
-                                  {reserva.esDiscrecional
-                                    ? "Reserva discrecional"
-                                    : `${reserva.materia} (${reserva.division})`}
-                                </strong>{" "}
-                                {reserva.profesor}
+                                <strong>{`${reserva.materia}${reserva.division}`}</strong> {reserva.profesor}
                               </div>
                             </Link>
                           ))
