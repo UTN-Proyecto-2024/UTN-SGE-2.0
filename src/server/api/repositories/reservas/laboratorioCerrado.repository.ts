@@ -441,6 +441,7 @@ export const cancelarReserva = async (ctx: { db: PrismaClient }, input: InputRec
           id: input.id,
         },
         select: {
+          id: true,
           usuarioCreadorId: true,
           usuarioSolicitoId: true,
           estatus: true,
@@ -474,6 +475,7 @@ export const cancelarReserva = async (ctx: { db: PrismaClient }, input: InputRec
 
         return reserva;
       }
+
       throw new Error("No tienes permisos para cancelar esta reserva");
     });
 
@@ -596,32 +598,53 @@ export const crearReservaLaboratorioCerradoDiscrecional = async (
 export const getReservaLaboratorioCerradoParaEmail = async (ctx: { db: PrismaClient }, input: { id: number }) => {
   const { id } = input;
 
-  const datos = await ctx.db.reservaLaboratorioCerrado.findUnique({
+  const datos = await ctx.db.reserva.findUnique({
     where: {
-      reservaId: id,
+      id: id,
     },
-    include: {
-      reserva: {
-        include: {
-          usuarioSolicito: {
+    select: {
+      fechaHoraInicio: true,
+      fechaHoraFin: true,
+      motivoRechazo: true,
+      reservaLaboratorioCerrado: {
+        select: {
+          laboratorio: true,
+          discrecionalMateria: true,
+          discrecionalTitulo: true,
+          esDiscrecional: true,
+          curso: {
             select: {
-              nombre: true,
-              apellido: true,
-              email: true,
+              materia: {
+                select: {
+                  nombre: true,
+                },
+              },
             },
           },
         },
       },
-      laboratorio: true,
+      usuarioSolicito: {
+        select: {
+          nombre: true,
+          apellido: true,
+          email: true,
+        },
+      },
     },
   });
 
   const reserva = {
-    laboratorioNombre: datos?.laboratorio?.nombre,
+    fechaHoraInicio: datos?.fechaHoraInicio,
+    fechaHoraFin: datos?.fechaHoraFin,
+    laboratorioNombre: datos?.reservaLaboratorioCerrado?.laboratorio?.nombre,
+    esDiscrecional: datos?.reservaLaboratorioCerrado?.esDiscrecional,
+    discrecionalMateria: datos?.reservaLaboratorioCerrado?.discrecionalMateria?.nombre,
+    discrecionalTitulo: datos?.reservaLaboratorioCerrado?.discrecionalTitulo,
+    motivoRechazo: datos?.motivoRechazo,
     usuarioSolicitante: {
-      nombre: datos?.reserva.usuarioSolicito.nombre,
-      apellido: datos?.reserva.usuarioSolicito.apellido,
-      email: datos?.reserva.usuarioSolicito.email,
+      nombre: datos?.usuarioSolicito.nombre,
+      apellido: datos?.usuarioSolicito.apellido,
+      email: datos?.usuarioSolicito.email,
     },
   };
 
