@@ -1,4 +1,4 @@
-import { type Prisma, type PrismaClient } from "@prisma/client";
+import { ReservaEstatus, ReservaTipo, type Prisma, type PrismaClient } from "@prisma/client";
 import { type z } from "zod";
 import {
   type inputGetReservasEquiposPorEquipoId,
@@ -308,7 +308,7 @@ export const devolverEquipo = async (ctx: { db: PrismaClient }, input: InputGetR
         },
         data: {
           usuarioRecibioId: userId,
-          estatus: "FINALIZADA",
+          estatus: ReservaEstatus.FINALIZADA,
           fechaRecibido: new Date(),
         },
       });
@@ -354,11 +354,11 @@ export const renovarEquipo = async (ctx: { db: PrismaClient }, input: InputRenov
 
       const reservas = await tx.reserva.findMany({
         where: {
-          tipo: "INVENTARIO",
+          tipo: ReservaTipo.INVENTARIO,
           reservaEquipo: {
             equipoId: input.equipoId,
           },
-          estatus: "PENDIENTE",
+          estatus: ReservaEstatus.PENDIENTE,
         },
         select: {
           id: true,
@@ -396,7 +396,7 @@ export const renovarEquipo = async (ctx: { db: PrismaClient }, input: InputRenov
         },
         data: {
           usuarioRenovoId: userId,
-          estatus: "PENDIENTE",
+          estatus: ReservaEstatus.PENDIENTE,
           fechaHoraInicio: getDateISO(input.fechaInicio),
           fechaHoraFin: getDateISO(input.fechaFin),
           fechaRenovacion: new Date(),
@@ -428,11 +428,17 @@ export const getReservaEquipoParaEmail = async (ctx: { db: PrismaClient }, input
       id: id,
     },
     select: {
+      fechaHoraInicio: true,
+      fechaHoraFin: true,
       reservaEquipo: {
         select: {
           equipo: {
             select: {
-              modelo: true,
+              tipo: {
+                select: {
+                  nombre: true,
+                },
+              },
             },
           },
         },
@@ -448,7 +454,9 @@ export const getReservaEquipoParaEmail = async (ctx: { db: PrismaClient }, input
   });
 
   const reserva = {
-    equipoModelo: datos?.reservaEquipo?.equipo?.modelo,
+    fechaHoraInicio: datos?.fechaHoraInicio,
+    fechaHoraFin: datos?.fechaHoraFin,
+    equipoTipo: datos?.reservaEquipo?.equipo?.tipo?.nombre,
     usuarioSolicitante: {
       nombre: datos?.usuarioSolicito.nombre,
       apellido: datos?.usuarioSolicito.apellido,
@@ -457,41 +465,6 @@ export const getReservaEquipoParaEmail = async (ctx: { db: PrismaClient }, input
   };
 
   return reserva;
-};
-
-export const getReservaRenovacionEquipoParaEmail = async (ctx: { db: PrismaClient }, input: { equipoId: number }) => {
-  const datos = await ctx.db.reserva.findUnique({
-    where: {
-      id: input.equipoId,
-    },
-    select: {
-      reservaEquipo: {
-        select: {
-          equipo: {
-            select: {
-              modelo: true,
-            },
-          },
-        },
-      },
-      usuarioSolicito: {
-        select: {
-          nombre: true,
-          apellido: true,
-          email: true,
-        },
-      },
-    },
-  });
-
-  return {
-    equipoModelo: datos?.reservaEquipo?.equipo?.modelo,
-    usuarioSolicitante: {
-      nombre: datos?.usuarioSolicito.nombre,
-      apellido: datos?.usuarioSolicito.apellido,
-      email: datos?.usuarioSolicito.email,
-    },
-  };
 };
 
 type InputGetPorId = z.infer<typeof inputGetReservaEquipoPorId>;
