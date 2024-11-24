@@ -1,17 +1,16 @@
 "use client";
 
-import ModalDrawer from "@/app/_components/modal/modal-drawer";
-import { ReservaViewAdmin } from "@/app/laboratorios/solicitudes/[id]/form-gestion-reserva";
 import { useRouter } from "next/navigation";
+import { ReservaViewAdmin } from "@/app/laboratorio_abierto/solicitudes/[id]/form-gestion-reserva";
+import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { useState } from "react";
 
 type PageProps = {
   params: { id: string };
 };
 
-export default function VerReservaModal({ params: { id } }: PageProps) {
+export default function PageLibroDetails({ params: { id } }: PageProps) {
   const [open, setOpen] = useState(true);
-
   const router = useRouter();
 
   const handleOpenChange = (open: boolean) => {
@@ -23,23 +22,17 @@ export default function VerReservaModal({ params: { id } }: PageProps) {
 
   const handleClickCancel = () => {
     router.back();
-    setTimeout(() => {
-      window.location.reload();
-    }, 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
+    setTimeout(() => window.location.reload(), 100);
   };
 
   const handleClickAprobar = () => {
-    router.back();
-    setTimeout(() => {
-      window.location.reload();
-    }, 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
+    router.refresh();
+    setTimeout(() => router.back(), 100);
   };
 
   const handleClickRechazar = () => {
-    router.back();
-    setTimeout(() => {
-      window.location.reload();
-    }, 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
+    router.refresh();
+    setTimeout(() => router.back(), 100);
   };
 
   return (
