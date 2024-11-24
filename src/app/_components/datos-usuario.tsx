@@ -20,7 +20,7 @@ export const DatoUsuarioReserva = ({
   usuario,
   mostrarNombre = true,
 }: {
-  usuario: UsuarioReserva | null;
+  usuario?: UsuarioReserva | null;
   mostrarNombre?: boolean;
 }) => {
   if (!usuario) {
