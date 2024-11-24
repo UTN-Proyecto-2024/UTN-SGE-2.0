@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadingCursosTable from "../_components/table/loading-curso-table";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { LABORATORIO_ROUTE } from "@/shared/server-routes";
 import ReservaDiscrecionalModal from "../_components/reserva-discrecional-form";
 import { AgregarAPantallaModal } from "../pantalla/_components/actions/agregar-pantalla";

@@ -1,7 +1,7 @@
 import { Suspense, useMemo } from "react";
 import LoadingSoftwareTable from "./_components/loading-software";
 import SoftwareTableContainer from "./_components/table/container";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { LABORATORIO_ROUTE } from "@/shared/server-routes";
 import { SoftwareNuevoEditar } from "./_components/actions/software-nuevo";
 import { inputGetSoftwareFilter } from "@/shared/filters/laboratorio-filter.schema";

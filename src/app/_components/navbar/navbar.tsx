@@ -2,12 +2,14 @@ import Image from "next/image";
 import { getServerAuthSession } from "@/server/auth";
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItems } from "@headlessui/react";
 import { AlignJustify, X } from "lucide-react";
-import { DesktopNavigation, ProfileMenuItem } from "./desktop";
-import { MobileNavigation, MobileNotificationButton, ProfilePanel } from "./mobile";
+import { DesktopNavigation } from "./desktop";
+import { MobileNavigation } from "./mobile";
 import type { Session } from "next-auth";
 import Notifications from "./notifications";
 import { USER_ROUTES } from "@/shared/server-routes";
 import { UTNLogo } from "../utn-logo";
+import { ProfileMenuItem } from "./profile-menu-item";
+import { MobileNotificationButton, ProfilePanel } from "./profile-panel";
 
 const UserIcon = ({ image, size }: { image: string | undefined | null; size: number }) => (
   <Image alt="" src={image ?? "/default-avatar.svg"} width={size} height={size} className="rounded-full" />

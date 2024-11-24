@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui";
 import LoadingLaboratorioAbiertoReserva from "./_components/table/loading-reserva-laboratorio-abierto";
 import { LABORATORIO_ABIERTO_ROUTE } from "@/shared/server-routes";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 
 const subRutas = LABORATORIO_ABIERTO_ROUTE.subRutas ?? [];
 

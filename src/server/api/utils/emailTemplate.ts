@@ -1,3 +1,7 @@
+import { env } from "@/env";
+
+const rutaActual = env.RUTA_ACTUAL;
+
 export const emailTemplate = ({
   usuario,
   textoMail,
@@ -33,7 +37,7 @@ export const emailTemplate = ({
                                     <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
                                         <tr>
                                             <td align="center" style="padding-bottom: 20px;">
-                                                <img src='https://i.postimg.cc/sgRzwG1Z/img-test.jpg' alt="Logo de UTN" style="max-width: 100%; height: 150px;"/>
+                                                <img src='${rutaActual}/utn-logo.svg' alt="Logo de UTN" style="max-width: 100%; height: 150px;"/>
                                             </td>
                                         </tr>
                                         <tr>

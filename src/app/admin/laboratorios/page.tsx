@@ -5,7 +5,7 @@ import { AdminActionButtons } from "./_components/action-button/action-buttons";
 import AdminLaboratoriosTableContainer from "./_components/table/laboratorios-table-container";
 import { adminLaboratoriosColumnas } from "./_components/table/columns";
 import { inputGetLaboratorios } from "@/shared/filters/admin-laboratorios-filter.schema";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { ADMIN_ROUTE } from "@/shared/server-routes";
 import { AdminLaboratoriosNuevoLaboratorio } from "./_components/action-button/nuevo-laboratorio-button";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";

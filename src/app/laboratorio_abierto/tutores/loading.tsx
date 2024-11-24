@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { LABORATORIO_ABIERTO_ROUTE } from "@/shared/server-routes";
 
 const subRutas = LABORATORIO_ABIERTO_ROUTE.subRutas ?? [];

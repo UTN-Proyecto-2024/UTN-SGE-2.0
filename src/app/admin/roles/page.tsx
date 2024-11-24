@@ -5,7 +5,7 @@ import LoadingAdminTable from "./_components/table/loading-admin-table";
 import { AdminActionButtons } from "./_components/action-button/action-buttons";
 import RolesTableContainer from "./_components/table/roles-table-container";
 import { adminRolesColumnas } from "./_components/table/columns";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { ADMIN_ROUTE } from "@/shared/server-routes";
 import { AdminRolesNuevoRol } from "./_components/action-button/nuevo-rol-button";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";

@@ -5,7 +5,7 @@ import { AdminUsuariosActionButtons } from "./_components/action-button/action-b
 import AdminUsuariosTableContainer from "./_components/table/roles-table-container";
 import { adminUsuariosColumnas } from "./_components/table/columns";
 import { inputGetUsuarios } from "@/shared/filters/admin-usuarios-filter.schema";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { ADMIN_ROUTE } from "@/shared/server-routes";
 
 type PageProps = {
