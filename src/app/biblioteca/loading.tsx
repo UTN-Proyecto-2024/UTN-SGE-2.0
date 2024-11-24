@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadingBibliotecaTable from "./(listado)/loading-biblioteca-table";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { BIBLIOTECA_ROUTE } from "@/shared/server-routes";
 
 export default function BibliotecaLoading() {

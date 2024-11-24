@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadingEquiposTable from "./(listado)/loading-equipos-table";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { EQUIPOS_ROUTE } from "@/shared/server-routes";
 import { EquiposNuevoEquipoModal } from "./(listado)/equipos-nuevo-equipo";
 import { TienePermiso } from "../_components/permisos/tienePermiso";

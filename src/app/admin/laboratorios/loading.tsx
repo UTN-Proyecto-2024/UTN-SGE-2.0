@@ -1,9 +1,8 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadingAdminTable from "./_components/table/loading-admin-table";
 import { adminLaboratoriosColumnas } from "./_components/table/columns";
-import PageLayout from "@/components/ui/page-template";
 import { ADMIN_ROUTE } from "@/shared/server-routes";
-// import { SgeNombre } from "@prisma/client";
+import PageLayout from "@/components/ui/template/page-template";
 
 export default function BibliotecaLoading() {
   return (

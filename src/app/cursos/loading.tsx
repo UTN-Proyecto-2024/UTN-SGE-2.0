@@ -2,7 +2,7 @@ import { Button } from "@/components/ui";
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadingCursosTable from "./(listado)/loading-curso-table";
 import React from "react";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { CURSOS_ROUTE } from "@/shared/server-routes";
 
 export default function CursoLoading() {
