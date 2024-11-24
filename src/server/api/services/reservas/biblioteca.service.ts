@@ -63,7 +63,7 @@ export const crearPrestamoLibroProcedure = protectedProcedure
 
     const reserva = await crearPrestamoLibro(ctx, input, userId);
 
-    void enviarMailReservaLibroProcedure(ctx, { reservaId: reserva.id });
+    void enviarMailReservaLibroProcedure(ctx, reserva.id);
 
     return reserva;
   });
@@ -87,7 +87,7 @@ export const devolverLibroProcedure = protectedProcedure
 
     const reserva = await devolverLibro(ctx, input, userId);
 
-    void enviarMailDevolverLibroProcedure(ctx, { libroId: input.libroId });
+    void enviarMailDevolverLibroProcedure(ctx, reserva.id);
 
     return reserva;
   });

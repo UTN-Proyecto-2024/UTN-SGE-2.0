@@ -230,7 +230,9 @@ export function obtenerHoraInicioFin(
     throw new Error(`Hora de inicio o fin inválida para el turno ${turno} y hora ${hora}`);
   }
 
-  return { horaInicio, horaFin };
+  const fechaFinHoraEntera = getHoraCon45MinutosMas(horaFin);
+
+  return { horaInicio, horaFin: fechaFinHoraEntera };
 }
 
 /**

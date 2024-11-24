@@ -531,32 +531,36 @@ const getReservaAbiertaCreateArgs = (input: InputCrearReservaLaboratorioAbierto,
 export const getReservaLaboratorioAbiertoParaEmail = async (ctx: { db: PrismaClient }, input: { id: number }) => {
   const { id } = input;
 
-  const datos = await ctx.db.reservaLaboratorioAbierto.findUnique({
+  const datos = await ctx.db.reserva.findUnique({
     where: {
-      reservaId: id,
+      id: id,
     },
-    include: {
-      reserva: {
-        include: {
-          usuarioSolicito: {
-            select: {
-              nombre: true,
-              apellido: true,
-              email: true,
-            },
-          },
+    select: {
+      fechaHoraInicio: true,
+      fechaHoraFin: true,
+      usuarioSolicito: {
+        select: {
+          nombre: true,
+          apellido: true,
+          email: true,
         },
       },
-      laboratorio: true,
+      reservaLaboratorioAbierto: {
+        select: {
+          laboratorio: true,
+        },
+      },
     },
   });
 
   const reserva = {
-    laboratorioNombre: datos?.laboratorio?.nombre,
+    fechaHoraInicio: datos?.fechaHoraInicio,
+    fechaHoraFin: datos?.fechaHoraFin,
+    laboratorioNombre: datos?.reservaLaboratorioAbierto?.laboratorio?.nombre,
     usuarioSolicitante: {
-      nombre: datos?.reserva.usuarioSolicito.nombre,
-      apellido: datos?.reserva.usuarioSolicito.apellido,
-      email: datos?.reserva.usuarioSolicito.email,
+      nombre: datos?.usuarioSolicito.nombre,
+      apellido: datos?.usuarioSolicito.apellido,
+      email: datos?.usuarioSolicito.email,
     },
   };
 
