@@ -98,7 +98,7 @@ export const enviarMailCancelacionLaboratorioAbiertoProcedure = async (
     textoMail: `
       <p style="text-align: center;"><strong>Reserva cancelada</strong></p>
       <p>Tu reserva para el laboratorio abierto ha sido cancelada.</p>
-      <p>Día: <strong>${fecha}</strong></p>
+      <p><strong>Día:</strong> ${fecha}</p>
     `,
     hipervinculo:
       LABORATORIO_ABIERTO_ROUTE.misReservaRuta !== undefined ? String(LABORATORIO_ABIERTO_ROUTE?.misReservaRuta) : "",

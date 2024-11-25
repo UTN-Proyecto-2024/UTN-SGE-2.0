@@ -25,8 +25,8 @@ export const enviarMailReservaLibroProcedure = async (ctx: { db: PrismaClient },
       <p>Has reservado el libro <strong>${reservaData.libroNombre}</strong>.</p>
       <p>Duración de la reserva:</p>
       <ul>
-        <li>Desde: <strong>${fechaInicio}</strong></li>
-        <li>Hasta: <strong>${fechaFin}</strong></li>
+        <li><strong>Desde:</strong> ${fechaInicio}</li>
+        <li><strong>Hasta:</strong> ${fechaFin}</li>
       </ul>
     `,
     hipervinculo: BIBLIOTECA_ROUTE.misPrestamosRuta !== undefined ? String(BIBLIOTECA_ROUTE?.misPrestamosRuta) : "",
@@ -54,8 +54,8 @@ export const enviarMailRenovarLibroProcedure = async (ctx: { db: PrismaClient },
       <p>Has renovado el préstamo del libro <strong>${reservaData.libroNombre}</strong>.</p>
       <p>Nueva duración del préstamo:</p>
       <ul>
-        <li>Desde: <strong>${fechaInicio}</strong></li>
-        <li>Hasta: <strong>${fechaFin}</strong></li>
+        <li><strong>Desde:</strong> ${fechaInicio}</li>
+        <li><strong>Hasta:</strong> ${fechaFin}</li>
       </ul>
     `,
     hipervinculo: BIBLIOTECA_ROUTE.misPrestamosRuta !== undefined ? String(BIBLIOTECA_ROUTE?.misPrestamosRuta) : "",
