@@ -326,6 +326,7 @@ export const editarCurso = async (ctx: { db: PrismaClient }, input: InputEditarC
         activo: input.activo,
 
         sedeId: Number(input.sedeId),
+        materiaId: Number(input.materiaId),
         ac: input.ac,
         dia1: input.dia1,
         dia2: input.dia2 ? input.dia2 : undefined,
