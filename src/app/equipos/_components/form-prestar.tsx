@@ -105,8 +105,8 @@ export const EquipoFormPrestarORenovar = ({ equipoId, onSubmit, onCancel, renova
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
         <div className="flex w-full flex-col items-center justify-center">
           <div className="flex flex-col space-y-4 px-0 md:px-6">
-            <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
-              <div className="mt-4 basis-1/2">
+            <div className="flex w-full flex-col gap-x-4 sm:flex-row lg:justify-between">
+              <div className="mt-4 w-full">
                 <FormInput
                   label={"Desde el día"}
                   control={control}
@@ -116,7 +116,7 @@ export const EquipoFormPrestarORenovar = ({ equipoId, onSubmit, onCancel, renova
                   required
                 />
               </div>
-              <div className="mt-4 basis-1/2">
+              <div className="mt-4 w-full">
                 <FormInput
                   label={"Hasta el día"}
                   control={control}
@@ -145,7 +145,7 @@ export const EquipoFormPrestarORenovar = ({ equipoId, onSubmit, onCancel, renova
           </div>
         </div>
 
-        <div className="bottom-0 mb-1 flex w-full flex-row items-end justify-end space-x-4 bg-white md:justify-end lg:sticky">
+        <div className="bottom-0 mb-1 flex w-full flex-row items-end justify-center space-x-4 bg-white sm:justify-end lg:sticky">
           <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
             Cancelar
           </Button>
