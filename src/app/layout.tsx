@@ -15,7 +15,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const session = await getServerAuthSession();
 
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
+    <html lang="es" className={`${GeistSans.variable}`}>
       <link rel="apple-touch-icon" type="image/png" href="/apple-touch-icon-iphone-60x60.png" />
       <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="/apple-touch-icon-ipad-76x76.png" />
       <link
