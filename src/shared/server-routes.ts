@@ -253,7 +253,7 @@ export const COMPROBANTE_ROUTE = {
 };
 
 export const REPORTES_ROUTE: AppRoute = {
-  href: "/reportes/mes",
+  href: "/reportes",
   label: "Reportes",
   isPublic: false,
   permisos: [SgeNombre.ADMIN_VER_PANEL_ADMIN],

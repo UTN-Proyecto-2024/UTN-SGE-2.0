@@ -52,6 +52,11 @@ const config = {
         destination: "/laboratorio_abierto/reservar",
         permanent: true,
       },
+      {
+        source: "/reportes",
+        destination: "/reportes/mes",
+        permanent: true,
+      },
     ];
   },
   output: "standalone",

@@ -4,20 +4,6 @@ import { validarInput } from "../helper";
 import { getAllReservasToday } from "../../repositories/reservas/reserva.repository";
 import { calcularTurnoTexto } from "@/shared/get-date";
 
-// type Reserva = {
-//   id: number;
-//   tipo: string;
-//   laboratorio: string;
-//   descripcion: string;
-//   sede: string;
-//   equipos: string[];
-//   division: string;
-//   materia: string;
-//   profesor: string | null;
-//   // fechaHoraInicio: Date;
-//   // fechaHoraFin: Date;
-// };
-
 export const getReservasToday = protectedProcedure.input(inputGetAllLaboratorios).query(async ({ ctx, input }) => {
   validarInput(inputGetAllLaboratorios, input);
   const reservas = await getAllReservasToday(ctx, input);
@@ -29,7 +15,7 @@ export const getReservasToday = protectedProcedure.input(inputGetAllLaboratorios
       turnoTexto: calcularTurnoTexto(reserva.fechaHoraInicio),
       ...(reserva.reservaLaboratorioCerrado && {
         id: reserva.reservaLaboratorioCerrado.id,
-        tipo: "CERRADO",
+        tipo: reserva.reservaLaboratorioCerrado.esDiscrecional ? "Discrecional" : "Cerrado",
         laboratorio: reserva.reservaLaboratorioCerrado.laboratorio?.nombre,
         descripcion: reserva.reservaLaboratorioCerrado.descripcion,
         equipos: reserva.reservaLaboratorioCerrado.equipoReservado
@@ -49,7 +35,7 @@ export const getReservasToday = protectedProcedure.input(inputGetAllLaboratorios
         discrecionalTitulo: reserva.reservaLaboratorioCerrado.discrecionalTitulo,
       }),
       ...(reserva.reservaLaboratorioAbierto && {
-        id: reserva.reservaLaboratorioAbierto.id,
+        id: reserva.id,
         tipo: reserva.reservaLaboratorioAbierto.laboratorioAbiertoTipo,
         laboratorio: reserva.reservaLaboratorioAbierto.laboratorio?.nombre,
         reserva: reserva.reservaLaboratorioAbierto.descripcion,
