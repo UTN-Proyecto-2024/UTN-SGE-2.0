@@ -73,7 +73,6 @@ export default function Calendar({ filters }: Props) {
     return hoy;
   }, []);
 
-  console.log(laboratoriosMap);
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 rounded">
