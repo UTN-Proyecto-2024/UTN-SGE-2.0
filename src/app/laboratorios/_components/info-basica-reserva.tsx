@@ -15,7 +15,7 @@ import {
   BadgeLaboratorioAbiertoReserva,
 } from "@/app/_components/badge-estatus-reserva";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getDateISOString, getTimeISOString } from "@/shared/get-date";
+import { getFechaHumanoDDMMYYYY, getTimeISOString } from "@/shared/get-date";
 import { MotivoRechazo } from "./rechazo-alert";
 import { AsistioReserva } from "@/app/_components/asistio-reserva";
 
@@ -95,7 +95,7 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 Fecha
               </b>
-              <p>{getDateISOString(reserva.reserva.fechaHoraInicio)}</p>
+              <p>{getFechaHumanoDDMMYYYY(reserva.reserva.fechaHoraInicio)}</p>
             </div>
             <div className="space-y-2">
               <b className="flex items-center text-sm font-semibold">

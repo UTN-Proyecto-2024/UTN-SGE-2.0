@@ -6,7 +6,7 @@ import { BeakerIcon, BookIcon, BoxIcon } from "lucide-react";
 import { api } from "@/trpc/react";
 import DetalleReserva from "./detalle-reserva";
 import type { RouterOutputs } from "@/trpc/react";
-import { getDateISOString, getTimeISOString } from "@/shared/get-date";
+import { getFechaHumanoDDMMYYYY, getTimeISOString } from "@/shared/get-date";
 import { cn } from "@/components/utils";
 import {
   BadgeReservaPasadaEquipo,
@@ -124,7 +124,7 @@ export default function ContenedorReserva({ usuarioData }: ClienteContenedorUsua
                 reservas={reservasLibros ?? []}
                 columns={[
                   { header: "ID", key: "id", className: "w-[100px]" },
-                  { header: "Fecha de préstamo", key: (item) => getDateISOString(item.fechaCreacion) },
+                  { header: "Fecha de préstamo", key: (item) => getFechaHumanoDDMMYYYY(item.fechaCreacion) },
                   { header: "Libro", key: (item) => item.libro?.titulo },
                   {
                     header: "Estado",
@@ -146,7 +146,7 @@ export default function ContenedorReserva({ usuarioData }: ClienteContenedorUsua
                 reservas={reservasInventario ?? []}
                 columns={[
                   { header: "ID", key: "id", className: "w-[100px]" },
-                  { header: "Fecha de préstamo", key: (item) => getDateISOString(item.fechaCreacion) },
+                  { header: "Fecha de préstamo", key: (item) => getFechaHumanoDDMMYYYY(item.fechaCreacion) },
                   { header: "Nombre", key: (item) => item.equipo.modelo },
                   { header: "Marca", key: (item) => item.equipo.marca.nombre },
                   {
@@ -171,7 +171,7 @@ export default function ContenedorReserva({ usuarioData }: ClienteContenedorUsua
                   { header: "ID", key: "id", className: "w-[100px]" },
                   {
                     header: "Fecha Solicitud Reserva",
-                    key: (item) => getDateISOString(item.fechaCreacion),
+                    key: (item) => getFechaHumanoDDMMYYYY(item.fechaCreacion),
                   },
                   {
                     header: "Hora Inicio",
@@ -204,7 +204,7 @@ export default function ContenedorReserva({ usuarioData }: ClienteContenedorUsua
                   { header: "ID", key: "id", className: "w-[100px]" },
                   {
                     header: "Fecha Solicitud Reserva",
-                    key: (item) => getDateISOString(item.fechaCreacion),
+                    key: (item) => getFechaHumanoDDMMYYYY(item.fechaCreacion),
                   },
                   {
                     header: "Hora Inicio",
