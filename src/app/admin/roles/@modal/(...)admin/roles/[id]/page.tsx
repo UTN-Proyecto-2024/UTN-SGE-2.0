@@ -5,6 +5,7 @@ import { AdminRolForm } from "@/app/admin/roles/[id]/admin-rol-form";
 import { ScrollArea } from "@/components/ui";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { api } from "@/trpc/react";
 
 type PageProps = {
   params: { id: string };
@@ -14,6 +15,12 @@ export default function PageDetails({ params: { id } }: PageProps) {
   const [open, setOpen] = useState(true);
 
   const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.admin.roles.getAllRoles.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -23,7 +30,7 @@ export default function PageDetails({ params: { id } }: PageProps) {
   };
 
   const handleClickSave = () => {
-    router.refresh();
+    refreshGetAll();
     setTimeout(() => router.back(), 100);
   };
 

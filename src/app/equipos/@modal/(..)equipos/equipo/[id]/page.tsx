@@ -5,6 +5,7 @@ import { EquipoForm } from "@/app/equipos/equipo/[id]/equipo-form";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui";
+import { api } from "@/trpc/react";
 
 type PageProps = {
   params: { id: string };
@@ -14,6 +15,12 @@ export default function PageDetails({ params: { id } }: PageProps) {
   const [open, setOpen] = useState(true);
 
   const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.equipos.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -23,8 +30,8 @@ export default function PageDetails({ params: { id } }: PageProps) {
   };
 
   const handleClickSave = () => {
+    refreshGetAll();
     router.back();
-    setTimeout(() => router.refresh(), 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
   };
 
   const handleClickCancel = () => handleOpenChange(false);

@@ -2,7 +2,7 @@
 
 import { DataTable } from "@/components/ui";
 import RemoveEquipoModal from "./remove-equipo";
-import { type RouterOutputs } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import { type z } from "zod";
 import { useEquiposQueryParam } from "../_hooks/use-equipos-query-param";
 import { DataTablePaginationStandalone } from "@/components/ui/table/table-pagination-standalone";
@@ -26,9 +26,16 @@ type EquiposTableProps = {
 export const EquiposTable = ({ data, filters }: EquiposTableProps) => {
   const { tienePermisos } = useTienePermisos([SgeNombre.EQUIPOS_PRESTAMO_PRESTAR]);
 
-  const { refresh, pagination, sorting, onSortingChange, onPaginationChange } = useEquiposQueryParam(filters);
+  const { pagination, sorting, onSortingChange, onPaginationChange } = useEquiposQueryParam(filters);
 
   const columns = getEquiposColumnas({ tienePrestar: tienePermisos });
+
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.equipos.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   // TODO: Implement resizing
   return (
@@ -55,7 +62,7 @@ export const EquiposTable = ({ data, filters }: EquiposTableProps) => {
                       equipoId={original.id}
                       nombre={original.inventarioId}
                       disponible={original.disponible}
-                      onSubmit={refresh}
+                      onSubmit={refreshGetAll}
                     />
                     <EditarEquipoModal equipoId={original.id} />
                   </>
