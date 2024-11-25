@@ -13,7 +13,7 @@ const rutaSolicitud =
 export const VerReservaModal = (props: VerReservaModalProps) => {
   return (
     <Link key={props.reservaID} href={`${rutaSolicitud?.href}/${props.reservaID}`} passHref prefetch={false}>
-      <Button color={"outline"} className="h-8 w-8 px-1 py-1">
+      <Button color={"outline"} className="h-8 w-8 px-1 py-1" title="Detalles de reserva">
         <EyeIcon size={16} />
       </Button>
     </Link>

@@ -47,7 +47,13 @@ export const EquiposPrestamosTable = ({ data, filters, filterByUser }: EquipoTab
               <>
                 {!filterByUser && (
                   <Link href={`${COMPROBANTE_ROUTE.inventarioRuta.href}/${original.reserva.id}`} target="_blank">
-                    <Button title="Imprimir" variant="icon" color="ghost" icon={PrinterIcon} />
+                    <Button
+                      title="Imprimir"
+                      variant="icon"
+                      color="ghost"
+                      icon={PrinterIcon}
+                      className="h-8 w-8 px-1 py-1"
+                    />
                   </Link>
                 )}
               </>
