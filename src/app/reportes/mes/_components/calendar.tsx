@@ -53,7 +53,7 @@ export default function Calendar({ filters }: Props) {
           [format(reserva.reserva.fechaHoraInicio, "yyyy-MM-dd")]: [
             ...(acc[dateKey] ?? []),
             {
-              id: reserva.reserva.id,
+              id: reserva.reservaId,
               materia: reserva.esDiscrecional ? reserva.discrecionalMateria?.nombre : reserva.curso?.materia.nombre,
               division: reserva.esDiscrecional ? "" : ` ${reserva.curso?.division.nombre}`,
               profesor: reserva.esDiscrecional
@@ -72,7 +72,6 @@ export default function Calendar({ filters }: Props) {
 
     return hoy;
   }, []);
-
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 rounded">
@@ -117,12 +116,7 @@ export default function Calendar({ filters }: Props) {
                     >
                       {reservas
                         ? reservas.map((reserva) => (
-                            <Link
-                              key={reserva.id}
-                              href={`/reportes/solicitudes/${reserva.id}`}
-                              passHref
-                              prefetch={false}
-                            >
+                            <Link key={reserva.id} href={`/reportes/cerrado/${reserva.id}`} passHref prefetch={false}>
                               <div
                                 className={clsx(
                                   "mx-1 mb-1 rounded-md px-2 py-1",
