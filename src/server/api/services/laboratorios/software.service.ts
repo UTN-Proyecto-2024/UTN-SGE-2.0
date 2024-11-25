@@ -5,7 +5,7 @@ import {
   inputGetSoftware,
   inputGetSoftwareFilter,
 } from "@/shared/filters/laboratorio-filter.schema";
-import { protectedProcedure } from "../../trpc";
+import { createAuthorizedProcedure, protectedProcedure } from "../../trpc";
 import { validarInput } from "../helper";
 import {
   agregarSoftware,
@@ -14,7 +14,6 @@ import {
   getSoftwarePorId,
   eliminarSoftware,
 } from "../../repositories/laboratorios/software.repository";
-import { verificarPermisos } from "@/server/permisos";
 import { SgeNombre } from "@prisma/client";
 
 export const getAllSoftwareProcedure = protectedProcedure
@@ -34,10 +33,9 @@ export const getSoftwarePorIdProcedure = protectedProcedure.input(inputGetSoftwa
   return libro;
 });
 
-export const editarSoftwareProcedure = protectedProcedure
+export const editarSoftwareProcedure = createAuthorizedProcedure([SgeNombre.RES_LAB_CONFIRMAR_RESERVAS])
   .input(inputEditarSoftware)
   .mutation(async ({ ctx, input }) => {
-    await verificarPermisos([SgeNombre.RES_LAB_CONFIRMAR_RESERVAS]);
     validarInput(inputEditarSoftware, input);
 
     const userId = ctx.session.user.id;
@@ -47,21 +45,21 @@ export const editarSoftwareProcedure = protectedProcedure
     return libro;
   });
 
-export const nuevoSoftwareProcedure = protectedProcedure.input(inputAddSoftware).mutation(async ({ ctx, input }) => {
-  await verificarPermisos([SgeNombre.RES_LAB_CONFIRMAR_RESERVAS]);
-  validarInput(inputAddSoftware, input);
+export const nuevoSoftwareProcedure = createAuthorizedProcedure([SgeNombre.RES_LAB_CONFIRMAR_RESERVAS])
+  .input(inputAddSoftware)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputAddSoftware, input);
 
-  const userId = ctx.session.user.id;
+    const userId = ctx.session.user.id;
 
-  const libro = await agregarSoftware(ctx, input, userId);
+    const libro = await agregarSoftware(ctx, input, userId);
 
-  return libro;
-});
+    return libro;
+  });
 
-export const eliminarSoftwareProcedure = protectedProcedure
+export const eliminarSoftwareProcedure = createAuthorizedProcedure([SgeNombre.RES_LAB_CONFIRMAR_RESERVAS])
   .input(inputEliminarSoftware)
   .mutation(async ({ ctx, input }) => {
-    await verificarPermisos([SgeNombre.RES_LAB_CONFIRMAR_RESERVAS]);
     validarInput(inputEliminarSoftware, input);
 
     const libro = await eliminarSoftware(ctx, input);

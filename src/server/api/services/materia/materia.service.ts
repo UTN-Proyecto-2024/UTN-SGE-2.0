@@ -1,4 +1,3 @@
-import { verificarPermisos } from "@/server/permisos";
 import {
   inputEliminarMateria,
   inputEditarMateria,
@@ -14,7 +13,7 @@ import {
   getMateriaById,
 } from "../../repositories/materia/materia.repository";
 
-import { protectedProcedure } from "../../trpc";
+import { createAuthorizedProcedure, protectedProcedure } from "../../trpc";
 import { validarInput } from "../helper";
 import { Prisma, SgeNombre } from "@prisma/client";
 
@@ -30,10 +29,9 @@ export const getMateriaByIdProcedure = protectedProcedure.input(inputGetMateria)
   return materia;
 });
 
-export const eliminarMateriaProcedure = protectedProcedure
+export const eliminarMateriaProcedure = createAuthorizedProcedure([SgeNombre.MATERIAS_ABM])
   .input(inputEliminarMateria)
   .mutation(async ({ ctx, input }) => {
-    await verificarPermisos([SgeNombre.MATERIAS_ABM]);
     validarInput(inputEliminarMateria, input);
 
     const materia = await eliminarMateria(ctx, input);
@@ -41,54 +39,56 @@ export const eliminarMateriaProcedure = protectedProcedure
     return materia;
   });
 
-export const editarMateriaProcedure = protectedProcedure.input(inputEditarMateria).mutation(async ({ ctx, input }) => {
-  await verificarPermisos([SgeNombre.MATERIAS_ABM]);
-  validarInput(inputEditarMateria, input);
+export const editarMateriaProcedure = createAuthorizedProcedure([SgeNombre.MATERIAS_ABM])
+  .input(inputEditarMateria)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputEditarMateria, input);
 
-  const userId = ctx.session.user.id;
+    const userId = ctx.session.user.id;
 
-  try {
-    const materia = await editarMateria(ctx, input, userId);
+    try {
+      const materia = await editarMateria(ctx, input, userId);
 
-    return materia;
-  } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        console.log(error);
-        throw new Error("Ocurrió un error al editar la materia");
+      return materia;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === "P2002") {
+          console.log(error);
+          throw new Error("Ocurrió un error al editar la materia");
+        }
       }
-    }
 
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-
-    throw new Error("Error editando materia");
-  }
-});
-
-export const nuevaMateriaProcedure = protectedProcedure.input(inputAgregarMateria).mutation(async ({ ctx, input }) => {
-  await verificarPermisos([SgeNombre.MATERIAS_ABM]);
-  validarInput(inputAgregarMateria, input);
-
-  const userId = ctx.session.user.id;
-
-  try {
-    const materia = await agregarMateria(ctx, input, userId);
-
-    return materia;
-  } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        console.log(error);
-        throw new Error("Ocurrió un error al agregar la materia");
+      if (error instanceof Error) {
+        throw new Error(error.message);
       }
-    }
 
-    if (error instanceof Error) {
-      throw new Error(error.message);
+      throw new Error("Error editando materia");
     }
+  });
 
-    throw new Error("Error agregando materia");
-  }
-});
+export const nuevaMateriaProcedure = createAuthorizedProcedure([SgeNombre.MATERIAS_ABM])
+  .input(inputAgregarMateria)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputAgregarMateria, input);
+
+    const userId = ctx.session.user.id;
+
+    try {
+      const materia = await agregarMateria(ctx, input, userId);
+
+      return materia;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === "P2002") {
+          console.log(error);
+          throw new Error("Ocurrió un error al agregar la materia");
+        }
+      }
+
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+
+      throw new Error("Error agregando materia");
+    }
+  });
