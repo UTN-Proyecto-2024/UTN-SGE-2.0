@@ -72,7 +72,7 @@ export const enviarMailAproboLaboratorioAbiertoProcedure = async (ctx: { db: Pri
     textoMail: `
       <p style="text-align: center;"><strong>¡Reserva aprobada!</strong></p>
       <p>Tu reserva para el laboratorio abierto <strong>${laboratorioNombre}</strong> ha sido aprobada.</p>
-      <p>Día: <strong>${fecha}</strong></p>
+      <p><strong>Día:</strong> ${fecha}</p>
       <p><strong>Horario:</strong> desde las <strong>${horaInicio}</strong> hasta las <strong>${horaFin}</strong>.</p>
     `,
     hipervinculo:
