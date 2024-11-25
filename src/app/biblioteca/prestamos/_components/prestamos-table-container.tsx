@@ -1,7 +1,10 @@
-import { api } from "@/trpc/server";
+"use client";
+
+import { api } from "@/trpc/react";
 import { type z } from "zod";
 import { type inputGetAllPrestamosLibros } from "@/shared/filters/reservas-filter.schema";
 import { BibliotecaPrestamosTable } from "./table";
+import LoadingBibliotecaPrestamosTable from "../../(listado)/loading-biblioteca-prestamos-table";
 
 type BibliotecaPrestamosFilters = z.infer<typeof inputGetAllPrestamosLibros>;
 
@@ -10,7 +13,7 @@ type BibliotecaPrestamosTableContainerProps = {
   filterByUser?: boolean;
 };
 
-export default async function BibliotecaPrestamosTableContainer({
+export default function BibliotecaPrestamosTableContainer({
   filters,
   filterByUser,
 }: BibliotecaPrestamosTableContainerProps) {
@@ -21,7 +24,11 @@ export default async function BibliotecaPrestamosTableContainer({
     };
   }
 
-  const prestamos = await api.reservas.reservaBiblioteca.getAll(filters);
+  const { data: prestamos, isLoading } = api.reservas.reservaBiblioteca.getAll.useQuery(filters);
 
-  return <BibliotecaPrestamosTable data={prestamos} filters={filters} filterByUser={filterByUser} />;
+  if (isLoading) {
+    return <LoadingBibliotecaPrestamosTable />;
+  }
+
+  return <BibliotecaPrestamosTable data={prestamos ?? { count: 0, reservas: [] }} filters={filters} />;
 }
