@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { api } from "@/trpc/react";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { EquipoForm } from "../equipo/[id]/equipo-form";
 import { useState } from "react";
@@ -11,10 +11,15 @@ import { ScrollArea } from "@/components/ui";
 export const EquiposNuevoEquipoModal = () => {
   const [open, setOpen] = useState(false);
 
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.equipos.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleSave = () => {
-    router.refresh();
+    refreshGetAll();
     setOpen(false);
   };
 

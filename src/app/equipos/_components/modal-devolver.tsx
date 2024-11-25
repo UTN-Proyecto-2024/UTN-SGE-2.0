@@ -4,7 +4,6 @@ import { useState } from "react";
 import { toast } from "@/components/ui";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { api } from "@/trpc/react";
-import { useRouter } from "next/navigation";
 import { DevolverButton } from "@/app/_components/prestar-devolver";
 
 type DevolverEquipoModalProps = {
@@ -12,7 +11,15 @@ type DevolverEquipoModalProps = {
 };
 
 export default function DevolverEquipoModal({ equipoId }: DevolverEquipoModalProps) {
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.equipos.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+    utils.reservas.reservaEquipo.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
   const devolverEquipo = api.reservas.reservaEquipo.devolverEquipo.useMutation();
 
   const [open, setOpen] = useState(false);
@@ -25,7 +32,7 @@ export default function DevolverEquipoModal({ equipoId }: DevolverEquipoModalPro
       {
         onSuccess: () => {
           toast.success("Equipo devuelto con éxito.");
-          router.refresh();
+          refreshGetAll();
           setOpen(false);
         },
         onError: (error) => {
