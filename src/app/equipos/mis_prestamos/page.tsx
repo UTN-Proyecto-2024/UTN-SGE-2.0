@@ -4,7 +4,7 @@ import { ActionButtonsPrestamos } from "../(listado)/action-redirect-prestamos";
 import LoadingEquiposPrestamosTable from "../(listado)/loading-equipos-prestamos-table";
 import EquiposPrestamosTableContainer from "../prestamos/_components/prestamos-table-container";
 import { inputGetAllPrestamosEquipos } from "@/shared/filters/reservas-equipos-filter.schema";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { EQUIPOS_ROUTE } from "@/shared/server-routes";
 
 type PageProps = {

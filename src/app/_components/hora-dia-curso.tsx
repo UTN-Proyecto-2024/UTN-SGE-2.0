@@ -1,4 +1,4 @@
-import { horariosTurnos } from "@/shared/get-date";
+import { calcularTurnoHora } from "@/shared/get-date";
 import { type TurnoCurso } from "@prisma/client";
 
 type HoraDiaProps = {
@@ -65,13 +65,9 @@ export const HoraDia = ({
       </div>
       <span className="text-center text-xs">
         {esHoyDia1 ? (
-          <span>
-            {horariosTurnos[turno]?.[horaInicio1]} a {horariosTurnos[turno]?.[finClase1 - 1]}
-          </span>
+          <span>{calcularTurnoHora(turno, horaInicio1, finClase1 - 1)}</span>
         ) : esHoyDia2 ? (
-          <span>
-            {horariosTurnos[turno]?.[horaInicio2]} a {horariosTurnos[turno]?.[finClase2 - 1]}
-          </span>
+          <span>{calcularTurnoHora(turno, horaInicio2, finClase2 - 1)}</span>
         ) : null}
       </span>
     </div>

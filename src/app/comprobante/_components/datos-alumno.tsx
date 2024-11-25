@@ -8,11 +8,11 @@ type UsuarioSolicito = {
   legajo: string | null;
 };
 
-export const DatosAlumno = ({ datosUsuario }: { datosUsuario: UsuarioSolicito | undefined }) => {
+export const DatosSolicitante = ({ datosUsuario }: { datosUsuario: UsuarioSolicito | undefined }) => {
   return (
     <div className="h-full basis-1/2 border border-gray-800 p-2">
       <div className="flex h-full flex-col justify-between text-left">
-        <h3 className="text-center text-lg font-bold">Datos del Alumno</h3>
+        <h3 className="text-center text-lg font-bold">Datos del Solicitante</h3>
         <p>
           <span className="underline">Apellido y Nombre:</span> {datosUsuario?.apellido ?? ""},{" "}
           {datosUsuario?.nombre ?? ""}

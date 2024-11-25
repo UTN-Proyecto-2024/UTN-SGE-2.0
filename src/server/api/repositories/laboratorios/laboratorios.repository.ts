@@ -11,15 +11,40 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
       reservaLaboratorioCerrado: {
         include: {
           reserva: {
-            include: {
-              usuarioSolicito: true,
+            select: {
+              id: true,
+              fechaHoraInicio: true,
+            },
+          },
+          discrecionalDocente: {
+            select: {
+              nombre: true,
+              apellido: true,
+            },
+          },
+          discrecionalMateria: {
+            select: {
+              nombre: true,
             },
           },
           curso: {
             include: {
-              division: true,
-              materia: true,
-              profesor: true,
+              division: {
+                select: {
+                  nombre: true,
+                },
+              },
+              materia: {
+                select: {
+                  nombre: true,
+                },
+              },
+              profesor: {
+                select: {
+                  nombre: true,
+                  apellido: true,
+                },
+              },
             },
           },
         },

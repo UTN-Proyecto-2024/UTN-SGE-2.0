@@ -4,9 +4,9 @@ import BibliotecaTableContainer from "./(listado)/biblioteca-table-container";
 import { inputGetBooks } from "@/shared/filters/biblioteca-filter.schema";
 import { Suspense, useMemo } from "react";
 import LoadingBibliotecaTable from "./(listado)/loading-biblioteca-table";
-import PageLayout from "@/components/ui/page-template";
 import { BIBLIOTECA_ROUTE } from "@/shared/server-routes";
 import { BibliotecaNewLibro } from "./(listado)/biblioteca-new-book";
+import PageLayout from "@/components/ui/template/page-template";
 
 type PageProps = {
   searchParams: ReadonlyURLSearchParams;

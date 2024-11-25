@@ -56,7 +56,7 @@ export const crearPrestamoEquipoProcedure = protectedProcedure
 
     const reserva = await crearPrestamoEquipo(ctx, input, userId);
 
-    void enviarMailReservaEquipoProcedure(ctx, { reservaId: reserva.id });
+    void enviarMailReservaEquipoProcedure(ctx, reserva.id);
 
     return reserva;
   });
@@ -81,7 +81,7 @@ export const devolverEquipoProcedure = protectedProcedure
 
     const reserva = await devolverEquipo(ctx, input, userId);
 
-    void enviarMailDevolverEquipoProcedure(ctx, { equipoId: input.equipoId });
+    void enviarMailDevolverEquipoProcedure(ctx, reserva.id);
 
     return reserva;
   });
@@ -94,11 +94,7 @@ export const renovarEquipoProcedure = protectedProcedure.input(inputPrestarEquip
 
   const reserva = await renovarEquipo(ctx, input, userId);
 
-  void enviarMailRenovarEquipoProcedure(ctx, {
-    equipoId: input.equipoId,
-    fechaInicio: new Date(input.fechaInicio),
-    fechaFin: new Date(input.fechaFin),
-  });
+  void enviarMailRenovarEquipoProcedure(ctx, reserva.id);
 
   return reserva;
 });

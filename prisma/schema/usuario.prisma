@@ -53,9 +53,10 @@ model User {
     cursosComoAyudante CursoAyudante[]
     cursosComoProfesor Curso[]
 
-    MateriaJefeTp    MateriaJefeTp[] @relation(name: "materiasJefeTrabajoPractico")
-    materiasDirector Materia[]       @relation(name: "materiasDirector")
-    tutor            Tutor? // 1 tutor por 1 usuario maximo
+    MateriaJefeTp             MateriaJefeTp[]             @relation(name: "materiasJefeTrabajoPractico")
+    materiasDirector          Materia[]                   @relation(name: "materiasDirector")
+    tutor                     Tutor? // 1 tutor por 1 usuario maximo
+    ReservaLaboratorioCerrado ReservaLaboratorioCerrado[] @relation(name: "reservasLaboratorioCerrado")
 
     @@unique([legajo(sort: Asc)], map: "usuario_legajo_asc_idx")
     @@index([name(sort: Asc)])

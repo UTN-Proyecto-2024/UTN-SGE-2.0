@@ -12,7 +12,7 @@ import type {
   inputRechazarReservaLaboratorioAbierto,
   inputCancelarReservaLaboratorioAbierto,
 } from "@/shared/filters/reserva-laboratorio-filter.schema";
-import { armarFechaReserva, getFechaddddDDMMYYYY } from "@/shared/get-date";
+import { armarFechaReserva, calcularTurnoTexto, getFechaddddDDMMYYYY } from "@/shared/get-date";
 // import { lanzarErrorSiLaboratorioOcupado } from "./laboratorioEnUso.repository";
 
 type InputGetPorUsuarioID = z.infer<typeof inputGetReservaLaboratorioPorUsuarioId>;
@@ -46,7 +46,7 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
   fechaHoyMenos1Dia.setHours(0, 0, 0, 0);
   const filtrosWhereReservaLaboratorioAbierto: Prisma.ReservaLaboratorioAbiertoWhereInput = {
     reserva: {
-      ...(filtrByUserId === "true" ? { usuarioSolicitoId: userId } : {}),
+      ...(filtrByUserId === "true" ? { usuarioSolicitoId: userId, fechaHoraFin: { gte: fechaHoyMenos1Dia } } : {}),
       ...(estatus ? { estatus: estatus } : {}),
       ...(pasadas === "true" ? { fechaHoraFin: { lte: fechaHoyMenos1Dia } } : {}),
       ...(aprobadas === "true" ? { fechaHoraFin: { gte: fechaHoyMenos1Dia } } : {}),
@@ -146,10 +146,12 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
 
   const reservasConFecha = reservas.map((reserva) => {
     const fechaTexto = getFechaddddDDMMYYYY(reserva.reserva.fechaHoraInicio);
+    const turnoTexto = calcularTurnoTexto(reserva.reserva.fechaHoraInicio);
 
     return {
       ...reserva,
       fechaTexto,
+      turnoTexto,
     };
   });
 
@@ -529,32 +531,36 @@ const getReservaAbiertaCreateArgs = (input: InputCrearReservaLaboratorioAbierto,
 export const getReservaLaboratorioAbiertoParaEmail = async (ctx: { db: PrismaClient }, input: { id: number }) => {
   const { id } = input;
 
-  const datos = await ctx.db.reservaLaboratorioAbierto.findUnique({
+  const datos = await ctx.db.reserva.findUnique({
     where: {
-      reservaId: id,
+      id: id,
     },
-    include: {
-      reserva: {
-        include: {
-          usuarioSolicito: {
-            select: {
-              nombre: true,
-              apellido: true,
-              email: true,
-            },
-          },
+    select: {
+      fechaHoraInicio: true,
+      fechaHoraFin: true,
+      usuarioSolicito: {
+        select: {
+          nombre: true,
+          apellido: true,
+          email: true,
         },
       },
-      laboratorio: true,
+      reservaLaboratorioAbierto: {
+        select: {
+          laboratorio: true,
+        },
+      },
     },
   });
 
   const reserva = {
-    laboratorioNombre: datos?.laboratorio?.nombre,
+    fechaHoraInicio: datos?.fechaHoraInicio,
+    fechaHoraFin: datos?.fechaHoraFin,
+    laboratorioNombre: datos?.reservaLaboratorioAbierto?.laboratorio?.nombre,
     usuarioSolicitante: {
-      nombre: datos?.reserva.usuarioSolicito.nombre,
-      apellido: datos?.reserva.usuarioSolicito.apellido,
-      email: datos?.reserva.usuarioSolicito.email,
+      nombre: datos?.usuarioSolicito.nombre,
+      apellido: datos?.usuarioSolicito.apellido,
+      email: datos?.usuarioSolicito.email,
     },
   };
 

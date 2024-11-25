@@ -25,7 +25,7 @@ import {
   enviarMailAproboLaboratorioCerradoProcedure,
   enviarMailCancelacionLaboratorioCerradoProcedure,
   enviarMailRechazoLaboratorioCerradoProcedure,
-  enviarMailReservaLaboratorioCerradoProcedure,
+  enviarMailReservaLaboratorioCerradoCreadaProcedure,
 } from "../mails/emailLaboratorioCerrado.service";
 import { revalidatePath } from "next/cache";
 import { verificarPermisos } from "@/server/permisos";
@@ -107,7 +107,7 @@ export const cancelarReservaProcedure = protectedProcedure
 
     const reserva = await cancelarReserva(ctx, input, userId);
 
-    void enviarMailCancelacionLaboratorioCerradoProcedure(ctx, input.id);
+    void enviarMailCancelacionLaboratorioCerradoProcedure(ctx, reserva.id);
 
     return reserva;
   });
@@ -134,7 +134,7 @@ export const inputCrearReservaLaboratorioCerradoProcedure = protectedProcedure
 
     const reserva = await crearReservaLaboratorioCerrado(ctx, input, userId);
 
-    void enviarMailReservaLaboratorioCerradoProcedure(ctx, reserva.id);
+    void enviarMailReservaLaboratorioCerradoCreadaProcedure(ctx, reserva.id);
 
     return reserva;
   });
@@ -147,7 +147,7 @@ export const inputCrearReservaLaboratorioCerradoDiscrecionalProcedure = protecte
     const userId = ctx.session.user.id;
 
     const reserva = await crearReservaLaboratorioCerradoDiscrecional(ctx, input, userId);
-    void enviarMailReservaLaboratorioCerradoProcedure(ctx, reserva.id);
+    void enviarMailReservaLaboratorioCerradoCreadaProcedure(ctx, reserva.id);
 
     return reserva;
   });

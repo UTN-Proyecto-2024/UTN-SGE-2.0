@@ -2,63 +2,113 @@ import { sendEmail } from "./email";
 import { type PrismaClient } from "@prisma/client";
 import { LABORATORIO_ROUTE } from "@/shared/server-routes";
 import { getReservaLaboratorioCerradoParaEmail } from "../../repositories/reservas/laboratorioCerrado.repository";
+import { getFechaddddDDMMYYYY, getTimeISOString } from "@/shared/get-date";
 
-export const enviarMailReservaLaboratorioCerradoProcedure = async (ctx: { db: PrismaClient }, id: number) => {
-  const reservaData = await getReservaLaboratorioCerradoParaEmail(ctx, { id: id });
+export const enviarMailReservaLaboratorioCerradoCreadaProcedure = async (
+  ctx: { db: PrismaClient },
+  reservaId: number,
+) => {
+  const reservaData = await getReservaLaboratorioCerradoParaEmail(ctx, { id: reservaId });
+
+  const esDiscrecional = reservaData.esDiscrecional;
+
+  const fecha = getFechaddddDDMMYYYY(reservaData.fechaHoraInicio);
+  const horaInicio = getTimeISOString(reservaData.fechaHoraInicio);
+  const horaFin = getTimeISOString(reservaData.fechaHoraFin);
+
+  const laboratorioNombre = reservaData.laboratorioNombre ? `<strong>${reservaData.laboratorioNombre}</strong>` : "";
 
   await sendEmail(ctx, {
-    asunto: "Reserva de laboratorio cerrado confirmada",
+    asunto: `Reserva ${esDiscrecional ? "discrecional" : ""} de laboratorio creada - ${fecha}`,
     to: reservaData.usuarioSolicitante.email ?? "",
     usuario: {
-      nombre: reservaData.usuarioSolicitante.nombre ?? "Usuario",
+      nombre: reservaData.usuarioSolicitante.nombre ?? "",
       apellido: reservaData.usuarioSolicitante.apellido ?? "",
     },
-    textoMail: `<strong>Has reservado el laboratorio cerrado: </strong> <br/> <em>${reservaData.laboratorioNombre}</em>`,
+    textoMail: `
+      <p style="text-align: center;"><strong>¡Reserva creada!</strong></p>
+      <p>Has creado una solicitud de reserva de laboratorio ${laboratorioNombre} para el día <strong>${fecha}</strong>.</p>
+      <p><strong>Horario:</strong> desde las <strong>${horaInicio}</strong> hasta las <strong>${horaFin}</strong>.</p>
+    `,
     hipervinculo: LABORATORIO_ROUTE.misReservasRuta !== undefined ? String(LABORATORIO_ROUTE?.misReservasRuta) : "",
   });
 };
 
-export const enviarMailRechazoLaboratorioCerradoProcedure = async (ctx: { db: PrismaClient }, id: number) => {
-  const rechazoData = await getReservaLaboratorioCerradoParaEmail(ctx, { id });
+export const enviarMailRechazoLaboratorioCerradoProcedure = async (ctx: { db: PrismaClient }, reservaId: number) => {
+  const reservaData = await getReservaLaboratorioCerradoParaEmail(ctx, { id: reservaId });
+
+  const esDiscrecional = reservaData.esDiscrecional;
+  const fecha = getFechaddddDDMMYYYY(reservaData.fechaHoraInicio);
+  const horaInicio = getTimeISOString(reservaData.fechaHoraInicio);
+  const horaFin = getTimeISOString(reservaData.fechaHoraFin);
+  const motivoRechazo = reservaData.motivoRechazo;
 
   await sendEmail(ctx, {
-    asunto: "Reserva de laboratorio abierto rechazada",
-    to: rechazoData.usuarioSolicitante.email ?? "",
+    asunto: `Reserva ${esDiscrecional ? "discrecional" : ""} de laboratorio rechazada - ${fecha}`,
+    to: reservaData.usuarioSolicitante.email ?? "",
     usuario: {
-      nombre: rechazoData.usuarioSolicitante.nombre ?? "Usuario",
-      apellido: rechazoData.usuarioSolicitante.apellido ?? "",
+      nombre: reservaData.usuarioSolicitante.nombre ?? "",
+      apellido: reservaData.usuarioSolicitante.apellido ?? "",
     },
-    textoMail: `<strong>Se rechazó tu reserva de laboratorio cerrado</strong> <br/>`,
+    textoMail: `
+      <p style="text-align: center;"><strong>Tu reserva ha sido rechazada.</strong></p>
+      <p>Lamentamos informarte que no fue posible aprobar tu reserva para el laboratorio el día <strong>${fecha}</strong>.</p>
+      <p><strong>Motivo:</strong> ${motivoRechazo}</p>
+      <p><strong>Horario:</strong> desde las <strong>${horaInicio}</strong> hasta las <strong>${horaFin}</strong>.</p>
+    `,
     hipervinculo: LABORATORIO_ROUTE.misReservasRuta !== undefined ? String(LABORATORIO_ROUTE?.misReservasRuta) : "",
   });
 };
 
-export const enviarMailAproboLaboratorioCerradoProcedure = async (ctx: { db: PrismaClient }, id: number) => {
-  const aprobacionData = await getReservaLaboratorioCerradoParaEmail(ctx, { id });
+export const enviarMailAproboLaboratorioCerradoProcedure = async (ctx: { db: PrismaClient }, reservaId: number) => {
+  const reservaData = await getReservaLaboratorioCerradoParaEmail(ctx, { id: reservaId });
+
+  const esDiscrecional = reservaData.esDiscrecional;
+  const fecha = getFechaddddDDMMYYYY(reservaData.fechaHoraInicio);
+  const horaInicio = getTimeISOString(reservaData.fechaHoraInicio);
+  const horaFin = getTimeISOString(reservaData.fechaHoraFin);
+  const laboratorioNombre = reservaData.laboratorioNombre ? `<strong>${reservaData.laboratorioNombre}</strong>` : "";
 
   await sendEmail(ctx, {
-    asunto: "Reserva de laboratorio abierto confirmada",
-    to: aprobacionData.usuarioSolicitante.email ?? "",
+    asunto: `Reserva ${esDiscrecional ? "discrecional" : ""} de laboratorio  aprobada - ${fecha}`,
+    to: reservaData.usuarioSolicitante.email ?? "",
     usuario: {
-      nombre: aprobacionData.usuarioSolicitante.nombre ?? "Usuario",
-      apellido: aprobacionData.usuarioSolicitante.apellido ?? "",
+      nombre: reservaData.usuarioSolicitante.nombre ?? "",
+      apellido: reservaData.usuarioSolicitante.apellido ?? "",
     },
-    textoMail: `<strong>Tu reserva de laboratorio ha sido aprobada</strong>`,
+    textoMail: `
+      <p style="text-align: center;"><strong>¡Reserva aprobada!</strong></p>
+      <p>Tu reserva para de laboratorio ${laboratorioNombre} ha sido aprobada.</p>
+      <p><strong>Día:</strong> ${fecha}</p>
+      <p><strong>Horario:</strong> desde las <strong>${horaInicio}</strong> hasta las <strong>${horaFin}</strong>.</p>
+    `,
     hipervinculo: LABORATORIO_ROUTE.misReservasRuta !== undefined ? String(LABORATORIO_ROUTE?.misReservasRuta) : "",
   });
 };
 
-export const enviarMailCancelacionLaboratorioCerradoProcedure = async (ctx: { db: PrismaClient }, id: number) => {
-  const cancelacionData = await getReservaLaboratorioCerradoParaEmail(ctx, { id });
+export const enviarMailCancelacionLaboratorioCerradoProcedure = async (
+  ctx: { db: PrismaClient },
+  reservaId: number,
+) => {
+  const reservaData = await getReservaLaboratorioCerradoParaEmail(ctx, { id: reservaId });
+
+  const esDiscrecional = reservaData.esDiscrecional;
+  const fecha = getFechaddddDDMMYYYY(reservaData.fechaHoraInicio);
+  const horaInicio = getTimeISOString(reservaData.fechaHoraInicio);
+  const horaFin = getTimeISOString(reservaData.fechaHoraFin);
 
   await sendEmail(ctx, {
-    asunto: "Reserva de laboratorio abierto cancelada",
-    to: cancelacionData.usuarioSolicitante.email ?? "",
+    asunto: `Reserva ${esDiscrecional ? "discrecional" : ""} de laboratorio cancelada - ${fecha}`,
+    to: reservaData.usuarioSolicitante.email ?? "",
     usuario: {
-      nombre: cancelacionData.usuarioSolicitante.nombre ?? "Usuario",
-      apellido: cancelacionData.usuarioSolicitante.apellido ?? "",
+      nombre: reservaData.usuarioSolicitante.nombre ?? "",
+      apellido: reservaData.usuarioSolicitante.apellido ?? "",
     },
-    textoMail: `<strong>Tu reserva de laboratorio: ${cancelacionData.laboratorioNombre} ha sido cancelada</strong>`,
+    textoMail: `
+      <p style="text-align: center;"><strong>Tu reserva ha sido cancelada.</strong></p>
+      <p>La reserva para de laboratorio el día <strong>${fecha}</strong> ha sido cancelada.</p>
+      <p><strong>Horario:</strong> desde las <strong>${horaInicio}</strong> hasta las <strong>${horaFin}</strong>.</p>
+    `,
     hipervinculo: LABORATORIO_ROUTE.misReservasRuta !== undefined ? String(LABORATORIO_ROUTE?.misReservasRuta) : "",
   });
 };

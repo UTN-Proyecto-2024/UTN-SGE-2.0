@@ -159,7 +159,7 @@ export function DataTable<T>({
 
   return (
     <div className="flex w-full flex-row justify-center">
-      <div className="flex max-h-[70vh] min-w-[60vw] flex-col">
+      <div className="flex max-h-[64vh] min-w-[60vw] flex-col">
         <Table containerClass={config?.containerClass}>
           <TableHeader className="sticky top-0 z-30">
             {table.getHeaderGroups().map((headerGroup) => (

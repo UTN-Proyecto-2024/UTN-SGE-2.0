@@ -1,20 +1,25 @@
-export const metadataLayoutPrincipal = {
+import { env } from "@/env";
+import { type Metadata } from "next";
+
+const rutaActual = env.RUTA_ACTUAL;
+
+export const metadataLayoutPrincipal: Metadata = {
   title: "SGE",
   description: "Sistema de Gestión Electrónica",
   icons: "/electrical-circuit.png",
   openGraph: {
     type: "website",
     locale: "es_ES",
-    url: "https://sge-2.vercel.app/",
+    url: rutaActual,
     countryName: "Argentina",
     title: "SGE 2.0",
     siteName: "SGE 2.0",
     description: "Sistema de Gestión Electrónica",
     images: [
       {
-        url: "https://sge-2.vercel.app/electrical-circuit.png",
-        width: 800,
-        height: 800,
+        url: `${rutaActual}/electrical-circuit.png`,
+        width: 200,
+        height: 200,
         alt: "SGE 2.0 Logo",
         type: "image/png",
       },
@@ -25,9 +30,9 @@ export const metadataLayoutPrincipal = {
     description: "Sistema de Gestión Electrónica",
     images: [
       {
-        url: "https://sge-2.vercel.app/electrical-circuit.png",
-        width: 800,
-        height: 800,
+        url: `${rutaActual}/electrical-circuit.png`,
+        width: 200,
+        height: 200,
         alt: "SGE 2.0 Logo",
         type: "image/png",
       },

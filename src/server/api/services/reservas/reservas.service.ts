@@ -2,31 +2,20 @@ import { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.sch
 import { protectedProcedure } from "../../trpc";
 import { validarInput } from "../helper";
 import { getAllReservasToday } from "../../repositories/reservas/reserva.repository";
-
-type Reserva = {
-  id: number;
-  tipo: string;
-  laboratorio: string;
-  descripcion: string;
-  sede: string;
-  equipos: string[];
-  division: string;
-  materia: string;
-  profesor: string | null;
-  fechaHoraInicio: Date;
-  fechaHoraFin: Date;
-};
+import { calcularTurnoTexto } from "@/shared/get-date";
 
 export const getReservasToday = protectedProcedure.input(inputGetAllLaboratorios).query(async ({ ctx, input }) => {
   validarInput(inputGetAllLaboratorios, input);
   const reservas = await getAllReservasToday(ctx, input);
-  return reservas
-    .map<Partial<Reserva>>((reserva) => ({
+
+  const reservasMaped = reservas
+    .map((reserva) => ({
       fechaHoraInicio: reserva.fechaHoraInicio,
       fechaHoraFin: reserva.fechaHoraFin,
+      turnoTexto: calcularTurnoTexto(reserva.fechaHoraInicio),
       ...(reserva.reservaLaboratorioCerrado && {
         id: reserva.reservaLaboratorioCerrado.id,
-        tipo: "CERRADO",
+        tipo: reserva.reservaLaboratorioCerrado.esDiscrecional ? "Discrecional" : "Cerrado",
         laboratorio: reserva.reservaLaboratorioCerrado.laboratorio?.nombre,
         descripcion: reserva.reservaLaboratorioCerrado.descripcion,
         equipos: reserva.reservaLaboratorioCerrado.equipoReservado
@@ -38,12 +27,15 @@ export const getReservasToday = protectedProcedure.input(inputGetAllLaboratorios
         sede: reserva.reservaLaboratorioCerrado.sede?.nombre,
         division: reserva.reservaLaboratorioCerrado.curso?.division.nombre,
         materia: reserva.reservaLaboratorioCerrado.curso?.materia.nombre,
-        profesor:
-          reserva.reservaLaboratorioCerrado.curso &&
-          `${reserva.reservaLaboratorioCerrado.curso?.profesor.nombre} ${reserva.reservaLaboratorioCerrado.curso?.profesor.apellido}`,
+        profesor: reserva.reservaLaboratorioCerrado.curso && reserva.reservaLaboratorioCerrado.curso?.profesor,
+
+        esDiscrecional: reserva.reservaLaboratorioCerrado.esDiscrecional,
+        discrecionalDocente: reserva.reservaLaboratorioCerrado.discrecionalDocente,
+        discrecionalMateria: reserva.reservaLaboratorioCerrado.discrecionalMateria,
+        discrecionalTitulo: reserva.reservaLaboratorioCerrado.discrecionalTitulo,
       }),
       ...(reserva.reservaLaboratorioAbierto && {
-        id: reserva.reservaLaboratorioAbierto.id,
+        id: reserva.id,
         tipo: reserva.reservaLaboratorioAbierto.laboratorioAbiertoTipo,
         laboratorio: reserva.reservaLaboratorioAbierto.laboratorio?.nombre,
         reserva: reserva.reservaLaboratorioAbierto.descripcion,
@@ -51,8 +43,10 @@ export const getReservasToday = protectedProcedure.input(inputGetAllLaboratorios
           (equipo) => `${equipo.cantidad} ${equipo.equipoTipo.nombre}`,
         ),
         sede: reserva.reservaLaboratorioAbierto.sede?.nombre,
-        profesor: reserva.usuarioTutor && `${reserva.usuarioTutor.nombre} ${reserva.usuarioTutor.apellido}`,
+        profesor: reserva?.usuarioTutor && reserva.usuarioTutor,
       }),
     }))
     .filter((reserva) => reserva.laboratorio);
+
+  return reservasMaped;
 });

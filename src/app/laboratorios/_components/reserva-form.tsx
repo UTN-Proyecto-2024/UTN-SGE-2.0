@@ -24,6 +24,8 @@ import { LaptopIcon, ProjectorIcon, ScreenShareIcon } from "lucide-react";
 import { SelectLaboratorioFormConEstadoReservaForm } from "@/app/_components/select-ubicacion/select-laboratorio";
 import { ConfirmarCambioEstadoModal } from "./modal-confirmar-reserva";
 import { SelectSedeConLaboratorioForm } from "@/app/_components/select-ubicacion/select-sede-con-laboratorio";
+import { SelectMateriasForm } from "@/app/cursos/_components/select-materia";
+import { getUserLabelNameForSelect, SelectProfesorForm } from "@/app/_components/select-usuario";
 
 type Props = {
   cursoId?: string | null | number;
@@ -31,9 +33,14 @@ type Props = {
   onSubmit: () => void;
   onCancel: () => void;
 };
+
+type FormHelperType = {
+  discrecionalDocente: { id: string; label: string };
+};
+
 type FormReservarLaboratorioType =
   | z.infer<typeof inputEditarReservaLaboratorioCerradoSchema>
-  | z.infer<typeof inputReservaLaboratorioDiscrecional>;
+  | (z.infer<typeof inputReservaLaboratorioDiscrecional> & FormHelperType);
 
 export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel }: Props) => {
   const esNuevo = reservaId === undefined;
@@ -80,6 +87,15 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
       esDiscrecional: esDiscrecional,
       sedeId: esDiscrecional ? String(reservaData?.sedeId) : undefined,
       agregarAPantalla: esDiscrecional ? false : undefined,
+      discrecionalTitulo: esDiscrecional ? reservaData?.discrecionalTitulo : undefined,
+      discrecionalMateriaId: esDiscrecional ? reservaData?.discrecionalMateriaId : undefined,
+      discrecionalDocente: esDiscrecional
+        ? {
+            id: reservaData?.discrecionalDocenteId ?? undefined,
+            label: reservaData?.discrecionalDocente ? getUserLabelNameForSelect(reservaData.discrecionalDocente) : "",
+          }
+        : undefined,
+      discrecionalDocenteId: esDiscrecional ? reservaData?.discrecionalDocenteId : undefined,
     } as FormReservarLaboratorioType;
   }, [cursoId, esDiscrecional, esNuevo, reservaData, reservaId]);
 
@@ -93,7 +109,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
       VIERNES: 5,
       SABADO: 6,
     };
-    const allDays = [0, 1, 2, 3, 4, 5, 6];
+    const allDays = Object.values(mapDias);
     if (!curso) return [];
     if (curso.dia1 && !curso.dia2) return allDays.filter((day) => day !== mapDias[curso.dia1]);
     return allDays.filter((day) => day !== mapDias[curso.dia1] && (curso.dia2 ? day !== mapDias[curso.dia2] : true));
@@ -138,9 +154,10 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
     setModalOpen(false);
   };
 
-  useEffect(() => {
-    formHook.reset(reservaBase);
-  }, [formHook, reservaBase]);
+  useEffect(() => formHook.reset(reservaBase), [formHook, reservaBase]);
+
+  const [discrecionalDocente] = formHook.watch(["discrecionalDocente"]);
+  useEffect(() => formHook.setValue("discrecionalDocenteId", discrecionalDocente?.id), [formHook, discrecionalDocente]);
 
   if (reservaId && esReservaPasada) {
     return <ReservaDetalle reservaId={reservaId} mostrarCompleto />;
@@ -166,6 +183,9 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
           horaFin: formHook.watch("horaFin"),
           laboratorioId: String(formHook.watch("laboratorioId")),
           agregarAPantalla: formHook.watch("agregarAPantalla"),
+          discrecionalTitulo: formHook.watch("discrecionalTitulo"),
+          discrecionalMateriaId: formHook.watch("discrecionalMateriaId"),
+          discrecionalDocenteId: formHook.watch("discrecionalDocenteId"),
         },
         {
           onSuccess: () => {
@@ -235,104 +255,85 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
             {haSidoRechazada && <MotivoRechazo motivoRechazo={reservaData?.reserva.motivoRechazo ?? ""} />}
             <div className="flex flex-col space-y-4 px-0 md:px-6">
               {!esDiscrecional && (
-                <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-                  <div className="mt-4 w-full">
-                    <Input
-                      label={"Materia"}
-                      name="materia"
-                      type={"text"}
-                      disabled
-                      className="mt-2"
-                      value={curso?.materia.nombre ?? ""}
-                      readOnly
-                    />
+                <>
+                  <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
+                    <div className="mt-4 w-full">
+                      <Input
+                        label={"Materia"}
+                        name="materia"
+                        type={"text"}
+                        disabled
+                        className="mt-2"
+                        value={curso?.materia.nombre ?? ""}
+                        readOnly
+                      />
+                    </div>
+                    <div className="mt-4 w-full">
+                      <Input
+                        label={"División"}
+                        name="division"
+                        disabled
+                        type={"text"}
+                        className="mt-2"
+                        value={curso?.division.nombre ?? ""}
+                        readOnly
+                      />
+                    </div>
                   </div>
-                  <div className="mt-4 w-full">
-                    <Input
-                      label={"División"}
-                      name="division"
-                      disabled
-                      type={"text"}
-                      className="mt-2"
-                      value={curso?.division.nombre ?? ""}
-                      readOnly
-                    />
-                  </div>
-                </div>
-              )}
 
-              {!esDiscrecional && (
-                <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-                  <div className="mt-4 w-full">
-                    <Input
-                      label={"Turno"}
-                      name="turno"
-                      type={"text"}
-                      disabled
-                      className="mt-2"
-                      value={CursoTurno({ turno: curso?.turno })}
-                      readOnly
-                    />
+                  <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
+                    <div className="mt-4 w-full">
+                      <Input
+                        label={"Turno"}
+                        name="turno"
+                        type={"text"}
+                        disabled
+                        className="mt-2"
+                        value={CursoTurno({ turno: curso?.turno })}
+                        readOnly
+                      />
+                    </div>
+                    <div className="mt-4 w-full">
+                      <Input
+                        label={"Sede"}
+                        name="sede"
+                        disabled
+                        type={"text"}
+                        className="mt-2"
+                        value={curso?.sede.nombre ?? ""}
+                        readOnly
+                      />
+                    </div>
                   </div>
-                  <div className="mt-4 w-full">
-                    <Input
-                      label={"Sede"}
-                      name="sede"
-                      disabled
-                      type={"text"}
-                      className="mt-2"
-                      value={curso?.sede.nombre ?? ""}
-                      readOnly
-                    />
-                  </div>
-                </div>
-              )}
 
-              {!esDiscrecional && (
-                <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-                  <div className="mt-4 w-full">
-                    <Input
-                      label={"Profesor"}
-                      name="profesor"
-                      type={"text"}
-                      disabled
-                      className="mt-2"
-                      value={`${curso?.profesor.nombre} ${curso?.profesor.apellido}`}
-                      readOnly
-                    />
+                  <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
+                    <div className="mt-4 w-full">
+                      <Input
+                        label={"Profesor"}
+                        name="profesor"
+                        type={"text"}
+                        disabled
+                        className="mt-2"
+                        value={`${curso?.profesor.nombre} ${curso?.profesor.apellido}`}
+                        readOnly
+                      />
+                    </div>
+                    <div className="mt-4 w-full">
+                      <Input
+                        label={"Ayudante/s"}
+                        name="ayudante"
+                        disabled
+                        type={"text"}
+                        className="mt-2"
+                        value={curso?.ayudantes.map((ayudante) => ayudante.usuario.apellido).join(", ") ?? ""}
+                        readOnly
+                      />
+                    </div>
                   </div>
-                  <div className="mt-4 w-full">
-                    <Input
-                      label={"Ayudante/s"}
-                      name="ayudante"
-                      disabled
-                      type={"text"}
-                      className="mt-2"
-                      value={curso?.ayudantes.map((ayudante) => ayudante.usuario.apellido).join(", ") ?? ""}
-                      readOnly
-                    />
-                  </div>
-                </div>
+                </>
               )}
 
               <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
-                {esDiscrecional && (
-                  <div className="mt-4 basis-1/2">
-                    <SelectSedeConLaboratorioForm
-                      name="sedeId"
-                      label={"Sede"}
-                      control={control}
-                      className="mt-2"
-                      placeholder={"Selecciona una sede"}
-                    />
-                  </div>
-                )}
-                {/* {!esDiscrecional && (
-                <div className="mt-4 basis-1/2">
-                  <FormSelect label={"Turno"} name="turno" className="mt-2" items={turnosValues} control={control} readonly/>
-                </div>
-              )} */}
-
                 <div className="mt-4 basis-1/2">
                   <CustomDatePicker
                     label="Fecha de reserva"
@@ -345,7 +346,55 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
               </div>
 
               {esDiscrecional && (
-                <>
+                <div className="rounded-lg border border-gray-800 p-4">
+                  <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
+                    <p className="text-sm italic text-gray-950">Reserva Discrecional</p>
+                  </div>
+
+                  <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
+                    <div className="mt-4 w-full">
+                      <FormInput
+                        label={"Título de la reserva discrecional"}
+                        control={control}
+                        name="discrecionalTitulo"
+                        type={"text"}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
+                    <div className="mt-4 basis-1/2">
+                      <SelectSedeConLaboratorioForm
+                        name="sedeId"
+                        label={"Sede"}
+                        control={control}
+                        className="mt-2"
+                        placeholder={"Selecciona una sede"}
+                      />
+                    </div>
+
+                    <div className="mt-4 basis-1/2">
+                      <SelectMateriasForm
+                        name="discrecionalMateriaId"
+                        control={control}
+                        className="mt-2"
+                        label="Materia"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
+                    <div className="mt-4 w-full">
+                      <SelectProfesorForm
+                        name="discrecionalDocente"
+                        realNameId="discrecionalDocenteId"
+                        control={control}
+                        className="mt-2"
+                        label="Profesor"
+                      />
+                    </div>
+                  </div>
+
                   <div className="flex w-full flex-row gap-x-4 lg:flex-row lg:justify-between">
                     <div className="mt-4 basis-1/2">
                       <FormInput
@@ -366,6 +415,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
                       />
                     </div>
                   </div>
+
                   <SelectLaboratorioFormConEstadoReservaForm
                     name="laboratorioId"
                     control={control}
@@ -378,12 +428,8 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
                     fechaHoraFin={armarFechaReserva(formHook.watch("fechaReserva"), formHook.watch("horaFin"))}
                     laboratorioId={formHook.watch("laboratorioId")}
                   />
-                </>
-              )}
 
-              <div className="flex w-full flex-col justify-end gap-y-4 lg:justify-between">
-                {esDiscrecional && (
-                  <div className="items-top flex space-x-2">
+                  <div className="items-top mt-4 flex space-x-2">
                     <Controller
                       control={control}
                       name="agregarAPantalla"
@@ -400,8 +446,10 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
                       )}
                     />
                   </div>
-                )}
+                </div>
+              )}
 
+              <div className="flex w-full flex-col justify-end gap-y-4 lg:justify-between">
                 <div className="items-top flex space-x-2">
                   <Controller
                     control={control}

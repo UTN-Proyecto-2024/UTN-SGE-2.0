@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTable } from "@/components/ui";
+import { Button, DataTable } from "@/components/ui";
 import { type RouterOutputs } from "@/trpc/react";
 import { type z } from "zod";
 import { DataTablePaginationStandalone } from "@/components/ui/table/table-pagination-standalone";
@@ -15,6 +15,9 @@ import { ReservaEstatus } from "@prisma/client";
 import { CancelarReservaLaboratorioAbierto } from "../_components/cancelar-reserva";
 import { useState } from "react";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
+import Link from "next/link";
+import { COMPROBANTE_ROUTE } from "@/shared/server-routes";
+import { PrinterIcon } from "lucide-react";
 
 type LaboratorioAbiertoReservaData = RouterOutputs["reservas"]["reservaLaboratorioAbierto"]["getAll"];
 type reservaFilters = z.infer<typeof inputGetAllSolicitudesReservaLaboratorioAbierto>;
@@ -29,7 +32,7 @@ export const LaboratorioAbiertoReservaTable = ({ data, filters, filterByUser }: 
   const { refresh, pagination, sorting, onSortingChange, onPaginationChange } =
     useReservasLaboratorioAbiertoQueryParam(filters);
 
-  const [grouping, setGrouping] = useState<GroupingState>(["fechaTexto"]);
+  const [grouping, setGrouping] = useState<GroupingState>(["fechaTexto", "turnoTexto"]);
   const columns = getColumnasReservasLaboratorioAbierto({ filterByUser });
 
   return (
@@ -70,6 +73,15 @@ export const LaboratorioAbiertoReservaTable = ({ data, filters, filterByUser }: 
                   <TienePermiso permisos={[]}>
                     <EditarReservaModal id={original.reserva.id} onSubmit={refresh} />
                   </TienePermiso>
+                )}
+
+                {!filterByUser && (
+                  <Link
+                    href={`${COMPROBANTE_ROUTE.laboratorioAbiertoRuta.href}/${original.reserva.id}`}
+                    target="_blank"
+                  >
+                    <Button title="Imprimir" variant="icon" color="ghost" icon={PrinterIcon} />
+                  </Link>
                 )}
               </>
             );

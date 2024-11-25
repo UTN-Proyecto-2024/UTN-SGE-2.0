@@ -10,6 +10,7 @@ import { softwareRouter } from "./routers/software";
 import { notificacionRouter } from "./routers/notificaciones";
 import { usuarioPermiso } from "./routers/permisos";
 import { laboratoriosRouter } from "./routers/laboratorios";
+import { applicationRouter } from "./routers/application";
 
 /**
  * This is the primary router for your server.
@@ -17,6 +18,7 @@ import { laboratoriosRouter } from "./routers/laboratorios";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
+  application: applicationRouter,
   biblioteca: bibliotecaRouter,
   materia: materiasRouter,
   equipos: equiposRouter,
