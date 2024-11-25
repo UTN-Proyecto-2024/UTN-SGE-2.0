@@ -1,6 +1,6 @@
 import { DatoUsuarioReserva } from "@/app/_components/datos-usuario";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getDateISOString } from "@/shared/get-date";
+import { getFechaHumanoDDMMYYYY } from "@/shared/get-date";
 import { api, type RouterOutputs } from "@/trpc/react";
 
 type Props = {
@@ -60,8 +60,8 @@ const ReservaDeEquipo = ({ reserva }: { reserva: ReservaEquipo }) => {
       <td>
         <DatoUsuarioReserva usuario={reserva.usuarioSolicito} />
       </td>
-      <td>{getDateISOString(reserva.fechaHoraInicio)}</td>
-      <td>{getDateISOString(reserva.fechaHoraFin)}</td>
+      <td>{getFechaHumanoDDMMYYYY(reserva.fechaHoraInicio)}</td>
+      <td>{getFechaHumanoDDMMYYYY(reserva.fechaHoraFin)}</td>
       <td>
         <DatoUsuarioReserva usuario={reserva.usuarioAprobador} />
       </td>
@@ -72,7 +72,7 @@ const ReservaDeEquipo = ({ reserva }: { reserva: ReservaEquipo }) => {
         ) : (
           <>
             <DatoUsuarioReserva usuario={reserva.usuarioRecibio} />
-            {reserva.fechaRecibido ? getDateISOString(reserva.fechaRecibido) : null}
+            {reserva.fechaRecibido ? getFechaHumanoDDMMYYYY(reserva.fechaRecibido) : null}
           </>
         )}
       </td>

@@ -14,7 +14,7 @@ import { Label } from "@/components/ui";
 import { api } from "@/trpc/react";
 import { BadgeEstatusReserva } from "@/app/_components/badge-estatus-reserva";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getDateISOString, getTimeISOString } from "@/shared/get-date";
+import { getFechaHumanoDDMMYYYY, getTimeISOString } from "@/shared/get-date";
 import { DatoUsuarioReserva } from "@/app/_components/datos-usuario";
 import { MotivoRechazo } from "@/app/laboratorios/_components/rechazo-alert";
 import { AsistioReserva } from "@/app/_components/asistio-reserva";
@@ -98,7 +98,7 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
                 {
                   icon: <CalendarIcon className="h-4 w-4" />,
                   label: "Fecha",
-                  value: getDateISOString(reserva.reserva.fechaHoraInicio),
+                  value: getFechaHumanoDDMMYYYY(reserva.reserva.fechaHoraInicio),
                 },
                 {
                   icon: <ClockIcon className="h-4 w-4" />,
