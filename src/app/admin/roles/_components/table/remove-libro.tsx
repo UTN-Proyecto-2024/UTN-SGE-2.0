@@ -16,10 +16,16 @@ type RemoveRolModalProps = {
 };
 
 export default function RemoverRolModal({ rolId, nombre, onSubmit }: RemoveRolModalProps) {
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.admin.roles.getAllRoles.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
+
   const eliminarRol = api.admin.roles.eliminarRol.useMutation({
     onSuccess: () => {
       toast.success(`El rol ${nombre} se eliminó con éxito.`);
-
       onSubmit?.();
     },
 
@@ -34,6 +40,7 @@ export default function RemoverRolModal({ rolId, nombre, onSubmit }: RemoveRolMo
     eliminarRol.mutate({ id: rolId });
 
     setOpen(false);
+    refreshGetAll();
   };
 
   const handleCancel = () => setOpen(false);
