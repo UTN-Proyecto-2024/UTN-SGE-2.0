@@ -14,7 +14,7 @@ import { ZodError } from "zod";
 import { getServerAuthSession } from "@/server/auth";
 import { db } from "@/server/db";
 import { type SgeNombre } from "@prisma/client";
-import { tienePermiso } from "./services/permisos/permisos.service";
+import { tienePermiso } from "./services/permisos/permisos.helper";
 
 /**
  * 1. CONTEXT
