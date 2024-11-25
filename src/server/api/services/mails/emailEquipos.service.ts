@@ -25,8 +25,8 @@ export const enviarMailReservaEquipoProcedure = async (ctx: { db: PrismaClient }
         <p>Has reservado el equipo <strong>${reservaData.equipoTipo}</strong>.</p>
         <p>Duración de la reserva:</p>
         <ul>
-          <li>Desde: <strong>${fechaInicio}</strong></li>
-          <li>Hasta: <strong>${fechaFin}</strong></li>
+          <li><strong>Desde:</strong> ${fechaInicio}</li>
+          <li><strong>Hasta:</strong> ${fechaFin}</li>
         </ul>
       `,
     hipervinculo: EQUIPOS_ROUTE.misPrestamosRuta !== undefined ? String(EQUIPOS_ROUTE?.misPrestamosRuta) : "",
@@ -54,8 +54,8 @@ export const enviarMailRenovarEquipoProcedure = async (ctx: { db: PrismaClient }
       <p>Has renovado el préstamo del equipo <strong>${reservaData.equipoTipo}</strong>.</p>
       <p>Nueva duración del préstamo:</p>
       <ul>
-        <li>Desde: <strong>${fechaInicio}</strong></li>
-        <li>Hasta: <strong>${fechaFin}</strong></li>
+        <li><strong>Desde:</strong> ${fechaInicio}</li>
+        <li><strong>Hasta:</strong> ${fechaFin}</li>
       </ul>
     `,
     hipervinculo: EQUIPOS_ROUTE.misPrestamosRuta !== undefined ? String(EQUIPOS_ROUTE?.misPrestamosRuta) : "",
