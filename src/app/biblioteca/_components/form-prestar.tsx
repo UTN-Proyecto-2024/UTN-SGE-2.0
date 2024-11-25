@@ -110,7 +110,7 @@ export const LibroFormPrestarORenovar = ({ libroId, onSubmit, onCancel, renovar 
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-y-4">
         <div className="flex w-full flex-col items-center justify-center">
           <div className="flex flex-col space-y-4 px-0 ">
-            <div className="flex w-full flex-col gap-x-4 lg:flex-row">
+            <div className="flex w-full flex-col gap-x-4 sm:flex-row">
               <div className="mt-4 w-full">
                 <FormInput label={"Desde el día"} control={control} name="fechaInicio" type={"date"} required />
               </div>

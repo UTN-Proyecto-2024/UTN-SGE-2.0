@@ -41,7 +41,7 @@ export const LibroView = ({ id, onCancel }: Props) => {
         </div>
       </ScrollArea>
 
-      <div className="flex w-full flex-row items-end justify-end space-x-4">
+      <div className="flex w-full flex-row items-end justify-center space-x-4 sm:justify-end">
         <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
           Volver
         </Button>
