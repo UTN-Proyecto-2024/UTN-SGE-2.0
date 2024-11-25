@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { EquipoForm } from "../equipo/[id]/equipo-form";
 import { useState } from "react";
+import { ScrollArea } from "@/components/ui";
 
 export const EquiposNuevoEquipoModal = () => {
   const [open, setOpen] = useState(false);
@@ -31,10 +32,11 @@ export const EquiposNuevoEquipoModal = () => {
           <Plus size={16} className="ml-2" />
         </Button>
       }
-      className={"max-h-[calc(100vh_-_10%)]"}
     >
       <div className="flex max-h-max w-full flex-col  gap-4">
-        <EquipoForm onCancel={handleCancel} onSubmit={handleSave} />
+        <ScrollArea className="mt-4 max-h-[calc(100vh_-_300px)] w-full pr-4">
+          <EquipoForm onCancel={handleCancel} onSubmit={handleSave} />
+        </ScrollArea>
       </div>
     </ModalDrawer>
   );

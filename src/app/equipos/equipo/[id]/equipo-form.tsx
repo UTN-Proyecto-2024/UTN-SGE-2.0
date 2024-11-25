@@ -288,7 +288,7 @@ export const EquipoForm = ({ id, onSubmit, onCancel }: Props) => {
           </div>
         </div>
 
-        <div className="mb-3 flex w-full flex-row items-end justify-center space-x-4 md:justify-end">
+        <div className="bottom-0 flex w-full flex-row items-end space-x-4 bg-white md:justify-end lg:sticky">
           <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
             Cancelar
           </Button>
