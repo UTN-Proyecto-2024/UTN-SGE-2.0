@@ -6,7 +6,7 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
-  reactStrictMode: false, // TODO: Enable this once all components are updated
+  reactStrictMode: true,
   swcMinify: true,
   // Next.js i18n docs: https://nextjs.org/docs/advanced-features/i18n-routing
   // i18n: {
@@ -50,6 +50,11 @@ const config = {
       {
         source: "/laboratorio_abierto",
         destination: "/laboratorio_abierto/reservar",
+        permanent: true,
+      },
+      {
+        source: "/reportes",
+        destination: "/reportes/hoy",
         permanent: true,
       },
     ];

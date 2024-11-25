@@ -34,11 +34,11 @@ export const EditDivisionModal = ({ divisionId, divisionName }: EditDivisionProp
         open={open}
         onOpenChange={setOpen}
         trigger={
-          <Badge key={divisionId}>
+          <Badge key={divisionId} className="hover:bg-blue-800/20">
             <button>{divisionName}</button>
           </Badge>
         }
-        className={"max-h-[calc(100vh_-_10%)]"}
+        className={"max-h-[calc(100vh_-_300px)]"}
       >
         <div className="flex max-h-max w-full flex-col gap-4">
           <DivisionForm id={divisionId} name={divisionName} onCancel={handleCancel} onSubmit={handleSave} />
