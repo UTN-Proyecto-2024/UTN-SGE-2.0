@@ -2,7 +2,7 @@
 
 import { DataTable } from "@/components/ui";
 import RemoveLibroModal from "./remove-libro";
-import { type RouterOutputs } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import { type z } from "zod";
 import { type inputGetBooks } from "@/shared/filters/biblioteca-filter.schema";
 import { useBibliotecaQueryParam } from "../_hooks/use-biblioteca-query-param";
@@ -26,9 +26,16 @@ type BibliotecaTableProps = {
 export const BibliotecaTable = ({ data, filters }: BibliotecaTableProps) => {
   const { tienePermisos: tienePrestar } = useTienePermisos([SgeNombre.BIBLIOTECA_PRESTAMO_PRESTAR]);
 
-  const { refresh, pagination, sorting, onSortingChange, onPaginationChange } = useBibliotecaQueryParam(filters);
+  const { pagination, sorting, onSortingChange, onPaginationChange } = useBibliotecaQueryParam(filters);
 
   const columns = getColumns({ tienePrestar: tienePrestar });
+
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.biblioteca.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   return (
     <>
@@ -55,7 +62,7 @@ export const BibliotecaTable = ({ data, filters }: BibliotecaTableProps) => {
                       libroId={original.id}
                       nombre={original.titulo}
                       disponible={original.disponible}
-                      onSubmit={refresh}
+                      onSubmit={refreshGetAll}
                     />
                     <EditLibroModal libroId={original.id} />
                   </>

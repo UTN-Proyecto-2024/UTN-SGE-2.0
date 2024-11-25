@@ -20,6 +20,7 @@ export default function Page({ searchParams }: PageProps) {
   return (
     <PageLayout route={BIBLIOTECA_ROUTE} buttons={<BibliotecaNewLibro />}>
       <ActionButtons filters={filters} />
+      {/* El mismo loading en el `fallback` se envia al componente hijo en el isLoading */}
       <Suspense key={filter_as_key} fallback={<LoadingBibliotecaTable />}>
         <BibliotecaTableContainer filters={filters} />
       </Suspense>

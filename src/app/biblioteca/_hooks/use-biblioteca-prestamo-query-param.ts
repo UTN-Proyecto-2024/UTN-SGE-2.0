@@ -137,7 +137,6 @@ export const useBibliotecaPrestamosQueryParam = (filters: BibliotecaPrestamoFilt
   );
 
   return {
-    refresh: () => router.refresh(),
     pagination,
     sorting,
     searchText,

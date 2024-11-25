@@ -26,7 +26,15 @@ export const LibroFormPrestarORenovar = ({ libroId, onSubmit, onCancel, renovar 
   const prestarLibro = api.reservas.reservaBiblioteca.crearReserva.useMutation(); // Se usa por efecto si `renovar=false`
   const renovarLibro = api.reservas.reservaBiblioteca.renovarLibro.useMutation(); // Se usa por efecto si `renovar=true`
 
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.biblioteca.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+    utils.reservas.reservaBiblioteca.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const prestamoBase: FormPrestarLibroType = {
     libroId: libroId,
@@ -64,7 +72,7 @@ export const LibroFormPrestarORenovar = ({ libroId, onSubmit, onCancel, renovar 
     renovarLibro.mutate(formData, {
       onSuccess: () => {
         toast.success("Libro renovado con éxito.");
-        router.refresh();
+        refreshGetAll();
         onSubmit();
       },
       onError: (error) => {
@@ -77,7 +85,7 @@ export const LibroFormPrestarORenovar = ({ libroId, onSubmit, onCancel, renovar 
     prestarLibro.mutate(formData, {
       onSuccess: () => {
         toast.success("Libro prestado con éxito.");
-        router.refresh();
+        refreshGetAll();
         onSubmit();
       },
       onError: (error) => {
