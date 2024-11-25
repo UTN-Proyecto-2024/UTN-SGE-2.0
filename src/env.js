@@ -40,6 +40,7 @@ export const env = createEnv({
    */
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_RUTA_ACTUAL: z.string().url(),
   },
 
   /**
@@ -65,6 +66,7 @@ export const env = createEnv({
     SMTP_TESTING_EMAIL_PASSWORD: process.env.SMTP_TESTING_EMAIL_PASSWORD,
 
     RUTA_ACTUAL: process.env.RUTA_ACTUAL,
+    NEXT_PUBLIC_RUTA_ACTUAL: process.env.NEXT_PUBLIC_RUTA_ACTUAL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
