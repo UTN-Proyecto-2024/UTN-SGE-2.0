@@ -1,8 +1,9 @@
 import { env } from "@/env";
+import { type Metadata } from "next";
 
 const rutaActual = env.RUTA_ACTUAL;
 
-export const metadataLayoutPrincipal = {
+export const metadataLayoutPrincipal: Metadata = {
   title: "SGE",
   description: "Sistema de Gestión Electrónica",
   icons: "/electrical-circuit.png",
