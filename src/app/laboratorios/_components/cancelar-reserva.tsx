@@ -36,10 +36,18 @@ export const CancelarReservaLaboratorio = ({ reservaId, refresh }: Props) => {
   return (
     <ModalDrawer
       titulo={"Cancelar solicitud"}
-      //description={"Confirmar cancelación de solicitud"}
       open={open}
       onOpenChange={setOpen}
-      trigger={<Button title="Cancelar reserva" variant="icon" color="danger" icon={TrashIcon} isLoading={isPending} />}
+      trigger={
+        <Button
+          title="Cancelar reserva"
+          variant="icon"
+          color="danger"
+          icon={TrashIcon}
+          className="h-8 w-8 px-2 py-2"
+          isLoading={isPending}
+        />
+      }
       className={"max-h-[calc(100vh_-_10%)]"}
       isAlertDialog
       esEliminar
