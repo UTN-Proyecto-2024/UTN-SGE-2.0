@@ -12,7 +12,7 @@ import {
 import { FormTextarea } from "@/components/ui/textarea";
 import { FormEquipoTipoSelector } from "@/app/laboratorios/_components/filtros/equipo-tipo-selector";
 import { type LaboratorioAbiertoType } from "../_components/laboratorios";
-import { esFechaPasada, getDateISOString, getTimeISOString } from "@/shared/get-date";
+import { esFechaPasada, getFechaHumanoDDMMYYYY, getTimeISOString } from "@/shared/get-date";
 import { SelectEspecialidadForm } from "@/app/_components/select-especialidad";
 import { FormInputPoliticas } from "@/app/_components/input-form-politicas";
 import { LaboratorioAbiertoTipo, ReservaEstatus } from "@prisma/client";
@@ -74,7 +74,9 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
       aceptoTerminos: false,
       concurrentes: esNuevo ? "1" : reservaData?.concurrentes.toString(),
       equipoReservado: esNuevo ? [] : (reservaData?.equipoReservado ?? []),
-      fechaReserva: esNuevo ? undefined : getDateISOString(reservaData?.reserva.fechaHoraInicio as unknown as Date),
+      fechaReserva: esNuevo
+        ? undefined
+        : getFechaHumanoDDMMYYYY(reservaData?.reserva.fechaHoraInicio as unknown as Date),
       turno: esNuevo
         ? undefined
         : turnos.find(
@@ -157,7 +159,9 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
         aceptoTerminos: false,
         concurrentes: esNuevo ? "1" : reservaData?.concurrentes.toString(),
         equipoReservado: esNuevo ? [] : (reservaData?.equipoReservado ?? []),
-        fechaReserva: esNuevo ? undefined : getDateISOString(reservaData?.reserva.fechaHoraInicio as unknown as Date),
+        fechaReserva: esNuevo
+          ? undefined
+          : getFechaHumanoDDMMYYYY(reservaData?.reserva.fechaHoraInicio as unknown as Date),
         turno: initialTurno,
         observaciones: esNuevo ? "" : (reservaData?.descripcion ?? ""),
         sedeId: esNuevo ? undefined : String(reservaData?.sedeId),

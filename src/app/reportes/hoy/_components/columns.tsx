@@ -1,6 +1,6 @@
 import { BadgeDiscrecionalReserva } from "@/app/_components/badge-estatus-reserva";
 import { DatoUsuarioReserva } from "@/app/_components/datos-usuario";
-import { getDateISOString, getTimeISOString } from "@/shared/get-date";
+import { getFechaHumanoDDMMYYYY, getTimeISOString } from "@/shared/get-date";
 import { type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
@@ -18,7 +18,7 @@ export const getColumnasReservas = () => {
     }),
     colHelper.display({
       header: "Fecha",
-      cell: ({ row }) => getDateISOString(row.original.fechaHoraInicio).split("-").reverse().join("/"),
+      cell: ({ row }) => getFechaHumanoDDMMYYYY(row.original.fechaHoraInicio),
     }),
     colHelper.accessor("fechaHoraInicio", {
       header: "Hora inicio",
