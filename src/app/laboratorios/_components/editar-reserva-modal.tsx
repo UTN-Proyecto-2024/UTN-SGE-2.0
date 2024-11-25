@@ -31,7 +31,9 @@ export default function EditarReservaModal({ params: { id, cursoId } }: PageProp
     <ModalDrawer
       titulo={esDiscrecional ? "Editar reserva discrecional" : "Editar reserva"}
       description="Sí modifica la reserva, volverá al estado pendiente de aprobación"
-      trigger={<Button title="Editar reserva" variant="icon" color="ghost" icon={PencilIcon} />}
+      trigger={
+        <Button title="Editar reserva" variant="icon" color="ghost" icon={PencilIcon} className="h-8 w-8 px-2 py-2" />
+      }
       open={open}
       onOpenChange={setOpen}
       className="max-h-[calc(100vh_-_10%)]"
