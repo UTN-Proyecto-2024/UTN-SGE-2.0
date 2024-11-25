@@ -273,7 +273,7 @@ export const LibroForm = ({ id, onSubmit, onCancel }: Props) => {
               </div>
 
               <div className="flex w-full flex-col gap-x-4 lg:flex-row lg:justify-between">
-                <div className="mt-4 w-full">
+                <div className="mt-4 w-full text-sm">
                   <label>
                     Materias
                     <MateriaDropdownMultipleForm name="materias" control={control} />

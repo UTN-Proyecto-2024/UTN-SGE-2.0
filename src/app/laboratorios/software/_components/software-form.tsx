@@ -184,7 +184,7 @@ export const SoftwareForm = ({ softwareId, onSubmit, onCancel }: Props) => {
               </div>
 
               <div className="flex w-full flex-row gap-x-4">
-                <div className="mt-4 w-full">
+                <div className="mt-4 w-full text-sm">
                   <label>
                     Laboratorios
                     <LaboratorioDropdownMultipleForm name="laboratorios" control={control} />

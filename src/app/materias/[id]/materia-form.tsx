@@ -214,7 +214,7 @@ export const MateriaForm = ({ id, onSubmit, onCancel }: Props) => {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-row gap-4">
+              <div className="flex flex-col gap-4 sm:flex-row">
                 {/* Director de la materia */}
                 <div className="mt-4 basis-1/2">
                   <SelectProfesorForm
@@ -228,7 +228,7 @@ export const MateriaForm = ({ id, onSubmit, onCancel }: Props) => {
 
                 {/* Jefes de Trabajos Prácticos */}
                 <div className="mt-6 basis-1/2">
-                  <label htmlFor="jefesTrabajoPracticoUserId">
+                  <label htmlFor="jefesTrabajoPracticoUserId" className="text-sm">
                     Jefes de Trabajos Prácticos:
                     <SelectMultipleProfesorForm
                       label={"Jefes de Trabajos Prácticos"}
@@ -242,7 +242,7 @@ export const MateriaForm = ({ id, onSubmit, onCancel }: Props) => {
               <div className="w-full">
                 {/* Para Cursar - Tener Regularizadas */}
                 <div className="mt-6">
-                  <label htmlFor="regularizadas">
+                  <label htmlFor="regularizadas" className="text-sm">
                     Para Cursar - Tener Regularizadas:
                     <MateriaDropdownMultipleForm name="regularizadas" control={control} />
                   </label>
@@ -252,7 +252,7 @@ export const MateriaForm = ({ id, onSubmit, onCancel }: Props) => {
               <div className="w-full">
                 {/* Para Cursar - Tener Aprobadas */}
                 <div className="mt-6">
-                  <label htmlFor="aprobadasParaCursar">
+                  <label htmlFor="aprobadasParaCursar" className="text-sm">
                     Para Cursar - Tener Aprobadas:
                     <MateriaDropdownMultipleForm name="aprobadasParaCursar" control={control} />
                   </label>
@@ -262,7 +262,7 @@ export const MateriaForm = ({ id, onSubmit, onCancel }: Props) => {
               <div className="w-full">
                 {/* Para Rendir - Tener Aprobadas */}
                 <div className="mt-6">
-                  <label htmlFor="aprobadasParaRendir">
+                  <label htmlFor="aprobadasParaRendir" className="text-sm">
                     Para Rendir - Tener Aprobadas:
                     <MateriaDropdownMultipleForm name="aprobadasParaRendir" control={control} />
                   </label>
