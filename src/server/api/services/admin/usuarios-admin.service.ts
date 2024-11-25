@@ -1,4 +1,4 @@
-import { protectedProcedure } from "../../trpc";
+import { createAuthorizedProcedure, protectedProcedure } from "../../trpc";
 import { validarInput } from "../helper";
 import {
   inputEditarUsuario,
@@ -26,7 +26,6 @@ import {
   getNumeroReservasQueNoAsistioEsteAnno,
   cambiarAsistioReserva,
 } from "../../repositories/admin/usuarios-admin.repository";
-import { verificarPermisos } from "@/server/permisos";
 import { SgeNombre } from "@prisma/client";
 
 export const getTodosLosUsuariosProcedure = protectedProcedure.input(inputGetUsuarios).query(async ({ ctx, input }) => {
@@ -59,10 +58,9 @@ export const getTutorPorIdProcedure = protectedProcedure.input(inputGetTutor).qu
   console.log(ctx, input);
 });
 
-export const eliminarUsuarioProcedure = protectedProcedure
+export const eliminarUsuarioProcedure = createAuthorizedProcedure([SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS])
   .input(inputEliminarUsuario)
   .mutation(async ({ ctx, input }) => {
-    await verificarPermisos([SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS]);
     validarInput(inputEliminarUsuario, input);
 
     const usuario = await eliminarUsuario(ctx, input);
@@ -70,25 +68,27 @@ export const eliminarUsuarioProcedure = protectedProcedure
     return usuario;
   });
 
-export const editarUsuarioProcedure = protectedProcedure.input(inputEditarUsuario).mutation(async ({ ctx, input }) => {
-  await verificarPermisos([SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS]);
-  validarInput(inputEditarUsuario, input);
+export const editarUsuarioProcedure = createAuthorizedProcedure([SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS])
+  .input(inputEditarUsuario)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputEditarUsuario, input);
 
-  const userId = ctx.session.user.id;
+    const userId = ctx.session.user.id;
 
-  const usuario = await editarUsuario(ctx, input, userId);
+    const usuario = await editarUsuario(ctx, input, userId);
 
-  return usuario;
-});
+    return usuario;
+  });
 
-export const editarTutorProcedure = protectedProcedure.input(inputEditarTutor).mutation(async ({ ctx, input }) => {
-  await verificarPermisos([SgeNombre.LAB_ABIERTO_TUTORES_ABM]);
-  validarInput(inputEditarTutor, input);
+export const editarTutorProcedure = createAuthorizedProcedure([SgeNombre.LAB_ABIERTO_TUTORES_ABM])
+  .input(inputEditarTutor)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputEditarTutor, input);
 
-  const tutor = await editarTutor(ctx, input);
+    const tutor = await editarTutor(ctx, input);
 
-  return tutor;
-});
+    return tutor;
+  });
 
 export const getAllTutoresProcedure = protectedProcedure.query(async ({ ctx }) => {
   const tutores = await getAllTutores(ctx);
@@ -102,10 +102,9 @@ export const getAllTutoresEspecialidadesProcedure = protectedProcedure.query(asy
   return especialidades;
 });
 
-export const eliminarTutorProcedure = protectedProcedure
+export const eliminarTutorProcedure = createAuthorizedProcedure([SgeNombre.LAB_ABIERTO_TUTORES_ABM])
   .input(inputEliminarUsuario)
   .mutation(async ({ ctx, input }) => {
-    await verificarPermisos([SgeNombre.LAB_ABIERTO_TUTORES_ABM]);
     validarInput(inputEliminarUsuario, input);
 
     const usuario = await eliminarTutor(ctx, input);

@@ -1,4 +1,4 @@
-import { protectedProcedure } from "../../trpc";
+import { createAuthorizedProcedure, protectedProcedure } from "../../trpc";
 import { validarInput } from "../helper";
 import {
   inputAgregarRol,
@@ -16,7 +16,6 @@ import {
   getRolById,
 } from "../../repositories/admin/roles-admin.repository";
 import { Prisma, SgeNombre } from "@prisma/client";
-import { verificarPermisos } from "@/server/permisos";
 
 export const getTodosLosRolesProcedure = protectedProcedure
   .input(inputGetRoles.optional())
@@ -36,14 +35,15 @@ export const getRolByIdProcedure = protectedProcedure.input(inputGetRol).query(a
   return role;
 });
 
-export const eliminarRolProcedure = protectedProcedure.input(inputEliminarRol).mutation(async ({ ctx, input }) => {
-  await verificarPermisos([SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS]);
-  validarInput(inputEliminarRol, input);
+export const eliminarRolProcedure = createAuthorizedProcedure([SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS])
+  .input(inputEliminarRol)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputEliminarRol, input);
 
-  const role = await eliminarRol(ctx, input);
+    const role = await eliminarRol(ctx, input);
 
-  return role;
-});
+    return role;
+  });
 
 export const getTodosLosPermisosProcedure = protectedProcedure.query(async ({ ctx }) => {
   const permisos = await getAllPermisos(ctx);
@@ -51,54 +51,56 @@ export const getTodosLosPermisosProcedure = protectedProcedure.query(async ({ ct
   return permisos;
 });
 
-export const editarRolProcedure = protectedProcedure.input(inputEditarRol).mutation(async ({ ctx, input }) => {
-  await verificarPermisos([SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS]);
-  validarInput(inputEditarRol, input);
+export const editarRolProcedure = createAuthorizedProcedure([SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS])
+  .input(inputEditarRol)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputEditarRol, input);
 
-  const userId = ctx.session.user.id;
+    const userId = ctx.session.user.id;
 
-  try {
-    const role = await editarRol(ctx, input, userId);
+    try {
+      const role = await editarRol(ctx, input, userId);
 
-    return role;
-  } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        console.log(error);
-        throw new Error("Ocurrió un error al editar el rol");
+      return role;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === "P2002") {
+          console.log(error);
+          throw new Error("Ocurrió un error al editar el rol");
+        }
       }
-    }
 
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-
-    throw new Error("Error editando rol");
-  }
-});
-
-export const nuevoRolProcedure = protectedProcedure.input(inputAgregarRol).mutation(async ({ ctx, input }) => {
-  await verificarPermisos([SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS]);
-  validarInput(inputAgregarRol, input);
-
-  const userId = ctx.session.user.id;
-
-  try {
-    const rol = await agregarRol(ctx, input, userId);
-
-    return rol;
-  } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        console.log(error);
-        throw new Error("Ocurrió un error al agregar el rol");
+      if (error instanceof Error) {
+        throw new Error(error.message);
       }
-    }
 
-    if (error instanceof Error) {
-      throw new Error(error.message);
+      throw new Error("Error editando rol");
     }
+  });
 
-    throw new Error("Error agregando rol");
-  }
-});
+export const nuevoRolProcedure = createAuthorizedProcedure([SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS])
+  .input(inputAgregarRol)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputAgregarRol, input);
+
+    const userId = ctx.session.user.id;
+
+    try {
+      const rol = await agregarRol(ctx, input, userId);
+
+      return rol;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === "P2002") {
+          console.log(error);
+          throw new Error("Ocurrió un error al agregar el rol");
+        }
+      }
+
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+
+      throw new Error("Error agregando rol");
+    }
+  });

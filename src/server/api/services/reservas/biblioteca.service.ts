@@ -1,4 +1,4 @@
-import { protectedProcedure } from "../../trpc";
+import { createAuthorizedProcedure, protectedProcedure } from "../../trpc";
 import {
   crearPrestamoLibro,
   devolverLibro,
@@ -21,7 +21,6 @@ import {
   enviarMailRenovarLibroProcedure,
   enviarMailDevolverLibroProcedure,
 } from "../mails/emailBiblioteca.service";
-import { verificarPermisos } from "@/server/permisos";
 import { SgeNombre } from "@prisma/client";
 
 export const getTodasLasReservasProcedure = protectedProcedure
@@ -80,10 +79,9 @@ export const verReservasProcedure = protectedProcedure
     return reservas;
   });
 
-export const devolverLibroProcedure = protectedProcedure
+export const devolverLibroProcedure = createAuthorizedProcedure([SgeNombre.BIBLIOTECA_ABM_LIBRO])
   .input(inputGetReservasLibroPorLibroId)
   .mutation(async ({ ctx, input }) => {
-    await verificarPermisos([SgeNombre.BIBLIOTECA_ABM_LIBRO]);
     validarInput(inputGetReservasLibroPorLibroId, input);
 
     const userId = ctx.session.user.id;
@@ -94,15 +92,16 @@ export const devolverLibroProcedure = protectedProcedure
 
     return reserva;
   });
-export const renovarLibroProcedure = protectedProcedure.input(inputPrestarLibro).mutation(async ({ ctx, input }) => {
-  await verificarPermisos([SgeNombre.BIBLIOTECA_ABM_LIBRO]);
-  validarInput(inputPrestarLibro, input);
+export const renovarLibroProcedure = createAuthorizedProcedure([SgeNombre.BIBLIOTECA_ABM_LIBRO])
+  .input(inputPrestarLibro)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputPrestarLibro, input);
 
-  const userId = ctx.session.user.id;
+    const userId = ctx.session.user.id;
 
-  const reserva = await renovarLibro(ctx, input, userId);
+    const reserva = await renovarLibro(ctx, input, userId);
 
-  void enviarMailRenovarLibroProcedure(ctx, reserva.id);
+    void enviarMailRenovarLibroProcedure(ctx, reserva.id);
 
-  return reserva;
-});
+    return reserva;
+  });
