@@ -15,7 +15,7 @@ import { FormEquipoTipoSelector } from "./filtros/equipo-tipo-selector";
 import { CursoTurno } from "@/app/_components/turno-text";
 import { Switch } from "@/components/ui/switch";
 import { FormInputPoliticas } from "@/app/_components/input-form-politicas";
-import { armarFechaReserva, esFechaPasada, getFechaHumanoDDMMYYYY } from "@/shared/get-date";
+import { armarFechaReserva, esFechaPasada, getDateISOString } from "@/shared/get-date";
 import { ReservaEstatus, TurnoCurso } from "@prisma/client";
 import { ReservaDetalle } from "./info-basica-reserva";
 import CustomDatePicker from "@/components/date-picker";
@@ -79,9 +79,7 @@ export const LaboratorioCerradoForm = ({ reservaId, cursoId, onSubmit, onCancel 
       cursoId: cursoId ? Number(cursoId) : undefined,
       aceptoTerminos: false,
       equipoReservado: esNuevo ? [] : (reservaData?.equipoReservado ?? []),
-      fechaReserva: esNuevo
-        ? undefined
-        : getFechaHumanoDDMMYYYY(reservaData?.reserva.fechaHoraInicio as unknown as Date),
+      fechaReserva: esNuevo ? undefined : getDateISOString(reservaData?.reserva.fechaHoraInicio as unknown as Date),
       requierePc: reservaData?.requierePC ?? false,
       requiereProyector: reservaData?.requiereProyector ?? false,
       turno: esNuevo ? TurnoCurso.MANANA : reservaData?.curso?.turno,
