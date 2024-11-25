@@ -278,106 +278,102 @@ export const devolverLibro = async (
   input: InputGetReservas, // Esto incluye libroId
   userId: string,
 ) => {
-  try {
-    const reserva = await ctx.db.$transaction(async (tx) => {
-      // Verificar si el libro existe
-      const libro = await tx.libro.findUnique({
-        where: {
-          id: input.libroId,
-        },
-        select: {
-          id: true,
-          disponible: true,
-        },
-      });
+  const reserva = await ctx.db.$transaction(async (tx) => {
+    // Verificar si el libro existe
+    const libro = await tx.libro.findUnique({
+      where: {
+        id: input.libroId,
+      },
+      select: {
+        id: true,
+        disponible: true,
+      },
+    });
 
-      if (!libro) {
-        throw new Error("El libro no existe");
-      }
+    if (!libro) {
+      throw new Error("El libro no existe");
+    }
 
-      // Si el libro ya está disponible, no se puede devolver
-      if (libro.disponible) {
-        throw new Error("El libro ya está disponible");
-      }
+    // Si el libro ya está disponible, no se puede devolver
+    if (libro.disponible) {
+      throw new Error("El libro ya está disponible");
+    }
 
-      // Actualizar el libro para marcarlo como disponible
-      await tx.libro.update({
-        where: {
-          id: input.libroId,
+    // Actualizar el libro para marcarlo como disponible
+    await tx.libro.update({
+      where: {
+        id: input.libroId,
+      },
+      data: {
+        disponible: true,
+      },
+    });
+
+    // Obtener la primera reserva pendiente para ese libro
+    const reservas = await tx.reserva.findMany({
+      where: {
+        tipo: "LIBRO",
+        reservaLibro: {
+          libroId: input.libroId,
         },
-        data: {
-          disponible: true,
-        },
-      });
-
-      // Obtener la primera reserva pendiente para ese libro
-      const reservas = await tx.reserva.findMany({
-        where: {
-          tipo: "LIBRO",
-          reservaLibro: {
-            libroId: input.libroId,
+        estatus: "PENDIENTE",
+      },
+      include: {
+        usuarioSolicito: {
+          // Incluir los datos del usuario solicitante
+          select: {
+            nombre: true,
+            apellido: true,
+            email: true,
           },
-          estatus: "PENDIENTE",
         },
-        include: {
-          usuarioSolicito: {
-            // Incluir los datos del usuario solicitante
-            select: {
-              nombre: true,
-              apellido: true,
-              email: true,
-            },
-          },
-          reservaLibro: {
-            select: {
-              libro: {
-                select: {
-                  titulo: true, // Obtener el título del libro
-                },
+        reservaLibro: {
+          select: {
+            libro: {
+              select: {
+                titulo: true, // Obtener el título del libro
               },
             },
           },
         },
-      });
-
-      if (reservas.length === 0) {
-        throw new Error("No hay reservas para devolver");
-      }
-
-      const reserva = reservas[0]; // Obtener la primera reserva pendiente
-
-      if (!reserva) {
-        throw new Error("No se pudo encontrar la reserva");
-      }
-
-      // Actualizar la reserva para marcarla como finalizada
-      await tx.reserva.update({
-        where: {
-          id: reserva.id,
-        },
-        data: {
-          usuarioRecibioId: userId,
-          estatus: "FINALIZADA",
-          fechaRecibido: new Date(),
-        },
-      });
-
-      // Retornar la información necesaria para el correo
-      return {
-        id: reserva.id,
-        libroNombre: reserva.reservaLibro?.libro?.titulo ?? "Título no disponible",
-        usuarioSolicitante: {
-          nombre: reserva.usuarioSolicito?.nombre ?? "Nombre no disponible",
-          apellido: reserva.usuarioSolicito?.apellido ?? "Apellido no disponible",
-          email: reserva.usuarioSolicito?.email ?? "Email no disponible",
-        },
-      };
+      },
     });
 
-    return reserva;
-  } catch (error) {
-    throw new Error("Error devolviendo libro.");
-  }
+    if (reservas.length === 0) {
+      throw new Error("No hay reservas para devolver");
+    }
+
+    const reserva = reservas[0]; // Obtener la primera reserva pendiente
+
+    if (!reserva) {
+      throw new Error("No se pudo encontrar la reserva");
+    }
+
+    // Actualizar la reserva para marcarla como finalizada
+    await tx.reserva.update({
+      where: {
+        id: reserva.id,
+      },
+      data: {
+        usuarioRecibioId: userId,
+        estatus: "FINALIZADA",
+        fechaRecibido: new Date(),
+      },
+    });
+
+    // Retornar la información necesaria para el correo
+    return {
+      id: reserva.id,
+      libroNombre: reserva.reservaLibro?.libro?.titulo ?? "Título no disponible",
+      usuarioSolicitante: {
+        nombre: reserva.usuarioSolicito?.nombre ?? "Nombre no disponible",
+        apellido: reserva.usuarioSolicito?.apellido ?? "Apellido no disponible",
+        email: reserva.usuarioSolicito?.email ?? "Email no disponible",
+      },
+    };
+  });
+
+  return reserva;
 };
 
 export type InputRenovarPrestamoLibro = z.infer<typeof inputPrestarLibro>;

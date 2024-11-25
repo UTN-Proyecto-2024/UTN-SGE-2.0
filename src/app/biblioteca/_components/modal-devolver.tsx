@@ -6,7 +6,6 @@ import { toast } from "@/components/ui";
 
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { api } from "@/trpc/react";
-import { useRouter } from "next/navigation";
 import { DevolverButton } from "@/app/_components/prestar-devolver";
 
 type DevolverLibroModalProps = {
@@ -14,10 +13,19 @@ type DevolverLibroModalProps = {
 };
 
 export default function DevolverLibroModal({ libroId }: DevolverLibroModalProps) {
-  const router = useRouter();
   const devolverLibro = api.reservas.reservaBiblioteca.devolverLibro.useMutation();
 
   const [open, setOpen] = useState(false);
+
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.biblioteca.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+    utils.reservas.reservaBiblioteca.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleCancel = () => setOpen(false);
 
@@ -27,7 +35,7 @@ export default function DevolverLibroModal({ libroId }: DevolverLibroModalProps)
       {
         onSuccess: () => {
           toast.success("Libro devuelto con éxito.");
-          router.refresh();
+          refreshGetAll();
           setOpen(false);
         },
         onError: (error) => {

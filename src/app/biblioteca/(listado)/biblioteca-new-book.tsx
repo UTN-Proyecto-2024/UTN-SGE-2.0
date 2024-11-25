@@ -2,24 +2,29 @@
 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { LibroForm } from "../libros/[id]/libro-form";
 import { useState } from "react";
 import { SgeNombre } from "@prisma/client";
 import { useTienePermisos } from "@/app/_hooks/use-tiene-permisos";
+import { api } from "@/trpc/react";
 
 export const BibliotecaNewLibro = () => {
   const tienePermiso = useTienePermisos([SgeNombre.BIBLIOTECA_ABM_LIBRO]);
 
   const [open, setOpen] = useState(false);
 
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.biblioteca.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   if (!tienePermiso) return null;
 
   const handleSave = () => {
-    router.refresh();
+    refreshGetAll();
     setOpen(false);
   };
 
