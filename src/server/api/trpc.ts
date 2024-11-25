@@ -13,6 +13,8 @@ import { ZodError } from "zod";
 
 import { getServerAuthSession } from "@/server/auth";
 import { db } from "@/server/db";
+import { type SgeNombre } from "@prisma/client";
+import { tienePermiso } from "./services/permisos/permisos.service";
 
 /**
  * 1. CONTEXT
@@ -105,3 +107,33 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
     },
   });
 });
+
+// Definimos un tipo para el contexto autenticado
+type AuthenticatedTRPCContext = {
+  db: typeof db;
+  session: NonNullable<Awaited<ReturnType<typeof getServerAuthSession>>>;
+  user: NonNullable<Awaited<ReturnType<typeof getServerAuthSession>>>["user"];
+};
+
+export const createAuthorizedProcedure = (permisosRequeridos: SgeNombre[]) => {
+  return protectedProcedure.use(
+    t.middleware(async ({ ctx, next }) => {
+      if (!ctx.session || !ctx.session.user) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      const puedeEditar = await tienePermiso(ctx, permisosRequeridos, ctx.session.user.id);
+      if (!puedeEditar) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
+
+      return next({
+        ctx: {
+          ...ctx,
+          session: ctx.session,
+          user: ctx.session.user,
+        } as AuthenticatedTRPCContext,
+      });
+    }),
+  );
+};
