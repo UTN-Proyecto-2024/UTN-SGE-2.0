@@ -84,6 +84,7 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
           )?.label,
       observaciones: esNuevo ? "" : (reservaData?.descripcion ?? ""),
       sedeId: esNuevo ? undefined : String(reservaData?.sedeId),
+      especialidad: esNuevo ? "" : reservaData?.especialidad,
     },
     resolver: zodResolver(esNuevo ? inputReservaLaboratorioAbiertoForm : inputEditarReservaLaboratorioForm),
   });
