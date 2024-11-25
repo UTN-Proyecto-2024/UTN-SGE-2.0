@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectUsuarioForm } from "@/app/_components/select-usuario";
 import { type z } from "zod";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { getDate } from "@/shared/get-date";
 import { inputPrestarEquipo } from "@/shared/filters/reservas-equipos-filter.schema";
 
@@ -26,7 +25,15 @@ export const EquipoFormPrestarORenovar = ({ equipoId, onSubmit, onCancel, renova
   const prestarEquipo = api.reservas.reservaEquipo.crearReserva.useMutation(); // Se usa por efecto si `renovar=false`
   const renovarEquipo = api.reservas.reservaEquipo.renovarEquipo.useMutation(); // Se usa por efecto si `renovar=true`
 
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.equipos.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+    utils.reservas.reservaBiblioteca.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const prestamoBase: FormPrestarEquipoType = {
     equipoId,
@@ -66,7 +73,7 @@ export const EquipoFormPrestarORenovar = ({ equipoId, onSubmit, onCancel, renova
     renovarEquipo.mutate(formData, {
       onSuccess: () => {
         toast.success("Equipo renovado con éxito.");
-        router.refresh();
+        refreshGetAll();
         onSubmit();
       },
       onError: (error) => {
@@ -79,7 +86,7 @@ export const EquipoFormPrestarORenovar = ({ equipoId, onSubmit, onCancel, renova
     prestarEquipo.mutate(formData, {
       onSuccess: () => {
         toast.success("Equipo prestado con éxito.");
-        router.refresh();
+        refreshGetAll();
         onSubmit();
       },
       onError: (error) => {

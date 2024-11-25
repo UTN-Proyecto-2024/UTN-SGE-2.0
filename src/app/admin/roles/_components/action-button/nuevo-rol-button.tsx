@@ -2,19 +2,24 @@
 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { useState } from "react";
 import { AdminRolForm } from "../../[id]/admin-rol-form";
 import { ScrollArea } from "@/components/ui";
+import { api } from "@/trpc/react";
 
 export const AdminRolesNuevoRol = () => {
   const [open, setOpen] = useState(false);
 
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.admin.roles.getAllRoles.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleSave = () => {
-    router.refresh();
+    refreshGetAll();
     setOpen(false);
   };
 
