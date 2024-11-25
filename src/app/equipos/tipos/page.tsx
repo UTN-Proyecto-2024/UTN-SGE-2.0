@@ -7,7 +7,7 @@ import { equiposColumnas } from "./_components/table/columns";
 import { inputGetTipos } from "@/shared/filters/equipos-tipos-filter.schema";
 import { EQUIPOS_ROUTE } from "@/shared/server-routes";
 import { EquiposTiposNuevoTipo } from "./_components/buttons/nuevo-tipo-button";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
 import { SgeNombre } from "@prisma/client";
 

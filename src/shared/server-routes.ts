@@ -1,14 +1,19 @@
 import { SgeNombre } from "@prisma/client";
+import { z } from "zod";
 
-export type AppRoute = {
-  href: string;
-  redirectClick?: string;
-  label: string;
-  isPublic: boolean;
-  inConstruction?: boolean;
+export const ZodRuta = z.object({
+  href: z.string(),
+  redirectClick: z.string().optional(),
+  label: z.string(),
+  isPublic: z.boolean(),
+  inConstruction: z.boolean().optional(),
+  esExterna: z.boolean().optional(),
+  permisos: z.array(z.nativeEnum(SgeNombre)),
+});
+
+export type AppBase = z.infer<typeof ZodRuta>;
+export type AppRoute = AppBase & {
   subRutas?: AppRoute[];
-  esExterna?: boolean;
-  permisos: SgeNombre[];
   [x: string]: unknown;
 };
 
@@ -242,10 +247,13 @@ export const COMPROBANTE_ROUTE = {
   inventarioRuta: {
     href: "/comprobante/equipo",
   },
+  laboratorioAbiertoRuta: {
+    href: "/comprobante/laboratorio_abierto",
+  },
 };
 
 export const REPORTES_ROUTE: AppRoute = {
-  href: "/reportes/mes",
+  href: "/reportes",
   label: "Reportes",
   isPublic: false,
   permisos: [SgeNombre.ADMIN_VER_PANEL_ADMIN],

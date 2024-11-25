@@ -1,8 +1,10 @@
 import { api, type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { esFechaPasada, getTimeISOString } from "@/shared/get-date";
-import { BadgeEstatusReserva } from "@/app/_components/badge-estatus-reserva";
+import { BadgeDiscrecionalReserva, BadgeEstatusReserva } from "@/app/_components/badge-estatus-reserva";
 import { Loader2 } from "lucide-react";
+import { DatoUsuarioReserva } from "@/app/_components/datos-usuario";
+import { materiaReservaLaboratorio } from "@/app/_components/reserva-cerrada-textos";
 
 type LaboratorioCerradoReservaData =
   RouterOutputs["reservas"]["reservarLaboratorioCerrado"]["getAll"]["reservas"][number];
@@ -17,7 +19,7 @@ export const getColumnasReservasLaboratorioCerrado = ({ filterByUser }: { filter
     colHelper.accessor("turnoTexto", {
       header: "",
     }),
-    colHelper.accessor("id", {
+    colHelper.accessor("reserva.id", {
       header: "#",
     }),
     colHelper.accessor("reserva.fechaHoraInicio", {
@@ -53,20 +55,55 @@ export const getColumnasReservasLaboratorioCerrado = ({ filterByUser }: { filter
     colHelper.accessor("curso.division.nombre", {
       header: "Division",
       cell: ({ row }) => {
+        const { esDiscrecional } = row.original;
+
+        if (esDiscrecional) {
+          return <BadgeDiscrecionalReserva esDiscrecional />;
+        }
+
         return row.original?.curso?.division.nombre ?? "-";
       },
     }),
     colHelper.accessor("curso.materia.nombre", {
       header: "Materia",
       cell: ({ row }) => {
-        // Puede ser reserva discrecional
-        return row.original?.curso?.materia.nombre ?? "-";
+        return materiaReservaLaboratorio({
+          esDiscrecional: row.original.esDiscrecional,
+          discrecionalMateria: row.original.discrecionalMateria,
+          discrecionalTitulo: row.original.discrecionalTitulo,
+          curso: row.original.curso,
+        });
       },
     }),
     colHelper.accessor("curso.sede.nombre", {
       header: "Sede",
       cell: ({ row }) => {
         return row.original.sede.nombre;
+      },
+    }),
+    colHelper.display({
+      header: "Docente",
+      cell: ({ row }) => {
+        const { esDiscrecional, curso, discrecionalDocente } = row.original;
+        if (esDiscrecional) {
+          if (discrecionalDocente) {
+            return <DatoUsuarioReserva usuario={discrecionalDocente} />;
+          }
+
+          return "-";
+        }
+
+        const profesor = curso?.profesor;
+        if (!profesor) {
+          return "-";
+        }
+
+        return <DatoUsuarioReserva usuario={profesor} />;
+      },
+      meta: {
+        header: {
+          hideSort: true,
+        },
       },
     }),
     colHelper.accessor("laboratorio.nombre", {

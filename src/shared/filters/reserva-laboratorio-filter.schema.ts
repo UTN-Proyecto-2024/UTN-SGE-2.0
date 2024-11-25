@@ -27,8 +27,15 @@ export const inputReservaLaboratorioDiscrecional = z
     horaFin: z.string().min(1, { message: "Requerido" }),
     laboratorioId: z.string().refine((value) => parseInt(value) >= 0, { message: "Debe seleccionar un laboratorio" }),
     agregarAPantalla: z.boolean().default(false),
+    discrecionalTitulo: z.string().default(""),
+    discrecionalMateriaId: z.string().optional(),
+    discrecionalDocenteId: z.string().optional(),
   })
-  .merge(inputReservaLaboratorioDiscrecionalBase);
+  .merge(inputReservaLaboratorioDiscrecionalBase)
+  .refine((data) => new Date(`1970-01-01T${data.horaInicio}:00Z`) < new Date(`1970-01-01T${data.horaFin}:00Z`), {
+    message: "La hora de inicio debe ser menor que la hora de fin",
+    path: ["horaInicio"], // Indica el campo que causa el error
+  });
 
 export const inputReservaLaboratorioCerrado = z
   .object({
@@ -56,7 +63,7 @@ export const inputReservaLaboratorioAbiertoForm = z.object({
   concurrentes: z.string().min(1, { message: "Requerido" }),
   sedeId: z.string().refine((value) => parseInt(value) >= 0, { message: "Debe seleccionar una sede" }),
   equipoReservado: z.array(inputEquipoReservado).default([]),
-  observaciones: z.string().default(""),
+  observaciones: z.string().min(1, { message: "Requerido" }),
   especialidad: z.string().optional().default(""),
   aceptoTerminos: z.boolean().refine((value) => value === true, { message: "Debe aceptar los términos y condiciones" }),
 });
@@ -78,7 +85,7 @@ export const inputAprobarReservaLaboratorioAbiertoSchema = z.object({
   id: z.number().positive().min(1, { message: "Requerido" }),
   tutorId: z.string().optional(),
   inventarioRevisado: z.array(z.string()),
-  laboratorioId: z.string().optional(),
+  laboratorioId: z.string().min(1, { message: "Requerido" }),
   equipoReservado: z.array(inputEquipoReservado).default([]),
 });
 
@@ -126,7 +133,7 @@ export const inputCancelarReservaLaboratorioAbierto = z.object({
 export const inputAprobarReservaLaboratorioCerradoSchema = z.object({
   id: z.number().positive().min(1, { message: "Requerido" }),
   inventarioRevisado: z.array(z.string()),
-  laboratorioId: z.string().optional(),
+  laboratorioId: z.string().min(1, { message: "Requerido" }),
   equipoRequerido: z.array(inputEquipoReservado).default([]),
   equipoReservado: z.array(inputEquipoReservado).default([]),
 });

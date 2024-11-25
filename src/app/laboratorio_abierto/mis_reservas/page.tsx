@@ -3,7 +3,7 @@ import { Suspense, useMemo } from "react";
 import LoadingBibliotecaPrestamosTable from "../(listado)/loading-laboratorio-abierto-reservas-table";
 import LaboratorioAbiertoSolicitudesTableContainer from "../(listado)/reservas-table-container";
 import { inputGetAllSolicitudesReservaLaboratorioAbierto } from "@/shared/filters/reserva-laboratorio-filter.schema";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { LABORATORIO_ABIERTO_ROUTE } from "@/shared/server-routes";
 
 type PageProps = {

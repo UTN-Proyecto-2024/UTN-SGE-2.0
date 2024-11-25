@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import LoadingTiposTable from "./_components/table/loading-tipos-table";
 import { equiposColumnas } from "./_components/table/columns";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { EQUIPOS_ROUTE } from "@/shared/server-routes";
 
 export default function TiposLoading() {

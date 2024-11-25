@@ -135,10 +135,10 @@ export const armarFechaReserva = (fecha: string, hora: string) => {
   return nuevaFecha;
 };
 
-export const construirFechaReservaSinOffset = (fecha: string) => {
+export const construirFechaReservaSinOffset = (fecha?: string | undefined) => {
   if (!fecha) return new Date();
 
-  const nuevaFecha = new Date(`${fecha}`);
+  const nuevaFecha = fecha ? new Date(`${fecha}`) : new Date();
 
   const timeZoneOffset = new Date().getTimezoneOffset() / 60; // Obtener el offset en horas
 
@@ -180,6 +180,43 @@ export const horariosTurnos: Record<string, Record<number, string>> = {
   },
 };
 
+const getHoraCon45MinutosMas = (horaString: string): string => {
+  const horaSplit = horaString.split(":");
+  if (horaSplit.length !== 2) {
+    return "";
+  }
+
+  let hora = parseInt(horaSplit[0]!, 10);
+  let minuto = parseInt(horaSplit[1]!, 10);
+
+  // Sumar 45 minutos
+  minuto += 45;
+
+  // Ajustar hora y minutos si es necesario
+  if (minuto >= 60) {
+    hora += Math.floor(minuto / 60);
+    minuto = minuto % 60;
+  }
+
+  // Ajustar la hora si es necesario
+  if (hora >= 24) {
+    hora = hora % 24;
+  }
+
+  // Formatear con ceros a la izquierda
+  const horaFormateada = hora.toString().padStart(2, "0");
+  const minutoFormateado = minuto.toString().padStart(2, "0");
+
+  return `${horaFormateada}:${minutoFormateado}`;
+};
+
+export const calcularTurnoHora = (turno: string, horaInicio: number, horaFin: number) => {
+  const horaInicioTexto = horariosTurnos[turno]?.[horaInicio];
+  const horaFinTexto = getHoraCon45MinutosMas(horariosTurnos[turno]?.[horaFin] ?? "");
+
+  return `${horaInicioTexto} a ${horaFinTexto}`;
+};
+
 // Función para obtener la hora en formato HH:mm según el turno y la hora (entero)
 export function obtenerHoraInicioFin(
   hora: number,
@@ -193,7 +230,9 @@ export function obtenerHoraInicioFin(
     throw new Error(`Hora de inicio o fin inválida para el turno ${turno} y hora ${hora}`);
   }
 
-  return { horaInicio, horaFin };
+  const fechaFinHoraEntera = getHoraCon45MinutosMas(horaFin);
+
+  return { horaInicio, horaFin: fechaFinHoraEntera };
 }
 
 /**
@@ -293,4 +332,35 @@ export const getTurnoTexto = (turno: TurnoCurso | undefined) => {
   if (!turno) return "";
 
   return mapCurso.get(turno) ?? "";
+};
+
+// Función para convertir una cadena de hora en minutos desde la medianoche
+function parseTimeToMinutes(timeStr: string): number {
+  const [hoursStr, minutesStr] = timeStr.split(":");
+  const hours = parseInt(hoursStr!, 10);
+  const minutes = parseInt(minutesStr!, 10);
+  return hours * 60 + minutes;
+}
+
+const MANANA_START = parseTimeToMinutes("07:45");
+const TARDE_START = parseTimeToMinutes("13:30");
+const NOCHE_START = parseTimeToMinutes("18:15");
+
+// Tu función calcularTurnoTexto
+export const calcularTurnoTexto = (fecha: Date): string => {
+  const minutosDesdeMediaNoche = fecha.getHours() * 60 + fecha.getMinutes();
+
+  if (minutosDesdeMediaNoche >= NOCHE_START) {
+    return getTurnoTexto(TurnoCurso.NOCHE);
+  }
+
+  if (minutosDesdeMediaNoche >= TARDE_START) {
+    return getTurnoTexto(TurnoCurso.TARDE);
+  }
+
+  if (minutosDesdeMediaNoche >= MANANA_START) {
+    return getTurnoTexto(TurnoCurso.MANANA);
+  }
+
+  return getTurnoTexto(TurnoCurso.MANANA);
 };

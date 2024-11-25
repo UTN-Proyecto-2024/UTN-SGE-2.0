@@ -1,7 +1,7 @@
 import LaboratorioAbiertoReservaContainer from "./_components/table/curso-table-container";
 import { Suspense } from "react";
 import LoadingLaboratorioAbiertoReserva from "./_components/table/loading-reserva-laboratorio-abierto";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { LABORATORIO_ABIERTO_ROUTE } from "@/shared/server-routes";
 
 export default async function Page() {

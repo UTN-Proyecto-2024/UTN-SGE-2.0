@@ -15,7 +15,10 @@ export const getColumnasReservasLaboratorioAbierto = ({ filterByUser }: { filter
     colHelper.accessor("fechaTexto", {
       header: "",
     }),
-    colHelper.accessor("id", {
+    colHelper.accessor("turnoTexto", {
+      header: "",
+    }),
+    colHelper.accessor("reserva.id", {
       header: "#",
     }),
     ...(filterByUser
@@ -24,7 +27,13 @@ export const getColumnasReservasLaboratorioAbierto = ({ filterByUser }: { filter
           colHelper.display({
             header: "Solicitante",
             cell: ({ row }) => {
-              return `${row.original.reserva.usuarioSolicito.nombre} ${row.original.reserva.usuarioSolicito.apellido}`;
+              return <DatoUsuarioReserva usuario={row.original.reserva.usuarioSolicito} />;
+            },
+
+            meta: {
+              header: {
+                hideSort: true,
+              },
             },
           }),
         ]),

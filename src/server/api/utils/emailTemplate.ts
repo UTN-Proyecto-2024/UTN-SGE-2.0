@@ -1,3 +1,9 @@
+import { env } from "@/env";
+
+const hostUrl = "https://sge-2.vercel.app" || env.RUTA_ACTUAL;
+const emisor = env.SMTP_MAIL_EMISOR;
+const utnLogoRuta = hostUrl + "/utn-logo.png";
+
 export const emailTemplate = ({
   usuario,
   textoMail,
@@ -9,75 +15,53 @@ export const emailTemplate = ({
 }) => {
   return `
     <!doctype html>
-    <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+    <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>${textoMail}</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style type="text/css">
-            body { margin: 0; padding: 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; line-height: 1.5; }
-            table, td { border-collapse: collapse; }
+            body { margin: 0; padding: 0; background-color: #f9f9f9; font-family: 'Helvetica Neue', Arial, sans-serif; line-height: 1.5; }
+            table { border-collapse: collapse; width: 100%; }
             img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
-            p { display: block; margin: 13px 0; }
+            p { margin: 0 0 15px; }
+            a { color: #007bff; text-decoration: none; }
+            .email-container { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #dddddd; }
+            .email-header { background-color: #2F67F6; padding: 35px; text-align: center; }
+            .email-body img { width: 100%; max-width: 150px; height: auto; }
+            .email-body { padding: 20px; color: #555555; }
+            .email-footer { text-align: center; padding: 20px; font-size: 12px; color: #888888; }
+            .cta-button { display: inline-block; padding: 15px 25px; background-color: #2F67F6; color: #ffffff !important; border-radius: 5px; text-decoration: none; }
+            @media only screen and (max-width: 600px) {
+                .email-container { width: 100%; }
+                .email-body { padding: 15px; font-size: 14px; }
+            }
         </style>
     </head>
-    <body style="background-color:#f9f9f9;">
-        <div style="background-color:#f9f9f9;">
-            <div style="background:#2F67F6; Margin:0px auto; max-width:600px; padding-top:35px;"> 
-                <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#fff; background-color:#fff; width:100%;">
-                    <tbody>
-                        <tr>
-                            <td style="border:#dddddd solid 1px; border-top:0px; direction:ltr; font-size:0px; padding:20px 0; text-align:center; vertical-align:top;">
-                                <div style="font-size:13px; text-align:left; direction:ltr; display:inline-block; vertical-align:bottom; width:100%;">
-                                    <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                                        <tr>
-                                            <td align="center" style="padding-bottom: 20px;">
-                                                <img src='https://i.postimg.cc/sgRzwG1Z/img-test.jpg' alt="Logo de UTN" style="max-width: 100%; height: 150px;"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:28px;font-weight:bold;line-height:1;text-align:center;color:#555;">
-                                                    ¡Hola${usuario?.length > 1 ? ", " + usuario : ""}!
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                                <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:16px;line-height:22px;text-align:center;color:#555;margin-top:10px;">
-                                                    ${textoMail}
-                                                    <br/>
-                                                    Gracias por usar nuestros sistemas.
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td align="center" style="font-size:0px;padding:10px 25px;padding-top:30px;padding-bottom:50px;word-break:break-word;">
-                                                <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
-                                                    <tr>
-                                                        <td align="center" bgcolor="#2F67F6" role="presentation" style="border:none;border-radius:3px;color:#ffffff;cursor:auto;padding:15px 25px;" valign="middle">
-                                                            <a href="${hipervinculo}" role="button" style="background:#2F67F6;color:#ffffff;font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:normal;line-height:120%;Margin:0;text-decoration:none;text-transform:none;">
-                                                                <strong>Ver más detalles</strong>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td align="center" style="font-size:12px;color:#888888;padding:20px;">
-                                                Este correo fue generado automáticamente por el Sistema de Gestión Electrónica de UTN-FRBA.
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <body>
+        <table role="presentation" class="email-container">
+            <tr>
+                <td class="email-header"></td>
+            </tr>
+            <tr>
+                <td class="email-body">
+                    <p style="text-align: center;"><img src="${utnLogoRuta}" alt="Logo UTN" width="150" height="auto" /></p>
+                    <p style="text-align: center;"><strong>¡Hola${usuario?.length > 1 ? ", " + usuario : ""}!</strong></p>
+                    ${textoMail}
+                    <p>Gracias por usar nuestros sistemas.</p>
+                    <p style="text-align: center; margin-top: 30px;">
+                        <a href="${hipervinculo}" class="cta-button">Ver más detalles</a>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td class="email-footer">
+                    Este correo fue generado automáticamente por el Sistema de Gestión Electrónica de UTN-FRBA.<br/>
+                    Si necesitas asistencia, contáctanos en <a href="mailto:${emisor}">${emisor}</a>.
+                </td>
+            </tr>
+        </table>
     </body>
     </html>
     `;

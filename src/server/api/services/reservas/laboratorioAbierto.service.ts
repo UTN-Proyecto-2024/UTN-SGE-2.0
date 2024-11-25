@@ -72,7 +72,7 @@ export const aprobarReservaProcedure = protectedProcedure
 
     const reserva = await aprobarReserva(ctx, input, userId);
 
-    void enviarMailAproboLaboratorioAbiertoProcedure(ctx, input.id);
+    void enviarMailAproboLaboratorioAbiertoProcedure(ctx, reserva.reserva.id);
 
     return reserva;
   });
@@ -87,7 +87,7 @@ export const rechazarReservaProcedure = protectedProcedure
 
     const reserva = await rechazarReserva(ctx, input, userId);
 
-    void enviarMailRechazoLaboratorioAbiertoProcedure(ctx, input.id, input.motivo);
+    void enviarMailRechazoLaboratorioAbiertoProcedure(ctx, reserva.reserva.id, input.motivo);
 
     return reserva;
   });
@@ -102,7 +102,7 @@ export const cancelarReservaProcedure = protectedProcedure
 
     const reserva = await cancelarReserva(ctx, input, userId);
 
-    void enviarMailCancelacionLaboratorioAbiertoProcedure(ctx, input.id);
+    void enviarMailCancelacionLaboratorioAbiertoProcedure(ctx, reserva.id);
 
     return reserva;
   });
@@ -112,7 +112,7 @@ export const editarReservaProcedure = protectedProcedure
   .mutation(async ({ ctx, input }) => {
     await verificarPermisos([SgeNombre.LAB_ABIERTO_CONFIRMAR_RESERVAS]);
     validarInput(inputEditarReservaLaboratorioAbiertoSchema, input);
-    validarFechaReserva(new Date(`${input.fechaReserva}T${input.horaInicio}`));
+    validarFechaReserva(input.fechaReserva);
 
     const userId = ctx.session.user.id;
 
@@ -125,7 +125,7 @@ export const inputCrearReservaLaboratorioAbiertoProcedure = protectedProcedure
   .input(inputReservaLaboratorioAbierto)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputReservaLaboratorioAbierto, input);
-    validarFechaReserva(new Date(`${input.fechaReserva}T${input.horaInicio}`));
+    validarFechaReserva(input.fechaReserva);
 
     const userId = ctx.session.user.id;
 

@@ -5,7 +5,7 @@ import LoadingBibliotecaPrestamosTable from "../(listado)/loading-biblioteca-pre
 import { inputGetAllPrestamosLibros } from "@/shared/filters/reservas-filter.schema";
 import BibliotecaPrestamosTableContainer from "../prestamos/_components/prestamos-table-container";
 import React from "react";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { BIBLIOTECA_ROUTE } from "@/shared/server-routes";
 type PageProps = {
   searchParams: ReadonlyURLSearchParams;

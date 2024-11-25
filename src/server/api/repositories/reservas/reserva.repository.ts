@@ -1,6 +1,7 @@
 import type { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.schema";
 import type { PrismaClient } from "@prisma/client";
 import type { z } from "zod";
+import { informacionUsuario } from "../usuario-helper";
 
 type InputGetAllReservas = z.infer<typeof inputGetAllLaboratorios>;
 export const getAllReservasToday = async (ctx: { db: PrismaClient }, input: InputGetAllReservas) => {
@@ -12,7 +13,9 @@ export const getAllReservasToday = async (ctx: { db: PrismaClient }, input: Inpu
   tomorrow.setHours(0, 0, 0, 0);
   return await ctx.db.reserva.findMany({
     include: {
-      usuarioTutor: true,
+      usuarioTutor: {
+        select: informacionUsuario,
+      },
       reservaLaboratorioCerrado: {
         include: {
           equipoReservado: {
@@ -25,10 +28,20 @@ export const getAllReservasToday = async (ctx: { db: PrismaClient }, input: Inpu
             include: {
               division: true,
               materia: true,
-              profesor: true,
+              profesor: {
+                select: informacionUsuario,
+              },
             },
           },
           sede: true,
+          discrecionalDocente: {
+            select: informacionUsuario,
+          },
+          discrecionalMateria: {
+            select: {
+              nombre: true,
+            },
+          },
         },
         where: {
           curso: { turno },

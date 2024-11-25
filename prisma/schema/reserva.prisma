@@ -115,7 +115,12 @@ model ReservaLaboratorioCerrado {
     cursoId Int?
     curso   Curso? @relation(fields: [cursoId], references: [id], onDelete: Cascade)
 
-    esDiscrecional Boolean @default(false)
+    esDiscrecional        Boolean  @default(false)
+    discrecionalTitulo    String   @default("")
+    discrecionalMateriaId Int?
+    discrecionalMateria   Materia? @relation(fields: [discrecionalMateriaId], references: [id], onDelete: Cascade)
+    discrecionalDocenteId String?
+    discrecionalDocente   User?    @relation(fields: [discrecionalDocenteId], references: [id], name: "reservasLaboratorioCerrado")
 
     equipoReservado ReservaLaboratorioCerradoEquipo[]
 

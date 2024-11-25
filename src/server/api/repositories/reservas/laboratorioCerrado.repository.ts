@@ -12,13 +12,12 @@ import { type PrismaClient, type Prisma, type CursoDia, ReservaEstatus } from "@
 import type { z } from "zod";
 import { informacionUsuario } from "../usuario-helper";
 import { construirOrderByDinamico } from "@/shared/dynamic-orderby";
-// import { lanzarErrorSiLaboratorioOcupado } from "./laboratorioEnUso.repository";
 import {
   obtenerHoraInicioFin,
   armarFechaReserva,
   construirFechaReservaSinOffset,
   getFechaddddDDMMYYYY,
-  getTurnoTexto,
+  calcularTurnoTexto,
 } from "@/shared/get-date";
 
 type InputGetPorUsuarioID = z.infer<typeof inputGetReservaLaboratorioPorUsuarioId>;
@@ -73,6 +72,15 @@ export const getReservaPorId = async (ctx: { db: PrismaClient }, input: InputGet
           },
         },
       },
+      discrecionalDocente: {
+        select: {
+          id: true,
+          nombre: true,
+          name: true,
+          apellido: true,
+          legajo: true,
+        },
+      },
     },
   });
 
@@ -88,7 +96,7 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
   fechaHoyMenos1Dia.setHours(0, 0, 0, 0);
   const filtrosWhereReservaLaboratorioCerrado: Prisma.ReservaLaboratorioCerradoWhereInput = {
     reserva: {
-      ...(filtrByUserId === "true" ? { usuarioSolicitoId: userId } : {}),
+      ...(filtrByUserId === "true" ? { usuarioSolicitoId: userId, fechaHoraFin: { gte: fechaHoyMenos1Dia } } : {}),
       ...(estatus ? { estatus: estatus } : {}),
       ...(pasadas === "true" ? { fechaHoraFin: { lte: fechaHoyMenos1Dia } } : {}),
       ...(aprobadas === "true" ? { fechaHoraFin: { gte: fechaHoyMenos1Dia } } : {}),
@@ -169,7 +177,9 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
             sede: true,
             division: true,
             materia: true,
-            profesor: true,
+            profesor: {
+              select: informacionUsuario,
+            },
           },
         },
         equipoReservado: true,
@@ -192,6 +202,15 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
           },
         },
         laboratorio: true,
+
+        discrecionalDocente: {
+          select: informacionUsuario,
+        },
+        discrecionalMateria: {
+          select: {
+            nombre: true,
+          },
+        },
       },
       where: filtrosWhereReservaLaboratorioCerrado,
       orderBy: orden,
@@ -205,7 +224,7 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
 
   const reservasConFecha = reservas.map((reserva) => {
     const fechaTexto = getFechaddddDDMMYYYY(reserva.reserva.fechaHoraInicio);
-    const turnoTexto = getTurnoTexto(reserva.curso?.turno);
+    const turnoTexto = calcularTurnoTexto(reserva.reserva.fechaHoraInicio);
 
     return {
       ...reserva,
@@ -422,6 +441,7 @@ export const cancelarReserva = async (ctx: { db: PrismaClient }, input: InputRec
           id: input.id,
         },
         select: {
+          id: true,
           usuarioCreadorId: true,
           usuarioSolicitoId: true,
           estatus: true,
@@ -455,6 +475,7 @@ export const cancelarReserva = async (ctx: { db: PrismaClient }, input: InputRec
 
         return reserva;
       }
+
       throw new Error("No tienes permisos para cancelar esta reserva");
     });
 
@@ -538,6 +559,10 @@ export const crearReservaLaboratorioCerradoDiscrecional = async (
           reservaLaboratorioCerrado: {
             create: {
               esDiscrecional: true,
+              discrecionalDocenteId: input.discrecionalDocenteId,
+              discrecionalTitulo: input.discrecionalTitulo,
+              discrecionalMateriaId: Number(input.discrecionalMateriaId),
+
               sedeId: Number(input.sedeId),
               cursoId: null,
               laboratorioId: Number(input.laboratorioId),
@@ -573,32 +598,53 @@ export const crearReservaLaboratorioCerradoDiscrecional = async (
 export const getReservaLaboratorioCerradoParaEmail = async (ctx: { db: PrismaClient }, input: { id: number }) => {
   const { id } = input;
 
-  const datos = await ctx.db.reservaLaboratorioCerrado.findUnique({
+  const datos = await ctx.db.reserva.findUnique({
     where: {
-      reservaId: id,
+      id: id,
     },
-    include: {
-      reserva: {
-        include: {
-          usuarioSolicito: {
+    select: {
+      fechaHoraInicio: true,
+      fechaHoraFin: true,
+      motivoRechazo: true,
+      reservaLaboratorioCerrado: {
+        select: {
+          laboratorio: true,
+          discrecionalMateria: true,
+          discrecionalTitulo: true,
+          esDiscrecional: true,
+          curso: {
             select: {
-              nombre: true,
-              apellido: true,
-              email: true,
+              materia: {
+                select: {
+                  nombre: true,
+                },
+              },
             },
           },
         },
       },
-      laboratorio: true,
+      usuarioSolicito: {
+        select: {
+          nombre: true,
+          apellido: true,
+          email: true,
+        },
+      },
     },
   });
 
   const reserva = {
-    laboratorioNombre: datos?.laboratorio?.nombre,
+    fechaHoraInicio: datos?.fechaHoraInicio,
+    fechaHoraFin: datos?.fechaHoraFin,
+    laboratorioNombre: datos?.reservaLaboratorioCerrado?.laboratorio?.nombre,
+    esDiscrecional: datos?.reservaLaboratorioCerrado?.esDiscrecional,
+    discrecionalMateria: datos?.reservaLaboratorioCerrado?.discrecionalMateria?.nombre,
+    discrecionalTitulo: datos?.reservaLaboratorioCerrado?.discrecionalTitulo,
+    motivoRechazo: datos?.motivoRechazo,
     usuarioSolicitante: {
-      nombre: datos?.reserva.usuarioSolicito.nombre,
-      apellido: datos?.reserva.usuarioSolicito.apellido,
-      email: datos?.reserva.usuarioSolicito.email,
+      nombre: datos?.usuarioSolicito.nombre,
+      apellido: datos?.usuarioSolicito.apellido,
+      email: datos?.usuarioSolicito.email,
     },
   };
 

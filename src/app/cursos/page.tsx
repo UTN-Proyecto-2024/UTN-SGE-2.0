@@ -7,7 +7,7 @@ import { inputGetCursos } from "@/shared/filters/cursos-filter.schema";
 import React from "react";
 import { CursosNuevoCurso } from "./(listado)/cursos-new-curso";
 import { CURSOS_ROUTE } from "@/shared/server-routes";
-import PageLayout from "@/components/ui/page-template";
+import PageLayout from "@/components/ui/template/page-template";
 import { CargarCursos } from "./(listado)/cursos-bulk-insert";
 import { TienePermiso } from "../_components/permisos/tienePermiso";
 import { SgeNombre } from "@prisma/client";
