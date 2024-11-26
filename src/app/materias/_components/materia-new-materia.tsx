@@ -2,17 +2,22 @@
 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { MateriaForm } from "../[id]/materia-form";
 import { useState } from "react";
+import { api } from "@/trpc/react";
 
 export const NuevaMateria = () => {
   const [open, setOpen] = useState(false);
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.materia.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleSave = () => {
-    router.refresh();
+    refreshGetAll();
     setOpen(false);
   };
 
