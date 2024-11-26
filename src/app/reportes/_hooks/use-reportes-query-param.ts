@@ -68,7 +68,6 @@ export const useReportesQueryParam = (filters: ReservasFilters) => {
   );
 
   return {
-    refresh: () => router.refresh(),
     sede,
     turno,
     desde,
