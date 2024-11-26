@@ -1,10 +1,9 @@
 "use client";
 
 import { Button, DataTable } from "@/components/ui";
-import { type RouterOutputs } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import { getColumns } from "./columns";
 import EliminarReservaPantallaModal from "../actions/pantalla-eliminar";
-import { useRouter } from "next/navigation";
 import React, { useState, type HTMLProps } from "react";
 import { type GroupingState, type ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
@@ -17,7 +16,12 @@ type BibliotecaTableProps = {
 };
 
 export const PantallaTable = ({ data }: BibliotecaTableProps) => {
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.reservas.pantalla.getAllActivas.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const [rowSelection, setRowSelection] = useState<Record<number, boolean>>({});
   const cursosAEliminar = Object.keys(rowSelection);
@@ -89,7 +93,7 @@ export const PantallaTable = ({ data }: BibliotecaTableProps) => {
               <>
                 <EliminarReservaPantallaModal
                   ids={cursosAEliminar.length ? cursosAEliminar : [original.id]}
-                  onSubmit={() => router.refresh()}
+                  onSubmit={refreshGetAll}
                 />
               </>
             );

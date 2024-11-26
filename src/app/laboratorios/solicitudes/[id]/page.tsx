@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { ReservaViewAdmin } from "./form-gestion-reserva";
+import { api } from "@/trpc/react";
 
 type PageProps = {
   params: { id: string };
@@ -9,20 +10,26 @@ type PageProps = {
 
 export default function PageLibroDetails({ params: { id } }: PageProps) {
   const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.reservas.reservarLaboratorioCerrado.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleClickCancel = () => {
-    router.refresh();
-    setTimeout(() => router.back(), 100);
+    refreshGetAll();
+    router.back();
   };
 
   const handleClickAprobar = () => {
-    router.refresh();
-    setTimeout(() => router.back(), 100);
+    refreshGetAll();
+    router.back();
   };
 
   const handleClickRechazar = () => {
-    router.refresh();
-    setTimeout(() => router.back(), 100);
+    refreshGetAll();
+    router.back();
   };
 
   return (

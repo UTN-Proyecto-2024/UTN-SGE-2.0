@@ -1,8 +1,10 @@
-import { api } from "@/trpc/server";
+"use client";
+
+import { api } from "@/trpc/react";
 import { PantallaTable } from "./pantalla-table";
 
-export default async function PantallaTableContainer() {
-  const reservasEnPantalla = await api.reservas.pantalla.getAllActivas({});
+export default function PantallaTableContainer() {
+  const { data: reservasEnPantalla } = api.reservas.pantalla.getAllActivas.useQuery({});
 
-  return <PantallaTable data={reservasEnPantalla} />;
+  return <PantallaTable data={reservasEnPantalla ?? []} />;
 }
