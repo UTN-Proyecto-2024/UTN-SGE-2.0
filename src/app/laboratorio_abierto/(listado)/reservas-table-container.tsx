@@ -1,4 +1,6 @@
-import { api } from "@/trpc/server";
+"use client";
+
+import { api } from "@/trpc/react";
 import { type z } from "zod";
 import { LaboratorioAbiertoReservaTable } from "./table";
 import { type inputGetAllSolicitudesReservaLaboratorioAbierto } from "@/shared/filters/reserva-laboratorio-filter.schema";
@@ -10,7 +12,7 @@ type LaboratorioAbiertoReservasTableContainerProps = {
   filterByUser?: boolean;
 };
 
-export default async function LaboratorioAbiertoSolicitudesTableContainer({
+export default function LaboratorioAbiertoSolicitudesTableContainer({
   filters,
   filterByUser,
 }: LaboratorioAbiertoReservasTableContainerProps) {
@@ -21,7 +23,7 @@ export default async function LaboratorioAbiertoSolicitudesTableContainer({
     };
   }
 
-  const reservas = await api.reservas.reservaLaboratorioAbierto.getAll(filters);
+  const { data: reservas } = api.reservas.reservaLaboratorioAbierto.getAll.useQuery(filters);
 
-  return <LaboratorioAbiertoReservaTable data={reservas} filters={filters} filterByUser={filterByUser} />;
+  return <LaboratorioAbiertoReservaTable data={reservas ?? { count: 0, reservas: [] }} filters={filters} />;
 }

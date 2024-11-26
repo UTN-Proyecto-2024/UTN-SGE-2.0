@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, DataTable } from "@/components/ui";
-import { type RouterOutputs } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import { type z } from "zod";
 import { DataTablePaginationStandalone } from "@/components/ui/table/table-pagination-standalone";
 import { type GroupingState, type SortingState } from "@tanstack/react-table";
@@ -29,11 +29,17 @@ type LaboratorioAbiertoTableProps = {
 };
 
 export const LaboratorioAbiertoReservaTable = ({ data, filters, filterByUser }: LaboratorioAbiertoTableProps) => {
-  const { refresh, pagination, sorting, onSortingChange, onPaginationChange } =
-    useReservasLaboratorioAbiertoQueryParam(filters);
+  const { pagination, sorting, onSortingChange, onPaginationChange } = useReservasLaboratorioAbiertoQueryParam(filters);
 
   const [grouping, setGrouping] = useState<GroupingState>(["fechaTexto", "turnoTexto"]);
   const columns = getColumnasReservasLaboratorioAbierto({ filterByUser });
+
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.reservas.reservaLaboratorioAbierto.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   return (
     <>
@@ -59,7 +65,7 @@ export const LaboratorioAbiertoReservaTable = ({ data, filters, filterByUser }: 
               <>
                 {filterByUser && !estaCancelada && (
                   <TienePermiso permisos={[]}>
-                    <CancelarReservaLaboratorioAbierto reservaId={original.reserva.id} refresh={refresh} />
+                    <CancelarReservaLaboratorioAbierto reservaId={original.reserva.id} refresh={refreshGetAll} />
                   </TienePermiso>
                 )}
 
@@ -71,7 +77,7 @@ export const LaboratorioAbiertoReservaTable = ({ data, filters, filterByUser }: 
 
                 {filterByUser && !estaCancelada && (
                   <TienePermiso permisos={[]}>
-                    <EditarReservaModal id={original.reserva.id} onSubmit={refresh} />
+                    <EditarReservaModal id={original.reserva.id} onSubmit={refreshGetAll} />
                   </TienePermiso>
                 )}
 
