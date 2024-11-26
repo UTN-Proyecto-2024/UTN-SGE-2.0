@@ -114,6 +114,7 @@ export const agregarMateria = async (ctx: { db: PrismaClient }, input: InputAgre
         anio: Number(input.anio),
         duracion: input.duracion,
         tipo: input.tipo,
+        directorUsuarioId: input.directorUserId && input.directorUserId?.length > 0 ? input.directorUserId : undefined,
         jefeTrabajoPracticos: {
           createMany: {
             data:
@@ -162,7 +163,7 @@ export const editarMateria = async (ctx: { db: PrismaClient }, input: InputEdita
         anio: Number(input.anio),
         duracion: input.duracion,
         tipo: input.tipo,
-        directorUsuarioId: input.directorUserId,
+        directorUsuarioId: input.directorUserId && input.directorUserId?.length > 0 ? input.directorUserId : undefined,
         jefeTrabajoPracticos: {
           deleteMany: {},
           createMany: {

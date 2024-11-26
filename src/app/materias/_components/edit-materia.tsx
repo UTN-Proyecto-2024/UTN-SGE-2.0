@@ -2,10 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { PencilIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { MateriaForm } from "../[id]/materia-form";
 import { useState } from "react";
+import { api } from "@/trpc/react";
 
 interface EditMateriaProps {
   materiaId: string;
@@ -13,10 +13,15 @@ interface EditMateriaProps {
 
 export const EditMateriaModal = ({ materiaId }: EditMateriaProps) => {
   const [open, setOpen] = useState(false);
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.materia.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleSave = () => {
-    router.refresh();
+    refreshGetAll();
     setOpen(false);
   };
 
