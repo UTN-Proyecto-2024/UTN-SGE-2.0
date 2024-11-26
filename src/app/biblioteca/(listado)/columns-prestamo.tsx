@@ -7,7 +7,7 @@ import RenovarPrestamoLibroModal from "../_components/modal-renovar";
 
 type LibroPrestamoData = RouterOutputs["reservas"]["reservaBiblioteca"]["getAll"]["reservas"][number];
 
-export const getColumnasPrestamo = ({ filterByUser }: { filterByUser?: boolean }) => {
+export const getColumnasPrestamo = ({ filtrByUserId }: { filtrByUserId?: boolean }) => {
   const colHelper = createColumnHelper<LibroPrestamoData>();
 
   const columnasBasicas = [
@@ -134,7 +134,7 @@ export const getColumnasPrestamo = ({ filterByUser }: { filterByUser?: boolean }
     }),
   ] as ColumnDef<LibroPrestamoData>[];
 
-  const columnas = filterByUser ? columnasBasicas : [...columnasBasicas, ...columnasGeneral];
+  const columnas = filtrByUserId ? columnasBasicas : [...columnasBasicas, ...columnasGeneral];
 
   return columnas;
 };

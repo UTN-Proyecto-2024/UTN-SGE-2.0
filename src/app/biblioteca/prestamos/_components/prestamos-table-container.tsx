@@ -30,5 +30,9 @@ export default function BibliotecaPrestamosTableContainer({
     return <LoadingBibliotecaPrestamosTable />;
   }
 
-  return <BibliotecaPrestamosTable data={prestamos ?? { count: 0, reservas: [] }} filters={filters} />;
+  return (
+    <>
+      <BibliotecaPrestamosTable data={prestamos ?? { count: 0, reservas: [] }} filters={filters} />
+    </>
+  );
 }
