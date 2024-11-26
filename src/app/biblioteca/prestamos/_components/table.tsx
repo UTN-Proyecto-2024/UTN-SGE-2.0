@@ -47,7 +47,13 @@ export const BibliotecaPrestamosTable = ({ data, filters, filterByUser }: Biblio
               <>
                 {!filterByUser && (
                   <Link href={`${COMPROBANTE_ROUTE.bibliotecaRuta.href}/${row.original.reserva.id}`} target="_blank">
-                    <Button title="Imprimir" variant="icon" color="ghost" icon={PrinterIcon} />
+                    <Button
+                      title="Imprimir"
+                      variant="icon"
+                      color="ghost"
+                      icon={PrinterIcon}
+                      className="h-8 w-8 px-1 py-1"
+                    />
                   </Link>
                 )}
               </>

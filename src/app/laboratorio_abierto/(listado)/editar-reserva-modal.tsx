@@ -27,7 +27,7 @@ export default function EditarReservaModal({ id, onSubmit }: ModalProps) {
       titulo="Editar reserva"
       description="Sí modifica la reserva, volverá al estado pendiente de aprobación"
       trigger={
-        <Button color={"outline"} className="h-8 w-8 px-1 py-1">
+        <Button color={"outline"} className="h-8 w-8 px-1 py-1" title="Editar reserva">
           <PencilIcon size={16} />
         </Button>
       }

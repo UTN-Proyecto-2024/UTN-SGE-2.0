@@ -5,7 +5,7 @@ import { Label } from "@/components/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CalendarIcon, IndentIcon, MapPinIcon, PhoneIcon } from "lucide-react";
 import { BadgeRol } from "@/app/_components/badge-rol";
-import { getDateISOString } from "@/shared/get-date";
+import { getFechaHumanoDDMMYYYY } from "@/shared/get-date";
 
 type UsuarioData = RouterOutputs["admin"]["usuarios"]["getUsuarioPorId"];
 type DetalleContenedor = {
@@ -88,7 +88,7 @@ function DetalleUsuario({ usuarioData }: DetalleContenedor) {
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 Fecha de Nacimiento
               </Label>
-              <p>{getDateISOString(fechaNacimiento)}</p>
+              <p>{getFechaHumanoDDMMYYYY(fechaNacimiento)}</p>
             </div>
           </div>
         </CardContent>

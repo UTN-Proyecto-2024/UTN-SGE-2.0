@@ -43,13 +43,7 @@ export default function RemoveLibroModal({ libroId, nombre, disponible, onSubmit
     return (
       <ModalDrawer
         trigger={
-          <Button
-            title="Eliminar equipo"
-            variant="icon"
-            color="danger"
-            className="h-8 w-8 px-2 py-2"
-            icon={TrashIcon}
-          />
+          <Button title="Eliminar libro" variant="icon" color="danger" className="h-8 w-8 px-2 py-2" icon={TrashIcon} />
         }
         titulo={`El equipo ${nombre ?? ""} tiene un préstamo activo`}
         cancelText="Cerrar"
@@ -59,7 +53,7 @@ export default function RemoveLibroModal({ libroId, nombre, disponible, onSubmit
         isAlertDialog
       >
         <div>
-          Es necesario devolver <span className="font-bold">{nombre ?? "este equipo"}</span> para poder eliminarlo
+          Es necesario devolver <span className="font-bold">{nombre ?? "este libro"}</span> para poder eliminarlo
         </div>
       </ModalDrawer>
     );

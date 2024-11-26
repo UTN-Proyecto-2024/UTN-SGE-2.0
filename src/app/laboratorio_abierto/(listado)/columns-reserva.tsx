@@ -1,7 +1,7 @@
 import { api, type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { DatoUsuarioReserva } from "@/app/_components/datos-usuario";
-import { getDateISOString, getTimeISOString } from "@/shared/get-date";
+import { getFechaHumanoDDMMYYYY, getTimeISOString } from "@/shared/get-date";
 import { BadgeEstatusReserva } from "@/app/_components/badge-estatus-reserva";
 import { Loader2 } from "lucide-react";
 
@@ -41,7 +41,7 @@ export const getColumnasReservasLaboratorioAbierto = ({ filterByUser }: { filter
       header: "Fecha",
       cell: ({ row }) => {
         const { reserva } = row.original;
-        const fecha = getDateISOString(reserva.fechaHoraInicio).split("-").reverse().join("/");
+        const fecha = getFechaHumanoDDMMYYYY(reserva.fechaHoraInicio);
         return `${fecha}`;
       },
     }),

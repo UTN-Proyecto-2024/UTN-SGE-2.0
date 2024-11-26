@@ -29,7 +29,7 @@ export const EditMateriaModal = ({ materiaId }: EditMateriaProps) => {
       open={open}
       onOpenChange={setOpen}
       trigger={
-        <Button color={"outline"} className="h-8 w-8 px-1 py-1">
+        <Button color={"outline"} className="h-8 w-8 px-1 py-1" title="Editar materia">
           <PencilIcon size={16} />
         </Button>
       }
