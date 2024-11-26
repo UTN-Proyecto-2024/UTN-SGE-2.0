@@ -46,10 +46,10 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
   fechaHoyMenos1Dia.setHours(0, 0, 0, 0);
   const filtrosWhereReservaLaboratorioAbierto: Prisma.ReservaLaboratorioAbiertoWhereInput = {
     reserva: {
-      ...(filtrByUserId === "true" ? { usuarioSolicitoId: userId, fechaHoraFin: { gte: fechaHoyMenos1Dia } } : {}),
+      ...(filtrByUserId === "true" ? { usuarioSolicitoId: userId, fechaHoraInicio: { gte: fechaHoyMenos1Dia } } : {}),
       ...(estatus ? { estatus: estatus } : {}),
-      ...(pasadas === "true" ? { fechaHoraFin: { lte: fechaHoyMenos1Dia } } : {}),
-      ...(aprobadas === "true" ? { fechaHoraFin: { gte: fechaHoyMenos1Dia } } : {}),
+      ...(pasadas === "true" ? { fechaHoraInicio: { lte: fechaHoyMenos1Dia } } : {}),
+      ...(aprobadas === "true" ? { fechaHoraInicio: { gte: fechaHoyMenos1Dia } } : {}),
     },
     ...(searchText
       ? {
