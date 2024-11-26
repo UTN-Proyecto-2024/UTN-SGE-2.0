@@ -128,8 +128,8 @@ model Permiso {
 
     sgeNombre SgeNombre
     nombre    String
-    grupo     String
-    enDesuso  Boolean   @default(false)
+    rubro     String
+    incluido  Boolean   @default(true)
 
     rolPermiso RolPermiso[]
 
@@ -138,7 +138,7 @@ model Permiso {
     usuarioCreadorId     String
     usuarioModificadorId String
 
-    @@unique([nombre, grupo])
+    @@unique([nombre, rubro])
     @@unique([sgeNombre])
     @@index([nombre(sort: Asc)])
     @@index([sgeNombre])
