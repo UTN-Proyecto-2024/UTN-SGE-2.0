@@ -109,7 +109,6 @@ export const useDivisionesQueryParam = (filters: DivisionesFilters) => {
   );
 
   return {
-    refresh: () => router.refresh(),
     pagination,
     sorting,
     searchText,

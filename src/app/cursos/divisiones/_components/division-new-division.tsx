@@ -2,17 +2,22 @@
 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { DivisionForm } from "../[id]/division-form";
 import { useState } from "react";
+import { api } from "@/trpc/react";
 
 export const NuevaDivision = () => {
   const [open, setOpen] = useState(false);
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.division.getFiltered.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleSave = () => {
-    router.refresh();
+    refreshGetAll();
     setOpen(false);
   };
 
