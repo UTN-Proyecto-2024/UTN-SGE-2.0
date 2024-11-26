@@ -92,7 +92,6 @@ export const useSoftwareQueryParam = (filters: SoftwareFilters) => {
   );
 
   return {
-    refresh: () => router.refresh(),
     sorting,
     searchText,
     sedeId,
