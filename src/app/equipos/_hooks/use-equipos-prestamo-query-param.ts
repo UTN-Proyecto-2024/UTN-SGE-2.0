@@ -130,7 +130,6 @@ export const useEquiposPrestamosQueryParam = (filters: EquiposPrestamoFilters) =
   );
 
   return {
-    refresh: () => router.refresh(),
     pagination,
     sorting,
     searchText,

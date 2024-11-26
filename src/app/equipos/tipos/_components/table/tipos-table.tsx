@@ -2,7 +2,7 @@
 
 import { DataTable } from "@/components/ui";
 import RemoverTipoModal from "./remove-tipo";
-import { type RouterOutputs } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import { type z } from "zod";
 import { EditarTipoModal } from "./edit-tipo";
 import { type SortingState } from "@tanstack/react-table";
@@ -22,7 +22,13 @@ type TiposTableProps = {
 };
 
 export const TiposTable = ({ data, filters }: TiposTableProps) => {
-  const { refresh, sorting, pagination, onSortingChange, onPaginationChange } = useTiposQueryParam(filters);
+  const { sorting, pagination, onSortingChange, onPaginationChange } = useTiposQueryParam(filters);
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.equipos.getAllTipos.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const columns = getColumns();
 
@@ -49,7 +55,7 @@ export const TiposTable = ({ data, filters }: TiposTableProps) => {
                     tipoId={original.id}
                     nombre={original.nombre ?? ""}
                     imagen={original.imagen ?? ""}
-                    onSubmit={refresh}
+                    onSubmit={refreshGetAll}
                   />
                 </TienePermiso>
 
