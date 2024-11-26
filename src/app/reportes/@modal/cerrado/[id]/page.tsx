@@ -2,6 +2,7 @@
 
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { ReservaViewAdmin } from "@/app/laboratorios/solicitudes/[id]/form-gestion-reserva";
+import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -12,6 +13,15 @@ type PageProps = {
 export default function VerReservaModal({ params: { id } }: PageProps) {
   const [open, setOpen] = useState(true);
   const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.reservas.reservasLaboratorio.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+    utils.laboratorios.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -21,24 +31,18 @@ export default function VerReservaModal({ params: { id } }: PageProps) {
   };
 
   const handleClickCancel = () => {
+    refreshGetAll();
     router.back();
-    setTimeout(() => {
-      window.location.reload();
-    }, 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
   };
 
   const handleClickAprobar = () => {
+    refreshGetAll();
     router.back();
-    setTimeout(() => {
-      window.location.reload();
-    }, 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
   };
 
   const handleClickRechazar = () => {
+    refreshGetAll();
     router.back();
-    setTimeout(() => {
-      window.location.reload();
-    }, 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
   };
 
   return (
