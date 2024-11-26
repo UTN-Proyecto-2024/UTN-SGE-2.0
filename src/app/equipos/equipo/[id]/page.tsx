@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { EquipoForm } from "./equipo-form";
+import { api } from "@/trpc/react";
 
 type PageProps = {
   params: { id?: string };
@@ -9,12 +10,18 @@ type PageProps = {
 
 export default function PageEquipoDetails({ params: { id } }: PageProps) {
   const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.equipos.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleClickCancel = () => router.back();
 
   const handleClickSave = () => {
-    router.refresh();
-    setTimeout(() => router.back(), 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
+    refreshGetAll();
+    router.back();
   };
 
   return (
