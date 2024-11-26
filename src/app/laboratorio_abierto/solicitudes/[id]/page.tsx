@@ -2,27 +2,34 @@
 
 import { useRouter } from "next/navigation";
 import { ReservaViewAdmin } from "./form-gestion-reserva";
+import { api } from "@/trpc/react";
 
 type PageProps = {
   params: { id: string };
 };
 
-export default function PageLibroDetails({ params: { id } }: PageProps) {
+export default function PageDetalleReserva({ params: { id } }: PageProps) {
   const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.reservas.reservaLaboratorioAbierto.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleClickCancel = () => {
     router.back();
-    setTimeout(() => window.location.reload(), 100);
+    refreshGetAll();
   };
 
   const handleClickAprobar = () => {
-    router.refresh();
-    setTimeout(() => router.back(), 100);
+    refreshGetAll();
+    router.back();
   };
 
   const handleClickRechazar = () => {
-    router.refresh();
-    setTimeout(() => router.back(), 100);
+    refreshGetAll();
+    router.back();
   };
 
   return (

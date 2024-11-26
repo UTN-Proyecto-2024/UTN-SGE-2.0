@@ -7,14 +7,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { inputEditarTutor } from "@/shared/filters/admin-usuarios-filter.schema";
 import { type z } from "zod";
 import { useEffect, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import { type TutorType } from "../table/constants";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   id: string;
-  onSubmit: () => void;
   onEditSuccess?: () => void;
   tutor: TutorType;
 };
@@ -26,7 +24,12 @@ type FormHelperType = {
 type FormEditarTutorType = z.infer<typeof inputEditarTutor> & FormHelperType;
 
 export const EditTutorModal = ({ isOpen, onClose, tutor }: Props) => {
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.admin.usuarios.getAllTutores.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const editarTutor = api.admin.usuarios.editarTutor.useMutation();
 
@@ -58,7 +61,7 @@ export const EditTutorModal = ({ isOpen, onClose, tutor }: Props) => {
     editarTutor.mutate(formData, {
       onSuccess: () => {
         toast.success("Tutor actualizado con éxito.");
-        router.refresh();
+        refreshGetAll();
         onClose();
       },
       onError: (error) => {

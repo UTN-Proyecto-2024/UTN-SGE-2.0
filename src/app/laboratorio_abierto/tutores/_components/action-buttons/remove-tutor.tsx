@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { TrashIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui";
 
 import { toast } from "@/components/ui";
@@ -12,17 +11,21 @@ import ModalDrawer from "@/app/_components/modal/modal-drawer";
 type RemoveTutorModalProps = {
   tutorId: string;
   nombre?: string;
-  onSubmit: () => void;
 };
 
-export default function RemoveTutorModal({ tutorId, nombre, onSubmit }: RemoveTutorModalProps) {
-  const router = useRouter();
+export default function RemoveTutorModal({ tutorId, nombre }: RemoveTutorModalProps) {
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.admin.usuarios.getAllTutores.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
+
   const eliminarTutor = api.admin.usuarios.eliminarTutor.useMutation({
     onSuccess: () => {
       toast.success(`El tutor ${nombre} se eliminó con éxito.`);
 
-      onSubmit?.();
-      router.refresh();
+      refreshGetAll();
     },
 
     onError: (error) => {

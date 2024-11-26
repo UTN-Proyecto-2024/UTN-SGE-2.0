@@ -171,7 +171,6 @@ export const useReservasLaboratorioAbiertoQueryParam = (filters: resevaLaborator
   );
 
   return {
-    refresh: () => router.refresh(),
     pagination,
     sorting,
     searchText,
