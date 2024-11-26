@@ -12,7 +12,7 @@ const rutaCurso = CURSOS_ROUTE;
 export const EditCursoModal = (props: EditCursoModalProps) => {
   return (
     <Link key={props.cursoId} href={`${rutaCurso.href}/curso/${props.cursoId}`} passHref prefetch={false}>
-      <Button color={"outline"} className="h-8 w-8 px-1 py-1">
+      <Button color={"outline"} className="h-8 w-8 px-1 py-1" title="Editar curso">
         <PencilIcon size={16} />
       </Button>
     </Link>

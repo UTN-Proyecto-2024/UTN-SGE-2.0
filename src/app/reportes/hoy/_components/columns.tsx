@@ -1,6 +1,6 @@
 import { DatoUsuarioReserva } from "@/app/_components/datos-usuario";
 import { Badge } from "@/components/ui/badge";
-import { getDateISOString, getTimeISOString } from "@/shared/get-date";
+import { getFechaHumanoDDMMYYYY, getTimeISOString } from "@/shared/get-date";
 import { type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
@@ -18,9 +18,7 @@ export const getColumnasReservas = () => {
     }),
     colHelper.display({
       header: "Fecha",
-      cell: ({ row }) => (
-        <p className="mr-2">{getDateISOString(row.original.fechaHoraInicio).split("-").reverse().join("/")}</p>
-      ),
+      cell: ({ row }) => <p className="mr-2">{getFechaHumanoDDMMYYYY(row.original.fechaHoraInicio)}</p>,
     }),
     colHelper.accessor("fechaHoraInicio", {
       header: "Hora inicio",

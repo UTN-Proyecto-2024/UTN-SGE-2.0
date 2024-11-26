@@ -67,7 +67,7 @@ export function TutorCard({ className, ...props }: CardProps & TutorData) {
         <div className="mt-4 flex justify-between">
           <TienePermiso permisos={[SgeNombre.LAB_ABIERTO_TUTORES_ABM]}>
             <>
-              <Button onClick={handleEditClick} title="Editar" color={"outline"} className="h-8 w-8 px-1 py-1">
+              <Button onClick={handleEditClick} title="Editar tutor" color={"outline"} className="h-8 w-8 px-1 py-1">
                 <PencilIcon size={16} />
               </Button>
               <RemoveTutorModal
