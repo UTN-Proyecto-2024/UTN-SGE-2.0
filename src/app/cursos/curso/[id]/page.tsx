@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { CursoForm } from "./curso-form";
 import { CURSOS_ROUTE } from "@/shared/server-routes";
+import { api } from "@/trpc/react";
 
 type PageProps = {
   params: { id?: string };
@@ -13,8 +14,16 @@ const cursoRuta = CURSOS_ROUTE;
 export default function PageCursosDetails({ params: { id } }: PageProps) {
   const router = useRouter();
 
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.cursos.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
+
   const handleClickCancel = () => {
-    setTimeout(() => router.refresh(), 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
+    refreshGetAll();
+    router.push(cursoRuta.href);
   };
 
   const handleClickSave = () => router.push(cursoRuta.href);
