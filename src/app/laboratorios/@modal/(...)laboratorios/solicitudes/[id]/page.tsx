@@ -2,6 +2,7 @@
 
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { ReservaViewAdmin } from "@/app/laboratorios/solicitudes/[id]/form-gestion-reserva";
+import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -11,35 +12,35 @@ type PageProps = {
 
 export default function VerReservaModal({ params: { id } }: PageProps) {
   const [open, setOpen] = useState(true);
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.reservas.reservarLaboratorioCerrado.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const router = useRouter();
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
       setOpen(false);
-      router.back();
+      refreshGetAll();
     }
   };
 
   const handleClickCancel = () => {
+    refreshGetAll();
     router.back();
-    setTimeout(() => {
-      window.location.reload();
-    }, 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
   };
 
   const handleClickAprobar = () => {
+    refreshGetAll();
     router.back();
-    setTimeout(() => {
-      window.location.reload();
-    }, 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
   };
 
   const handleClickRechazar = () => {
+    refreshGetAll();
     router.back();
-    setTimeout(() => {
-      window.location.reload();
-    }, 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
   };
 
   return (

@@ -2,10 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { PencilIcon, Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import React, { useState } from "react";
 import { SoftwareForm } from "../software-form";
+import { api } from "@/trpc/react";
 
 type SoftwareFormProps = {
   softwareId?: number;
@@ -13,11 +13,15 @@ type SoftwareFormProps = {
 
 export const SoftwareNuevoEditar = ({ softwareId }: SoftwareFormProps) => {
   const [open, setOpen] = useState(false);
-
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.software.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleSave = () => {
-    router.refresh();
+    refreshGetAll();
     setOpen(false);
   };
 
