@@ -1,7 +1,10 @@
-import { api } from "@/trpc/server";
+"use client";
+
+import { api } from "@/trpc/react";
 import { type z } from "zod";
 import { EquiposPrestamosTable } from "./table";
 import { type inputGetAllPrestamosEquipos } from "@/shared/filters/reservas-equipos-filter.schema";
+import LoadingEquiposPrestamosTable from "../../(listado)/loading-equipos-prestamos-table";
 
 type EquiposPrestamosFilters = z.infer<typeof inputGetAllPrestamosEquipos>;
 
@@ -10,10 +13,7 @@ type EquiposPrestamosTableContainerProps = {
   filterByUser?: boolean;
 };
 
-export default async function EquiposPrestamosTableContainer({
-  filters,
-  filterByUser,
-}: EquiposPrestamosTableContainerProps) {
+export default function EquiposPrestamosTableContainer({ filters, filterByUser }: EquiposPrestamosTableContainerProps) {
   if (filterByUser) {
     filters = {
       ...filters,
@@ -21,7 +21,17 @@ export default async function EquiposPrestamosTableContainer({
     };
   }
 
-  const prestamos = await api.reservas.reservaEquipo.getAll(filters);
+  const { data: prestamos, isLoading } = api.reservas.reservaEquipo.getAll.useQuery(filters);
 
-  return <EquiposPrestamosTable data={prestamos} filters={filters} filterByUser={filterByUser} />;
+  if (isLoading) {
+    return <LoadingEquiposPrestamosTable />;
+  }
+
+  return (
+    <EquiposPrestamosTable
+      data={prestamos ?? { count: 0, reservas: [] }}
+      filters={filters}
+      filterByUser={filterByUser}
+    />
+  );
 }

@@ -30,7 +30,7 @@ export const EquipoFormPrestarORenovar = ({ equipoId, onSubmit, onCancel, renova
     utils.equipos.getAll.invalidate().catch((err) => {
       console.error(err);
     });
-    utils.reservas.reservaBiblioteca.invalidate().catch((err) => {
+    utils.reservas.reservaEquipo.invalidate().catch((err) => {
       console.error(err);
     });
   };
