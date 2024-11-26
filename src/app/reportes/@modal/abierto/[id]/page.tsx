@@ -4,14 +4,24 @@ import { useRouter } from "next/navigation";
 import { ReservaViewAdmin } from "@/app/laboratorio_abierto/solicitudes/[id]/form-gestion-reserva";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { useState } from "react";
+import { api } from "@/trpc/react";
 
 type PageProps = {
   params: { id: string };
 };
 
-export default function PageLibroDetails({ params: { id } }: PageProps) {
+export default function PageDetalleReserva({ params: { id } }: PageProps) {
   const [open, setOpen] = useState(true);
   const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.reservas.reservasLaboratorio.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+    utils.laboratorios.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -21,18 +31,18 @@ export default function PageLibroDetails({ params: { id } }: PageProps) {
   };
 
   const handleClickCancel = () => {
+    refreshGetAll();
     router.back();
-    setTimeout(() => window.location.reload(), 100);
   };
 
   const handleClickAprobar = () => {
-    router.refresh();
-    setTimeout(() => router.back(), 100);
+    refreshGetAll();
+    router.back();
   };
 
   const handleClickRechazar = () => {
-    router.refresh();
-    setTimeout(() => router.back(), 100);
+    refreshGetAll();
+    router.back();
   };
 
   return (
@@ -41,7 +51,7 @@ export default function PageLibroDetails({ params: { id } }: PageProps) {
       description="Detalles de la reserva de laboratorio."
       open={open}
       onOpenChange={handleOpenChange}
-      className="max-h-[calc(100vh_-_10%)]"
+      className="max-h-[calc(100vh_-_300px)]"
     >
       <div className="flex max-h-max w-full flex-col gap-4">
         <ReservaViewAdmin
