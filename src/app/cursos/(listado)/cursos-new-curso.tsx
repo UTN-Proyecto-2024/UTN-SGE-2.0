@@ -2,18 +2,22 @@
 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { CursoForm } from "../curso/[id]/curso-form";
 import { useState } from "react";
+import { api } from "@/trpc/react";
 
 export const CursosNuevoCurso = () => {
   const [open, setOpen] = useState(false);
-
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.cursos.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleSave = () => {
-    router.refresh();
+    refreshGetAll();
     setOpen(false);
   };
 
@@ -31,7 +35,7 @@ export const CursosNuevoCurso = () => {
           <Plus size={16} className="ml-2" />
         </Button>
       }
-      className={"max-h-[calc(100vh_-_10%)]"}
+      className={"max-h-[calc(100vh_-_300px)]"}
     >
       <CursoForm onCancel={handleCancel} onSubmit={handleSave} />
     </ModalDrawer>

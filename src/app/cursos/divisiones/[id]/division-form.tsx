@@ -7,7 +7,6 @@ import { type z } from "zod";
 import { useEffect, useMemo } from "react";
 import { FormSelect } from "@/components/ui/autocomplete";
 import RemoveDivisionModal from "../_components/remove-division";
-import { useRouter } from "next/navigation";
 
 type Props = {
   id?: string;
@@ -19,9 +18,15 @@ type Props = {
 type FormEditarDivisionType = z.infer<typeof inputEditarDivision>;
 
 export const DivisionForm = ({ id, name, onSubmit, onCancel }: Props) => {
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.division.getFiltered.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
+
   const onDeleteDivision = () => {
-    router.refresh();
+    refreshGetAll();
   };
 
   const esNuevo = id === undefined;
