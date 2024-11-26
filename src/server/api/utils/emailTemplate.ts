@@ -2,7 +2,7 @@ import { env } from "@/env";
 
 const hostUrl = env.RUTA_ACTUAL;
 const emisor = env.SMTP_MAIL_EMISOR;
-const utnLogoRuta = hostUrl + "/utn-logo.svg";
+const utnLogoRuta = hostUrl + "/utn-logo.png";
 
 export const emailTemplate = ({
   usuario,
