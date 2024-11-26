@@ -127,7 +127,6 @@ export const useAdminUsuariosQueryParam = (filters: AdminUsuariosFilters) => {
   );
 
   return {
-    refresh: () => router.refresh(),
     sorting,
     pagination,
     searchText,

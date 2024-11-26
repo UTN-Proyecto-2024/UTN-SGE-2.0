@@ -2,7 +2,7 @@
 
 import { DataTable } from "@/components/ui";
 import RemoverRolModal from "./remove-libro";
-import { type RouterOutputs } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import { type z } from "zod";
 import { EditarRolModal } from "./edit-libro";
 import { type SortingState } from "@tanstack/react-table";
@@ -20,7 +20,13 @@ type BibliotecaTableProps = {
 };
 
 export const RolesTable = ({ data, filters }: BibliotecaTableProps) => {
-  const { refresh, sorting, onSortingChange } = useAdminRolesQueryParam(filters);
+  const { sorting, onSortingChange } = useAdminRolesQueryParam(filters);
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.admin.roles.getAllRoles.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const columns = getColumns();
 
@@ -43,7 +49,7 @@ export const RolesTable = ({ data, filters }: BibliotecaTableProps) => {
               <>
                 <TienePermiso permisos={[]}>
                   {/* TODO: no se cual seria el permiso que va??*/}
-                  <RemoverRolModal rolId={original.id} nombre={original.nombre} onSubmit={refresh} />
+                  <RemoverRolModal rolId={original.id} nombre={original.nombre} onSubmit={refreshGetAll} />
                 </TienePermiso>
                 <TienePermiso permisos={[]}>
                   {/* TODO: no se cual seria el permiso que va??*/}

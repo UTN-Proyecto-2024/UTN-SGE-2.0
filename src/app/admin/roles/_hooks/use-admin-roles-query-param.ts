@@ -96,7 +96,6 @@ export const useAdminRolesQueryParam = (filters: AdminRolesFilters) => {
   );
 
   return {
-    refresh: () => router.refresh(),
     sorting,
     searchText,
     permiso,

@@ -216,14 +216,16 @@ export const AdminUsuarioForm = ({ id, onSubmit, onCancel }: Props) => {
               <h3 className="mb-2 text-lg font-semibold">Roles</h3>
               <div className="grid w-full cursor-pointer grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-2">
                 {Object.entries(rolesDiccionario).map(([rolId, rol]) => (
-                  <div className="hover:bg-slate-100" key={rol.id}>
+                  <label className="hover:bg-slate-100" key={rol.id} htmlFor={`rol-${rolId}`}>
                     <Checkbox
+                      id={`rol-${rolId}`}
+                      name={`rol-${rolId}`}
                       className="mt-1"
                       checked={currentRoles.includes(rolId)}
                       onCheckedChange={() => onRolChange(rolId)}
                     />
                     <span className="ms-1">{rol.nombre}</span>
-                  </div>
+                  </label>
                 ))}
               </div>
             </div>
