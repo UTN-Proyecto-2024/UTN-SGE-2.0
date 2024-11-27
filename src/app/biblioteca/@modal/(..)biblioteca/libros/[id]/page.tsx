@@ -2,6 +2,7 @@
 
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { LibroForm } from "@/app/biblioteca/libros/[id]/libro-form";
+import { ScrollArea } from "@/components/ui";
 import { api } from "@/trpc/react";
 // import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
@@ -48,7 +49,9 @@ export default function PageDetails({ params: { id } }: PageProps) {
       className={"max-h-[calc(100vh_-_10%)]"}
     >
       <div className="flex max-h-max w-full flex-col  gap-4">
-        <LibroForm id={id} onCancel={handleClickCancel} onSubmit={handleClickSave} />
+        <ScrollArea className="max-h-[calc(100vh_-_300px)] w-full pr-4">
+          <LibroForm id={id} onCancel={handleClickCancel} onSubmit={handleClickSave} />
+        </ScrollArea>
       </div>
     </ModalDrawer>
   );
