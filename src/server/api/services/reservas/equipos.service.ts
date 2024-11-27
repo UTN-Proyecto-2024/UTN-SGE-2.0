@@ -1,4 +1,4 @@
-import { protectedProcedure } from "../../trpc";
+import { createAuthorizedProcedure, protectedProcedure } from "../../trpc";
 import {
   crearPrestamoEquipo,
   devolverEquipo,
@@ -21,6 +21,7 @@ import {
   enviarMailRenovarEquipoProcedure,
   enviarMailReservaEquipoProcedure,
 } from "../mails/emailEquipos.service";
+import { SgeNombre } from "@prisma/client";
 
 export const getTodasLasReservasProcedure = protectedProcedure
   .input(inputGetAllPrestamosEquipos)
@@ -44,7 +45,7 @@ export const getReservaEquipoPorUserProcedure = protectedProcedure
     return reserva;
   });
 
-export const crearPrestamoEquipoProcedure = protectedProcedure
+export const crearPrestamoEquipoProcedure = createAuthorizedProcedure([SgeNombre.EQUIPOS_PRESTAMO_PRESTAR])
   .input(inputPrestarEquipo)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputPrestarEquipo, input);
@@ -68,7 +69,7 @@ export const verReservasProcedure = protectedProcedure
     return reservas;
   });
 
-export const devolverEquipoProcedure = protectedProcedure
+export const devolverEquipoProcedure = createAuthorizedProcedure([SgeNombre.EQUIPOS_PRESTAMO_PRESTAR])
   .input(inputGetReservasEquiposPorEquipoId)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputGetReservasEquiposPorEquipoId, input);
@@ -82,17 +83,19 @@ export const devolverEquipoProcedure = protectedProcedure
     return reserva;
   });
 
-export const renovarEquipoProcedure = protectedProcedure.input(inputPrestarEquipo).mutation(async ({ ctx, input }) => {
-  validarInput(inputPrestarEquipo, input);
+export const renovarEquipoProcedure = createAuthorizedProcedure([SgeNombre.EQUIPOS_PRESTAMO_PRESTAR])
+  .input(inputPrestarEquipo)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputPrestarEquipo, input);
 
-  const userId = ctx.session.user.id;
+    const userId = ctx.session.user.id;
 
-  const reserva = await renovarEquipo(ctx, input, userId);
+    const reserva = await renovarEquipo(ctx, input, userId);
 
-  void enviarMailRenovarEquipoProcedure(ctx, reserva.id);
+    void enviarMailRenovarEquipoProcedure(ctx, reserva.id);
 
-  return reserva;
-});
+    return reserva;
+  });
 
 export const getReservaEquipoPorIdProcedure = protectedProcedure
   .input(inputGetReservaEquipoPorId)
