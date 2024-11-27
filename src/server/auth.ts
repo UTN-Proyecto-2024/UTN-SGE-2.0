@@ -42,6 +42,10 @@ const CustomAdapter = {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
+  pages: {
+    signIn: "/",
+    signOut: "/",
+  },
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60,
