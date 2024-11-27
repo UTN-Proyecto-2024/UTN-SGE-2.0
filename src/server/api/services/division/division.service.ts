@@ -11,9 +11,9 @@ import {
   agregarDivision,
   getDivisionById,
 } from "../../repositories/division/division.repository";
-import { protectedProcedure } from "../../trpc";
+import { createAuthorizedProcedure, protectedProcedure } from "../../trpc";
 import { validarInput } from "../helper";
-import { Prisma } from "@prisma/client";
+import { Prisma, SgeNombre } from "@prisma/client";
 
 export const getTodasLasDivisiones = protectedProcedure.query(async ({ ctx }) => {
   return await getAllDivisiones(ctx);
@@ -34,7 +34,7 @@ export const getDivisionesFiltradas = protectedProcedure.query(async ({ ctx }) =
   return Object.values(groupedMap);
 });
 
-export const eliminarDivisionProcedure = protectedProcedure
+export const eliminarDivisionProcedure = createAuthorizedProcedure([SgeNombre.CURSOS_ABM])
   .input(inputEliminarDivision)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputEliminarDivision, input);
@@ -48,7 +48,7 @@ export const getDivisionByIdProcedure = protectedProcedure.input(inputGetDivisio
 });
 
 // Editar una división
-export const editarDivisionProcedure = protectedProcedure
+export const editarDivisionProcedure = createAuthorizedProcedure([SgeNombre.CURSOS_ABM])
   .input(inputEditarDivision)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputEditarDivision, input);
@@ -72,7 +72,7 @@ export const editarDivisionProcedure = protectedProcedure
   });
 
 // Agregar nueva división
-export const nuevaDivisionProcedure = protectedProcedure
+export const nuevaDivisionProcedure = createAuthorizedProcedure([SgeNombre.CURSOS_ABM])
   .input(inputAgregarDivision)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputAgregarDivision, input);

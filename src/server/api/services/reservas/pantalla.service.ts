@@ -4,13 +4,14 @@ import {
   crearReservaPantalla,
   getSedePorId,
 } from "../../repositories/reservas/pantalla.repository";
-import { protectedProcedure, publicProcedure } from "../../trpc";
+import { createAuthorizedProcedure, publicProcedure } from "../../trpc";
 import {
   inputAgregarReservaPantalla,
   inputEliminarReservaPantallas,
   inputGetReservasEnPntallaActivas,
 } from "@/shared/filters/reserva-pantalla-filter.schema";
 import { validarInput } from "../helper";
+import { SgeNombre } from "@prisma/client";
 
 export const getReservasEnPntallaActivasProcedure = publicProcedure
   .input(inputGetReservasEnPntallaActivas)
@@ -22,7 +23,7 @@ export const getReservasEnPntallaActivasProcedure = publicProcedure
     return reservas;
   });
 
-export const removerReservaPantallaProcedure = protectedProcedure
+export const removerReservaPantallaProcedure = createAuthorizedProcedure([SgeNombre.RES_LAB_ABM_PANTALLA])
   .input(inputEliminarReservaPantallas)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputEliminarReservaPantallas, input);
@@ -32,7 +33,7 @@ export const removerReservaPantallaProcedure = protectedProcedure
     return reservasPantallaEliminadas;
   });
 
-export const agregarReservaPantallaProcedure = protectedProcedure
+export const agregarReservaPantallaProcedure = createAuthorizedProcedure([SgeNombre.RES_LAB_ABM_PANTALLA])
   .input(inputAgregarReservaPantalla)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputAgregarReservaPantalla, input);
