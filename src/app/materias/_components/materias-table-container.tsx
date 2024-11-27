@@ -1,8 +1,14 @@
-import { api } from "@/trpc/server";
+"use client";
+
+import { api } from "@/trpc/react";
 import { MateriasTable } from "./table";
+import LoadingMateriasTable from "./loading-materia-table";
 
-export default async function MateriasTableContainer() {
-  const data = await api.materia.getAll();
+export default function MateriasTableContainer() {
+  const { data: materias, isLoading } = api.materia.getAll.useQuery();
+  if (isLoading) {
+    return <LoadingMateriasTable />;
+  }
 
-  return <MateriasTable data={data} />;
+  return <MateriasTable data={materias ?? []} />;
 }

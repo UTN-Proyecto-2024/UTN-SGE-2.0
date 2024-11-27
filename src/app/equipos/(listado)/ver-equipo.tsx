@@ -8,14 +8,8 @@ type VerEquipoModalProps = {
 
 export const VerEquipoModal = (props: VerEquipoModalProps) => {
   return (
-    <Link
-      key={props.equipoId}
-      href={`/equipos/equipo/ver/${props.equipoId}`}
-      passHref
-      prefetch={false}
-      title="Detalles de equipo"
-    >
-      <Button color={"outline"} size="xs" variant={"icon"} icon={EyeIcon} type="button" />
+    <Link key={props.equipoId} href={`/equipos/equipo/ver/${props.equipoId}`} passHref prefetch={false}>
+      <Button color={"outline"} size="xs" variant={"icon"} icon={EyeIcon} type="button" title="Detalles de equipo" />
     </Link>
   );
 };

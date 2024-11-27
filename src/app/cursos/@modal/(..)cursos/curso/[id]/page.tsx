@@ -2,6 +2,7 @@
 
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { CursoForm } from "@/app/cursos/curso/[id]/curso-form";
+import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -13,6 +14,12 @@ export default function PageDetails({ params: { id } }: PageProps) {
   const [open, setOpen] = useState(true);
 
   const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.cursos.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -22,10 +29,8 @@ export default function PageDetails({ params: { id } }: PageProps) {
   };
 
   const handleClickSave = () => {
+    refreshGetAll();
     router.back();
-    setTimeout(() => {
-      window.location.reload();
-    }, 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
   };
 
   const handleClickCancel = () => handleOpenChange(false);
@@ -37,7 +42,7 @@ export default function PageDetails({ params: { id } }: PageProps) {
       open={open}
       onOpenChange={handleOpenChange}
       trigger={<></>}
-      className={"max-h-[calc(100vh_-_10%)]"}
+      className={"max-h-[calc(100vh_-_300px)]"}
     >
       <CursoForm id={id} onCancel={handleClickCancel} onSubmit={handleClickSave} />
     </ModalDrawer>

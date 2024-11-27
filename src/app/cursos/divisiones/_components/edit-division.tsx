@@ -1,14 +1,12 @@
 "use client";
 
-// import { Button } from "@/components/ui/button";
-// import { EditIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { DivisionForm } from "../[id]/division-form";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
 import { SgeNombre } from "@prisma/client";
+import { api } from "@/trpc/react";
 
 interface EditDivisionProps {
   divisionId: string;
@@ -17,10 +15,15 @@ interface EditDivisionProps {
 
 export const EditDivisionModal = ({ divisionId, divisionName }: EditDivisionProps) => {
   const [open, setOpen] = useState(false);
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.division.getFiltered.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleSave = () => {
-    router.refresh();
+    refreshGetAll();
     setOpen(false);
   };
 

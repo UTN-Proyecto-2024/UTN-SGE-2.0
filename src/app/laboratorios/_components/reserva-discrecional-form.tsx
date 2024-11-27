@@ -3,18 +3,21 @@
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { LaboratorioCerradoForm } from "@/app/laboratorios/_components/reserva-form";
 import { Button } from "@/components/ui";
+import { api } from "@/trpc/react";
 import { CalendarIcon } from "lucide-react";
-
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function ReservaDiscrecionalModal() {
   const [open, setOpen] = useState(false);
-
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.reservas.reservarLaboratorioCerrado.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleClickSave = () => {
-    router.refresh();
+    refreshGetAll();
     setOpen(false);
   };
 

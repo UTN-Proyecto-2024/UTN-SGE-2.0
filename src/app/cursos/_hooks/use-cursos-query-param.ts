@@ -115,7 +115,6 @@ export const useCursosQueryParam = (filters: CursosFilters) => {
   );
 
   return {
-    refresh: () => router.refresh(),
     sorting,
     searchText,
     materia,

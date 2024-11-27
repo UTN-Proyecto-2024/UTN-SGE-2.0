@@ -127,7 +127,6 @@ export const useTiposQueryParam = (filters: TiposFilters) => {
   );
 
   return {
-    refresh: () => router.refresh(),
     sorting,
     pagination,
     searchText,

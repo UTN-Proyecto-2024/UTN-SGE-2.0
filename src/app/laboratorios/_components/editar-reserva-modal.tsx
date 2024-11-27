@@ -4,25 +4,30 @@ import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { Button } from "@/components/ui";
 import { PencilIcon } from "lucide-react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { LaboratorioCerradoForm } from "./reserva-form";
+import { api } from "@/trpc/react";
 
 type PageProps = {
   params: { id: number; cursoId: string | null | number };
 };
 
 export default function EditarReservaModal({ params: { id, cursoId } }: PageProps) {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.reservas.reservarLaboratorioCerrado.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleClickCancel = () => {
+    refreshGetAll();
     setOpen(false);
-    setTimeout(() => router.refresh(), 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
   };
 
   const handleClickSave = () => {
+    refreshGetAll();
     setOpen(false);
-    setTimeout(() => router.refresh(), 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
   };
 
   const esDiscrecional = cursoId === null;
@@ -31,7 +36,9 @@ export default function EditarReservaModal({ params: { id, cursoId } }: PageProp
     <ModalDrawer
       titulo={esDiscrecional ? "Editar reserva discrecional" : "Editar reserva"}
       description="Sí modifica la reserva, volverá al estado pendiente de aprobación"
-      trigger={<Button title="Editar reserva" variant="icon" color="ghost" icon={PencilIcon} />}
+      trigger={
+        <Button title="Editar reserva" variant="icon" color="ghost" icon={PencilIcon} className="h-8 w-8 px-2 py-2" />
+      }
       open={open}
       onOpenChange={setOpen}
       className="max-h-[calc(100vh_-_10%)]"

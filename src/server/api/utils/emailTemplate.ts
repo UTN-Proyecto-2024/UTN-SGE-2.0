@@ -1,6 +1,6 @@
 import { env } from "@/env";
 
-const hostUrl = "https://sge-2.vercel.app" || env.RUTA_ACTUAL;
+const hostUrl = env.RUTA_ACTUAL;
 const emisor = env.SMTP_MAIL_EMISOR;
 const utnLogoRuta = hostUrl + "/utn-logo.png";
 

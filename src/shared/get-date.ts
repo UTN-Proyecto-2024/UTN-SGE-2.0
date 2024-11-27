@@ -276,7 +276,7 @@ export const addMinutes = (date: Date, minutes: number): Date => {
  * @param fecha Fecha en formato Date (Contiene hora, minutos y segundos)
  * @returns Fecha en formato DD/MM/YYYY
  */
-export const getFechaHumanoDDMMYYYY = (fecha: Date | undefined) => {
+export const getFechaHumanoDDMMYYYY = (fecha: Date | undefined | null) => {
   if (!fecha) return "";
 
   const dateISOSplit = fecha.toISOString().split("T")[0]?.split("-").reverse().join("/");

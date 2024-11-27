@@ -12,7 +12,7 @@ const rutaAdmin = ADMIN_ROUTE;
 export const EditarRolModal = (props: EditLibroModalProps) => {
   return (
     <Link key={props.rolId} href={`${rutaAdmin.href}/roles/${props.rolId}`} passHref prefetch={false}>
-      <Button color={"outline"} className="h-8 w-8 px-1 py-1">
+      <Button color={"outline"} className="h-8 w-8 px-1 py-1" title="Editar rol">
         <PencilIcon size={16} />
       </Button>
     </Link>

@@ -6,7 +6,6 @@ import { SelectUsuarioForm } from "@/app/_components/select-usuario";
 import { type z } from "zod";
 import { useEffect } from "react";
 import { inputPrestarLibro } from "@/shared/filters/reservas-filter.schema";
-import { useRouter } from "next/navigation";
 import { getDate } from "@/shared/get-date";
 
 type Props = {
@@ -26,7 +25,15 @@ export const LibroFormPrestarORenovar = ({ libroId, onSubmit, onCancel, renovar 
   const prestarLibro = api.reservas.reservaBiblioteca.crearReserva.useMutation(); // Se usa por efecto si `renovar=false`
   const renovarLibro = api.reservas.reservaBiblioteca.renovarLibro.useMutation(); // Se usa por efecto si `renovar=true`
 
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.biblioteca.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+    utils.reservas.reservaBiblioteca.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const prestamoBase: FormPrestarLibroType = {
     libroId: libroId,
@@ -64,7 +71,7 @@ export const LibroFormPrestarORenovar = ({ libroId, onSubmit, onCancel, renovar 
     renovarLibro.mutate(formData, {
       onSuccess: () => {
         toast.success("Libro renovado con éxito.");
-        router.refresh();
+        refreshGetAll();
         onSubmit();
       },
       onError: (error) => {
@@ -77,7 +84,7 @@ export const LibroFormPrestarORenovar = ({ libroId, onSubmit, onCancel, renovar 
     prestarLibro.mutate(formData, {
       onSuccess: () => {
         toast.success("Libro prestado con éxito.");
-        router.refresh();
+        refreshGetAll();
         onSubmit();
       },
       onError: (error) => {
@@ -103,7 +110,7 @@ export const LibroFormPrestarORenovar = ({ libroId, onSubmit, onCancel, renovar 
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-y-4">
         <div className="flex w-full flex-col items-center justify-center">
           <div className="flex flex-col space-y-4 px-0 ">
-            <div className="flex w-full flex-col gap-x-4 lg:flex-row">
+            <div className="flex w-full flex-col gap-x-4 sm:flex-row">
               <div className="mt-4 w-full">
                 <FormInput label={"Desde el día"} control={control} name="fechaInicio" type={"date"} required />
               </div>

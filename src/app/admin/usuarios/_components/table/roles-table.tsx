@@ -26,7 +26,6 @@ export const AdminUsuariosTable = ({ data, filters }: Props) => {
 
   const columns = getColumns();
 
-  // TODO: Implement resizing
   return (
     <>
       <DataTable
@@ -46,7 +45,6 @@ export const AdminUsuariosTable = ({ data, filters }: Props) => {
             return (
               <>
                 <TienePermiso permisos={[]}>
-                  {/* TODO: no se cual seria el permiso que va??*/}
                   <EditarUsuarioModal usuarioId={original.id} />
                 </TienePermiso>
                 <TienePermiso permisos={[SgeNombre.ADMIN_VER_FICHA_USUARIO]}>

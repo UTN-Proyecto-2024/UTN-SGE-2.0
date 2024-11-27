@@ -1,5 +1,7 @@
+"use client";
+
 import type { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.schema";
-import { api } from "@/trpc/server";
+import { api } from "@/trpc/react";
 import type { z } from "zod";
 import { ReservasHoy } from "./table";
 
@@ -10,7 +12,7 @@ type Reservas = {
 };
 
 export const ReservasHoyTableContainer = async ({ filters }: Reservas) => {
-  const reservas = await api.reservas.reservasLaboratorio.getAll(filters);
+  const { data: reservas } = api.reservas.reservasLaboratorio.getAll.useQuery(filters);
 
-  return <ReservasHoy reservas={reservas} />;
+  return <ReservasHoy reservas={reservas ?? []} />;
 };

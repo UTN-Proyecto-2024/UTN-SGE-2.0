@@ -3,6 +3,7 @@
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { LaboratorioAbiertoForm } from "@/app/laboratorio_abierto/reservar/[tipo]/reserva-form";
 import { type LaboratorioAbiertoType } from "@/app/laboratorio_abierto/reservar/_components/laboratorios";
+import { api } from "@/trpc/react";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -13,6 +14,12 @@ type PageProps = {
 
 export default function PageDetails({ params: { tipo } }: PageProps) {
   const [open, setOpen] = useState(true);
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.reservas.reservaLaboratorioAbierto.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const router = useRouter();
 
@@ -24,13 +31,13 @@ export default function PageDetails({ params: { tipo } }: PageProps) {
   };
 
   const handleClickSave = () => {
-    router.refresh();
-    setTimeout(() => router.back(), 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
+    refreshGetAll();
+    router.back();
   };
 
   const handleClickCancel = () => {
-    router.refresh();
-    setTimeout(() => router.back(), 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
+    refreshGetAll();
+    router.back();
   };
 
   return (

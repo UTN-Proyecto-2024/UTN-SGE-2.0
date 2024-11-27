@@ -66,7 +66,6 @@ export const useAdminLaboratoriosQueryParam = (filters: AdminLaboratoriosFilters
   );
 
   return {
-    refresh: () => router.refresh(),
     searchText,
     onSearchTextChange,
     sedeId,

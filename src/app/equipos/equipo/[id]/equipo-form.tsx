@@ -138,18 +138,21 @@ export const EquipoForm = ({ id, onSubmit, onCancel }: Props) => {
         <div className="flex w-full flex-col justify-center lg:items-center">
           <div className="flex flex-col space-y-4 px-0 md:px-6">
             <div className="flex w-full flex-col gap-x-4 md:flex-row lg:flex-row lg:justify-between">
-              <div className="mt-4 basis-1/3">
-                <FormInput
-                  label={"Inventario"}
-                  control={control}
-                  name="inventarioId"
-                  placeholder={"Ingrese el inventario"}
-                  type={"text"}
-                  className="mt-2"
-                />
-              </div>
+              {!esNuevo && (
+                <div className="mt-4 w-full">
+                  <FormInput
+                    label={"Inventario"}
+                    control={control}
+                    name="inventarioId"
+                    placeholder={"Ingrese el inventario"}
+                    type={"text"}
+                    className="mt-2"
+                    readOnly
+                  />
+                </div>
+              )}
 
-              <div className="mt-4 basis-1/3">
+              <div className="mt-4 w-full">
                 <SelectMarcasForm
                   name="marca"
                   realNameId="marcaId"
@@ -160,7 +163,7 @@ export const EquipoForm = ({ id, onSubmit, onCancel }: Props) => {
                 />
               </div>
 
-              <div className="mt-4 basis-1/3">
+              <div className="mt-4 w-full">
                 <SelectModelosForm
                   label={"Modelo"}
                   control={control}

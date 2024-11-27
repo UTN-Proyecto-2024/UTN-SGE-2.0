@@ -67,27 +67,19 @@ export function TutorCard({ className, ...props }: CardProps & TutorData) {
         <div className="mt-4 flex justify-between">
           <TienePermiso permisos={[SgeNombre.LAB_ABIERTO_TUTORES_ABM]}>
             <>
-              <Button onClick={handleEditClick} title="Editar" color={"outline"} className="h-8 w-8 px-1 py-1">
+              <Button onClick={handleEditClick} title="Editar tutor" color={"outline"} className="h-8 w-8 px-1 py-1">
                 <PencilIcon size={16} />
               </Button>
-              <RemoveTutorModal
-                tutorId={tutor.usuario.id}
-                nombre={`${nombre} ${apellido}`}
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                onSubmit={() => {}}
-              />
+              <RemoveTutorModal tutorId={tutor.usuario.id} nombre={`${nombre} ${apellido}`} />
             </>
           </TienePermiso>
         </div>
       </CardContent>
 
-      {}
       <EditTutorModal
         isOpen={isEditModalOpen}
         onClose={handleModalClose}
         id={tutor.usuario.id}
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        onSubmit={() => {}}
         onEditSuccess={() => {
           handleModalClose();
         }}

@@ -2,7 +2,7 @@
 
 import { DataTable } from "@/components/ui";
 import RemoveCursoModal from "./remove-curso";
-import { type RouterOutputs } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import { type z } from "zod";
 import { useCursosQueryParam } from "../_hooks/use-cursos-query-param";
 // import { DataTablePaginationStandalone } from "@/components/ui/table/table-pagination-standalone";
@@ -23,20 +23,23 @@ type CursosTableProps = {
 };
 
 export const CursosTable = ({ data, filters }: CursosTableProps) => {
-  // const { refresh, pagination, sorting, onSortingChange, onPaginationChange } = useCursosQueryParam(filters);
-  const { refresh, sorting, onSortingChange } = useCursosQueryParam(filters);
+  const { sorting, onSortingChange } = useCursosQueryParam(filters);
   const [grouping, setGrouping] = useState<GroupingState>(["anioDeCarrera", "materia"]);
   const columns = getColumns();
 
-  // TODO: Implement resizing
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.cursos.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
+
   return (
     <>
       <DataTable
         data={data.cursos ?? []}
         columns={columns}
         manualSorting
-        // pageSize={pagination.pageSize}
-        // pageIndex={pagination.pageIndex}
         grouping={grouping}
         setGrouping={setGrouping}
         config={{
@@ -50,7 +53,7 @@ export const CursosTable = ({ data, filters }: CursosTableProps) => {
             return (
               <>
                 <TienePermiso permisos={[SgeNombre.CURSOS_ABM]}>
-                  <RemoveCursoModal cursoId={original.id} nombre={original.division.nombre} onSubmit={refresh} />
+                  <RemoveCursoModal cursoId={original.id} nombre={original.division.nombre} onSubmit={refreshGetAll} />
                 </TienePermiso>
                 <TienePermiso permisos={[SgeNombre.CURSOS_ABM]}>
                   <EditCursoModal cursoId={original.id} />
@@ -60,13 +63,6 @@ export const CursosTable = ({ data, filters }: CursosTableProps) => {
           },
         }}
       />
-
-      {/* <DataTablePaginationStandalone
-        pageIndex={pagination.pageIndex}
-        pageSize={pagination.pageSize}
-        rowCount={data.count}
-        onChange={onPaginationChange}
-      /> */}
     </>
   );
 };

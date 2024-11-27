@@ -12,7 +12,7 @@ const rutaEquipos = EQUIPOS_ROUTE;
 export const EditarTipoModal = (props: EditTipoModalProps) => {
   return (
     <Link key={props.tipoId} href={`${rutaEquipos.href}/tipos/${props.tipoId}`} passHref prefetch={false}>
-      <Button color={"outline"} className="h-8 w-8 px-1 py-1">
+      <Button color={"outline"} className="h-8 w-8 px-1 py-1" title="Editar tipo">
         <PencilIcon size={16} />
       </Button>
     </Link>

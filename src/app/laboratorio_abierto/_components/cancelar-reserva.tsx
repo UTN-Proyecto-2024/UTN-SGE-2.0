@@ -36,7 +36,6 @@ export const CancelarReservaLaboratorioAbierto = ({ reservaId, refresh }: Props)
   return (
     <ModalDrawer
       titulo={"Cancelar solicitud"}
-      //description={"Confirmar cancelación de solicitud"}
       open={open}
       onOpenChange={setOpen}
       trigger={
