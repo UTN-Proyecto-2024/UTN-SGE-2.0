@@ -11,7 +11,10 @@ type LayoutProps = {
 };
 
 export default async function RootLayout({ children, modal }: LayoutProps) {
-  const puedeVer = await estaLogueadoYConPermiso([SgeNombre.LAB_ABIERTO_RESERVAR]);
+  const puedeVer = await estaLogueadoYConPermiso([
+    SgeNombre.LAB_ABIERTO_RESERVAR,
+    SgeNombre.LAB_ABIERTO_VER_MIS_RESERVAS,
+  ]);
   if (!puedeVer) {
     redirect(INICIO_ROUTE.href);
   }

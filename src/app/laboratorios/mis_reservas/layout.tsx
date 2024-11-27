@@ -10,7 +10,7 @@ type LayoutProps = {
 };
 
 export default async function RootLayout({ children }: LayoutProps) {
-  const puedeVer = await estaLogueadoYConPermiso([SgeNombre.RES_LAB_VER_RESERVAS_GENERALES_DOCENTES]);
+  const puedeVer = await estaLogueadoYConPermiso([SgeNombre.RES_LAB_VER_RESERVAS_CURSO_AUTO]);
   if (!puedeVer) {
     redirect(INICIO_ROUTE.href);
   }

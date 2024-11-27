@@ -71,7 +71,7 @@ export const CustomSelect = <TType extends ISelectItem | string>({
         </Label>
       )}
       <Select key={key} value={currentValue} onValueChange={handleChange}>
-        <SelectTrigger className="w-full bg-input">
+        <SelectTrigger id={id} className="w-full bg-input">
           {isLoading ? <SelectValue placeholder={"Cargando..."} /> : <SelectValue placeholder={placeholder ?? ""} />}
         </SelectTrigger>
         {props.clearable && (
@@ -90,7 +90,7 @@ export const CustomSelect = <TType extends ISelectItem | string>({
           />
         )}
 
-        <SelectContent id={id} className="hover:bg-card mt-1 max-h-[300px] overflow-y-auto bg-menu text-black">
+        <SelectContent className="hover:bg-card mt-1 max-h-[300px] overflow-y-auto bg-menu text-black">
           {props.items.map((item) => {
             if (typeof item === "string") {
               return (
