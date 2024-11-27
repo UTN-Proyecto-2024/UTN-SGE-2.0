@@ -14,6 +14,7 @@ export default async function Layout({ children, modal }: LayoutProps) {
     SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS,
     SgeNombre.ADMIN_AGREGAR_USUARIOS_A_GRUPOS,
     SgeNombre.ADMIN_VER_FICHA_USUARIO,
+    SgeNombre.ADMIN_VER_PANEL_ADMIN,
   ]);
   if (!puedeVer) {
     redirect(INICIO_ROUTE.href);
