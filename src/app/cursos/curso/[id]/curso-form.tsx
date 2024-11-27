@@ -1,9 +1,9 @@
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { api } from "@/trpc/react";
 import { Button, ScrollArea, toast } from "@/components/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
-import { useEffect, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import { inputEditarCurso } from "@/shared/filters/cursos-filter.schema";
 import { FormSelect } from "@/components/ui/autocomplete";
 import { turnosValues } from "@/app/_components/turno-text";
@@ -43,7 +43,7 @@ const horas = ["0", "1", "2", "3", "4", "5", "6"].map((item) => ({
   label: item,
 }));
 
-const duracion = ["1", "2", "3", "4", "5", "6"].map((item) => ({
+const duracion = ["1", "2", "3", "4", "5", "6", "7"].map((item) => ({
   id: item,
   label: item,
 }));
@@ -105,7 +105,7 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
     resolver: zodResolver(inputEditarCurso),
   });
 
-  const { handleSubmit, control, formState, reset, watch, setValue } = formHook;
+  const { handleSubmit, control, reset, watch, setValue } = formHook;
 
   useEffect(() => {
     if (curso?.dia2) {
@@ -113,14 +113,23 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
     }
   }, [curso]);
 
-  console.log(formState.errors);
-
   useEffect(() => formHook.reset(cursoBase), [formHook, curso, cursoBase]);
 
   const [profesorUser] = watch(["profesorUser"]);
   useEffect(() => formHook.setValue("profesorUserId", profesorUser?.id), [formHook, profesorUser]);
 
   const esNuevo = id === undefined;
+
+  const [horaInicio1, horaInicio2, turno] = formHook.watch(["horaInicio1", "horaInicio2", "turno"]);
+
+  const posibleDuracion1 = useMemo(
+    () => duracion.filter((duracion) => Number(duracion.id) + Number(horaInicio1) <= (turno === "NOCHE" ? 6 : 7)),
+    [horaInicio1, turno],
+  );
+  const posibleDuracion2 = useMemo(
+    () => duracion.filter((duracion) => Number(duracion.id) + Number(horaInicio2) <= (turno === "NOCHE" ? 6 : 7)),
+    [horaInicio2, turno],
+  );
 
   if (!esNuevo && isNaN(cursoId)) {
     return <div>Error al cargar...</div>;
@@ -198,8 +207,18 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
               <FormSelect label={"Día 1"} control={control} name="dia1" items={dias} />
-              <FormSelect label={"Hora inicio 1"} control={control} name="horaInicio1" items={horas} />
-              <FormSelect label={"Duración 1"} control={control} name="duracion1" items={duracion} />
+              <FormSelect
+                label={"Hora inicio 1"}
+                control={control}
+                name="horaInicio1"
+                items={horas}
+                onChange={(value) => {
+                  if (value) {
+                    formHook.setValue("duracion1", "1");
+                  }
+                }}
+              />
+              <FormSelect label={"Duración 1"} control={control} name="duracion1" items={posibleDuracion1} />
               {!mostrarDia2 && (
                 <button type="button" className="h-10 self-end text-left text-blue-600" onClick={handleAddDia2}>
                   + Agregar día 2
@@ -209,8 +228,18 @@ export const CursoForm = ({ id, onSubmit, onCancel }: Props) => {
             {mostrarDia2 && (
               <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
                 <FormSelect label={"Día 2"} control={control} name="dia2" items={dias} />
-                <FormSelect label={"Hora inicio 2"} control={control} name="horaInicio2" items={horas} />
-                <FormSelect label={"Duración 2"} control={control} name="duracion2" items={duracion} />
+                <FormSelect
+                  label={"Hora inicio 2"}
+                  control={control}
+                  name="horaInicio2"
+                  items={horas}
+                  onChange={(value) => {
+                    if (value) {
+                      formHook.setValue("duracion2", "1");
+                    }
+                  }}
+                />
+                <FormSelect label={"Duración 2"} control={control} name="duracion2" items={posibleDuracion2} />
                 <Button
                   type="button"
                   className="h-10 self-end"
