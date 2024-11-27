@@ -1,7 +1,6 @@
 import { api } from "@/trpc/server";
 import { getServerAuthSession } from "./auth";
 import { type SgeNombre } from "@prisma/client";
-import { TRPCError } from "@trpc/server";
 
 export const tienePermisoBack = async (permisos: SgeNombre[]) => {
   const tienePermiso = await api.permisos.usuarioTienePermisos({ permisos });
