@@ -6,8 +6,7 @@ import { type PrismaClient } from "@prisma/client";
 const isTestingEmail = process.env.SMTP_TESTING === "true";
 const host = process.env.SMTP_HOST;
 const port = Number(process.env.SMTP_PORT);
-// TODO: Esta comentado porque ignoraba la configuracion
-// const secure = process.env.SMTP_SECURE === "true";
+const secure = process.env.SMTP_SECURE === "true";
 const auth = isTestingEmail
   ? {
       user: process.env.SMTP_TESTING_EMAIL_USER,
@@ -24,8 +23,9 @@ export const fromEmail = `"Sistema de Gestión Electrónica" <${emisor}>`;
 export const transporter = nodemailer.createTransport({
   host: host,
   port: port,
-  secure: false,
+  secure,
   auth,
+  ...(!secure && { tls: { rejectUnauthorized: false }, ignoreTLS: true }),
 });
 
 if (!transporter) {
