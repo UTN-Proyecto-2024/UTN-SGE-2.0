@@ -6,6 +6,7 @@ import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { CursoForm } from "../curso/[id]/curso-form";
 import { useState } from "react";
 import { api } from "@/trpc/react";
+import { ScrollArea } from "@/components/ui";
 
 export const CursosNuevoCurso = () => {
   const [open, setOpen] = useState(false);
@@ -35,9 +36,10 @@ export const CursosNuevoCurso = () => {
           <Plus size={16} className="ml-2" />
         </Button>
       }
-      className={"max-h-[calc(100vh_-_300px)]"}
     >
-      <CursoForm onCancel={handleCancel} onSubmit={handleSave} />
+      <ScrollArea className="max-h-[calc(100vh_-_300px)] w-full pr-4">
+        <CursoForm onCancel={handleCancel} onSubmit={handleSave} />
+      </ScrollArea>
     </ModalDrawer>
   );
 };
