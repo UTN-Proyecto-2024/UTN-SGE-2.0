@@ -1,13 +1,13 @@
 import { type RouterOutputs } from "@/trpc/react";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { DatoUsuarioReserva } from "@/app/_components/datos-usuario";
-import { getDateISOString } from "@/shared/get-date";
+import { getFechaHumanoDDMMYYYY } from "@/shared/get-date";
 import DevolverLibroModal from "../_components/modal-devolver";
 import RenovarPrestamoLibroModal from "../_components/modal-renovar";
 
 type LibroPrestamoData = RouterOutputs["reservas"]["reservaBiblioteca"]["getAll"]["reservas"][number];
 
-export const getColumnasPrestamo = ({ filterByUser }: { filterByUser?: boolean }) => {
+export const getColumnasPrestamo = ({ filtrByUserId }: { filtrByUserId?: boolean }) => {
   const colHelper = createColumnHelper<LibroPrestamoData>();
 
   const columnasBasicas = [
@@ -34,7 +34,7 @@ export const getColumnasPrestamo = ({ filterByUser }: { filterByUser?: boolean }
       cell: ({ row }) => {
         const { reserva } = row.original;
 
-        const fecha = getDateISOString(reserva.fechaHoraInicio);
+        const fecha = getFechaHumanoDDMMYYYY(reserva.fechaHoraInicio);
 
         return fecha;
       },
@@ -44,7 +44,7 @@ export const getColumnasPrestamo = ({ filterByUser }: { filterByUser?: boolean }
       cell: ({ row }) => {
         const { reserva } = row.original;
 
-        const fecha = getDateISOString(reserva.fechaHoraFin);
+        const fecha = getFechaHumanoDDMMYYYY(reserva.fechaHoraFin);
 
         return fecha;
       },
@@ -69,7 +69,7 @@ export const getColumnasPrestamo = ({ filterByUser }: { filterByUser?: boolean }
           return <span className="text-center">-</span>;
         }
 
-        const fechaRenovacion = reserva.fechaRenovacion ? getDateISOString(reserva.fechaRenovacion) : "";
+        const fechaRenovacion = reserva.fechaRenovacion ? getFechaHumanoDDMMYYYY(reserva.fechaRenovacion) : "";
 
         return (
           <div className="flex flex-col space-y-2 text-center">
@@ -115,7 +115,7 @@ export const getColumnasPrestamo = ({ filterByUser }: { filterByUser?: boolean }
             return <span className="text-center">No</span>;
           }
 
-          const fechaRecibido = reserva.fechaRecibido ? getDateISOString(reserva.fechaRecibido) : "";
+          const fechaRecibido = reserva.fechaRecibido ? getFechaHumanoDDMMYYYY(reserva.fechaRecibido) : "";
 
           return (
             <div className="flex flex-col space-y-2 text-center">
@@ -134,7 +134,7 @@ export const getColumnasPrestamo = ({ filterByUser }: { filterByUser?: boolean }
     }),
   ] as ColumnDef<LibroPrestamoData>[];
 
-  const columnas = filterByUser ? columnasBasicas : [...columnasBasicas, ...columnasGeneral];
+  const columnas = filtrByUserId ? columnasBasicas : [...columnasBasicas, ...columnasGeneral];
 
   return columnas;
 };

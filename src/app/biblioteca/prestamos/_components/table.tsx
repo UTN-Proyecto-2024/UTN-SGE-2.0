@@ -19,13 +19,12 @@ type BibliotecaFilters = z.infer<typeof inputGetAllPrestamosLibros>;
 type BibliotecaTableProps = {
   data: LibroPrestamoData;
   filters: BibliotecaFilters;
-  filterByUser?: boolean;
 };
 
-export const BibliotecaPrestamosTable = ({ data, filters, filterByUser }: BibliotecaTableProps) => {
+export const BibliotecaPrestamosTable = ({ data, filters }: BibliotecaTableProps) => {
   const { pagination, sorting, onSortingChange, onPaginationChange } = useBibliotecaPrestamosQueryParam(filters);
 
-  const columns = getColumnasPrestamo({ filterByUser });
+  const columns = getColumnasPrestamo({ filtrByUserId: !!filters.filtrByUserId });
 
   return (
     <>
@@ -45,9 +44,15 @@ export const BibliotecaPrestamosTable = ({ data, filters, filterByUser }: Biblio
           cell: (row) => {
             return (
               <>
-                {!filterByUser && (
+                {!filters.filtrByUserId && (
                   <Link href={`${COMPROBANTE_ROUTE.bibliotecaRuta.href}/${row.original.reserva.id}`} target="_blank">
-                    <Button title="Imprimir" variant="icon" color="ghost" icon={PrinterIcon} />
+                    <Button
+                      title="Imprimir"
+                      variant="icon"
+                      color="ghost"
+                      icon={PrinterIcon}
+                      className="h-8 w-8 px-1 py-1"
+                    />
                   </Link>
                 )}
               </>

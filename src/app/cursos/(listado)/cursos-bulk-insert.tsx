@@ -2,18 +2,23 @@
 
 import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
-import { useRouter } from "next/navigation";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { useState } from "react";
 import FileUpload from "../curso/[id]/bulk-insert-form";
+import { api } from "@/trpc/react";
 
 export const CargarCursos = () => {
   const [open, setOpen] = useState(false);
 
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.cursos.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleSave = () => {
-    router.refresh();
+    refreshGetAll();
     setOpen(false);
   };
 

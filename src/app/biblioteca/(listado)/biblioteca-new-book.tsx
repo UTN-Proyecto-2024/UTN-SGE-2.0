@@ -2,24 +2,30 @@
 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { LibroForm } from "../libros/[id]/libro-form";
 import { useState } from "react";
 import { SgeNombre } from "@prisma/client";
 import { useTienePermisos } from "@/app/_hooks/use-tiene-permisos";
+import { api } from "@/trpc/react";
+import { ScrollArea } from "@/components/ui";
 
 export const BibliotecaNewLibro = () => {
   const tienePermiso = useTienePermisos([SgeNombre.BIBLIOTECA_ABM_LIBRO]);
 
   const [open, setOpen] = useState(false);
 
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.biblioteca.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   if (!tienePermiso) return null;
 
   const handleSave = () => {
-    router.refresh();
+    refreshGetAll();
     setOpen(false);
   };
 
@@ -40,7 +46,9 @@ export const BibliotecaNewLibro = () => {
       className={"max-h-[calc(100vh_-_10%)]"}
     >
       <div className="flex max-h-max w-full flex-col  gap-4">
-        <LibroForm onCancel={handleCancel} onSubmit={handleSave} />
+        <ScrollArea className="flex max-h-[calc(100vh_-_300px)] w-full flex-col pr-4">
+          <LibroForm onCancel={handleCancel} onSubmit={handleSave} />
+        </ScrollArea>
       </div>
     </ModalDrawer>
   );

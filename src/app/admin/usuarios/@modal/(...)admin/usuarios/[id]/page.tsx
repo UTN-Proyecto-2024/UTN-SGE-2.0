@@ -5,6 +5,7 @@ import { AdminUsuarioForm } from "@/app/admin/usuarios/[id]/admin-usuario-form";
 import { ScrollArea } from "@/components/ui";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { api } from "@/trpc/react";
 
 type PageProps = {
   params: { id: string };
@@ -14,6 +15,12 @@ export default function PageDetails({ params: { id } }: PageProps) {
   const [open, setOpen] = useState(true);
 
   const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.admin.usuarios.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -23,8 +30,8 @@ export default function PageDetails({ params: { id } }: PageProps) {
   };
 
   const handleClickSave = () => {
-    router.refresh();
-    setTimeout(() => router.back(), 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
+    refreshGetAll();
+    router.back();
   };
 
   const handleClickCancel = () => handleOpenChange(false);

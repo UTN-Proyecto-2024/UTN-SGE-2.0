@@ -2,6 +2,7 @@
 
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { ReservaViewAdmin } from "@/app/laboratorio_abierto/solicitudes/[id]/form-gestion-reserva";
+import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -11,6 +12,12 @@ type PageProps = {
 
 export default function VerReservaModal({ params: { id } }: PageProps) {
   const [open, setOpen] = useState(true);
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.reservas.reservaLaboratorioAbierto.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const router = useRouter();
 
@@ -26,17 +33,13 @@ export default function VerReservaModal({ params: { id } }: PageProps) {
   };
 
   const handleClickAprobar = () => {
+    refreshGetAll();
     router.back();
-    setTimeout(() => {
-      window.location.reload();
-    }, 100);
   };
 
   const handleClickRechazar = () => {
+    refreshGetAll();
     router.back();
-    setTimeout(() => {
-      window.location.reload();
-    }, 100);
   };
 
   return (

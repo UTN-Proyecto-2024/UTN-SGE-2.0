@@ -1,7 +1,7 @@
 "use client";
 
 import { DataTable } from "@/components/ui";
-import { type RouterOutputs } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import { type z } from "zod";
 import { DataTablePaginationStandalone } from "@/components/ui/table/table-pagination-standalone";
 import { type GroupingState, type SortingState } from "@tanstack/react-table";
@@ -24,8 +24,13 @@ type LaboratorioCerradoTableProps = {
 };
 
 export const LaboratorioCerradoReservaTable = ({ data, filters, filterByUser }: LaboratorioCerradoTableProps) => {
-  const { pagination, sorting, onSortingChange, onPaginationChange, refresh } =
-    useReservasLaboratorioCerradoQueryParam(filters);
+  const { pagination, sorting, onSortingChange, onPaginationChange } = useReservasLaboratorioCerradoQueryParam(filters);
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.reservas.reservarLaboratorioCerrado.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const columns = getColumnasReservasLaboratorioCerrado({ filterByUser });
 
@@ -54,7 +59,7 @@ export const LaboratorioCerradoReservaTable = ({ data, filters, filterByUser }: 
             return (
               <>
                 {filterByUser && !estaCancelada && (
-                  <CancelarReservaLaboratorio reservaId={original.reserva.id} refresh={refresh} />
+                  <CancelarReservaLaboratorio reservaId={original.reserva.id} refresh={refreshGetAll} />
                 )}
 
                 {!filterByUser && <VerReservaModal reservaID={original.reserva.id} />}

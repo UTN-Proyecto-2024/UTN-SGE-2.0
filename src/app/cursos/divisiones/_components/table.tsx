@@ -13,6 +13,7 @@ type DivisionesTableProps = {
 
 export const DivisionesTable = ({ data }: DivisionesTableProps) => {
   const columns = getColumns();
+
   return <DataTable data={data ?? []} columns={columns} />;
 };
 

@@ -65,7 +65,7 @@ export const AdminRolForm = ({ id, onSubmit, onCancel }: Props) => {
     (acc, permisoId) => {
       const permiso = permisosDictionario[permisoId];
       if (permiso) {
-        const grupo = permiso.grupo;
+        const grupo = permiso.rubro;
         if (!acc[grupo]) {
           acc[grupo] = [];
         }

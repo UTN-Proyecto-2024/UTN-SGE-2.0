@@ -3,8 +3,10 @@ import {
   CalculatorIcon,
   CalendarIcon,
   ClockIcon,
+  LaptopIcon,
   MapPinIcon,
   PersonStandingIcon,
+  ProjectorIcon,
   TextIcon,
   WrenchIcon,
 } from "lucide-react";
@@ -15,7 +17,7 @@ import {
   BadgeLaboratorioAbiertoReserva,
 } from "@/app/_components/badge-estatus-reserva";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getDateISOString, getTimeISOString } from "@/shared/get-date";
+import { getFechaHumanoDDMMYYYY, getTimeISOString } from "@/shared/get-date";
 import { MotivoRechazo } from "./rechazo-alert";
 import { AsistioReserva } from "@/app/_components/asistio-reserva";
 
@@ -95,7 +97,7 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 Fecha
               </b>
-              <p>{getDateISOString(reserva.reserva.fechaHoraInicio)}</p>
+              <p>{getFechaHumanoDDMMYYYY(reserva.reserva.fechaHoraInicio)}</p>
             </div>
             <div className="space-y-2">
               <b className="flex items-center text-sm font-semibold">
@@ -128,6 +130,22 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
               <p>{reserva?.laboratorio?.nombre ?? "Sin asignar"}</p>
             </div>
 
+            <div className="space-y-2">
+              <b className="flex items-center text-sm font-semibold">
+                <ProjectorIcon className="mr-2 h-4 w-4" />
+                Requiere proyector
+              </b>
+              <p>{reserva.requiereProyector ? "Sí" : "No"}</p>
+            </div>
+
+            <div className="space-y-2">
+              <b className="flex items-center text-sm font-semibold">
+                <LaptopIcon className="mr-2 h-4 w-4" />
+                Requiere pc
+              </b>
+              <p>{reserva.requierePC ? "Sí" : "No"}</p>
+            </div>
+
             {mostrarCompleto && (
               <>
                 <div className="space-y-2">
@@ -158,7 +176,8 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
                 )}
               </>
             )}
-
+          </div>
+          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
             <div className="space-y-2">
               <b className="flex items-center text-sm font-semibold">
                 <PersonStandingIcon className="h-4 w-4" />

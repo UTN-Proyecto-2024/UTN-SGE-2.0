@@ -2,18 +2,22 @@
 
 import { Button } from "@/components/ui/button";
 import { ScreenShareIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import React, { useState } from "react";
 import { AgregarCursoPantallaForm } from "../curso-pantalla-nuevo";
+import { api } from "@/trpc/react";
 
 export const AgregarAPantallaModal = () => {
   const [open, setOpen] = useState(false);
-
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.reservas.pantalla.getAllActivas.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleSave = () => {
-    router.refresh();
+    refreshGetAll();
     setOpen(false);
   };
 

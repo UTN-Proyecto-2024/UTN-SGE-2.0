@@ -1,7 +1,7 @@
 "use client";
 
 import { DataTable } from "@/components/ui";
-import { type RouterOutputs } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import { getColumns } from "./columns";
 import { SoftwareNuevoEditar } from "../actions/software-nuevo";
 import EliminarSoftwareModal from "../actions/software-eliminar";
@@ -21,7 +21,13 @@ type BibliotecaTableProps = {
 };
 
 export const SoftwareTable = ({ data, filters }: BibliotecaTableProps) => {
-  const { refresh, onSortingChange } = useSoftwareQueryParam(filters);
+  const { onSortingChange } = useSoftwareQueryParam(filters);
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.software.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const { software, laboratorios } = data;
 
@@ -45,7 +51,7 @@ export const SoftwareTable = ({ data, filters }: BibliotecaTableProps) => {
               <>
                 <TienePermiso permisos={[SgeNombre.APLICACIONES_ABM]}>
                   <>
-                    <EliminarSoftwareModal softwareId={original.id} nombre={original.nombre} onSubmit={refresh} />
+                    <EliminarSoftwareModal softwareId={original.id} nombre={original.nombre} onSubmit={refreshGetAll} />
                     <SoftwareNuevoEditar softwareId={original.id} />
                   </>
                 </TienePermiso>

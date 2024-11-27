@@ -143,6 +143,13 @@ export const FormEquipoTipoSelector = <T extends FieldValues>({ name: nombre }: 
     formHook.setValue(name, newEquipos);
   };
 
+  const onSwitchChange = (value: boolean) => {
+    if (!value) {
+      formHook.setValue(name, []);
+    }
+    setRequiereInstrumental(value);
+  };
+
   return (
     <div className="flex w-full flex-col justify-end gap-y-4 lg:justify-between">
       <div className="items-top flex space-x-2">
@@ -153,7 +160,7 @@ export const FormEquipoTipoSelector = <T extends FieldValues>({ name: nombre }: 
           <div className="flex flex-row justify-center text-base">
             <WrenchIcon className="m-auto mr-2 h-4 w-4" /> Requiere instrumental
           </div>
-          <Switch id={name} checked={requiereInstrumental} onCheckedChange={setRequiereInstrumental} />
+          <Switch id={name} checked={requiereInstrumental} onCheckedChange={onSwitchChange} />
         </label>
       </div>
 

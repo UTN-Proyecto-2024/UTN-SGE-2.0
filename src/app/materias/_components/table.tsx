@@ -1,11 +1,10 @@
 "use client";
 
 import { DataTable } from "@/components/ui";
-import { type RouterOutputs } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import { getColumns } from "./columns";
 import RemoveMateriaModal from "./remove-materia";
 import EditMateriaModal from "./edit-materia";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import type { GroupingState } from "@tanstack/react-table";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
@@ -19,11 +18,17 @@ type MateriasTableProps = {
 
 export const MateriasTable = ({ data }: MateriasTableProps) => {
   const columns = getColumns();
-  const router = useRouter();
   const [grouping, setGrouping] = useState<GroupingState>(["anio"]);
 
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.materia.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
+
   const onDeleteMateria = () => {
-    router.refresh();
+    refreshGetAll();
   };
 
   return (

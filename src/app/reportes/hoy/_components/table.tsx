@@ -29,7 +29,7 @@ export const ReservasHoy = ({ reservas }: { reservas: Reserva[] }) => {
             <Link
               href={`${REPORTES_ROUTE.href}/${original.tipo && ["Cerrado", "Discrecional"].includes(original.tipo) ? "cerrado" : "abierto"}/${original.id}`}
               passHref
-              prefetch={true}
+              prefetch
               title="Ver reserva"
             >
               <Button color={"outline"} className="h-8 w-8 px-1 py-1" variant={"icon"} icon={EyeIcon} />

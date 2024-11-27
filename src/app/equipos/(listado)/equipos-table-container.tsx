@@ -1,7 +1,10 @@
-import { api } from "@/trpc/server";
+"use client";
+
+import { api } from "@/trpc/react";
 import { EquiposTable } from "./table";
 import { type z } from "zod";
 import { type inputGetEquipos } from "@/shared/filters/equipos-filter.schema";
+import LoadingEquiposTable from "./loading-equipos-table";
 
 type EquiposFilters = z.infer<typeof inputGetEquipos>;
 
@@ -9,8 +12,12 @@ type EquiposTableContainerProps = {
   filters: EquiposFilters;
 };
 
-export default async function EquiposTableContainer({ filters }: EquiposTableContainerProps) {
-  const data = await api.equipos.getAll(filters);
+export default function EquiposTableContainer({ filters }: EquiposTableContainerProps) {
+  const { data: equipos, isLoading } = api.equipos.getAll.useQuery(filters);
 
-  return <EquiposTable data={data} filters={filters} />;
+  if (isLoading) {
+    return <LoadingEquiposTable />;
+  }
+
+  return <EquiposTable data={equipos ?? { count: 0, equipos: [] }} filters={filters} />;
 }

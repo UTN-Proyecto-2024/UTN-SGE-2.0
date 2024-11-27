@@ -128,7 +128,6 @@ export const useBibliotecaQueryParam = (filters: BibliotecaFilters) => {
   );
 
   return {
-    refresh: () => router.refresh(),
     pagination,
     sorting,
     searchText,

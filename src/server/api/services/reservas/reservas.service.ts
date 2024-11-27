@@ -13,8 +13,8 @@ export const getReservasToday = protectedProcedure.input(inputGetAllLaboratorios
       fechaHoraInicio: reserva.fechaHoraInicio,
       fechaHoraFin: reserva.fechaHoraFin,
       turnoTexto: calcularTurnoTexto(reserva.fechaHoraInicio),
+      id: reserva.id,
       ...(reserva.reservaLaboratorioCerrado && {
-        id: reserva.reservaLaboratorioCerrado.id,
         tipo: reserva.reservaLaboratorioCerrado.esDiscrecional ? "Discrecional" : "Cerrado",
         laboratorio: reserva.reservaLaboratorioCerrado.laboratorio?.nombre,
         descripcion: reserva.reservaLaboratorioCerrado.descripcion,
@@ -35,10 +35,9 @@ export const getReservasToday = protectedProcedure.input(inputGetAllLaboratorios
         discrecionalTitulo: reserva.reservaLaboratorioCerrado.discrecionalTitulo,
       }),
       ...(reserva.reservaLaboratorioAbierto && {
-        id: reserva.id,
         tipo: reserva.reservaLaboratorioAbierto.laboratorioAbiertoTipo,
         laboratorio: reserva.reservaLaboratorioAbierto.laboratorio?.nombre,
-        reserva: reserva.reservaLaboratorioAbierto.descripcion,
+        descripcion: reserva.reservaLaboratorioAbierto.descripcion,
         equipos: reserva.reservaLaboratorioAbierto.equipoReservado.map(
           (equipo) => `${equipo.cantidad} ${equipo.equipoTipo.nombre}`,
         ),

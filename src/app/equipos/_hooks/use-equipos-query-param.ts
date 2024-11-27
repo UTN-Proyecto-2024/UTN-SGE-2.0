@@ -197,7 +197,6 @@ export const useEquiposQueryParam = (filters: EquiposFilters) => {
   );
 
   return {
-    refresh: () => router.refresh(),
     pagination,
     sorting,
     searchText,

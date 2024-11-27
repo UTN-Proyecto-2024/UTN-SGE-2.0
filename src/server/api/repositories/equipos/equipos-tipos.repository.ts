@@ -10,17 +10,33 @@ import {
 
 type InputBorrarTipo = z.infer<typeof inputEliminarTipo>;
 export const eliminarTipo = async (ctx: { db: PrismaClient }, input: InputBorrarTipo) => {
-  try {
-    const tipo = await ctx.db.equipoTipo.delete({
+  const tipo = await ctx.db.$transaction(async (tx) => {
+    const existe = await tx.equipo.findFirst({
       where: {
-        id: input.id,
+        tipoId: input.id,
+      },
+      select: {
+        id: true,
       },
     });
+    if (existe) {
+      throw new Error(`El equipo tiene equipos asociados`);
+    }
 
-    return tipo;
-  } catch (error) {
-    throw new Error(`Error eliminando tipo ${input.id}`);
-  }
+    try {
+      const tipoBorrado = await tx.equipoTipo.delete({
+        where: {
+          id: input.id,
+        },
+      });
+
+      return tipoBorrado;
+    } catch (error) {
+      throw new Error(`Error eliminando tipo`);
+    }
+  });
+
+  return tipo;
 };
 
 type InputGetTipoPorId = z.infer<typeof inputGetTipo>;

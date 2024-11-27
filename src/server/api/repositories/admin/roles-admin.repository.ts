@@ -61,17 +61,17 @@ export const getAllRoles = async (ctx: { db: PrismaClient }, input?: InputGetAll
             contains: input?.searchText ?? undefined,
             mode: "insensitive",
           },
-          ...(!input?.permiso
-            ? undefined
-            : {
-                rolPermiso: {
-                  some: {
-                    permisoId: input?.permiso ? parseInt(input?.permiso) : undefined,
-                  },
-                },
-              }),
         }
       : {}),
+    ...(!input?.permiso
+      ? undefined
+      : {
+          rolPermiso: {
+            some: {
+              permisoId: input?.permiso ? parseInt(input?.permiso) : undefined,
+            },
+          },
+        }),
   };
 
   const [count, roles] = await ctx.db.$transaction([

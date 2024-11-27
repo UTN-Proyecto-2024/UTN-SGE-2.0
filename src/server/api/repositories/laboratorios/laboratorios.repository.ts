@@ -12,7 +12,6 @@ export const getAllReservas = async (ctx: { db: PrismaClient }, input: InputGetA
         include: {
           reserva: {
             select: {
-              id: true,
               fechaHoraInicio: true,
             },
           },

@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SelectUsuarioForm } from "@/app/_components/select-usuario";
 import { type z } from "zod";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { getDate } from "@/shared/get-date";
 import { inputPrestarEquipo } from "@/shared/filters/reservas-equipos-filter.schema";
 
@@ -26,7 +25,15 @@ export const EquipoFormPrestarORenovar = ({ equipoId, onSubmit, onCancel, renova
   const prestarEquipo = api.reservas.reservaEquipo.crearReserva.useMutation(); // Se usa por efecto si `renovar=false`
   const renovarEquipo = api.reservas.reservaEquipo.renovarEquipo.useMutation(); // Se usa por efecto si `renovar=true`
 
-  const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.equipos.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+    utils.reservas.reservaEquipo.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const prestamoBase: FormPrestarEquipoType = {
     equipoId,
@@ -66,7 +73,7 @@ export const EquipoFormPrestarORenovar = ({ equipoId, onSubmit, onCancel, renova
     renovarEquipo.mutate(formData, {
       onSuccess: () => {
         toast.success("Equipo renovado con éxito.");
-        router.refresh();
+        refreshGetAll();
         onSubmit();
       },
       onError: (error) => {
@@ -79,7 +86,7 @@ export const EquipoFormPrestarORenovar = ({ equipoId, onSubmit, onCancel, renova
     prestarEquipo.mutate(formData, {
       onSuccess: () => {
         toast.success("Equipo prestado con éxito.");
-        router.refresh();
+        refreshGetAll();
         onSubmit();
       },
       onError: (error) => {
@@ -105,8 +112,8 @@ export const EquipoFormPrestarORenovar = ({ equipoId, onSubmit, onCancel, renova
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
         <div className="flex w-full flex-col items-center justify-center">
           <div className="flex flex-col space-y-4 px-0 md:px-6">
-            <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
-              <div className="mt-4 basis-1/2">
+            <div className="flex w-full flex-col gap-x-4 sm:flex-row lg:justify-between">
+              <div className="mt-4 w-full">
                 <FormInput
                   label={"Desde el día"}
                   control={control}
@@ -116,7 +123,7 @@ export const EquipoFormPrestarORenovar = ({ equipoId, onSubmit, onCancel, renova
                   required
                 />
               </div>
-              <div className="mt-4 basis-1/2">
+              <div className="mt-4 w-full">
                 <FormInput
                   label={"Hasta el día"}
                   control={control}
@@ -145,7 +152,7 @@ export const EquipoFormPrestarORenovar = ({ equipoId, onSubmit, onCancel, renova
           </div>
         </div>
 
-        <div className="bottom-0 mb-1 flex w-full flex-row items-end justify-end space-x-4 bg-white md:justify-end lg:sticky">
+        <div className="bottom-0 mb-1 flex w-full flex-row items-end justify-center space-x-4 bg-white sm:justify-end lg:sticky">
           <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
             Cancelar
           </Button>

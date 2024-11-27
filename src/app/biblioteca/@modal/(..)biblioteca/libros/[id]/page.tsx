@@ -2,6 +2,8 @@
 
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { LibroForm } from "@/app/biblioteca/libros/[id]/libro-form";
+import { ScrollArea } from "@/components/ui";
+import { api } from "@/trpc/react";
 // import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -16,6 +18,12 @@ export default function PageDetails({ params: { id } }: PageProps) {
   // const utils = api.useUtils();
 
   const router = useRouter();
+  const utils = api.useUtils();
+  const refreshGetAll = () => {
+    utils.biblioteca.getAll.invalidate().catch((err) => {
+      console.error(err);
+    });
+  };
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -25,8 +33,8 @@ export default function PageDetails({ params: { id } }: PageProps) {
   };
 
   const handleClickSave = () => {
-    router.refresh();
-    setTimeout(() => router.back(), 100); // Hack para que primero recargue la pagina y luego haga el back, de otra forma el back cancela el refresh
+    refreshGetAll();
+    router.back();
   };
 
   const handleClickCancel = () => handleOpenChange(false);
@@ -41,7 +49,9 @@ export default function PageDetails({ params: { id } }: PageProps) {
       className={"max-h-[calc(100vh_-_10%)]"}
     >
       <div className="flex max-h-max w-full flex-col  gap-4">
-        <LibroForm id={id} onCancel={handleClickCancel} onSubmit={handleClickSave} />
+        <ScrollArea className="max-h-[calc(100vh_-_300px)] w-full pr-4">
+          <LibroForm id={id} onCancel={handleClickCancel} onSubmit={handleClickSave} />
+        </ScrollArea>
       </div>
     </ModalDrawer>
   );
