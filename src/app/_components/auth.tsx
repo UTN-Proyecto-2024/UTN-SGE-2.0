@@ -11,7 +11,7 @@ export function SignIn(providers: ClientSafeProvider[]) {
         Object.values(providers)
           .filter((provider) => provider.id === "keycloak")
           .map((provider) => (
-            <button key={provider.id} className={style} onClick={async () => await signIn(provider.id)}>
+            <button key={provider.id} className={style} onClick={() => signIn(provider.id)}>
               Iniciar sesión
             </button>
           ))}
@@ -21,7 +21,7 @@ export function SignIn(providers: ClientSafeProvider[]) {
 
 export function SignOut() {
   return (
-    <button className={style} onClick={async () => await signOut()}>
+    <button className={style} onClick={() => signOut()}>
       Cerrar sesión
     </button>
   );
