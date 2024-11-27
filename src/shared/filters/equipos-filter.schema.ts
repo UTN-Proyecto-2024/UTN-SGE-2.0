@@ -13,7 +13,7 @@ export const inputAgregarEquipo = z.object({
   armarioId: z.string().nullish(),
   estanteId: z.string().nullish(),
   estadoId: z.string().min(1, { message: "Requerido" }),
-  inventarioId: z.string().min(1, { message: "Requerido" }),
+  inventarioId: z.string().optional().default(""),
 });
 
 export const inputGetEquipos = z.object({
