@@ -31,14 +31,3 @@ export const estaLogueadoYConPermiso = async (permisos: SgeNombre[]) => {
 
   return true;
 };
-
-export const verificarPermisos = async (permisosRequeridos: SgeNombre[]) => {
-  const tienePermiso = await tienePermisoBack(permisosRequeridos);
-
-  if (!tienePermiso) {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "No tienes permiso para realizar esta operación",
-    });
-  }
-};
