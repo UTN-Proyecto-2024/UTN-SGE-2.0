@@ -1,4 +1,4 @@
-import { protectedProcedure } from "../../trpc";
+import { createAuthorizedProcedure, protectedProcedure } from "../../trpc";
 import {
   getAllLibros,
   addLibro,
@@ -21,6 +21,7 @@ import {
   inputGetLibro,
 } from "@/shared/filters/biblioteca-filter.schema";
 import { validarInput } from "../helper";
+import { SgeNombre } from "@prisma/client";
 
 export const getTodosLosLibrosProcedure = protectedProcedure.input(inputGetBooks).query(async ({ ctx, input }) => {
   validarInput(inputGetBooks, input);
@@ -50,33 +51,39 @@ export const libroPorIdProcedure = protectedProcedure.input(inputGetLibro).query
   return libro;
 });
 
-export const nuevoLibroProcedure = protectedProcedure.input(inputAddBooks).mutation(async ({ ctx, input }) => {
-  validarInput(inputAddBooks, input);
+export const nuevoLibroProcedure = createAuthorizedProcedure([SgeNombre.BIBLIOTECA_ABM_LIBRO])
+  .input(inputAddBooks)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputAddBooks, input);
 
-  const userId = ctx.session.user.id;
+    const userId = ctx.session.user.id;
 
-  const libro = await addLibro(ctx, input, userId);
+    const libro = await addLibro(ctx, input, userId);
 
-  return libro;
-});
+    return libro;
+  });
 
-export const editarLibroProcedure = protectedProcedure.input(inputEditBooks).mutation(async ({ ctx, input }) => {
-  validarInput(inputEditBooks, input);
+export const editarLibroProcedure = createAuthorizedProcedure([SgeNombre.BIBLIOTECA_ABM_LIBRO])
+  .input(inputEditBooks)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputEditBooks, input);
 
-  const userId = ctx.session.user.id;
+    const userId = ctx.session.user.id;
 
-  const libro = await editLibro(ctx, input, userId);
+    const libro = await editLibro(ctx, input, userId);
 
-  return libro;
-});
+    return libro;
+  });
 
-export const eliminarLibroProcedure = protectedProcedure.input(inputEliminarLibro).mutation(async ({ ctx, input }) => {
-  validarInput(inputEliminarLibro, input);
+export const eliminarLibroProcedure = createAuthorizedProcedure([SgeNombre.BIBLIOTECA_ABM_LIBRO])
+  .input(inputEliminarLibro)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputEliminarLibro, input);
 
-  const libro = await deleteLibro(ctx, input);
+    const libro = await deleteLibro(ctx, input);
 
-  return libro;
-});
+    return libro;
+  });
 
 export const getTodosLosAutoresProcedure = protectedProcedure.query(async ({ ctx }) => {
   const autores = await getAllAutores(ctx);
@@ -84,17 +91,19 @@ export const getTodosLosAutoresProcedure = protectedProcedure.query(async ({ ctx
   return autores;
 });
 
-export const crearAutorProcedure = protectedProcedure.input(inputAgregarAutor).mutation(async ({ ctx, input }) => {
-  validarInput(inputAgregarAutor, input);
+export const crearAutorProcedure = createAuthorizedProcedure([SgeNombre.BIBLIOTECA_ABM_LIBRO])
+  .input(inputAgregarAutor)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputAgregarAutor, input);
 
-  const userId = ctx.session.user.id;
+    const userId = ctx.session.user.id;
 
-  const autor = await agregarAutor(ctx, input, userId);
+    const autor = await agregarAutor(ctx, input, userId);
 
-  return autor;
-});
+    return autor;
+  });
 
-export const crearEditorialProcedure = protectedProcedure
+export const crearEditorialProcedure = createAuthorizedProcedure([SgeNombre.BIBLIOTECA_ABM_LIBRO])
   .input(inputAgregarEditorial)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputAgregarEditorial, input);

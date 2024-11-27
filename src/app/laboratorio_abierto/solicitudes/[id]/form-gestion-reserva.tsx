@@ -1,4 +1,3 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { ReservaDetalle } from "@/app/laboratorio_abierto/_components/info-basica-reserva";
 import { ReservaAprobacion } from "@/app/laboratorio_abierto/_components/reserva-gestion";
 import { api } from "@/trpc/react";
@@ -42,42 +41,32 @@ export const ReservaViewAdmin = ({ reservaId, onCancel, onAprobar, onRechazar }:
     esReservaPasada && !estaCancelada && reservaData?.reserva.estatus === ReservaEstatus.PENDIENTE;
 
   return (
-    <ScrollArea className="max-h-[calc(100vh_-_300px)] w-full">
-      <div className="mx-auto max-w-3xl space-y-6 pb-2">
-        {esReservaPendientePasada && (
-          <Alert variant={"destructive"} className="w-full bg-red-500 text-white">
-            <AlertTitle className="flex flex-row items-center">
-              <ClockIcon className="mr-2 h-4 w-4" />
-              Reserva pendiente pasada
-            </AlertTitle>
-            <AlertDescription>
-              <p className="text-sm">
-                <b>
-                  Esta reserva quedo en el estado pendiente y se encuentra en el pasado, solo es posible cancelarla.
-                </b>
-              </p>
-            </AlertDescription>
-          </Alert>
-        )}
-        <ReservaDetalle reservaId={reservaId} mostrarCompleto={esReservaPasada} />
-        {!esReservaPasada && !estaCancelada && (
-          <ReservaAprobacion reservaId={reservaId} onCancel={onCancel} onAprobar={onAprobar} onRechazar={onRechazar} />
-        )}
-        {esReservaPendientePasada && (
-          <div className="flex justify-end">
-            <Button
-              title="Cancelar Reserva"
-              type="button"
-              variant="default"
-              color="danger"
-              onClick={handleCancelReserva}
-            >
-              Cancelar Reserva
-            </Button>
-          </div>
-        )}
-      </div>
-    </ScrollArea>
+    <div className="mx-auto max-w-3xl space-y-6 pb-2">
+      {esReservaPendientePasada && (
+        <Alert variant={"destructive"} className="w-full bg-red-500 text-white">
+          <AlertTitle className="flex flex-row items-center">
+            <ClockIcon className="mr-2 h-4 w-4" />
+            Reserva pendiente pasada
+          </AlertTitle>
+          <AlertDescription>
+            <p className="text-sm">
+              <b>Esta reserva quedo en el estado pendiente y se encuentra en el pasado, solo es posible cancelarla.</b>
+            </p>
+          </AlertDescription>
+        </Alert>
+      )}
+      <ReservaDetalle reservaId={reservaId} mostrarCompleto={esReservaPasada} />
+      {!esReservaPasada && !estaCancelada && (
+        <ReservaAprobacion reservaId={reservaId} onCancel={onCancel} onAprobar={onAprobar} onRechazar={onRechazar} />
+      )}
+      {esReservaPendientePasada && (
+        <div className="flex justify-end">
+          <Button title="Cancelar Reserva" type="button" variant="default" color="danger" onClick={handleCancelReserva}>
+            Cancelar Reserva
+          </Button>
+        </div>
+      )}
+    </div>
   );
 };
 

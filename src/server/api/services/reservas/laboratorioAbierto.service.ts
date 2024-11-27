@@ -9,7 +9,7 @@ import {
   cancelarReserva,
   editarReserva,
 } from "../../repositories/reservas/laboratorioAbierto.repository";
-import { protectedProcedure } from "../../trpc";
+import { createAuthorizedProcedure, protectedProcedure } from "../../trpc";
 import { validarFechaReserva, validarInput } from "../helper";
 import {
   inputAprobarReservaLaboratorioAbiertoSchema,
@@ -27,6 +27,7 @@ import {
   enviarMailReservaLaboratorioAbiertoProcedure,
   enviarMailRechazoLaboratorioAbiertoProcedure,
 } from "../mails/emailLaboratorioAbierto.service";
+import { SgeNombre } from "@prisma/client";
 
 export const getReservaLaboratorioAbiertoPorUserProcedure = protectedProcedure
   .input(inputGetReservaLaboratorioPorUsuarioId)
@@ -60,7 +61,7 @@ export const getReservaLaboratorioAbiertoPorIdProcedure = protectedProcedure
     return reserva;
   });
 
-export const aprobarReservaProcedure = protectedProcedure
+export const aprobarReservaProcedure = createAuthorizedProcedure([SgeNombre.LAB_ABIERTO_CONFIRMAR_RESERVAS])
   .input(inputAprobarReservaLaboratorioAbiertoSchema)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputAprobarReservaLaboratorioAbiertoSchema, input);
@@ -74,7 +75,7 @@ export const aprobarReservaProcedure = protectedProcedure
     return reserva;
   });
 
-export const rechazarReservaProcedure = protectedProcedure
+export const rechazarReservaProcedure = createAuthorizedProcedure([SgeNombre.LAB_ABIERTO_CONFIRMAR_RESERVAS])
   .input(inputRechazarReservaLaboratorioAbierto)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputRechazarReservaLaboratorioAbierto, input);
@@ -88,7 +89,7 @@ export const rechazarReservaProcedure = protectedProcedure
     return reserva;
   });
 
-export const cancelarReservaProcedure = protectedProcedure
+export const cancelarReservaProcedure = createAuthorizedProcedure([SgeNombre.LAB_ABIERTO_CONFIRMAR_RESERVAS])
   .input(inputCancelarReservaLaboratorioAbierto)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputCancelarReservaLaboratorioAbierto, input);
@@ -102,7 +103,7 @@ export const cancelarReservaProcedure = protectedProcedure
     return reserva;
   });
 
-export const editarReservaProcedure = protectedProcedure
+export const editarReservaProcedure = createAuthorizedProcedure([SgeNombre.LAB_ABIERTO_CONFIRMAR_RESERVAS])
   .input(inputEditarReservaLaboratorioAbiertoSchema)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputEditarReservaLaboratorioAbiertoSchema, input);
