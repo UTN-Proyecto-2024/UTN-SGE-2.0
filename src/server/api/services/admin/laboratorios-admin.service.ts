@@ -1,4 +1,4 @@
-import { protectedProcedure, publicProcedure } from "../../trpc";
+import { createAuthorizedProcedure, protectedProcedure, publicProcedure } from "../../trpc";
 import { validarInput } from "../helper";
 import {
   inputAgregarLaboratorio,
@@ -24,6 +24,7 @@ import {
   getAllLaboratoriosReservables,
   getAllSedesConLaboratorios,
 } from "../../repositories/admin/laboratorios-admin.repository";
+import { SgeNombre } from "@prisma/client";
 
 export const getTodosLosLaboratoriosProcedure = protectedProcedure
   .input(inputGetLaboratorios)
@@ -103,7 +104,7 @@ export const getLaboratorioPorIdProcedure = protectedProcedure
     return laboratorio;
   });
 
-export const eliminarLaboratorioProcedure = protectedProcedure
+export const eliminarLaboratorioProcedure = createAuthorizedProcedure([SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS])
   .input(inputEliminarLaboratorio)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputEliminarLaboratorio, input);
@@ -113,7 +114,7 @@ export const eliminarLaboratorioProcedure = protectedProcedure
     return laboratorio;
   });
 
-export const editarLaboratorioProcedure = protectedProcedure
+export const editarLaboratorioProcedure = createAuthorizedProcedure([SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS])
   .input(inputEditarLaboratorio)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputEditarLaboratorio, input);

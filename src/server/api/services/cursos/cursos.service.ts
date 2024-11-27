@@ -1,3 +1,4 @@
+import { SgeNombre } from "@prisma/client";
 import {
   agregarCurso,
   agregarCursoBulkInsert,
@@ -6,7 +7,7 @@ import {
   getAllCursos,
   getCursoPorId,
 } from "../../repositories/cursos/cursos.repository";
-import { protectedProcedure } from "../../trpc";
+import { createAuthorizedProcedure, protectedProcedure } from "../../trpc";
 import { validarInput } from "../helper";
 import {
   inputAgregarCurso,
@@ -35,17 +36,19 @@ export const cursoPorIdProcedure = protectedProcedure.input(inputGetCurso).query
   return curso;
 });
 
-export const nuevoCursoProcedure = protectedProcedure.input(inputAgregarCurso).mutation(async ({ ctx, input }) => {
-  validarInput(inputAgregarCurso, input);
+export const nuevoCursoProcedure = createAuthorizedProcedure([SgeNombre.CURSOS_ABM])
+  .input(inputAgregarCurso)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputAgregarCurso, input);
 
-  const userId = ctx.session.user.id;
+    const userId = ctx.session.user.id;
 
-  const curso = await agregarCurso(ctx, input, userId);
+    const curso = await agregarCurso(ctx, input, userId);
 
-  return curso;
-});
+    return curso;
+  });
 
-export const nuevoCursoBulkInsertProcedure = protectedProcedure
+export const nuevoCursoBulkInsertProcedure = createAuthorizedProcedure([SgeNombre.CURSOS_ABM])
   .input(inputAgregarCursoBulkInsert)
   .mutation(async ({ ctx, input }) => {
     validarInput(inputAgregarCursoBulkInsert, input);
@@ -54,20 +57,24 @@ export const nuevoCursoBulkInsertProcedure = protectedProcedure
     return curso;
   });
 
-export const editarCursoProcedure = protectedProcedure.input(inputEditarCurso).mutation(async ({ ctx, input }) => {
-  validarInput(inputEditarCurso, input);
+export const editarCursoProcedure = createAuthorizedProcedure([SgeNombre.CURSOS_ABM])
+  .input(inputEditarCurso)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputEditarCurso, input);
 
-  const userId = ctx.session.user.id;
+    const userId = ctx.session.user.id;
 
-  const curso = await editarCurso(ctx, input, userId);
+    const curso = await editarCurso(ctx, input, userId);
 
-  return curso;
-});
+    return curso;
+  });
 
-export const eliminarCursoProcedure = protectedProcedure.input(inputEliminarCurso).mutation(async ({ ctx, input }) => {
-  validarInput(inputEliminarCurso, input);
+export const eliminarCursoProcedure = createAuthorizedProcedure([SgeNombre.CURSOS_ABM])
+  .input(inputEliminarCurso)
+  .mutation(async ({ ctx, input }) => {
+    validarInput(inputEliminarCurso, input);
 
-  const curso = await eliminarCurso(ctx, input);
+    const curso = await eliminarCurso(ctx, input);
 
-  return curso;
-});
+    return curso;
+  });
