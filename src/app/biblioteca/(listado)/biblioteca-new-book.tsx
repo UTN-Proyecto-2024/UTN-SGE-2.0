@@ -8,6 +8,7 @@ import { useState } from "react";
 import { SgeNombre } from "@prisma/client";
 import { useTienePermisos } from "@/app/_hooks/use-tiene-permisos";
 import { api } from "@/trpc/react";
+import { ScrollArea } from "@/components/ui";
 
 export const BibliotecaNewLibro = () => {
   const tienePermiso = useTienePermisos([SgeNombre.BIBLIOTECA_ABM_LIBRO]);
@@ -45,7 +46,9 @@ export const BibliotecaNewLibro = () => {
       className={"max-h-[calc(100vh_-_10%)]"}
     >
       <div className="flex max-h-max w-full flex-col  gap-4">
-        <LibroForm onCancel={handleCancel} onSubmit={handleSave} />
+        <ScrollArea className="flex max-h-[calc(100vh_-_300px)] w-full flex-col pr-4">
+          <LibroForm onCancel={handleCancel} onSubmit={handleSave} />
+        </ScrollArea>
       </div>
     </ModalDrawer>
   );
