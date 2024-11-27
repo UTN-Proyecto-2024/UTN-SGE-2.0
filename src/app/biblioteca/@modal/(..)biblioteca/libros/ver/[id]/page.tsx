@@ -2,6 +2,7 @@
 
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { LibroView } from "@/app/biblioteca/libros/ver/[id]/libro-view";
+import { ScrollArea } from "@/components/ui";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -33,7 +34,9 @@ export default function PageDetails({ params: { id } }: PageProps) {
       className={"max-h-[calc(100vh_-_10%)]"}
     >
       <div className="flex max-h-max w-full flex-col gap-4">
-        <LibroView id={id} onCancel={handleClickCancel} />
+        <ScrollArea className="flex max-h-[calc(100vh_-_300px)] w-full flex-col pr-4">
+          <LibroView id={id} onCancel={handleClickCancel} />
+        </ScrollArea>
       </div>
     </ModalDrawer>
   );

@@ -1,4 +1,4 @@
-import { Button, ScrollArea } from "@/components/ui";
+import { Button } from "@/components/ui";
 import { Separator } from "@radix-ui/react-separator";
 import { UsuarioCreador } from "../../_components/usuario-creador-libro";
 import { LibroInformacionBasica } from "../../_components/info-basica-libro";
@@ -17,31 +17,29 @@ export const LibroView = ({ id, onCancel }: Props) => {
 
   return (
     <div className="relative flex w-full flex-col gap-4">
-      <ScrollArea className="flex max-h-[calc(100vh_-_300px)] w-full flex-col pr-4">
-        <div className="my-8 flex w-full flex-col items-center justify-center">
-          <LibroInformacionBasica libroId={libroId} />
-        </div>
+      <div className="my-8 flex w-full flex-col items-center justify-center">
+        <LibroInformacionBasica libroId={libroId} />
+      </div>
 
-        <Separator className="my-2 border-2" />
+      <Separator className="my-2 border-2" />
 
-        <div className="my-8 flex w-full flex-col items-center justify-center">
-          <LibroInformacionUbicacion libroId={libroId} />
-        </div>
+      <div className="my-8 flex w-full flex-col items-center justify-center">
+        <LibroInformacionUbicacion libroId={libroId} />
+      </div>
 
-        <Separator className="my-2 border-2" />
+      <Separator className="my-2 border-2" />
 
-        <div className="my-8 flex w-full flex-col items-center justify-center">
-          <LibroInformacionPrestamos libroId={libroId} />
-        </div>
+      <div className="my-8 flex w-full flex-col items-center justify-center">
+        <LibroInformacionPrestamos libroId={libroId} />
+      </div>
 
-        <Separator className="my-2 border-2" />
+      <Separator className="my-2 border-2" />
 
-        <div className="my-8 flex w-full flex-col items-center justify-center">
-          <UsuarioCreador libroId={libroId} />
-        </div>
-      </ScrollArea>
+      <div className="my-8 flex w-full flex-col items-center justify-center">
+        <UsuarioCreador libroId={libroId} />
+      </div>
 
-      <div className="flex w-full flex-row items-end justify-center space-x-4 sm:justify-end">
+      <div className="bottom-0 flex w-full flex-row items-end space-x-4 bg-white md:justify-end lg:sticky">
         <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
           Volver
         </Button>

@@ -1,6 +1,6 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { api } from "@/trpc/react";
-import { Button, FormInput, ScrollArea, toast } from "@/components/ui";
+import { Button, FormInput, toast } from "@/components/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { inputEditBooks } from "@/shared/filters/biblioteca-filter.schema";
 import { type z } from "zod";
@@ -127,163 +127,154 @@ export const LibroForm = ({ id, onSubmit, onCancel }: Props) => {
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
-        <ScrollArea className="max-h-[calc(100vh_-_300px)] w-full pr-4">
-          <div className="flex w-full flex-col items-stretch justify-center sm:items-stretch md:items-stretch lg:items-center">
-            <div className="flex flex-col space-y-4 px-0 md:px-6">
-              <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
-                <div className="mt-4 w-full">
-                  <FormInput label={"Titulo"} control={control} name="titulo" type={"text"} className="mt-2" />
-                </div>
+        <div className="flex w-full flex-col items-stretch justify-center sm:items-stretch md:items-stretch lg:items-center">
+          <div className="flex flex-col space-y-4 px-0 md:px-6">
+            <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
+              <div className="mt-4 w-full">
+                <FormInput label={"Titulo"} control={control} name="titulo" type={"text"} className="mt-2" />
               </div>
+            </div>
 
-              <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
-                <div className="mt-4 w-full">
-                  <SelectAutoresForm
-                    name="autor"
-                    realNameId="autorId"
-                    control={control}
-                    className="mt-2"
-                    label={"Autor"}
-                  />
-                </div>
+            <div className="flex w-full flex-row lg:flex-row lg:justify-between lg:gap-x-4">
+              <div className="mt-4 w-full">
+                <SelectAutoresForm
+                  name="autor"
+                  realNameId="autorId"
+                  control={control}
+                  className="mt-2"
+                  label={"Autor"}
+                />
               </div>
+            </div>
 
-              <div className="flex w-full flex-col gap-x-4 lg:flex-row lg:justify-between">
-                {!esNuevo && (
-                  <div className="mt-4 basis-1/2">
-                    <FormInput
-                      label={"Inventario ID (solo lectura)"}
-                      control={control}
-                      name="inventarioId"
-                      type={"text"}
-                      className="mt-2"
-                      readOnly
-                    />
-                  </div>
-                )}
+            <div className="flex w-full flex-col gap-x-4 lg:flex-row lg:justify-between">
+              {!esNuevo && (
                 <div className="mt-4 basis-1/2">
                   <FormInput
-                    label={"Biblioteca ID"}
+                    label={"Inventario ID (solo lectura)"}
                     control={control}
-                    name="bibliotecaId"
+                    name="inventarioId"
                     type={"text"}
                     className="mt-2"
+                    readOnly
                   />
                 </div>
+              )}
+              <div className="mt-4 basis-1/2">
+                <FormInput
+                  label={"Biblioteca ID"}
+                  control={control}
+                  name="bibliotecaId"
+                  type={"text"}
+                  className="mt-2"
+                />
+              </div>
+            </div>
+
+            <div className="flex w-full flex-col gap-x-4 lg:flex-row lg:justify-between">
+              <div className="mt-4 basis-1/2">
+                <FormInput label={"ISBN"} control={control} name="isbn" type={"text"} className="mt-2" />
               </div>
 
-              <div className="flex w-full flex-col gap-x-4 lg:flex-row lg:justify-between">
-                <div className="mt-4 basis-1/2">
-                  <FormInput label={"ISBN"} control={control} name="isbn" type={"text"} className="mt-2" />
-                </div>
+              <div className="mt-4 basis-1/2">
+                <FormInput label={"Año"} control={control} name="anio" type={"number"} className="mt-2" maxLength={4} />
+              </div>
+            </div>
 
-                <div className="mt-4 basis-1/2">
-                  <FormInput
-                    label={"Año"}
-                    control={control}
-                    name="anio"
-                    type={"number"}
-                    className="mt-2"
-                    maxLength={4}
-                  />
-                </div>
+            <div className="flex w-full flex-col gap-x-4 lg:flex-row lg:justify-between">
+              <div className="mt-4 basis-1/2">
+                <SelectSedeForm
+                  name="sedeId"
+                  control={control}
+                  className="mt-2 text-sm"
+                  label={"Sede"}
+                  placeholder={"Selecciona una sede"}
+                  onChange={() => {
+                    // @ts-expect-error - undefined
+                    formHook.setValue("laboratorioId", undefined);
+                    formHook.setValue("armarioId", undefined);
+                    formHook.setValue("estanteId", undefined);
+                  }}
+                />
               </div>
 
-              <div className="flex w-full flex-col gap-x-4 lg:flex-row lg:justify-between">
-                <div className="mt-4 basis-1/2">
-                  <SelectSedeForm
-                    name="sedeId"
-                    control={control}
-                    className="mt-2 text-sm"
-                    label={"Sede"}
-                    placeholder={"Selecciona una sede"}
-                    onChange={() => {
-                      // @ts-expect-error - undefined
-                      formHook.setValue("laboratorioId", undefined);
-                      formHook.setValue("armarioId", undefined);
-                      formHook.setValue("estanteId", undefined);
-                    }}
-                  />
-                </div>
+              <div className="mt-4 basis-1/2">
+                <SelectLaboratorioConArmariosForm
+                  name="laboratorioId"
+                  control={control}
+                  className="mt-2 text-sm"
+                  label={"Laboratorio"}
+                  sedeId={sedeId ? String(sedeId) : undefined}
+                  disabled={!sedeId}
+                  placeholder={!sedeId ? "Selecciona una sede" : "Selecciona un laboratorio"}
+                  onChange={() => {
+                    formHook.setValue("armarioId", undefined);
+                    formHook.setValue("estanteId", undefined);
+                  }}
+                />
+              </div>
+            </div>
 
-                <div className="mt-4 basis-1/2">
-                  <SelectLaboratorioConArmariosForm
-                    name="laboratorioId"
-                    control={control}
-                    className="mt-2 text-sm"
-                    label={"Laboratorio"}
-                    sedeId={sedeId ? String(sedeId) : undefined}
-                    disabled={!sedeId}
-                    placeholder={!sedeId ? "Selecciona una sede" : "Selecciona un laboratorio"}
-                    onChange={() => {
-                      formHook.setValue("armarioId", undefined);
-                      formHook.setValue("estanteId", undefined);
-                    }}
-                  />
-                </div>
+            <div className="flex w-full flex-col gap-x-4 lg:flex-row lg:justify-between">
+              <div className="mt-4 basis-1/2">
+                <SelectArmarioForm
+                  name="armarioId"
+                  control={control}
+                  className="mt-2 text-sm"
+                  label={"Armario"}
+                  laboratorioId={laboratorioId}
+                  placeholder={!laboratorioId ? "Selecciona un laboratorio" : "Selecciona un armario"}
+                  onChange={() => {
+                    formHook.setValue("estanteId", undefined);
+                  }}
+                />
               </div>
 
-              <div className="flex w-full flex-col gap-x-4 lg:flex-row lg:justify-between">
-                <div className="mt-4 basis-1/2">
-                  <SelectArmarioForm
-                    name="armarioId"
-                    control={control}
-                    className="mt-2 text-sm"
-                    label={"Armario"}
-                    laboratorioId={laboratorioId}
-                    placeholder={!laboratorioId ? "Selecciona un laboratorio" : "Selecciona un armario"}
-                    onChange={() => {
-                      formHook.setValue("estanteId", undefined);
-                    }}
-                  />
-                </div>
+              <div className="mt-4 basis-1/2">
+                <SelectEstanteForm
+                  name="estanteId"
+                  control={control}
+                  className="mt-2 text-sm"
+                  label={"Estante"}
+                  armarioId={armarioId}
+                  placeholder={!armarioId ? "Selecciona un armario" : "Selecciona una estante"}
+                />
+              </div>
+            </div>
 
-                <div className="mt-4 basis-1/2">
-                  <SelectEstanteForm
-                    name="estanteId"
-                    control={control}
-                    className="mt-2 text-sm"
-                    label={"Estante"}
-                    armarioId={armarioId}
-                    placeholder={!armarioId ? "Selecciona un armario" : "Selecciona una estante"}
-                  />
-                </div>
+            <div className="flex w-full flex-col gap-x-4 lg:flex-row lg:justify-between">
+              <div className="mt-4 basis-1/2">
+                <SelectEditorialForm
+                  name="editorial"
+                  realNameId="editorialId"
+                  control={control}
+                  className="mt-2"
+                  label={"Editorial"}
+                />
               </div>
 
-              <div className="flex w-full flex-col gap-x-4 lg:flex-row lg:justify-between">
-                <div className="mt-4 basis-1/2">
-                  <SelectEditorialForm
-                    name="editorial"
-                    realNameId="editorialId"
-                    control={control}
-                    className="mt-2"
-                    label={"Editorial"}
-                  />
-                </div>
-
-                <div className="mt-4 basis-1/2">
-                  <SelectIdiomasForm
-                    name="idiomaId"
-                    control={control}
-                    className="mt-2 text-sm"
-                    label={"Idioma"}
-                    placeholder={"Selecciona un idioma"}
-                  />
-                </div>
+              <div className="mt-4 basis-1/2">
+                <SelectIdiomasForm
+                  name="idiomaId"
+                  control={control}
+                  className="mt-2 text-sm"
+                  label={"Idioma"}
+                  placeholder={"Selecciona un idioma"}
+                />
               </div>
+            </div>
 
-              <div className="flex w-full flex-col gap-x-4 lg:flex-row lg:justify-between">
-                <div className="mt-4 w-full text-sm">
-                  <label>
-                    Materias
-                    <MateriaDropdownMultipleForm name="materias" control={control} />
-                  </label>
-                </div>
+            <div className="flex w-full flex-col gap-x-4 lg:flex-row lg:justify-between">
+              <div className="mt-4 w-full text-sm">
+                <label>
+                  Materias
+                  <MateriaDropdownMultipleForm name="materias" control={control} />
+                </label>
               </div>
             </div>
           </div>
-        </ScrollArea>
-        <div className="mb-3 flex w-full flex-row items-end justify-center space-x-4 md:justify-end lg:justify-end">
+        </div>
+        <div className="bottom-0 flex w-full flex-row items-end space-x-4 bg-white md:justify-end lg:sticky">
           <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
             Cancelar
           </Button>
