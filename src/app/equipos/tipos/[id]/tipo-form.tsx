@@ -1,6 +1,6 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { api } from "@/trpc/react";
-import { Button, FormInput, Input, ScrollArea, toast } from "@/components/ui";
+import { Button, FormInput, Input, toast } from "@/components/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
 import { useEffect, useMemo, useState } from "react";
@@ -128,53 +128,52 @@ export const TipoForm = ({ id, onSubmit, onCancel }: Props) => {
   return (
     <FormProvider {...formHook}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="relative flex w-full flex-col gap-4">
-        <ScrollArea className="max-h-[calc(100vh_-_300px)] w-full pr-4">
-          <div className="flex w-full flex-col items-center justify-center">
-            <div className="flex flex-col space-y-4 px-0 md:flex-row md:justify-between md:space-x-8 md:px-6">
-              <div className="flex w-full flex-col md:w-1/2 md:flex-col lg:justify-between">
-                <div className="mt-4 basis-1/2">
-                  <FormInput
-                    label={"Nombre"}
-                    control={control}
-                    name="nombre"
-                    type={"text"}
-                    className="mt-2"
-                    placeholder={"Ingrese nombre del tipo"}
-                  />
-                </div>
-
-                <div className="mt-4 basis-1/2">
-                  <Input
-                    label={!previewImgUrl ? "Agregar imagen" : "Cambiar imagen"}
-                    name="imagen"
-                    type={"file"}
-                    accept="image/*"
-                    className="mt-2"
-                    onChange={handleFileChange}
-                  />
-                </div>
+        <div className="flex w-full flex-col items-center justify-center">
+          <div className="flex flex-col space-y-4 px-0 md:flex-row md:justify-between md:space-x-8 md:px-6">
+            <div className="flex w-full flex-col md:w-1/2 md:flex-col lg:justify-between">
+              <div className="mt-4 basis-1/2">
+                <FormInput
+                  label={"Nombre"}
+                  control={control}
+                  name="nombre"
+                  type={"text"}
+                  className="mt-2"
+                  placeholder={"Ingrese nombre del tipo"}
+                />
               </div>
 
-              <div className="flex w-full flex-col md:w-1/3 md:flex-row lg:justify-between">
-                <div className="mt-4">
-                  <div style={{ position: "relative", width: "200px", height: "200px" }}>
-                    <Image
-                      src={previewImgUrl ? previewImgUrl : "/no-image.svg"}
-                      alt={`Equipo`}
-                      className="rounded-xl"
-                      sizes="200px"
-                      fill
-                      style={{
-                        objectFit: "contain",
-                      }}
-                    />
-                  </div>
+              <div className="mt-4 basis-1/2">
+                <Input
+                  label={!previewImgUrl ? "Agregar imagen" : "Cambiar imagen"}
+                  name="imagen"
+                  type={"file"}
+                  accept="image/*"
+                  className="mt-2"
+                  onChange={handleFileChange}
+                />
+              </div>
+            </div>
+
+            <div className="flex w-full flex-col md:w-1/3 md:flex-row lg:justify-between">
+              <div className="mt-4">
+                <div style={{ position: "relative", width: "200px", height: "200px" }}>
+                  <Image
+                    src={previewImgUrl ? previewImgUrl : "/no-image.svg"}
+                    alt={`Equipo`}
+                    className="rounded-xl"
+                    sizes="200px"
+                    fill
+                    style={{
+                      objectFit: "contain",
+                    }}
+                  />
                 </div>
               </div>
             </div>
           </div>
-        </ScrollArea>
-        <div className="mb-3 flex w-full flex-row items-end justify-center space-x-4 md:justify-end lg:justify-end">
+        </div>
+
+        <div className="sticky bottom-0 mb-3 flex w-full flex-row items-end justify-center space-x-4 md:justify-end lg:justify-end">
           <Button title="Cancelar" type="button" variant="default" color="secondary" onClick={handleCancel}>
             Cancelar
           </Button>
