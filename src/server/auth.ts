@@ -85,38 +85,38 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.KEYCLOAK_CLIENT_SECRET ?? "",
       issuer: process.env.KEYCLOAK_ISSUER,
       async profile(profile: KeycloakProfile) {
-        const documentoTipo = await db.documentoTipo.findFirst({ where: { nombre: profile.documento_tipo } });
-        const provincia = await db.provincia.findFirst({ where: { nombre: profile.address.region } });
-        const pais = await db.pais.findFirst({ where: { nombreEspanol: profile.address.country } });
+        // const documentoTipo = await db.documentoTipo.findFirst({ where: { nombre: profile.documento_tipo } });
+        // const provincia = await db.provincia.findFirst({ where: { nombre: profile.address.region } });
+        // const pais = await db.pais.findFirst({ where: { nombreEspanol: profile.address.country } });
         return {
           id: profile.sub,
           name: profile.preferred_username,
           email: profile.email,
           emailVerified: profile.email_verified,
-          image: profile.picture,
+          // image: profile.picture,
           nombre: profile.given_name,
           apellido: profile.family_name,
-          fechaNacimiento: new Date(profile.birthdate.split("/").reverse().join("-")),
-          legajo: profile.legajo?.replace("-", ""),
-          direccion: profile.address.street_address,
-          ciudad: profile.address.locality,
-          codigoPostal: profile.address.postal_code,
-          telefonoCelular: profile.phone_number,
-          documentoNumero: profile.documento,
-          esDocente: profile.es_docente === "Docente",
-          documentoTipo: documentoTipo ? { connect: { id: documentoTipo.id } } : undefined,
-          pais: pais ? { connect: { iso: pais.iso } } : undefined,
-          provincia:
-            provincia && pais
-              ? {
-                  connect: {
-                    iso_paisIso: {
-                      iso: provincia.iso,
-                      paisIso: pais.iso,
-                    },
-                  },
-                }
-              : undefined,
+          // fechaNacimiento: new Date(profile.birthdate.split("/").reverse().join("-")),
+          // legajo: profile.legajo?.replace("-", ""),
+          // direccion: profile.address.street_address,
+          // ciudad: profile.address.locality,
+          // codigoPostal: profile.address.postal_code,
+          // telefonoCelular: profile.phone_number,
+          // documentoNumero: profile.documento,
+          // esDocente: profile.es_docente === "Docente",
+          // documentoTipo: documentoTipo ? { connect: { id: documentoTipo.id } } : undefined,
+          // pais: pais ? { connect: { iso: pais.iso } } : undefined,
+          // provincia:
+          //   provincia && pais
+          //     ? {
+          //         connect: {
+          //           iso_paisIso: {
+          //             iso: provincia.iso,
+          //             paisIso: pais.iso,
+          //           },
+          //         },
+          //       }
+          //     : undefined,
         };
       },
     }),
