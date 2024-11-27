@@ -25,6 +25,7 @@ export default function VerReservaModal({ params: { id } }: PageProps) {
     if (!open) {
       setOpen(false);
       refreshGetAll();
+      router.back();
     }
   };
 
