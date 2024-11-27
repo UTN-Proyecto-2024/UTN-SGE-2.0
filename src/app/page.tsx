@@ -1,11 +1,9 @@
 import { getServerAuthSession } from "@/server/auth";
 import Image from "next/image";
-import { getProviders } from "next-auth/react";
 import { SignIn, SignOut } from "./_components/auth";
 
 export default async function Home() {
   const session = await getServerAuthSession();
-  const providers = await getProviders();
 
   return (
     <main className="flex flex-col items-center justify-center">
@@ -33,7 +31,7 @@ export default async function Home() {
                 </>
               )}
             </div>
-            {session ? <SignOut /> : <SignIn {...Object.values(providers ?? {})} />}
+            {session ? <SignOut /> : <SignIn />}
             <div className="w-2/3 pt-5 text-center text-xl">
               <p>
                 Bienvenido al sistema de gestión electrónica del departamento de Ingeniería Electrónica de la Facultad
