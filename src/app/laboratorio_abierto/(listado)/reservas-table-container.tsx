@@ -25,5 +25,11 @@ export default function LaboratorioAbiertoSolicitudesTableContainer({
 
   const { data: reservas } = api.reservas.reservaLaboratorioAbierto.getAll.useQuery(filters);
 
-  return <LaboratorioAbiertoReservaTable data={reservas ?? { count: 0, reservas: [] }} filters={filters} />;
+  return (
+    <LaboratorioAbiertoReservaTable
+      data={reservas ?? { count: 0, reservas: [] }}
+      filters={filters}
+      filterByUser={filterByUser}
+    />
+  );
 }
