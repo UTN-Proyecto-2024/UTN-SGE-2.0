@@ -173,7 +173,7 @@ const MultiSelectFormField = React.forwardRef<HTMLButtonElement, MultiSelectForm
                         pointerEvents: "auto",
                         opacity: 1,
                       }}
-                      className="cursor-pointer"
+                      className="cursor-pointer text-black hover:bg-slate-100 hover:!text-blue-900/80"
                     >
                       <div
                         className={cn(
