@@ -49,13 +49,15 @@ export type EmailParams = {
 export const sendEmail = async (ctx: { db: PrismaClient }, props: EmailParams) => {
   const usuario = props.usuario.nombre + " " + props.usuario.apellido;
 
+  const hiperVinculo = `/${props.hipervinculo}`.replaceAll("//", "/");
+
   const mailOptions = {
     from: fromEmail,
     to: receptorTesting ?? props.to,
     subject: props.asunto,
     html: emailTemplate({
       usuario,
-      hipervinculo: `${baseRuta}/${props.hipervinculo}`,
+      hipervinculo: `${baseRuta}${hiperVinculo}`,
       textoMail: props.textoMail,
     }),
   };
