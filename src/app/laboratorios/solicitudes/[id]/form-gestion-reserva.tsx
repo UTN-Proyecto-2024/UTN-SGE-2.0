@@ -1,4 +1,3 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { api } from "@/trpc/react";
 import { esFechaPasada } from "@/shared/get-date";
 import { ReservaDetalle } from "../../_components/info-basica-reserva";
@@ -20,17 +19,17 @@ export const ReservaViewAdmin = ({ reservaId, onCancel, onAprobar, onRechazar }:
     id: Number(reservaId),
   });
 
-  const cancelarReservaLaboratorio = api.reservas.reservarLaboratorioCerrado.cancelarReserva.useMutation();
-  const handleCancelReserva = () => {
-    cancelarReservaLaboratorio.mutate(
-      { id: reservaId, motivo: "Cancelada por expiración" },
+  const rechazarReservaLaboratorio = api.reservas.reservarLaboratorioCerrado.rechazarReserva.useMutation();
+  const handleRechazarReserva = () => {
+    rechazarReservaLaboratorio.mutate(
+      { id: reservaId, motivo: "Rechazada por expiración" },
       {
         onSuccess: () => {
-          toast.success("Reserva cancelada con éxito.");
+          toast.success("Reserva rechazada con éxito.");
           onCancel();
         },
         onError: (error) => {
-          toast.error(error?.message ?? "Error al cancelar la reserva");
+          toast.error(error?.message ?? "Error al rechazar la reserva");
         },
       },
     );
@@ -62,8 +61,14 @@ export const ReservaViewAdmin = ({ reservaId, onCancel, onAprobar, onRechazar }:
       )}
       {esReservaPendientePasada && (
         <div className="flex justify-end">
-          <Button title="Cancelar Reserva" type="button" variant="default" color="danger" onClick={handleCancelReserva}>
-            Cancelar Reserva
+          <Button
+            title="Rechazar Reserva"
+            type="button"
+            variant="default"
+            color="danger"
+            onClick={handleRechazarReserva}
+          >
+            Rechazar Reserva
           </Button>
         </div>
       )}
