@@ -1,4 +1,3 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { api } from "@/trpc/react";
 import { esFechaPasada } from "@/shared/get-date";
 import { ReservaDetalle } from "../../_components/info-basica-reserva";

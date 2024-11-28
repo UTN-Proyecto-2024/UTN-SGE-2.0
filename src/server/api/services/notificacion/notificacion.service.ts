@@ -5,12 +5,7 @@ import {
 } from "../../repositories/notificacion/notificacion.repository";
 import { protectedProcedure } from "../../trpc";
 import { BIBLIOTECA_ROUTE, EQUIPOS_ROUTE, LABORATORIO_ABIERTO_ROUTE, LABORATORIO_ROUTE } from "@/shared/server-routes";
-import {
-  construirFechaReservaSinOffset,
-  getDateISOString,
-  getFechaddddDDMMYYYY,
-  getTimeISOString,
-} from "@/shared/get-date";
+import { getDateISOString, getFechaddddDDMMYYYY } from "@/shared/get-date";
 
 const RUTA_APROBAR_LABO_CERRADO = `${LABORATORIO_ROUTE.href}/solicitudes`;
 const RUTA_APROBAR_LABO_ABIERTO = `${LABORATORIO_ABIERTO_ROUTE.href}/solicitudes`;
