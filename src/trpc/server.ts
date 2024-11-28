@@ -27,6 +27,11 @@ export const api = createCaller(createContext, {
       // TODO: Si alguien entra desde el mail y no está logueado, se lo va a redirigir a la página de inicio.
       // Lo ideal seria que acá se tome la URL actual, y se redirija a la página HOME conservando la URL actual.
       // De ese modo el usuario al loguearse podrá ser redirigido a la página que queria visitar originalmente
+      // En caso de querer pasar parametros aca van a tener que hacer lo siguiente:
+      // 1. Leer el current Path
+      // 2. Enviarlo como `query param`
+      // 3. Pasarselo a authJs como redirectTo
+      // https://stackoverflow.com/questions/78697614/callbackurl-not-working-in-auth-js-signin
       redirect(INICIO_ROUTE.href);
     }
   },
