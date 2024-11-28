@@ -18,7 +18,7 @@ export default async function Page() {
       }
     >
       <Suspense fallback={<LoadingCursosTable />}>
-        <LaboratorioReservaTableContainer filterByUserId={true} filterByCatedraId={false} />
+        <LaboratorioReservaTableContainer filterByUserId filterByCatedraId={false} />
       </Suspense>
     </PageLayout>
   );
