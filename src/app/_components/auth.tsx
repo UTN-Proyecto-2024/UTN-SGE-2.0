@@ -6,7 +6,7 @@ const style = "rounded-full bg-slate-100 px-10 py-3 font-semibold no-underline t
 
 export function SignIn() {
   return (
-    <button className={style} onClick={() => signIn("keycloak")}>
+    <button className={style} onClick={() => signIn("discord")}>
       Iniciar sesión
     </button>
   );
