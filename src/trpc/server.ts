@@ -5,6 +5,8 @@ import { cache } from "react";
 
 import { createCaller } from "@/server/api/root";
 import { createTRPCContext } from "@/server/api/trpc";
+import { redirect } from "next/navigation";
+import { INICIO_ROUTE } from "@/shared/server-routes";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
@@ -19,4 +21,13 @@ const createContext = cache(() => {
   });
 });
 
-export const api = createCaller(createContext);
+export const api = createCaller(createContext, {
+  onError: (error) => {
+    if (error?.error?.code === "UNAUTHORIZED") {
+      // TODO: Si alguien entra desde el mail y no está logueado, se lo va a redirigir a la página de inicio.
+      // Lo ideal seria que acá se tome la URL actual, y se redirija a la página HOME conservando la URL actual.
+      // De ese modo el usuario al loguearse podrá ser redirigido a la página que queria visitar originalmente
+      redirect(INICIO_ROUTE.href);
+    }
+  },
+});
