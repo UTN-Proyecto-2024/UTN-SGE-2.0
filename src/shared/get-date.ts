@@ -240,7 +240,7 @@ export function obtenerHoraInicioFin(
   duracion: number,
 ): { horaInicio: string; horaFin: string } {
   const horaInicio = horariosTurnos[turno]?.[hora];
-  const horaFin = horariosTurnos[turno]?.[duracion];
+  const horaFin = horariosTurnos[turno]?.[hora + duracion - 1];
 
   if (!horaInicio || !horaFin) {
     throw new Error(`Hora de inicio o fin inválida para el turno ${turno} y hora ${hora}`);
