@@ -1,4 +1,5 @@
-import { ReservaEstatus, ReservaTipo, type PrismaClient } from "@prisma/client";
+import { ReservaEstatus, ReservaTipo, SgeNombre, type PrismaClient } from "@prisma/client";
+import { tienePermiso } from "../../services/permisos/permisos.helper";
 
 export type Notificacion = {
   id: number;
@@ -29,19 +30,26 @@ export const getAllPendientesNotificaciones = async (
 
 export const getReservasPendientesAprobacion = async (
   ctx: { db: PrismaClient },
-  _userId: string,
+  userId: string,
 ): Promise<Notificacion[]> => {
-  const puedeAprobarCerrado = true; // TODO @Alex: Hacer peticion por permiso
-  const puedeAprobarAbierto = true; // TODO @Alex: Hacer peticion por permiso
+  const puedeAprobarCerradoPromise = tienePermiso(ctx, [SgeNombre.RES_LAB_CONFIRMAR_RESERVAS], userId);
+  const puedeAprobarAbiertoPromise = tienePermiso(ctx, [SgeNombre.LAB_ABIERTO_CONFIRMAR_RESERVAS], userId);
 
-  if (!puedeAprobarCerrado && !puedeAprobarAbierto) {
-    return [];
+  const [puedeAprobarCerrado, puedeAprobarAbierto] = await Promise.all([
+    puedeAprobarCerradoPromise,
+    puedeAprobarAbiertoPromise,
+  ]);
+
+  const reservaTipo: ReservaTipo[] = [];
+  if (puedeAprobarCerrado) {
+    reservaTipo.push(ReservaTipo.LABORATORIO_CERRADO);
+  }
+  if (puedeAprobarAbierto) {
+    reservaTipo.push(ReservaTipo.LABORATORIO_ABIERTO);
   }
 
-  const reservaTipo: ReservaTipo[] = [
-    puedeAprobarCerrado && ReservaTipo.LABORATORIO_CERRADO,
-    puedeAprobarAbierto && ReservaTipo.LABORATORIO_ABIERTO,
-  ].filter((tipo) => tipo !== undefined);
+  const hoyALas0 = new Date();
+  hoyALas0.setHours(0, 0, 0, 0);
 
   const reservasPendientesDeAprobacion = await ctx.db.reserva.findMany({
     where: {
@@ -50,7 +58,7 @@ export const getReservasPendientesAprobacion = async (
       },
       estatus: ReservaEstatus.PENDIENTE,
       fechaHoraInicio: {
-        gte: new Date(),
+        gte: hoyALas0,
       },
     },
     select: {

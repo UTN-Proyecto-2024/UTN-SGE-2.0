@@ -5,6 +5,7 @@ import { ReservaViewAdmin } from "@/app/laboratorio_abierto/solicitudes/[id]/for
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { useState } from "react";
 import { api } from "@/trpc/react";
+import { ScrollArea } from "@/components/ui";
 
 type PageProps = {
   params: { id: string };
@@ -51,15 +52,17 @@ export default function PageDetalleReserva({ params: { id } }: PageProps) {
       description="Detalles de la reserva de laboratorio."
       open={open}
       onOpenChange={handleOpenChange}
-      className="max-h-[calc(100vh_-_300px)]"
+      className="max-h-[calc(100vh_-_10%)]"
     >
       <div className="flex max-h-max w-full flex-col gap-4">
-        <ReservaViewAdmin
-          reservaId={Number(id)}
-          onCancel={handleClickCancel}
-          onAprobar={handleClickAprobar}
-          onRechazar={handleClickRechazar}
-        />
+        <ScrollArea className="max-h-[calc(100vh_-_300px)]">
+          <ReservaViewAdmin
+            reservaId={Number(id)}
+            onCancel={handleClickCancel}
+            onAprobar={handleClickAprobar}
+            onRechazar={handleClickRechazar}
+          />
+        </ScrollArea>
       </div>
     </ModalDrawer>
   );

@@ -71,12 +71,12 @@ export default function ContenedorReserva({ usuarioData }: ClienteContenedorUsua
           onValueChange={(value) => setActiveTab(value as typeof activeTab)}
           className="flex w-full flex-col rounded-lg bg-[#F1F5F9] text-sm"
         >
-          <TabsList className="flex w-full flex-row gap-x-4 p-4">
+          <TabsList className="grid w-full grid-cols-2 gap-4 p-4 sm:flex sm:flex-row">
             <TabsTrigger
               value="libros"
               className={cn(
                 { "bg-[#FFFFFF]": activeTab === "libros" },
-                "m-auto flex w-full flex-row justify-center rounded-lg px-3 py-1.5 hover:bg-slate-200",
+                "m-auto flex w-full items-center justify-center rounded-lg px-3 py-1.5 hover:bg-slate-200",
               )}
             >
               <BookIcon className="mr-2 h-4 w-4" />
@@ -85,8 +85,8 @@ export default function ContenedorReserva({ usuarioData }: ClienteContenedorUsua
             <TabsTrigger
               value="inventario"
               className={cn(
-                { " bg-[#FFFFFF]": activeTab === "inventario" },
-                "m-auto flex w-full flex-row justify-center rounded-lg px-3 py-1.5 hover:bg-slate-200",
+                { "bg-[#FFFFFF]": activeTab === "inventario" },
+                "m-auto flex w-full items-center justify-center rounded-lg px-3 py-1.5 hover:bg-slate-200",
               )}
             >
               <BoxIcon className="mr-2 h-4 w-4" />
@@ -95,8 +95,8 @@ export default function ContenedorReserva({ usuarioData }: ClienteContenedorUsua
             <TabsTrigger
               value="laboratorio abierto"
               className={cn(
-                { " bg-[#FFFFFF]": activeTab === "laboratorio abierto" },
-                "m-auto flex w-full flex-row justify-center rounded-lg px-3 py-1.5 hover:bg-slate-200",
+                { "bg-[#FFFFFF]": activeTab === "laboratorio abierto" },
+                "m-auto flex w-full items-center justify-center rounded-lg px-3 py-1.5 hover:bg-slate-200",
               )}
             >
               <BeakerIcon className="mr-2 h-4 w-4" />
@@ -105,8 +105,8 @@ export default function ContenedorReserva({ usuarioData }: ClienteContenedorUsua
             <TabsTrigger
               value="laboratorio cerrado"
               className={cn(
-                { " bg-[#FFFFFF]": activeTab === "laboratorio cerrado" },
-                "m-auto flex w-full flex-row justify-center rounded-lg px-3 py-1.5 hover:bg-slate-200",
+                { "bg-[#FFFFFF]": activeTab === "laboratorio cerrado" },
+                "m-auto flex w-full items-center justify-center rounded-lg px-3 py-1.5 hover:bg-slate-200",
               )}
             >
               <BeakerIcon className="mr-2 h-4 w-4" />

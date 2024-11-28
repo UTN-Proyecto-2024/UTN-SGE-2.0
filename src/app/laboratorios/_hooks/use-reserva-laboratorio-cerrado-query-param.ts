@@ -125,7 +125,10 @@ export const useReservasLaboratorioCerradoQueryParam = (filters: resevaLaborator
   const sorting = getSorting(filters);
   const pagination = getPagination(filters);
   const searchText = filters.searchText;
-  const reservaEstatus = filters.estatus;
+
+  // El estado `APROBADA` no existe en el backend.
+  // Este estado es para separar virtualmente en el frontend las reservas que ya estan aprobadas y pendientes de ejecución y mostrarlo en el tab.
+  const reservaEstatus = filters.aprobadas === "true" ? EstadoAprobada : filters.estatus;
 
   const changeQueryParams = useCallback(
     (filters: resevaLaboratorioCerradoFilters) => {

@@ -2,6 +2,7 @@
 
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import { ReservaViewAdmin } from "@/app/laboratorios/solicitudes/[id]/form-gestion-reserva";
+import { ScrollArea } from "@/components/ui";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -54,12 +55,14 @@ export default function VerReservaModal({ params: { id } }: PageProps) {
       className="max-h-[calc(100vh_-_10%)]"
     >
       <div className="flex max-h-max w-full flex-col gap-4">
-        <ReservaViewAdmin
-          reservaId={Number(id)}
-          onCancel={handleClickCancel}
-          onAprobar={handleClickAprobar}
-          onRechazar={handleClickRechazar}
-        />
+        <ScrollArea className="max-h-[calc(100vh_-_300px)]">
+          <ReservaViewAdmin
+            reservaId={Number(id)}
+            onCancel={handleClickCancel}
+            onAprobar={handleClickAprobar}
+            onRechazar={handleClickRechazar}
+          />
+        </ScrollArea>
       </div>
     </ModalDrawer>
   );
