@@ -15,7 +15,6 @@ import { construirOrderByDinamico } from "@/shared/dynamic-orderby";
 import {
   obtenerHoraInicioFin,
   armarFechaReserva,
-  construirFechaReservaSinOffset,
   getFechaddddDDMMYYYY,
   calcularTurnoTexto,
   armarFechaSinHorasALas0000,
