@@ -143,6 +143,7 @@ export const Autocomplete = <TType extends SelectItemAutocomplete | string, TMul
   const onClear = (e: React.MouseEvent<SVGSVGElement, MouseEvent>): void => {
     e.preventDefault();
     onChange(null);
+    onQueryChange?.("");
     inputRef.current?.focus();
     inputRef.current?.blur();
   };
@@ -212,7 +213,7 @@ export const Autocomplete = <TType extends SelectItemAutocomplete | string, TMul
                 {isLoading ? (
                   <Loader2 className="block h-4 w-4" />
                 ) : (
-                  canClear && <XIcon onClick={onClear} className="mr-1 h-5 cursor-pointer hover:text-primary" />
+                  canClear && <XIcon onClick={onClear} className="mr-1 h-5 cursor-pointer hover:bg-primary" />
                 )}
                 <ComboboxButton className={cn({ "ml-2": isLoading })}>
                   <ChevronDownIcon
