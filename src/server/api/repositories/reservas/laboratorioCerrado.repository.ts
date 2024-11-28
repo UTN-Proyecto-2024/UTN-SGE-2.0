@@ -24,12 +24,29 @@ type InputGetPorUsuarioID = z.infer<typeof inputGetReservaLaboratorioPorUsuarioI
 export const getReservaPorUsuarioId = async (ctx: { db: PrismaClient }, input: InputGetPorUsuarioID) => {
   const { id } = input;
 
-  const filtrosWhereReservaLaboratorioCerrado: Prisma.ReservaLaboratorioCerradoWhereInput = {
-    usuarioCreadorId: id,
-  };
-
   const reservas = await ctx.db.reservaLaboratorioCerrado.findMany({
-    where: filtrosWhereReservaLaboratorioCerrado,
+    where: {
+      OR: [
+        {
+          // Es discrecional y tiene un docente asignado -> Mostramos al docente
+          esDiscrecional: true,
+          discrecionalDocenteId: id,
+        },
+        {
+          // Es discrecional y no tiene un docente asignado -> Mostramos al usuario creador
+          esDiscrecional: true,
+          discrecionalMateriaId: null,
+          usuarioCreadorId: id,
+        },
+        {
+          // No es discrecional -> Mostramos al profesor del curso
+          esDiscrecional: false,
+          curso: {
+            profesorId: id,
+          },
+        },
+      ],
+    },
     include: {
       reserva: true,
       laboratorio: true,
