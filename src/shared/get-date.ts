@@ -149,6 +149,22 @@ export const construirFechaReservaSinOffset = (fecha?: string | undefined) => {
   return nuevaFecha;
 };
 
+export const getTimeISOStringSinOffset = (fecha: Date | undefined) => {
+  const date = fecha ?? new Date();
+
+  const timeZoneOffset = date.getTimezoneOffset() / 60; // Obtener el offset en horas
+
+  const ajusteHoras = timeZoneOffset - 3;
+
+  date.setHours(date.getHours() + ajusteHoras);
+
+  return date.toLocaleTimeString("es-AR", {
+    hour12: false,
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
 // Mapeo de horarios por turno
 export const horariosTurnos: Record<string, Record<number, string>> = {
   MANANA: {

@@ -169,17 +169,30 @@ export const getLaboratorioPorId = async (ctx: { db: PrismaClient }, input: Inpu
 
 type InputEliminarLaboratorio = z.infer<typeof inputEliminarLaboratorio>;
 export const eliminarLaboratorio = async (ctx: { db: PrismaClient }, input: InputEliminarLaboratorio) => {
-  try {
-    const laboratorio = await ctx.db.laboratorio.delete({
+  const laboratorio = await ctx.db.$transaction(async (tx) => {
+    const existeEquipoEnLaboratorio = await tx.equipo.findFirst({
+      where: {
+        laboratorioId: input.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (existeEquipoEnLaboratorio) {
+      throw new Error("No se puede eliminar un laboratorio con equipos asignados");
+    }
+
+    const laboratorio = await tx.laboratorio.delete({
       where: {
         id: input.id,
       },
     });
 
     return laboratorio;
-  } catch (error) {
-    throw new Error(`Error eliminando laboratorio ${input.id}`);
-  }
+  });
+
+  return laboratorio;
 };
 
 type InputEditarLaboratorio = z.infer<typeof inputEditarLaboratorio>;

@@ -2,14 +2,14 @@ import { sendEmail } from "./email";
 import { type PrismaClient } from "@prisma/client";
 import { LABORATORIO_ABIERTO_ROUTE } from "@/shared/server-routes";
 import { getReservaLaboratorioAbiertoParaEmail } from "../../repositories/reservas/laboratorioAbierto.repository";
-import { getFechaddddDDMMYYYY, getTimeISOString } from "@/shared/get-date";
+import { getFechaddddDDMMYYYY, getTimeISOStringSinOffset } from "@/shared/get-date";
 
 export const enviarMailReservaLaboratorioAbiertoProcedure = async (ctx: { db: PrismaClient }, reservaId: number) => {
   const reservaData = await getReservaLaboratorioAbiertoParaEmail(ctx, { id: reservaId });
 
   const fecha = getFechaddddDDMMYYYY(reservaData.fechaHoraInicio);
-  const horaInicio = getTimeISOString(reservaData.fechaHoraInicio);
-  const horaFin = getTimeISOString(reservaData.fechaHoraFin);
+  const horaInicio = getTimeISOStringSinOffset(reservaData.fechaHoraInicio);
+  const horaFin = getTimeISOStringSinOffset(reservaData.fechaHoraFin);
 
   await sendEmail(ctx, {
     asunto: "Reserva de laboratorio abierto confirmada",
@@ -58,8 +58,8 @@ export const enviarMailAproboLaboratorioAbiertoProcedure = async (ctx: { db: Pri
   const reservaData = await getReservaLaboratorioAbiertoParaEmail(ctx, { id: reservaId });
 
   const fecha = getFechaddddDDMMYYYY(reservaData.fechaHoraInicio);
-  const horaInicio = getTimeISOString(reservaData.fechaHoraInicio);
-  const horaFin = getTimeISOString(reservaData.fechaHoraFin);
+  const horaInicio = getTimeISOStringSinOffset(reservaData.fechaHoraInicio);
+  const horaFin = getTimeISOStringSinOffset(reservaData.fechaHoraFin);
   const laboratorioNombre = reservaData.laboratorioNombre;
 
   await sendEmail(ctx, {
