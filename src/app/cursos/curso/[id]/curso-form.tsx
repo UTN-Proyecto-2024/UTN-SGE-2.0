@@ -1,9 +1,9 @@
-import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { api } from "@/trpc/react";
 import { Button, toast } from "@/components/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
-import { use, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { inputEditarCurso } from "@/shared/filters/cursos-filter.schema";
 import { FormSelect } from "@/components/ui/autocomplete";
 import { turnosValues } from "@/app/_components/turno-text";
