@@ -2,7 +2,7 @@ import { sendEmail } from "./email";
 import { type PrismaClient } from "@prisma/client";
 import { LABORATORIO_ROUTE } from "@/shared/server-routes";
 import { getReservaLaboratorioCerradoParaEmail } from "../../repositories/reservas/laboratorioCerrado.repository";
-import { getFechaddddDDMMYYYY, getTimeISOString } from "@/shared/get-date";
+import { getFechaddddDDMMYYYY, getTimeISOStringSinOffset } from "@/shared/get-date";
 
 export const enviarMailReservaLaboratorioCerradoCreadaProcedure = async (
   ctx: { db: PrismaClient },
@@ -13,8 +13,8 @@ export const enviarMailReservaLaboratorioCerradoCreadaProcedure = async (
   const esDiscrecional = reservaData.esDiscrecional;
 
   const fecha = getFechaddddDDMMYYYY(reservaData.fechaHoraInicio);
-  const horaInicio = getTimeISOString(reservaData.fechaHoraInicio);
-  const horaFin = getTimeISOString(reservaData.fechaHoraFin);
+  const horaInicio = getTimeISOStringSinOffset(reservaData.fechaHoraInicio);
+  const horaFin = getTimeISOStringSinOffset(reservaData.fechaHoraFin);
 
   const laboratorioNombre = reservaData.laboratorioNombre ? `<strong>${reservaData.laboratorioNombre}</strong>` : "";
 
@@ -39,8 +39,8 @@ export const enviarMailRechazoLaboratorioCerradoProcedure = async (ctx: { db: Pr
 
   const esDiscrecional = reservaData.esDiscrecional;
   const fecha = getFechaddddDDMMYYYY(reservaData.fechaHoraInicio);
-  const horaInicio = getTimeISOString(reservaData.fechaHoraInicio);
-  const horaFin = getTimeISOString(reservaData.fechaHoraFin);
+  const horaInicio = getTimeISOStringSinOffset(reservaData.fechaHoraInicio);
+  const horaFin = getTimeISOStringSinOffset(reservaData.fechaHoraFin);
   const motivoRechazo = reservaData.motivoRechazo;
 
   await sendEmail(ctx, {
@@ -65,8 +65,8 @@ export const enviarMailAproboLaboratorioCerradoProcedure = async (ctx: { db: Pri
 
   const esDiscrecional = reservaData.esDiscrecional;
   const fecha = getFechaddddDDMMYYYY(reservaData.fechaHoraInicio);
-  const horaInicio = getTimeISOString(reservaData.fechaHoraInicio);
-  const horaFin = getTimeISOString(reservaData.fechaHoraFin);
+  const horaInicio = getTimeISOStringSinOffset(reservaData.fechaHoraInicio);
+  const horaFin = getTimeISOStringSinOffset(reservaData.fechaHoraFin);
   const laboratorioNombre = reservaData.laboratorioNombre ? `<strong>${reservaData.laboratorioNombre}</strong>` : "";
 
   await sendEmail(ctx, {
@@ -94,8 +94,8 @@ export const enviarMailCancelacionLaboratorioCerradoProcedure = async (
 
   const esDiscrecional = reservaData.esDiscrecional;
   const fecha = getFechaddddDDMMYYYY(reservaData.fechaHoraInicio);
-  const horaInicio = getTimeISOString(reservaData.fechaHoraInicio);
-  const horaFin = getTimeISOString(reservaData.fechaHoraFin);
+  const horaInicio = getTimeISOStringSinOffset(reservaData.fechaHoraInicio);
+  const horaFin = getTimeISOStringSinOffset(reservaData.fechaHoraFin);
 
   await sendEmail(ctx, {
     asunto: `Reserva ${esDiscrecional ? "discrecional" : ""} de laboratorio cancelada - ${fecha}`,

@@ -19,12 +19,10 @@ type InputGetPorUsuarioID = z.infer<typeof inputGetReservaLaboratorioPorUsuarioI
 export const getReservaPorUsuarioId = async (ctx: { db: PrismaClient }, input: InputGetPorUsuarioID) => {
   const { id } = input;
 
-  const filtrosWhereReservaLaboratorioAbierto: Prisma.ReservaLaboratorioAbiertoWhereInput = {
-    usuarioCreadorId: id,
-  };
-
   const reservas = await ctx.db.reservaLaboratorioAbierto.findMany({
-    where: filtrosWhereReservaLaboratorioAbierto,
+    where: {
+      usuarioCreadorId: id,
+    },
     include: {
       reserva: true,
       laboratorio: true,

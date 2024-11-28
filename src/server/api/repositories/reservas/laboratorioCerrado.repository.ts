@@ -15,21 +15,38 @@ import { construirOrderByDinamico } from "@/shared/dynamic-orderby";
 import {
   obtenerHoraInicioFin,
   armarFechaReserva,
-  construirFechaReservaSinOffset,
   getFechaddddDDMMYYYY,
   calcularTurnoTexto,
+  armarFechaSinHorasALas0000,
 } from "@/shared/get-date";
 
 type InputGetPorUsuarioID = z.infer<typeof inputGetReservaLaboratorioPorUsuarioId>;
 export const getReservaPorUsuarioId = async (ctx: { db: PrismaClient }, input: InputGetPorUsuarioID) => {
   const { id } = input;
 
-  const filtrosWhereReservaLaboratorioCerrado: Prisma.ReservaLaboratorioCerradoWhereInput = {
-    usuarioCreadorId: id,
-  };
-
   const reservas = await ctx.db.reservaLaboratorioCerrado.findMany({
-    where: filtrosWhereReservaLaboratorioCerrado,
+    where: {
+      OR: [
+        {
+          // Es discrecional y tiene un docente asignado -> Mostramos al docente
+          esDiscrecional: true,
+          discrecionalDocenteId: id,
+        },
+        {
+          // Es discrecional y no tiene un docente asignado -> Mostramos al usuario creador
+          esDiscrecional: true,
+          discrecionalMateriaId: null,
+          usuarioCreadorId: id,
+        },
+        {
+          // No es discrecional -> Mostramos al profesor del curso
+          esDiscrecional: false,
+          curso: {
+            profesorId: id,
+          },
+        },
+      ],
+    },
     include: {
       reserva: true,
       laboratorio: true,
@@ -711,22 +728,22 @@ function obtenerFechaHoraInicio(
   input: InputCrearReserva,
 ) {
   // Obtener el día de la fecha de reserva
-  const fechaReserva = construirFechaReservaSinOffset(input.fechaReserva);
+  const fechaReserva = armarFechaSinHorasALas0000(input.fechaReserva);
   if (!(fechaReserva instanceof Date) || isNaN(fechaReserva.getTime())) {
     throw new Error("Fecha de reserva inválida");
   }
   const diaReserva = fechaReserva.getDay(); // Esto devolverá 0-6
-  const diaReservaFinal = obtenerCursoDia(diaReserva);
+  const diaReservaSemana = obtenerCursoDia(diaReserva);
 
   // Determinar si la reserva es para el dia1 o dia2 del curso
   let horaInicioStr: string | undefined;
   let duracionStr: string | undefined;
 
-  if (diaReservaFinal === curso.dia1) {
+  if (diaReservaSemana === curso.dia1) {
     // Si el día de la reserva coincide con dia1
     horaInicioStr = curso.horaInicio1;
     duracionStr = curso.duracion1;
-  } else if (diaReservaFinal === curso.dia2) {
+  } else if (diaReservaSemana === curso.dia2) {
     // Si el día de la reserva coincide con dia2
     horaInicioStr = curso.horaInicio2 ?? undefined;
     duracionStr = curso.duracion2 ?? undefined;
@@ -734,7 +751,7 @@ function obtenerFechaHoraInicio(
 
   // Validar si el curso tiene clases ese día
   if (!horaInicioStr || !duracionStr) {
-    throw new Error(`El curso no tiene clases el día ${diaReservaFinal}`);
+    throw new Error(`El curso no tiene clases el día ${diaReservaSemana}`);
   }
 
   const horaInicioNumero = parseInt(horaInicioStr);

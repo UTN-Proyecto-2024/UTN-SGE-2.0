@@ -5,7 +5,7 @@ import {
 } from "../../repositories/notificacion/notificacion.repository";
 import { protectedProcedure } from "../../trpc";
 import { BIBLIOTECA_ROUTE, EQUIPOS_ROUTE, LABORATORIO_ABIERTO_ROUTE, LABORATORIO_ROUTE } from "@/shared/server-routes";
-import { getDateISOString, getTimeISOString } from "@/shared/get-date";
+import { getDateISOString, getFechaddddDDMMYYYY } from "@/shared/get-date";
 
 const RUTA_APROBAR_LABO_CERRADO = `${LABORATORIO_ROUTE.href}/solicitudes`;
 const RUTA_APROBAR_LABO_ABIERTO = `${LABORATORIO_ABIERTO_ROUTE.href}/solicitudes`;
@@ -44,12 +44,14 @@ const buildNotificacionReservaLaboratorio = (notificacion: Notificacion): Notifi
   const esTipoAbierto = notificacion.tipo === ReservaTipo.LABORATORIO_ABIERTO;
   const esTipoCerrado = notificacion.tipo === ReservaTipo.LABORATORIO_CERRADO;
 
+  const fecha = getFechaddddDDMMYYYY(notificacion.fechaHoraInicio);
+
   if (esTipoAbierto) {
     return {
       ...notificacion,
       link: `${RUTA_APROBAR_LABO_ABIERTO}/${notificacion.id}`,
       titulo: "Laboratorio Abierto",
-      descripcion: `Reserva pendiente de aprobación el ${getDateISOString(notificacion.fechaHoraInicio)} de ${getTimeISOString(notificacion.fechaHoraInicio)} a ${getTimeISOString(notificacion.fechaHoraFin)}.`,
+      descripcion: `Reserva pendiente de aprobación el ${fecha}.`,
     };
   }
 
@@ -58,7 +60,7 @@ const buildNotificacionReservaLaboratorio = (notificacion: Notificacion): Notifi
       ...notificacion,
       link: `${RUTA_APROBAR_LABO_CERRADO}/${notificacion.id}`,
       titulo: "Laboratorio",
-      descripcion: `Reserva pendiente de aprobación el ${getDateISOString(notificacion.fechaHoraInicio)} de ${getTimeISOString(notificacion.fechaHoraInicio)} a ${getTimeISOString(notificacion.fechaHoraFin)}.`,
+      descripcion: `Reserva pendiente de aprobación el ${fecha}.`,
     };
   }
 

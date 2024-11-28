@@ -91,7 +91,7 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
           </div>
         </CardHeader>
         <CardContent>
-          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-4">
             <div className="space-y-2">
               <b className="flex items-center text-sm font-semibold">
                 <CalendarIcon className="mr-2 h-4 w-4" />
@@ -177,7 +177,7 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
               </>
             )}
           </div>
-          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-4">
             <div className="space-y-2">
               <b className="flex items-center text-sm font-semibold">
                 <PersonStandingIcon className="h-4 w-4" />

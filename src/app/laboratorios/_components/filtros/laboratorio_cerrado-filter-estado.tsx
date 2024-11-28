@@ -6,6 +6,7 @@ import { type RouterOutputs } from "@/trpc/react";
 import { type inputGetAllSolicitudesReservaLaboratorioCerrado } from "@/shared/filters/reserva-laboratorio-filter.schema";
 import { useReservasLaboratorioCerradoQueryParam } from "../../_hooks/use-reserva-laboratorio-cerrado-query-param";
 import { EstadoReservaToString } from "@/app/_components/estados-reservas";
+import { type EstatusAprobada } from "@/shared/estado-reserva";
 
 type LaboratorioCerradoReservaFilters = z.infer<typeof inputGetAllSolicitudesReservaLaboratorioCerrado>;
 type EstadoReservaType =
@@ -18,7 +19,7 @@ type Props = {
 export const ReservaLaboratorioCerradoEstadoFilter = ({ filters }: Props) => {
   const { reservaEstatus, onReservaEstatusChange } = useReservasLaboratorioCerradoQueryParam(filters);
 
-  const [currentEstatus, setCurrentEstatus] = useState<EstadoReservaType | "">(reservaEstatus);
+  const [currentEstatus, setCurrentEstatus] = useState<EstadoReservaType | EstatusAprobada | "">(reservaEstatus);
 
   const handleTextChange = (nuevoEstatus: EstadoReservaType | "") => {
     onReservaEstatusChange(nuevoEstatus);
