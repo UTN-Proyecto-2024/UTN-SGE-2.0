@@ -17,7 +17,7 @@ export function SignIn() {
 
   // Login productivo
   return (
-    <button className={style} onClick={() => signIn("discord")}>
+    <button className={style} onClick={() => signIn("keycloak")}>
       Iniciar sesión
     </button>
   );
