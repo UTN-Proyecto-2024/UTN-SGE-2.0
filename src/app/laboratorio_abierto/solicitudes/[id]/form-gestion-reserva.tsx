@@ -19,17 +19,17 @@ export const ReservaViewAdmin = ({ reservaId, onCancel, onAprobar, onRechazar }:
     id: Number(reservaId),
   });
 
-  const cancelarReservaLaboratorio = api.reservas.reservaLaboratorioAbierto.cancelarReserva.useMutation();
-  const handleCancelReserva = () => {
-    cancelarReservaLaboratorio.mutate(
-      { id: reservaId },
+  const rechazarReservaLaboratorio = api.reservas.reservaLaboratorioAbierto.rechazarReserva.useMutation();
+  const handleRechazarReserva = () => {
+    rechazarReservaLaboratorio.mutate(
+      { id: reservaId, motivo: "Rechazada por expiración" },
       {
         onSuccess: () => {
-          toast.success("Reserva cancelada con éxito.");
+          toast.success("Reserva rechazada con éxito.");
           onCancel();
         },
         onError: (error) => {
-          toast.error(error?.message ?? "Error al cancelar la reserva");
+          toast.error(error?.message ?? "Error al rechazar la reserva");
         },
       },
     );
@@ -61,8 +61,14 @@ export const ReservaViewAdmin = ({ reservaId, onCancel, onAprobar, onRechazar }:
       )}
       {esReservaPendientePasada && (
         <div className="flex justify-end">
-          <Button title="Cancelar Reserva" type="button" variant="default" color="danger" onClick={handleCancelReserva}>
-            Cancelar Reserva
+          <Button
+            title="Rechazar Reserva"
+            type="button"
+            variant="default"
+            color="danger"
+            onClick={handleRechazarReserva}
+          >
+            Rechazar Reserva
           </Button>
         </div>
       )}
