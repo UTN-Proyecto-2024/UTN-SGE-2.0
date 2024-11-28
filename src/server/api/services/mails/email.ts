@@ -3,6 +3,7 @@ import { emailTemplate } from "../../utils/emailTemplate";
 import { cargarMailAuditoria } from "./auditoria";
 import { type PrismaClient } from "@prisma/client";
 
+const isLocalOrVercel = process.env.RUTA_ACTUAL?.includes("localhost") ?? process.env.RUTA_ACTUAL?.includes("vercel");
 const isTestingEmail = process.env.SMTP_TESTING === "true";
 const host = process.env.SMTP_HOST;
 const port = Number(process.env.SMTP_PORT);
@@ -25,7 +26,7 @@ export const transporter = nodemailer.createTransport({
   port: port,
   secure,
   auth,
-  ...(!secure && { tls: { rejectUnauthorized: false }, ignoreTLS: true }),
+  ...(isLocalOrVercel ? {} : !secure && { tls: { rejectUnauthorized: false }, ignoreTLS: true }),
 });
 
 if (!transporter) {
