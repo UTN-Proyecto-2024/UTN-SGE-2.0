@@ -8,6 +8,7 @@ import KeycloakProvider, { type KeycloakProfile } from "next-auth/providers/keyc
 import { env } from "@/env";
 import { db } from "@/server/db";
 import Credentials from "next-auth/providers/credentials";
+import type { User } from "@prisma/client";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -29,6 +30,18 @@ const prismaAdapter = PrismaAdapter(db);
 
 const CustomAdapter = {
   ...prismaAdapter,
+  createUser: async (data: User) => {
+    const user = await db.$transaction(async (tx) => {
+      const userPromise = tx.user.create({ data });
+      const rolPromise = tx.rol.findUnique({ where: { nombre: "Alumno" } });
+      const [user, rolAlumno] = await Promise.all([userPromise, rolPromise]);
+      if (rolAlumno?.id) {
+        await tx.usuarioRol.create({ data: { rolId: rolAlumno.id, userId: user.id, usuarioCreadorId: user.id } });
+      }
+      return user;
+    });
+    return user;
+  },
   linkAccount: (account: AdapterAccount) => {
     delete account["not-before-policy"];
     // @ts-expect-error string not assignable to Lowecase<string>
@@ -42,6 +55,10 @@ const CustomAdapter = {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
+  pages: {
+    signIn: "/",
+    signOut: "/",
+  },
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60,
@@ -85,38 +102,38 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.KEYCLOAK_CLIENT_SECRET ?? "",
       issuer: process.env.KEYCLOAK_ISSUER,
       async profile(profile: KeycloakProfile) {
-        const documentoTipo = await db.documentoTipo.findFirst({ where: { nombre: profile.documento_tipo } });
-        const provincia = await db.provincia.findFirst({ where: { nombre: profile.address.region } });
-        const pais = await db.pais.findFirst({ where: { nombreEspanol: profile.address.country } });
+        // const documentoTipo = await db.documentoTipo.findFirst({ where: { nombre: profile.documento_tipo } });
+        // const provincia = await db.provincia.findFirst({ where: { nombre: profile.address.region } });
+        // const pais = await db.pais.findFirst({ where: { nombreEspanol: profile.address.country } });
         return {
           id: profile.sub,
           name: profile.preferred_username,
           email: profile.email,
           emailVerified: profile.email_verified,
-          image: profile.picture,
+          // image: profile.picture,
           nombre: profile.given_name,
           apellido: profile.family_name,
-          fechaNacimiento: new Date(profile.birthdate.split("/").reverse().join("-")),
-          legajo: profile.legajo?.replace("-", ""),
-          direccion: profile.address.street_address,
-          ciudad: profile.address.locality,
-          codigoPostal: profile.address.postal_code,
-          telefonoCelular: profile.phone_number,
-          documentoNumero: profile.documento,
-          esDocente: profile.es_docente === "Docente",
-          documentoTipo: documentoTipo ? { connect: { id: documentoTipo.id } } : undefined,
-          pais: pais ? { connect: { iso: pais.iso } } : undefined,
-          provincia:
-            provincia && pais
-              ? {
-                  connect: {
-                    iso_paisIso: {
-                      iso: provincia.iso,
-                      paisIso: pais.iso,
-                    },
-                  },
-                }
-              : undefined,
+          // fechaNacimiento: new Date(profile.birthdate.split("/").reverse().join("-")),
+          // legajo: profile.legajo?.replace("-", ""),
+          // direccion: profile.address.street_address,
+          // ciudad: profile.address.locality,
+          // codigoPostal: profile.address.postal_code,
+          // telefonoCelular: profile.phone_number,
+          // documentoNumero: profile.documento,
+          // esDocente: profile.es_docente === "Docente",
+          // documentoTipo: documentoTipo ? { connect: { id: documentoTipo.id } } : undefined,
+          // pais: pais ? { connect: { iso: pais.iso } } : undefined,
+          // provincia:
+          //   provincia && pais
+          //     ? {
+          //         connect: {
+          //           iso_paisIso: {
+          //             iso: provincia.iso,
+          //             paisIso: pais.iso,
+          //           },
+          //         },
+          //       }
+          //     : undefined,
         };
       },
     }),
