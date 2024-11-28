@@ -1,7 +1,6 @@
-import Link from "next/link";
-
 import { getServerAuthSession } from "@/server/auth";
 import Image from "next/image";
+import { SignIn, SignOut } from "./_components/auth";
 
 export default async function Home() {
   const session = await getServerAuthSession();
@@ -32,12 +31,7 @@ export default async function Home() {
                 </>
               )}
             </div>
-            <Link
-              href={session ? "/api/auth/signout" : "/api/auth/signin"}
-              className="rounded-full bg-slate-100 px-10 py-3 font-semibold no-underline transition hover:bg-slate-200"
-            >
-              {session ? " Cerrar sesión" : "Iniciar sesión"}
-            </Link>
+            {session ? <SignOut /> : <SignIn />}
             <div className="w-2/3 pt-5 text-center text-xl">
               <p>
                 Bienvenido al sistema de gestión electrónica del departamento de Ingeniería Electrónica de la Facultad
