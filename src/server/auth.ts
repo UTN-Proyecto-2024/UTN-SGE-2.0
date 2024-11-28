@@ -8,6 +8,7 @@ import KeycloakProvider, { type KeycloakProfile } from "next-auth/providers/keyc
 import { env } from "@/env";
 import { db } from "@/server/db";
 import Credentials from "next-auth/providers/credentials";
+import type { User } from "@prisma/client";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -29,6 +30,18 @@ const prismaAdapter = PrismaAdapter(db);
 
 const CustomAdapter = {
   ...prismaAdapter,
+  createUser: async (data: User) => {
+    const user = await db.$transaction(async (tx) => {
+      const userPromise = tx.user.create({ data });
+      const rolPromise = tx.rol.findUnique({ where: { nombre: "Alumno" } });
+      const [user, rolAlumno] = await Promise.all([userPromise, rolPromise]);
+      if (rolAlumno?.id) {
+        await tx.usuarioRol.create({ data: { rolId: rolAlumno.id, userId: user.id, usuarioCreadorId: user.id } });
+      }
+      return user;
+    });
+    return user;
+  },
   linkAccount: (account: AdapterAccount) => {
     delete account["not-before-policy"];
     // @ts-expect-error string not assignable to Lowecase<string>
