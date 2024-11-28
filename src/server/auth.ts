@@ -58,12 +58,6 @@ export const authOptions: NextAuthOptions = {
       if (existingUser && profile) {
         delete account["not-before-policy"];
         await db.account.create({ data: { ...account, userId: existingUser.id } });
-      } else {
-        const alumno = await db.rol.findUnique({ where: { nombre: "Alumno" } });
-        if (alumno?.id) {
-          // TODO: modificar rol para que tenga una columna nueva "asignar al crear"
-          await db.usuarioRol.create({ data: { rolId: alumno.id, userId: user.id, usuarioCreadorId: user.id } });
-        }
       }
       return true;
     },
