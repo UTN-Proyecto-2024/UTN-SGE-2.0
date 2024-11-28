@@ -52,7 +52,7 @@ export default function PageDetalleReserva({ params: { id } }: PageProps) {
       description="Detalles de la reserva de laboratorio."
       open={open}
       onOpenChange={handleOpenChange}
-      className="max-h-[calc(100vh_-_300px)]"
+      className="max-h-[calc(100vh_-_10%)]"
     >
       <div className="flex max-h-max w-full flex-col gap-4">
         <ScrollArea className="max-h-[calc(100vh_-_300px)]">

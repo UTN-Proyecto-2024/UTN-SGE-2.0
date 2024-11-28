@@ -8,6 +8,7 @@ import {
   PersonStandingIcon,
   SearchIcon,
   TextIcon,
+  UsersIcon,
   WrenchIcon,
 } from "lucide-react";
 import { Label } from "@/components/ui";
@@ -92,7 +93,7 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid auto-cols-max grid-cols-2 gap-4 md:grid-cols-3">
+          <div className="grid auto-cols-max grid-cols-2 gap-4 md:grid-cols-4">
             {[
               ...[
                 {
@@ -124,6 +125,11 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
                   icon: <SearchIcon className="h-4 w-4" />,
                   label: "Especialidad",
                   value: reserva?.especialidad ?? "Sin asignar",
+                },
+                {
+                  icon: <UsersIcon className="h-4 w-4" />,
+                  label: "Cantidad de asistentes",
+                  value: reserva?.concurrentes ?? "-",
                 },
                 {
                   icon: <PersonStandingIcon className="h-4 w-4" />,
