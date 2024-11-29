@@ -19,7 +19,7 @@ export async function uploadFile(formData: FormData) {
   const arrayBuffer = await file.arrayBuffer();
   const buffer = new Uint8Array(arrayBuffer);
 
-  const dir = path.join("./public/imagenes");
+  const dir = path.join(process.cwd(), "./public/imagenes");
   mkdirSync(dir, { recursive: true });
 
   const newName = `${Date.now().toString()}-${file.name}`;
@@ -37,7 +37,7 @@ export async function uploadFile(formData: FormData) {
 }
 
 export async function removeFile(fileName: string) {
-  const filePath = path.join("./public/imagenes", fileName);
+  const filePath = path.join(process.cwd(), "./public/imagenes", fileName);
 
   try {
     await rm(filePath);
