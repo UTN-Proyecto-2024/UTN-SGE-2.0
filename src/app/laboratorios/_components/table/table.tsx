@@ -6,6 +6,8 @@ import { ReservarLaboratorioCerradoModal } from "./reservar-laboratorio";
 import { getColumns } from "./columns";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
 import { SgeNombre } from "@prisma/client";
+import { useState } from "react";
+import { type GroupingState } from "@tanstack/react-table";
 
 type CursoData = RouterOutputs["cursos"]["getAll"];
 
@@ -16,11 +18,15 @@ type CursosTableProps = {
 export const CursosTable = ({ data }: CursosTableProps) => {
   const columns = getColumns();
 
+  const [grouping, setGrouping] = useState<GroupingState>(["anioDeCarrera", "materia"]);
+
   return (
     <>
       <DataTable
         data={data.cursos ?? []}
         columns={columns}
+        grouping={grouping}
+        setGrouping={setGrouping}
         action={{
           header: "Acciones",
           cell({ original }) {

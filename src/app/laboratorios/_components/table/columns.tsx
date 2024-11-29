@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { AnnoTexto } from "@/app/_components/anno-texto";
 import { DatoUsuarioReserva } from "@/app/_components/datos-usuario";
 import { HoraDia } from "@/app/_components/hora-dia-curso";
 import { CursoTurno } from "@/app/_components/turno-text";
@@ -20,6 +21,23 @@ export const getColumns = () => {
   const colHelper = createColumnHelper<CursosData>();
 
   return [
+    colHelper.accessor("anioDeCarrera", {
+      header: "",
+      cell: ({ row }) => {
+        const { anioDeCarrera } = row.original;
+
+        return <AnnoTexto anio={anioDeCarrera} />;
+      },
+    }),
+    colHelper.accessor("materia.nombre", {
+      id: "materia",
+      header: "",
+      meta: {
+        header: {
+          hideSort: true,
+        },
+      },
+    }),
     colHelper.accessor("division.nombre", {
       header: "División",
     }),
