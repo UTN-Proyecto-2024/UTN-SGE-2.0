@@ -134,9 +134,11 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
                 {
                   icon: <PersonStandingIcon className="h-4 w-4" />,
                   label: "Solicitante",
-                  value: reserva?.reserva.usuarioSolicito
-                    ? `${reserva.reserva.usuarioSolicito.nombre} ${reserva.reserva.usuarioSolicito.apellido}`
-                    : "Sin asignar",
+                  value: reserva?.reserva.usuarioSolicito ? (
+                    <DatoUsuarioReserva usuario={reserva.reserva.usuarioSolicito} />
+                  ) : (
+                    "Sin asignar"
+                  ),
                 },
                 {
                   icon: <CalculatorIcon className="h-4 w-4" />,
