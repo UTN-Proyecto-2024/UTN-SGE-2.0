@@ -6,13 +6,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Label, Select, SelectTrigger, SelectValue } from "@/components/ui";
 import { CheckIcon, XIcon } from "lucide-react";
 import { LaboratorioOcupado } from "../laboratorio-ocupado";
-import { LABORATORIO_ABIERTO_ROUTE, LABORATORIO_ROUTE } from "@/shared/server-routes";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/components/utils";
-
-const RUTA_RESERVA_ABIERTO =
-  LABORATORIO_ABIERTO_ROUTE.subRutas !== undefined ? LABORATORIO_ABIERTO_ROUTE?.subRutas[1]?.href : "";
-const RUTA_RESERVA_CERRADO = LABORATORIO_ROUTE.subRutas !== undefined ? LABORATORIO_ROUTE?.subRutas[5]?.href : "";
 
 type Props = RouterInputs["admin"]["laboratorios"]["getAll"];
 export const SelectLaboratorioConArmariosForm = <T extends FieldValues, TType extends string>({
@@ -140,7 +135,6 @@ export const SelectLaboratorioFormConEstadoReservaForm = <T extends FieldValues,
           excepcionReservaId={props.excepcionReservaId}
           fechaHoraInicio={props.fechaHoraInicio}
           fechaHoraFin={props.fechaHoraFin}
-          rutaBase={props.esAbierto ? RUTA_RESERVA_ABIERTO : RUTA_RESERVA_CERRADO}
         />
       )}
       <div className="mt-2 flex flex-row gap-x-2 text-base">
