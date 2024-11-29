@@ -82,13 +82,19 @@ export const EquipoForm = ({ id, onSubmit, onCancel }: Props) => {
 
   const { handleSubmit, control, watch } = formHook;
 
-  const [sedeId, laboratorioId, armarioId] = watch(["sedeId", "laboratorioId", "armarioId"]);
+  const [sedeId, laboratorioId, armarioId, estanteId] = watch(["sedeId", "laboratorioId", "armarioId", "estanteId"]);
   const [marca, tipo, modeloForm] = watch(["marca", "tipo", "modeloForm"]);
 
   useEffect(() => formHook.reset(equipoBase), [formHook, equipoBase]);
   useEffect(() => formHook.setValue("marcaId", marca?.id), [formHook, marca]);
   useEffect(() => formHook.setValue("tipoId", tipo?.id), [formHook, tipo]);
   useEffect(() => formHook.setValue("modelo", modeloForm?.label), [formHook, modeloForm]);
+  useEffect(() => {
+    formHook.setValue("sedeId", sedeId);
+    formHook.setValue("laboratorioId", laboratorioId);
+    formHook.setValue("armarioId", armarioId);
+    formHook.setValue("estanteId", estanteId);
+  }, [formHook, armarioId, sedeId, laboratorioId, estanteId]);
 
   if (!esNuevo && isNaN(equipoId)) {
     return <div>Error al cargar...</div>;
