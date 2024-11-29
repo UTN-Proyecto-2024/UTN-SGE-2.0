@@ -3,10 +3,15 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { getTimeISOString } from "@/shared/get-date";
 import Link from "next/link";
 import { CalendarOffIcon } from "lucide-react";
+import { LABORATORIO_ABIERTO_ROUTE, LABORATORIO_ROUTE } from "@/shared/server-routes";
+import { ReservaTipo } from "@prisma/client";
 
 type Props = RouterInputs["reservas"]["laboratorioEnUso"]["obtenerReservasExistentesDeLaboratorio"];
 
-export const LaboratorioOcupado = (props: Props & { rutaBase?: string }) => {
+const RUTA_RESERVA_ABIERTO = LABORATORIO_ABIERTO_ROUTE?.subRutas?.[1]?.href ?? "";
+const RUTA_RESERVA_CERRADO = LABORATORIO_ROUTE?.subRutas?.[5]?.href ?? "";
+
+export const LaboratorioOcupado = (props: Props) => {
   const isValidQuery =
     props.laboratorioId !== undefined && props.fechaHoraInicio !== undefined && props.fechaHoraFin !== undefined;
 
@@ -49,11 +54,13 @@ export const LaboratorioOcupado = (props: Props & { rutaBase?: string }) => {
           <b>{getTimeISOString(reservaInterfiere.fechaHoraInicio)}</b> a{" "}
           <b>{getTimeISOString(reservaInterfiere.fechaHoraFin)}</b> por la reserva <b>#{reservaInterfiere.id}</b>
         </p>
-        {props.rutaBase && (
-          <Link href={`${props.rutaBase}/${reservaInterfiere.id}`} passHref className="text-primary hover:underline">
-            Click aquí para verla
-          </Link>
-        )}
+        <Link
+          href={`${reservaInterfiere.tipo === ReservaTipo.LABORATORIO_ABIERTO ? RUTA_RESERVA_ABIERTO : RUTA_RESERVA_CERRADO}/${reservaInterfiere.id}`}
+          passHref
+          className="text-primary hover:underline"
+        >
+          Click aquí para verla
+        </Link>
       </AlertDescription>
     </Alert>
   );
