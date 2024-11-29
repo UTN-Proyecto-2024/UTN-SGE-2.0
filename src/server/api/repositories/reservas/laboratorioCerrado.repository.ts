@@ -733,7 +733,9 @@ function obtenerFechaHoraInicio(
     throw new Error("Fecha de reserva inválida");
   }
   const diaReserva = fechaReserva.getDay(); // Esto devolverá 0-6
-  const diaReservaSemana = obtenerCursoDia(diaReserva);
+  const diaReservaSemana2 = obtenerCursoDia(diaReserva);
+
+  const diaReservaSemana = obtenerDiaEnArgentina(input.fechaReserva);
 
   // Determinar si la reserva es para el dia1 o dia2 del curso
   let horaInicioStr: string | undefined;
@@ -757,6 +759,7 @@ function obtenerFechaHoraInicio(
         inputFechaReserva: input.fechaReserva,
         fechaReserva,
         diaReserva,
+        diaReservaSemana2,
         diaReservaSemana,
         horaInicioStr,
         duracionStr,
@@ -790,6 +793,26 @@ function obtenerFechaHoraInicio(
 
 // Función para obtener el día en formato CursoDia en base al día de la semana
 function obtenerCursoDia(dia: number): CursoDia {
+  const timeZoneOffsetActual = new Date().getTimezoneOffset();
+
   const dias = ["LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO", "DOMINGO"];
+
+  return dias[dia] as CursoDia;
+}
+
+function obtenerDiaEnArgentina(dateString: string) {
+  const userDate = new Date(dateString);
+
+  // Argentina está en UTC-3
+  const utcTimestamp = userDate.getTime() + userDate.getTimezoneOffset() * 60000;
+
+  const argentinaOffset = -3 * 60 * 60 * 1000; // -3 horas en milisegundos
+
+  const argentinaDate = new Date(utcTimestamp + argentinaOffset);
+
+  const dia = argentinaDate.getDay();
+
+  const dias = ["LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO", "DOMINGO"];
+
   return dias[dia] as CursoDia;
 }
