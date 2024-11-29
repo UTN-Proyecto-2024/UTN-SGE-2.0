@@ -3,6 +3,34 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "author": "Alexander Armua <alexanderarmua1@gmail.com> (https://github.com/AlexanderArmua)",
+  "contributors": [
+    {
+      "name": "Alexander Armua",
+      "email": "alexanderarmua1@gmail.com",
+      "url": "https://github.com/AlexanderArmua"
+    },
+    {
+      "name": "Agustina Razanov",
+      "email": "contribuyente2@example.com",
+      "url": "https://github.com/agustinarazanov"
+    },
+    {
+      "name": "Santiago Castelli",
+      "email": "santiago.castelli@gmail.com",
+      "url": "https://github.com/Santiagocast"
+    },
+    {
+      "name": "Dylan Hurtado",
+      "email": "dhurtado@frba.utn.edu.ar",
+      "url": "https://github.com/Dylanhurtado1"
+    },
+    {
+      "name": "Cesar Mejia",
+      "email": "cesarmejia555@yahoo.com.ar",
+      "url": "https://github.com/comejia"
+    }
+  ],
   "scripts": {
     "build": "next build",
     "db:generar-migracion": "prisma migrate dev --create-only --name",

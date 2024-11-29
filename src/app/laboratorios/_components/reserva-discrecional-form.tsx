@@ -1,15 +1,24 @@
 "use client";
 
 import ModalDrawer from "@/app/_components/modal/modal-drawer";
+import { useTienePermisos } from "@/app/_hooks/use-tiene-permisos";
 import { LaboratorioCerradoForm } from "@/app/laboratorios/_components/reserva-form";
 import { Button } from "@/components/ui";
 import { api } from "@/trpc/react";
+import { SgeNombre } from "@prisma/client";
 import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
 
 export default function ReservaDiscrecionalModal() {
+  const { tienePermisos, isLoading, isError } = useTienePermisos([SgeNombre.RES_LAB_REALIZAR_RESERVA_DISCRECIONAL]);
+
   const [open, setOpen] = useState(false);
   const utils = api.useUtils();
+
+  if (isLoading || isError || !tienePermisos) {
+    return null;
+  }
+
   const refreshGetAll = () => {
     utils.reservas.reservarLaboratorioCerrado.getAll.invalidate().catch((err) => {
       console.error(err);

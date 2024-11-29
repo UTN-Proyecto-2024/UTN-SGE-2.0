@@ -24,18 +24,19 @@ export const INICIO_ROUTE: AppRoute = {
   permisos: [],
 };
 
+const PERMISOS_VER_BIBLIOTECA = [SgeNombre.BIBLIOTECA_VER_LISTADO];
 export const BIBLIOTECA_ROUTE: AppRoute = {
   href: "/biblioteca",
   label: "Biblioteca",
   isPublic: false,
   misPrestamosRuta: "/biblioteca/mis_prestamos",
-  permisos: [SgeNombre.BIBLIOTECA_VER_LISTADO],
+  permisos: PERMISOS_VER_BIBLIOTECA,
   subRutas: [
     {
       href: "/biblioteca",
       label: "Todos los libros",
       isPublic: false,
-      permisos: [SgeNombre.BIBLIOTECA_VER_LISTADO],
+      permisos: PERMISOS_VER_BIBLIOTECA,
     },
     {
       href: "/biblioteca/prestamos",
@@ -52,18 +53,38 @@ export const BIBLIOTECA_ROUTE: AppRoute = {
   ],
 };
 
+// Nota @Alex: Es importante que `Mis Curso` y `Laboratorio` tengan siempre los mismos permisos para ver. Debido a que en `next.config.js` existe un redirect automatico.
+// Y el `layout` de estas páginas valida que el usuario tenga permisos para entrar en la misma.
+// Si por ejemplo para entrar en `/laboratorio/layout` se valida por el permiso [1,2,3]
+// Pero en `/laboratorio/mis_cursos/layout` se valida por el permiso [4]
+// Entonces el usuario cuando haga click en el navbar en `Laboratorio` el archivo `next.config.js` redirige a `/laboratorio/mis_cursos/layout` y este a `/` porque no tiene permisos.
+
+// Nota @Alex 2: En caso de que esta lógica no guste o se desee cambiarla porque el redirect automático no es lo ideal, se puede eliminar el redirect de `next.config.js` y
+// agregar validaciones de permisos en el `layout` de cada página. Por ejemplo
+// `laboratorio/layout` si tienePermisoVer => redirect mis reservas, caso contrario si tiene para aprobar => redirect a aprobar caso contrario redirecciona a inicio.
+// Tener cuidado con esto de no generar un loop infinito de redirects.
+
+// Nota @Alex 3: Si no pueden resolver el redirect de loop infinitos, solamente validen en el `layout` principal que el usuario esta logueado, dejen el redirect fijo en `next.config.js`
+// PERO! en cada redirect dentro de laboratorio pongan validacion y redirect al siguiente (es un poco mas lento pero funciona)
+// Ej: `laboratorio/layout` estaLogueado? => si es true, redirecciona a mis reservas, si es false, redirecciona a inicio
+// Ej: `laboratorio/mis_reservas/layout` tienePermisoVerMisReservas? => Si es true, no pasa nada. Si es false, redirecciona a aprobar
+// Ej: `laboratorio/aprobar/layout` tienePermisoAprobar? => Si es true, no pasa nada. Si es false, redirecciona a inicio
+// No es el mejor ejemplo dado que no tiene sentido que pueda aprobar y no vea sus reservas, pero se entiende. Aconsejo hacerlo programaticamente modificando el objeto de Rutas
+
+// NOTA @Alex 4: Si todo falla, pueden llamarme sin problema, no me dió el tiempo para hacer esto :) (alexanderarmua1@gmail.com)
+const PERMISOS_VER_LABORATORIO = [SgeNombre.RES_LAB_RESERVAR_CURSO_AUTO, SgeNombre.RES_LAB_VER_RESERVAS_CATEDRA];
 export const LABORATORIO_ROUTE: AppRoute = {
   href: "/laboratorios",
   label: "Laboratorios",
   isPublic: false,
   misReservasRuta: "/laboratorios/mis_reservas",
-  permisos: [SgeNombre.RES_LAB_VER_RESERVAS_GENERALES_DOCENTES],
+  permisos: PERMISOS_VER_LABORATORIO,
   subRutas: [
     {
       href: "/laboratorios/mis_cursos",
       label: "Mis cursos",
       isPublic: false,
-      permisos: [SgeNombre.RES_LAB_RESERVAR_CURSO_AUTO],
+      permisos: PERMISOS_VER_LABORATORIO,
     },
     {
       href: "/laboratorios/catedra",
@@ -99,18 +120,19 @@ export const LABORATORIO_ROUTE: AppRoute = {
   ],
 };
 
+const PERMISOS_VER_LABORATORIOS = [SgeNombre.LAB_ABIERTO_RESERVAR];
 export const LABORATORIO_ABIERTO_ROUTE: AppRoute = {
   href: "/laboratorio_abierto",
   label: "Laboratorio abierto",
   isPublic: false,
   misReservaRuta: "/laboratorio_abierto/mis_reservas",
-  permisos: [SgeNombre.LAB_ABIERTO_RESERVAR],
+  permisos: PERMISOS_VER_LABORATORIOS,
   subRutas: [
     {
       href: "/laboratorio_abierto/reservar",
       label: "Reservar",
       isPublic: false,
-      permisos: [SgeNombre.LAB_ABIERTO_RESERVAR],
+      permisos: PERMISOS_VER_LABORATORIOS,
     },
     {
       redirectClick: "/laboratorio_abierto/solicitudes?estatus=PENDIENTE",
@@ -134,18 +156,19 @@ export const LABORATORIO_ABIERTO_ROUTE: AppRoute = {
   ],
 };
 
+const PERMISOS_VER_EQUIPOS = [SgeNombre.EQUIPOS_VER_LISTADO];
 export const EQUIPOS_ROUTE: AppRoute = {
   href: "/equipos",
   label: "Equipos",
   isPublic: false,
   misPrestamosRuta: "/equipos/mis_prestamos",
-  permisos: [SgeNombre.EQUIPOS_VER_LISTADO],
+  permisos: PERMISOS_VER_EQUIPOS,
   subRutas: [
     {
       href: "/equipos",
       label: "Todos los equipos",
       isPublic: false,
-      permisos: [SgeNombre.EQUIPOS_VER_LISTADO],
+      permisos: PERMISOS_VER_EQUIPOS,
     },
     {
       href: "/equipos/tipos",
@@ -168,32 +191,34 @@ export const EQUIPOS_ROUTE: AppRoute = {
   ],
 };
 
+const PERMISOS_VER_MATERIAS = [SgeNombre.MATERIAS_VER_LISTADO];
 export const MATERIA_ROUTE: AppRoute = {
   href: "/materias",
   label: "Materias",
   isPublic: false,
-  permisos: [SgeNombre.MATERIAS_VER_LISTADO],
+  permisos: PERMISOS_VER_MATERIAS,
   subRutas: [
     {
       href: "/materias",
       label: "Todas las materias",
       isPublic: false,
-      permisos: [SgeNombre.MATERIAS_VER_LISTADO],
+      permisos: PERMISOS_VER_MATERIAS,
     },
   ],
 };
 
+const PERMISOS_VER_CURSOS = [SgeNombre.CURSOS_MOSTRAR_TODOS];
 export const CURSOS_ROUTE: AppRoute = {
   href: "/cursos",
   label: "Cursos",
   isPublic: false,
-  permisos: [SgeNombre.CURSOS_MOSTRAR_TODOS],
+  permisos: PERMISOS_VER_CURSOS,
   subRutas: [
     {
       href: "/cursos",
       label: "Todos los cursos",
       isPublic: false,
-      permisos: [SgeNombre.CURSOS_MOSTRAR_TODOS],
+      permisos: PERMISOS_VER_CURSOS,
     },
     {
       href: "/cursos/mis_cursos",
@@ -210,23 +235,24 @@ export const CURSOS_ROUTE: AppRoute = {
   ],
 };
 
+const PERMISOS_VER_ADMIN = [SgeNombre.ADMIN_VER_PANEL_ADMIN];
 export const ADMIN_ROUTE: AppRoute = {
   href: "/admin",
   label: "Administración",
   isPublic: false,
-  permisos: [SgeNombre.ADMIN_VER_PANEL_ADMIN],
+  permisos: PERMISOS_VER_ADMIN,
   subRutas: [
     {
       href: "/admin/roles",
       label: "Roles",
       isPublic: false,
-      permisos: [SgeNombre.ADMIN_VER_PANEL_ADMIN],
+      permisos: PERMISOS_VER_ADMIN,
     },
     {
       href: "/admin/usuarios",
       label: "Usuarios",
       isPublic: false,
-      permisos: [SgeNombre.ADMIN_VER_PANEL_ADMIN],
+      permisos: [SgeNombre.ADMIN_VER_PANEL_ADMIN, SgeNombre.ADMIN_ABM_USUARIOS],
     },
     {
       href: "/admin/laboratorios",
@@ -252,21 +278,22 @@ export const COMPROBANTE_ROUTE = {
   },
 };
 
+const PERMISOS_VER_REPORTES = [SgeNombre.ADMIN_VER_PANEL_ADMIN];
 export const REPORTES_ROUTE: AppRoute = {
   href: "/reportes",
   label: "Reportes",
   isPublic: false,
-  permisos: [SgeNombre.ADMIN_VER_PANEL_ADMIN],
+  permisos: PERMISOS_VER_REPORTES,
   subRutas: [
-    {
-      href: "/reportes/mes",
-      label: "Mes",
-      isPublic: false,
-      permisos: [SgeNombre.ADMIN_VER_PANEL_ADMIN],
-    },
     {
       href: "/reportes/hoy",
       label: "Hoy",
+      isPublic: false,
+      permisos: PERMISOS_VER_REPORTES,
+    },
+    {
+      href: "/reportes/mes",
+      label: "Mes",
       isPublic: false,
       permisos: [SgeNombre.ADMIN_VER_PANEL_ADMIN],
     },
