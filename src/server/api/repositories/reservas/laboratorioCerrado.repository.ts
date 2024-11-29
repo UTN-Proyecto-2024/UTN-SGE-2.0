@@ -728,7 +728,7 @@ function obtenerFechaHoraInicio(
   input: InputCrearReserva,
 ) {
   // Obtener el día de la fecha de reserva
-  const fechaReserva = armarFechaSinHorasALas0000(input.fechaReserva);
+  const fechaReserva = armarFechaSinHorasALas0000(`${input.fechaReserva} UTC-0`);
   if (!(fechaReserva instanceof Date) || isNaN(fechaReserva.getTime())) {
     throw new Error("Fecha de reserva inválida");
   }
@@ -748,6 +748,27 @@ function obtenerFechaHoraInicio(
     horaInicioStr = curso.horaInicio2 ?? undefined;
     duracionStr = curso.duracion2 ?? undefined;
   }
+
+  console.error(`
+    #############################################
+    #############################################
+    ${JSON.stringify(
+      {
+        inputFechaReserva: input.fechaReserva,
+        fechaReserva,
+        diaReserva,
+        diaReservaSemana,
+        horaInicioStr,
+        duracionStr,
+        newDate: new Date(),
+        timeZoneOffset: new Date().getTimezoneOffset(),
+      },
+      null,
+      4,
+    )}
+    #############################################
+    #############################################
+  `);
 
   // Validar si el curso tiene clases ese día
   if (!horaInicioStr || !duracionStr) {
