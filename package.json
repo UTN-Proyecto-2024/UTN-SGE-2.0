@@ -1,6 +1,20 @@
 {
   "name": "sge2",
-  "version": "0.1.0",
+  "description": "Sistema de Gestión Electrónica 2.0",
+  "keywords": [
+    "UTN",
+    "electrónica",
+    "sistema de gestión",
+    "Next.js",
+    "Prisma",
+    "Trpc",
+    "React",
+    "TypeScript",
+    "Auth.js",
+    "Tailwind",
+    "Docker"
+  ],
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "author": "Alexander Armua <alexanderarmua1@gmail.com> (https://github.com/AlexanderArmua)",
