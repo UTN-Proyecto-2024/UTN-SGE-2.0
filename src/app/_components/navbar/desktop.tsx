@@ -8,7 +8,7 @@ export const DesktopNavigation = async ({ isLogged }: { isLogged: boolean }) => 
   const navbarRutas = isLogged ? await api.application.getNavbarElements() : APP_ROUTES;
 
   return (
-    <div className="flex flex-wrap items-baseline space-x-4 md:ms-5">
+    <div className="flex flex-wrap items-baseline gap-x-4 py-3 md:ms-5">
       {navbarRutas
         .filter((item) => isLogged || item.isPublic)
         .map((item) => (

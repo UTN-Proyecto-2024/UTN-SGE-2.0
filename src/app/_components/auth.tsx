@@ -1,5 +1,6 @@
 "use client";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { env } from "@/env";
 import { type BuiltInProviderType } from "next-auth/providers/index";
 import { signIn, signOut, getProviders, type LiteralUnion, type ClientSafeProvider } from "next-auth/react";
@@ -38,7 +39,7 @@ const SignInTesting = () => {
   }, []);
 
   if (!providers) {
-    return <p>Loading providers...</p>;
+    return <Skeleton className="h-10 w-96" />;
   }
 
   return (
