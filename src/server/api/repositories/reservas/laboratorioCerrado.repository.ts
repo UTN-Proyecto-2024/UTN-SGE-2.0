@@ -728,12 +728,10 @@ function obtenerFechaHoraInicio(
   input: InputCrearReserva,
 ) {
   // Obtener el día de la fecha de reserva
-  const fechaReserva = armarFechaReserva(input.fechaReserva, "12:00"); // Hack para que setee la hora dinamicamente y calcule bien la zona horaria
+  const fechaReserva = armarFechaSinHorasALas0000(input.fechaReserva);
   if (!(fechaReserva instanceof Date) || isNaN(fechaReserva.getTime())) {
     throw new Error("Fecha de reserva inválida");
   }
-  const diaReserva = fechaReserva.getDay(); // Esto devolverá 0-6
-  const diaReservaSemana2 = obtenerCursoDia(diaReserva);
 
   const diaReservaSemana = obtenerDiaEnArgentina(input.fechaReserva);
 
@@ -751,30 +749,6 @@ function obtenerFechaHoraInicio(
     duracionStr = curso.duracion2 ?? undefined;
   }
 
-  console.error(`
-    #############################################
-    #############################################
-    ${JSON.stringify(
-      {
-        inputFechaReserva: input.fechaReserva,
-        fechaReserva,
-        diaReserva,
-        diaReservaSemana2,
-        diaReservaSemana,
-        horaInicioStr,
-        duracionStr,
-        newDate: new Date(),
-        timeZoneOffset: new Date().getTimezoneOffset(),
-        timeZoneOffsetUTC3: new Date(`${input.fechaReserva} UTC-3`).getTimezoneOffset(),
-        timeZonefechaReserva: fechaReserva.getTimezoneOffset(),
-      },
-      null,
-      4,
-    )}
-    #############################################
-    #############################################
-  `);
-
   // Validar si el curso tiene clases ese día
   if (!horaInicioStr || !duracionStr) {
     throw new Error(`El curso no tiene clases el día ${diaReservaSemana}`);
@@ -789,15 +763,6 @@ function obtenerFechaHoraInicio(
   const fechaHoraFin = armarFechaReserva(input.fechaReserva, horaFin);
 
   return { fechaHoraInicio, fechaHoraFin };
-}
-
-// Función para obtener el día en formato CursoDia en base al día de la semana
-function obtenerCursoDia(dia: number): CursoDia {
-  const timeZoneOffsetActual = new Date().getTimezoneOffset();
-
-  const dias = ["LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO", "DOMINGO"];
-
-  return dias[dia] as CursoDia;
 }
 
 function obtenerDiaEnArgentina(dateString: string) {
