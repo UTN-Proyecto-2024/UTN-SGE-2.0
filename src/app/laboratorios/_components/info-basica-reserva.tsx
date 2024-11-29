@@ -20,6 +20,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getFechaHumanoDDMMYYYY, getTimeISOString } from "@/shared/get-date";
 import { MotivoRechazo } from "./rechazo-alert";
 import { AsistioReserva } from "@/app/_components/asistio-reserva";
+import { DatoUsuarioReserva } from "@/app/_components/datos-usuario";
 
 type ReservaDetalleProps = {
   reservaId: number;
@@ -146,48 +147,12 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
               <p>{reserva.requierePC ? "Sí" : "No"}</p>
             </div>
 
-            {mostrarCompleto && (
-              <>
-                <div className="space-y-2">
-                  <b className="flex items-center text-sm font-semibold">
-                    <WrenchIcon className="mr-2 h-4 w-4" />
-                    Equipo
-                  </b>
-                  <ul className="list-disc pl-2">
-                    {reserva.equipoReservado.map((equipo) => {
-                      return (
-                        <li key={equipo.equipoId} className="flex flex-row space-x-2">
-                          {equipo.equipoTipo.nombre} x {equipo.cantidad}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-                {reserva.descripcion && (
-                  <div className="col-span-3 space-y-2">
-                    <b className="flex items-center text-sm font-semibold">
-                      <TextIcon className="mr-2 h-4 w-4" />
-                      Observaciones
-                    </b>
-                    <div className="whitespace-pre-wrap rounded-md border border-gray-300 bg-gray-50 p-4">
-                      {reserva.descripcion ?? "Sin informar"}
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-4">
             <div className="space-y-2">
               <b className="flex items-center text-sm font-semibold">
                 <PersonStandingIcon className="h-4 w-4" />
                 Solicitante
               </b>
-              <p>
-                {reserva?.reserva.usuarioSolicito
-                  ? `${reserva.reserva.usuarioSolicito.nombre} ${reserva.reserva.usuarioSolicito.apellido}`
-                  : "Sin asignar"}
-              </p>
+              <DatoUsuarioReserva usuario={reserva.reserva.usuarioSolicito} />
             </div>
 
             <div className="space-y-2">
@@ -205,6 +170,37 @@ export const ReservaDetalle = ({ reservaId, mostrarCompleto }: ReservaDetallePro
               </b>
               <p>{reservasQueNoAsistio}</p>
             </div>
+
+            {mostrarCompleto && (
+              <>
+                <div className="col-span-4 space-y-2">
+                  <b className="flex items-center text-sm font-semibold">
+                    <WrenchIcon className="mr-2 h-4 w-4" />
+                    Equipo
+                  </b>
+                  <ul className="list-disc pl-2">
+                    {reserva.equipoReservado.map((equipo) => {
+                      return (
+                        <li key={equipo.equipoId} className="flex flex-row space-x-2">
+                          {equipo.equipoTipo.nombre} x {equipo.cantidad}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+                {reserva.descripcion && (
+                  <div className="col-span-4 space-y-2">
+                    <b className="flex items-center text-sm font-semibold">
+                      <TextIcon className="mr-2 h-4 w-4" />
+                      Observaciones
+                    </b>
+                    <div className="whitespace-pre-wrap rounded-md border border-gray-300 bg-gray-50 p-4">
+                      {reserva.descripcion ?? "Sin informar"}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </CardContent>
       </Card>
