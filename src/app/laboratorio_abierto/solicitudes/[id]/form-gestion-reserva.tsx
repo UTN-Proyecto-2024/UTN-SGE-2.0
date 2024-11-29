@@ -41,7 +41,7 @@ export const ReservaViewAdmin = ({ reservaId, onCancel, onAprobar, onRechazar }:
     esReservaPasada && !estaCancelada && reservaData?.reserva.estatus === ReservaEstatus.PENDIENTE;
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6 pb-2">
+    <div className="container mx-auto space-y-8 p-4">
       {esReservaPendientePasada && (
         <Alert variant={"destructive"} className="w-full bg-red-500 text-white">
           <AlertTitle className="flex flex-row items-center">
