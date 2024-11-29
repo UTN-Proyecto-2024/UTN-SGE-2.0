@@ -728,7 +728,7 @@ function obtenerFechaHoraInicio(
   input: InputCrearReserva,
 ) {
   // Obtener el día de la fecha de reserva
-  const fechaReserva = armarFechaSinHorasALas0000(`${input.fechaReserva} UTC-3`);
+  const fechaReserva = armarFechaReserva(input.fechaReserva, "12:00"); // Hack para que setee la hora dinamicamente y calcule bien la zona horaria
   if (!(fechaReserva instanceof Date) || isNaN(fechaReserva.getTime())) {
     throw new Error("Fecha de reserva inválida");
   }
@@ -763,6 +763,7 @@ function obtenerFechaHoraInicio(
         newDate: new Date(),
         timeZoneOffset: new Date().getTimezoneOffset(),
         timeZoneOffsetUTC3: new Date(`${input.fechaReserva} UTC-3`).getTimezoneOffset(),
+        timeZonefechaReserva: fechaReserva.getTimezoneOffset(),
       },
       null,
       4,
