@@ -6,10 +6,19 @@ import ModalDrawer from "@/app/_components/modal/modal-drawer";
 import React, { useState } from "react";
 import { AgregarCursoPantallaForm } from "../curso-pantalla-nuevo";
 import { api } from "@/trpc/react";
+import { useTienePermisos } from "@/app/_hooks/use-tiene-permisos";
+import { SgeNombre } from "@prisma/client";
 
 export const AgregarAPantallaModal = () => {
+  const { tienePermisos, isLoading, isError } = useTienePermisos([SgeNombre.RES_LAB_ABM_PANTALLA]);
+
   const [open, setOpen] = useState(false);
   const utils = api.useUtils();
+
+  if (isLoading || isError || !tienePermisos) {
+    return null;
+  }
+
   const refreshGetAll = () => {
     utils.reservas.pantalla.getAllActivas.invalidate().catch((err) => {
       console.error(err);
