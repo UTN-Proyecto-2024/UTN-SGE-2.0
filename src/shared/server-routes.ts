@@ -351,12 +351,12 @@ export const USER_ROUTES = (id: string): AppRoute[] => [
     isPublic: false,
     permisos: [],
   },
-  {
-    href: "/api/auth/signout",
-    label: "Cerrar sesión",
-    isPublic: false,
-    permisos: [],
-  },
+  // {
+  //   href: "/api/auth/signout",
+  //   label: "Cerrar sesión",
+  //   isPublic: false,
+  //   permisos: [],
+  // },
 ];
 
 export const APP_ROUTES_MAP = APP_ROUTES.reduce(

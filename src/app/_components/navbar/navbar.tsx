@@ -10,6 +10,7 @@ import { USER_ROUTES } from "@/shared/server-routes";
 import { UTNLogo } from "../utn-logo";
 import { ProfileMenuItem } from "./profile-menu-item";
 import { MobileNotificationButton, ProfilePanel } from "./profile-panel";
+import { ProfileMenuCerrarSesion } from "./cerrar-sesion";
 
 const UserIcon = ({ image, size }: { image: string | undefined | null; size: number }) => (
   <Image alt="" src={image ?? "/default-avatar.svg"} width={size} height={size} className="rounded-full" />
@@ -44,6 +45,7 @@ const DesktopProfileMenu = (user: Session["user"]) => (
         {USER_ROUTES(user.id).map((item) => (
           <ProfileMenuItem key={item.href} href={item.href} label={item.label} />
         ))}
+        <ProfileMenuCerrarSesion />
       </div>
     </MenuItems>
   </Menu>
