@@ -11,8 +11,10 @@ type Reservas = {
   filters: reservaFilters;
 };
 
-export const ReservasHoyTableContainer = async ({ filters }: Reservas) => {
-  const { data: reservas } = api.reservas.reservasLaboratorio.getAll.useQuery(filters);
+export const ReservasHoyTableContainer = ({ filters }: Reservas) => {
+  const { data: reservas, isLoading } = api.reservas.reservasLaboratorio.getAll.useQuery(filters);
+
+  if (isLoading) return <div></div>;
 
   return <ReservasHoy reservas={reservas ?? []} />;
 };
