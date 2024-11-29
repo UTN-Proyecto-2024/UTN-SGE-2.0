@@ -108,7 +108,7 @@ export const LABORATORIO_ROUTE: AppRoute = {
       href: "/laboratorios/mis_reservas",
       label: "Mis reservas",
       isPublic: false,
-      permisos: [SgeNombre.RES_LAB_VER_RESERVAS_GENERALES_DOCENTES],
+      permisos: [SgeNombre.RES_LAB_RESERVAR_CURSO_AUTO, SgeNombre.RES_LAB_VER_RESERVAS_CATEDRA],
     },
     {
       redirectClick: "/laboratorios/solicitudes?estatus=PENDIENTE",
