@@ -170,7 +170,11 @@ export const LaboratorioAbiertoForm = ({ tipo, reservaId, onSubmit, onCancel }: 
     if (esNuevo) {
       setValue("tipo", tipo);
     }
-  }, [esNuevo, tipo, setValue]);
+    if (esTLA) {
+      // Hack porque especialidad a veces no carga al apenas carga el formulario y requiere cerrar y volver a abrirlo
+      setValue("especialidad", reservaData?.especialidad ?? "");
+    }
+  }, [esNuevo, tipo, setValue, reservaData?.especialidad, esTLA]);
 
   const onFormSubmit = async (formData: DataLaboratorioAbiertoBack) => {
     if (esNuevo) {
