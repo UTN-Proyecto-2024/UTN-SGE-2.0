@@ -135,6 +135,13 @@ export const LABORATORIO_ABIERTO_ROUTE: AppRoute = {
       permisos: PERMISOS_VER_LABORATORIOS,
     },
     {
+      redirectClick: "/laboratorio_abierto/solicitudes?estatus=PENDIENTE",
+      href: "/laboratorio_abierto/solicitudes",
+      label: "Administrar reservas",
+      isPublic: false,
+      permisos: [SgeNombre.LAB_ABIERTO_CONFIRMAR_RESERVAS],
+    },
+    {
       href: "/laboratorio_abierto/mis_reservas",
       label: "Mis reservas",
       isPublic: false,
@@ -145,13 +152,6 @@ export const LABORATORIO_ABIERTO_ROUTE: AppRoute = {
       label: "Tutores",
       isPublic: false,
       permisos: [SgeNombre.LAB_ABIERTO_VER_PLANILLA_TUTORES],
-    },
-    {
-      redirectClick: "/laboratorio_abierto/solicitudes?estatus=PENDIENTE",
-      href: "/laboratorio_abierto/solicitudes",
-      label: "Administrar reservas",
-      isPublic: false,
-      permisos: [SgeNombre.LAB_ABIERTO_CONFIRMAR_RESERVAS],
     },
   ],
 };
