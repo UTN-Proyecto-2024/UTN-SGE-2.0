@@ -1,48 +1,79 @@
-# Create T3 App
+# SGE 2.0
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+Proyecto creado con [T3 Stack](https://create.t3.gg/).
 
-## What's next? How do I make an app with this?
+# Prod link
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- Vercel - [https://sge-2.vercel.app](https://sge-2.vercel.app)
+- UTN (requiere VPN) - [https://sge-tst.frba.utn.edu.ar/laboratorio_abierto/reservar](https://sge-tst.frba.utn.edu.ar/laboratorio_abierto/reservar)
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+# Como ejecutar local
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+1. Iniciar la base de datos en docker
 
-## Learn More
+```bash
+./start-database.sh
+```
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+2. Clonar el repositorio
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+```bash
+git clone git@github.com:UTN-Proyecto-2024/UTN-SGE-2.0.git
+cd UTN-SGE-2.0
+```
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+3. Instalar dependencias
 
-## How do I deploy this?
+```bash
+npm install
+```
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+4. Migrar la base de datos
 
-## TODOs - Viernes 05 de Julio
-- [x] Sistema corriendo local
-- [x] Login de Discord
-- [ ] Pantalla simple cuando no esta logueado
-- [ ] Pantalla con información cuando si esta logueado
-- [ ] Prevenir render de paginas si no tiene el rol
-- [ ] Navbar con funcionamiento en cliente para mostrar y ocultar elementos
+```bash
+npm run db:deploy-migracion
+npm run db:generar-esquema
+```
 
-## TODOs - Biblioteca
-- [ ] Schema en la base de datos
-- [ ] Router queries basicas
-- [ ] Pantalla biblioteca listado y filtrado
-- [ ] Pantalla Alta, baja y modificación
+5. Build
 
-## TODOs - Largo plazo
-- [ ] Sistema corriendo en internet
-- [ ] Sistema corriendo en Docker
-- [ ] Login de Keycloak
+```bash
+npm run build
+```
+
+6. Ejecutar
+
+```bash
+npm run dev
+```
+
+## Tecnologías usadas
+
+- Next.js
+- Prisma ORM
+- Tailwind CSS
+- TypeScript
+- Auth.js
+- TRPC
+- React
+- Docker
+
+## Links útiles
+
+- Prisma Docs Errors: [Errors | Prisma Documentation](https://www.prisma.io/docs/orm/reference/error-reference)
+- Prisma Type: [Table inheritance | Prisma Documentation](https://www.prisma.io/docs/orm/prisma-schema/data-model/table-inheritance)
+- Query Nested: [Relation queries \(Concepts\) | Prisma Documentation](https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries)
+- Keycloack login issue: [Signout does not logout user when session is being requested simultaneously · Issue \#4612 · nextauthjs/next-auth](https://github.com/nextauthjs/next-auth/issues/4612)
+- NextJs Keycloak tutorial: [NextJS, NextAuth with App Router and Keycloak \(Demo part 3/3\)](https://www.youtube.com/watch?v=-HsldaBdIPQ)
+- [ ] NextJs official guide: [Learn Next.js: Mutating Data](https://nextjs.org/learn/dashboard-app/mutating-data)
+- DER generator: [Prisma ERD](https://prisma-erd.simonknott.de/)
+- Sonner Toaster: [Toast\(\) – Sonner](https://sonner.emilkowal.ski/toast)
+- Tailwind CSS: [Background Position](https://tailwindcss.com/docs/background-position)
+- ShadCDN: [Accordion](https://ui.shadcn.com/docs/components/accordion)
+- TRPC: [Getting Started](https://trpc.io/docs/getting-started)
+- Matine Components: [Slider](https://mantine.dev/core/slider/)
+- Guide: [From 0 to Production - The Modern React Tutorial \(RSCs, Next.js, Shadui, Drizzle, TS and more\)](https://youtu.be/d5x0JCZbAJs?si=4qYCzN_18mZngyAA&t=5527)
+- Typescript definition: [Configuring: TypeScript](https://nextjs.org/docs/app/building-your-application/configuring/typescript#typescript-plugin)
+- Hooks variedad: [usehooks-ts](https://usehooks-ts.com/introduction)
+- Códigos de Error: [Error Handling](https://trpc.io/docs/server/error-handling)
+- Presentacion comercial: [SGE 2.0](https://www.canva.com/design/DAGPKrgbpq0/Xg6BmtoG3p1hQdboYGZd9g/edit)
