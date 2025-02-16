@@ -11,7 +11,12 @@ import { getServerAuthSession } from "@/server/auth";
 
 export const metadata = metadataLayoutPrincipal;
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+type LayoutProps = {
+  children: React.ReactNode;
+  modal: React.ReactNode;
+};
+
+export default async function RootLayout({ children, modal }: LayoutProps) {
   const session = await getServerAuthSession();
 
   return (
@@ -33,6 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </header>
             <Toaster position="top-right" duration={3000} />
             {children}
+            {modal}
           </PermisosProvider>
           <SpeedInsights />
         </TRPCReactProvider>

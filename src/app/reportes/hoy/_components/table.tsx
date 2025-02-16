@@ -7,7 +7,6 @@ import Link from "next/link";
 import { type GroupingState } from "@tanstack/react-table";
 import { useState } from "react";
 import { getColumnasReservas } from "./columns";
-import { REPORTES_ROUTE } from "@/shared/server-routes";
 
 type Reserva = RouterOutputs["reservas"]["reservasLaboratorio"]["getAll"][number];
 
@@ -25,13 +24,10 @@ export const ReservasHoy = ({ reservas }: { reservas: Reserva[] }) => {
       action={{
         header: "Acciones",
         cell({ original }) {
+          if (!original.tipo) return null;
+          const endpoint = ["Cerrado", "Discrecional"].includes(original.tipo) ? "laboratorios" : "laboratorio_abierto";
           return (
-            <Link
-              href={`${REPORTES_ROUTE.href}/${original.tipo && ["Cerrado", "Discrecional"].includes(original.tipo) ? "cerrado" : "abierto"}/${original.id}`}
-              passHref
-              prefetch
-              title="Ver reserva"
-            >
+            <Link href={`/${endpoint}/solicitudes/${original.id}`} passHref prefetch title="Ver reserva">
               <Button color={"outline"} className="h-8 w-8 px-1 py-1" variant={"icon"} icon={EyeIcon} />
             </Link>
           );
