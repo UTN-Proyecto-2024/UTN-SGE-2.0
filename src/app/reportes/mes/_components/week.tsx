@@ -51,17 +51,18 @@ export function Week({ index, monthDates, laboratoriosMap, startOfCurrentMonth, 
   );
 }
 
-export function WeekDay({ index, date, startOfCurrentMonth, today, reservas, color }: WeekDayProps) {
+export function WeekDay({ date, startOfCurrentMonth, today, reservas, color }: WeekDayProps) {
   return (
     <div
-      key={index}
       className={clsx(
         "text-sm",
         (date.getMonth() !== startOfCurrentMonth.getMonth() || isBefore(date, today)) && "bg-gray-50",
       )}
     >
       {reservas
-        ? reservas.map((reserva) => <ReservaBadge reserva={reserva} color={color} date={date} today={today} />)
+        ? reservas.map((reserva) => (
+            <ReservaBadge key={reserva.id} reserva={reserva} color={color} date={date} today={today} />
+          ))
         : ""}
     </div>
   );
