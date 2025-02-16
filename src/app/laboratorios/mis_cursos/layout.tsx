@@ -7,19 +7,13 @@ import { redirect } from "next/navigation";
 
 type LayoutProps = {
   children: React.ReactNode;
-  modal: React.ReactNode;
 };
 
-export default async function Layout({ children, modal }: LayoutProps) {
+export default async function Layout({ children }: LayoutProps) {
   const puedeVer = await estaLogueadoYConPermiso([SgeNombre.RES_LAB_RESERVAR_CURSO_AUTO]);
   if (!puedeVer) {
     redirect(INICIO_ROUTE.href);
   }
 
-  return (
-    <main className="flex w-full flex-col">
-      {children}
-      {modal}
-    </main>
-  );
+  return <main className="flex w-full flex-col">{children}</main>;
 }
