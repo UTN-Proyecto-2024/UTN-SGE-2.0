@@ -5,10 +5,9 @@ import { redirect } from "next/navigation";
 
 type LayoutProps = {
   children: React.ReactNode;
-  modal: React.ReactNode;
 };
 
-export default async function Layout({ children, modal }: LayoutProps) {
+export default async function Layout({ children }: LayoutProps) {
   const puedeVer = await estaLogueadoYConPermiso([
     SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS_ADMIN,
     SgeNombre.ADMIN_MODIFICAR_ATRIBUTOS,
@@ -18,10 +17,5 @@ export default async function Layout({ children, modal }: LayoutProps) {
   if (!puedeVer) {
     redirect(INICIO_ROUTE.href);
   }
-  return (
-    <div className="flex w-full flex-col">
-      {children}
-      {modal}
-    </div>
-  );
+  return <div className="flex w-full flex-col">{children}</div>;
 }

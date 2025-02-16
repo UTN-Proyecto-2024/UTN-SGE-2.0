@@ -7,19 +7,13 @@ import { redirect } from "next/navigation";
 
 type LayoutProps = {
   children: React.ReactNode;
-  modal: React.ReactNode;
 };
 
-export default async function RootLayout({ children, modal }: LayoutProps) {
+export default async function RootLayout({ children }: LayoutProps) {
   const puedeVer = await estaLogueadoYConPermiso([SgeNombre.ADMIN_VER_PANEL_ADMIN]);
   if (!puedeVer) {
     redirect(INICIO_ROUTE.href);
   }
 
-  return (
-    <>
-      {children}
-      {modal}
-    </>
-  );
+  return children;
 }

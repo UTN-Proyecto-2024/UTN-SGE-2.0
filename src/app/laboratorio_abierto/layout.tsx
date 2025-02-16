@@ -7,10 +7,9 @@ import { SgeNombre } from "@prisma/client";
 
 type LayoutProps = {
   children: React.ReactNode;
-  modal: React.ReactNode;
 };
 
-export default async function RootLayout({ children, modal }: LayoutProps) {
+export default async function RootLayout({ children }: LayoutProps) {
   const puedeVer = await estaLogueadoYConPermiso([
     SgeNombre.LAB_ABIERTO_RESERVAR,
     SgeNombre.LAB_ABIERTO_VER_MIS_RESERVAS,
@@ -19,10 +18,5 @@ export default async function RootLayout({ children, modal }: LayoutProps) {
     redirect(INICIO_ROUTE.href);
   }
 
-  return (
-    <main className="flex w-full flex-col">
-      {children}
-      {modal}
-    </main>
-  );
+  return <main className="flex w-full flex-col">{children}</main>;
 }
