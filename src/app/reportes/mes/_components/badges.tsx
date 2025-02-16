@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { laboratoriosRouter } from "@/server/api/routers/laboratorios";
+import type { laboratoriosRouter } from "@/server/api/routers/laboratorios";
 import type { inferRouterOutputs } from "@trpc/server";
 import { format, isBefore } from "date-fns";
 import { clsx } from "clsx";
