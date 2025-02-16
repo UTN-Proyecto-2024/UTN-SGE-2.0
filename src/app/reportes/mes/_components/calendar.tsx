@@ -6,7 +6,7 @@ import type { z } from "zod";
 import type { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.schema";
 import { api } from "@/trpc/react";
 import type { inferRouterOutputs } from "@trpc/server";
-import { laboratoriosRouter } from "src/server/api/routers/laboratorios";
+import type { laboratoriosRouter } from "src/server/api/routers/laboratorios";
 import { CalendarHeader } from "./headers";
 import { Week } from "./week";
 
