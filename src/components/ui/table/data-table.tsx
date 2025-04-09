@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -15,7 +15,6 @@ import {
   type Row,
   type RowSelectionState,
   type SortingState,
-  type TableState,
   getGroupedRowModel,
   getExpandedRowModel,
 } from "@tanstack/react-table";
@@ -37,7 +36,6 @@ interface DataTableProps<TData> {
   onRowClick?: (row: Row<TData>) => void;
   paginationConfig?: PaginationConfig;
   config?: Config;
-  initialState?: Pick<TableState, "pagination">;
   action?: {
     header?: string;
     classNames?: string;
@@ -94,7 +92,6 @@ export function DataTable<T>({
   onRowClick,
   config,
   action,
-  initialState,
   manualSorting,
   manualPagination,
   pageSize,
@@ -107,12 +104,10 @@ export function DataTable<T>({
 }: DataTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [pagination, setPagination] = useState<PaginationState>(
-    initialState?.pagination ?? {
-      pageSize: pageSize ?? 10,
-      pageIndex: pageIndex ?? 0,
-    },
-  );
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageSize: pageSize ?? 10,
+    pageIndex: pageIndex ?? 0,
+  });
 
   const columns = useMemo(() => {
     return action
@@ -140,8 +135,8 @@ export function DataTable<T>({
     onRowSelectionChange: config?.onRowSelectionChange ?? setRowSelection,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: paginationConfig ? getPaginationRowModel() : undefined,
-    getGroupedRowModel: grouping && getGroupedRowModel(),
-    getExpandedRowModel: grouping && getExpandedRowModel(),
+    getGroupedRowModel: grouping ? getGroupedRowModel() : undefined,
+    getExpandedRowModel: grouping ? getExpandedRowModel() : undefined,
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: config?.onSortingChange ?? setSorting,
     onPaginationChange: config?.onPaginationChange ?? setPagination,
@@ -156,6 +151,16 @@ export function DataTable<T>({
       expanded: true,
     },
   });
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div className="flex w-full flex-row justify-center">
@@ -172,7 +177,7 @@ export function DataTable<T>({
                   const headerValue = flexRender(column.columnDef.header, header.getContext());
                   return (
                     <TableHead key={header.id} className={cn("px-1", alignment)}>
-                      {index === 0 && grouping && (
+                      {index === 0 && table.getCanSomeRowsExpand() && (
                         <Button
                           variant={"default"}
                           color={"white"}
@@ -221,7 +226,7 @@ export function DataTable<T>({
             ))}
           </TableHeader>
           <TableBody>
-            {data.length > 0 ? (
+            {table.getRowCount() > 0 ? (
               table.getRowModel().rows.map((row, index) => (
                 <TableRow
                   key={row.id}
