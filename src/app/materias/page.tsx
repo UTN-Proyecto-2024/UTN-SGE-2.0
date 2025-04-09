@@ -1,5 +1,5 @@
 import { type ReadonlyURLSearchParams } from "next/navigation";
-import { Suspense, useMemo } from "react";
+import { Suspense } from "react";
 import MateriasTableContainer from "./_components/materias-table-container";
 import LoadingMateriasTable from "./_components/loading-materia-table";
 import { inputGetMaterias } from "@/shared/filters/materia-filter.schema";
@@ -11,12 +11,12 @@ import { TienePermiso } from "../_components/permisos/tienePermiso";
 import { SgeNombre } from "@prisma/client";
 
 type PageProps = {
-  searchParams: ReadonlyURLSearchParams;
+  searchParams: Promise<ReadonlyURLSearchParams>;
 };
 
-export default function Page({ searchParams }: PageProps) {
-  const filters = inputGetMaterias.parse(searchParams);
-  const filter_as_key = useMemo(() => JSON.stringify(filters), [filters]);
+export default async function Page({ searchParams }: PageProps) {
+  const filters = inputGetMaterias.parse(await searchParams);
+  const filter_as_key = JSON.stringify(filters);
 
   return (
     <PageLayout

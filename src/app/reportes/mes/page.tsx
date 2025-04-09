@@ -7,11 +7,11 @@ import { ActionButtons } from "../_actions/action-buttons";
 import Calendar from "./_components/calendar";
 
 type PageProps = {
-  searchParams: ReadonlyURLSearchParams;
+  searchParams: Promise<ReadonlyURLSearchParams>;
 };
 
-export default function Page({ searchParams }: PageProps) {
-  const filters = inputGetAllLaboratorios.parse(searchParams);
+export default async function Page({ searchParams }: PageProps) {
+  const filters = inputGetAllLaboratorios.parse(await searchParams);
   const filter_as_key = JSON.stringify(filters);
 
   return (

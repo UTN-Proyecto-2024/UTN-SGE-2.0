@@ -1,4 +1,4 @@
-import { Suspense, useMemo } from "react";
+import { Suspense } from "react";
 import LoadingCursosTable from "../(listado)/loading-curso-table";
 import CursoTableContainer from "../(listado)/curso-table-container";
 import { ActionButtons } from "../(listado)/action-buttons";
@@ -8,12 +8,12 @@ import PageLayout from "@/components/ui/template/page-template";
 import { CURSOS_ROUTE } from "@/shared/server-routes";
 
 type PageProps = {
-  searchParams: ReadonlyURLSearchParams;
+  searchParams: Promise<ReadonlyURLSearchParams>;
 };
 
-export default function Page({ searchParams }: PageProps) {
-  const filters = inputGetCursos.parse(searchParams);
-  const filter_as_key = useMemo(() => JSON.stringify(filters), [filters]);
+export default async function Page({ searchParams }: PageProps) {
+  const filters = inputGetCursos.parse(await searchParams);
+  const filter_as_key = JSON.stringify(filters);
 
   return (
     <PageLayout route={CURSOS_ROUTE}>

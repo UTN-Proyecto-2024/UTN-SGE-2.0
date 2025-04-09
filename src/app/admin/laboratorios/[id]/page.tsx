@@ -1,42 +1,10 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import { AdminLaboratorioForm } from "./admin-laboratorio-form";
-import { ADMIN_ROUTE } from "@/shared/server-routes";
-import { api } from "@/trpc/react";
+import DetalleLaboratorio from "./detalle";
 
 type PageProps = {
-  params: { id?: string };
+  params: Promise<{ id: string }>;
 };
 
-const rutaAdmin = ADMIN_ROUTE;
-
-export default function PageAdminRolDetails({ params: { id } }: PageProps) {
-  const router = useRouter();
-  const utils = api.useUtils();
-  const refreshGetAll = () => {
-    utils.admin.laboratorios.getAll.invalidate().catch((err) => {
-      console.error(err);
-    });
-  };
-
-  const handleClickCancel = () => router.back();
-
-  const handleClickSave = () => {
-    refreshGetAll();
-
-    const rutaLaboratorio = rutaAdmin.subRutas?.find((subRuta) => subRuta.label === "Laboratorios");
-    if (rutaLaboratorio) {
-      router.push(rutaLaboratorio.href);
-      return;
-    }
-
-    router.push(rutaAdmin.href);
-  };
-
-  return (
-    <>
-      <AdminLaboratorioForm id={id} onCancel={handleClickCancel} onSubmit={handleClickSave} />
-    </>
-  );
+export default async function Page({ params }: PageProps) {
+  const { id } = await params;
+  return <DetalleLaboratorio id={id} />;
 }

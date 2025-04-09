@@ -1,5 +1,5 @@
 import { type ReadonlyURLSearchParams } from "next/navigation";
-import { Suspense, useMemo } from "react";
+import { Suspense } from "react";
 import { ActionButtonsPrestamos } from "../(listado)/action-redirect-prestamos";
 import LoadingBibliotecaPrestamosTable from "../(listado)/loading-laboratorio-abierto-reservas-table";
 import LaboratorioAbiertoSolicitudesTableContainer from "../(listado)/reservas-table-container";
@@ -8,13 +8,13 @@ import PageLayout from "@/components/ui/template/page-template";
 import { LABORATORIO_ABIERTO_ROUTE } from "@/shared/server-routes";
 
 type PageProps = {
-  searchParams: ReadonlyURLSearchParams;
+  searchParams: Promise<ReadonlyURLSearchParams>;
 };
 
-export default function Page({ searchParams }: PageProps) {
-  const filters = inputGetAllSolicitudesReservaLaboratorioAbierto.parse(searchParams);
+export default async function Page({ searchParams }: PageProps) {
+  const filters = inputGetAllSolicitudesReservaLaboratorioAbierto.parse(await searchParams);
 
-  const filter_as_key = useMemo(() => JSON.stringify(filters), [filters]);
+  const filter_as_key = JSON.stringify(filters);
 
   return (
     <PageLayout route={LABORATORIO_ABIERTO_ROUTE}>

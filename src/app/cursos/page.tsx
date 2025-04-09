@@ -1,7 +1,7 @@
 import { type ReadonlyURLSearchParams } from "next/navigation";
 import { ActionButtons } from "./(listado)/action-buttons";
 import CursoTableContainer from "./(listado)/curso-table-container";
-import { Suspense, useMemo } from "react";
+import { Suspense } from "react";
 import LoadingCursosTable from "./(listado)/loading-curso-table";
 import { inputGetCursos } from "@/shared/filters/cursos-filter.schema";
 import React from "react";
@@ -13,12 +13,12 @@ import { TienePermiso } from "../_components/permisos/tienePermiso";
 import { SgeNombre } from "@prisma/client";
 
 type PageProps = {
-  searchParams: ReadonlyURLSearchParams;
+  searchParams: Promise<ReadonlyURLSearchParams>;
 };
 
-export default function Page({ searchParams }: PageProps) {
-  const filters = useMemo(() => inputGetCursos.parse(searchParams), [searchParams]);
-  const filter_as_key = useMemo(() => JSON.stringify(filters), [filters]);
+export default async function Page({ searchParams }: PageProps) {
+  const filters = inputGetCursos.parse(await searchParams);
+  const filter_as_key = JSON.stringify(filters);
   return (
     <PageLayout
       route={CURSOS_ROUTE}

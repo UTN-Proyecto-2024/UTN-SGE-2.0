@@ -9,11 +9,11 @@ import PageLayout from "@/components/ui/template/page-template";
 import { ADMIN_ROUTE } from "@/shared/server-routes";
 
 type PageProps = {
-  searchParams: ReadonlyURLSearchParams;
+  searchParams: Promise<ReadonlyURLSearchParams>;
 };
 
 export default async function Page({ searchParams }: PageProps) {
-  const filters = inputGetUsuarios.parse(searchParams);
+  const filters = inputGetUsuarios.parse(await searchParams);
 
   const filter_as_key = JSON.stringify(filters);
 

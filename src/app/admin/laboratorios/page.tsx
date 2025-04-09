@@ -11,11 +11,11 @@ import { AdminLaboratoriosNuevoLaboratorio } from "./_components/action-button/n
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
 
 type PageProps = {
-  searchParams: ReadonlyURLSearchParams;
+  searchParams: Promise<ReadonlyURLSearchParams>;
 };
 
 export default async function Page({ searchParams }: PageProps) {
-  const filters = inputGetLaboratorios.parse(searchParams);
+  const filters = inputGetLaboratorios.parse(await searchParams);
 
   const filter_as_key = JSON.stringify(filters);
 

@@ -1,5 +1,5 @@
 import { type ReadonlyURLSearchParams } from "next/navigation";
-import { Suspense, useMemo } from "react";
+import { Suspense } from "react";
 import { inputGetAllSolicitudesReservaLaboratorioCerrado } from "@/shared/filters/reserva-laboratorio-filter.schema";
 import LaboratorioCerradoSolicitudesTableContainer from "../_components/table/reservas-labo-cerrado-table-container";
 import LoadingBibliotecaPrestamosTable from "@/app/biblioteca/(listado)/loading-biblioteca-prestamos-table";
@@ -10,13 +10,13 @@ import ReservaDiscrecionalModal from "../_components/reserva-discrecional-form";
 import { AgregarAPantallaModal } from "../pantalla/_components/actions/agregar-pantalla";
 
 type PageProps = {
-  searchParams: ReadonlyURLSearchParams;
+  searchParams: Promise<ReadonlyURLSearchParams>;
 };
 
-export default function Page({ searchParams }: PageProps) {
-  const filters = inputGetAllSolicitudesReservaLaboratorioCerrado.parse(searchParams);
+export default async function Page({ searchParams }: PageProps) {
+  const filters = inputGetAllSolicitudesReservaLaboratorioCerrado.parse(await searchParams);
 
-  const filter_as_key = useMemo(() => JSON.stringify(filters), [filters]);
+  const filter_as_key = JSON.stringify(filters);
 
   return (
     <PageLayout

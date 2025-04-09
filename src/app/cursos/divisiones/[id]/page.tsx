@@ -1,23 +1,10 @@
-"use client";
+import DetalleDivision from "./detalle";
 
-import { useRouter } from "next/navigation";
-import { DivisionForm } from "./division-form";
-import { CURSOS_ROUTE } from "@/shared/server-routes";
-import React from "react";
 type PageProps = {
-  params: { id?: string };
+  params: Promise<{ id: string }>;
 };
-const rutaCurso = CURSOS_ROUTE.subRutas !== undefined ? CURSOS_ROUTE?.subRutas[2] : undefined;
-export default function PageDivisionDetails({ params: { id } }: PageProps) {
-  const router = useRouter();
 
-  const handleClickCancel = () => router.back();
-
-  const handleClickSave = () => router.push(rutaCurso?.href ?? "");
-
-  return (
-    <>
-      <DivisionForm id={id} onCancel={handleClickCancel} onSubmit={handleClickSave} />
-    </>
-  );
+export default async function Page({ params }: PageProps) {
+  const { id } = await params;
+  return <DetalleDivision id={id} />;
 }

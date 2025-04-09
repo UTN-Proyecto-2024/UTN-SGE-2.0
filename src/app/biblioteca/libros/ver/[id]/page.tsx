@@ -1,20 +1,10 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import { LibroView } from "./libro-view";
+import DetalleLibro from "./detalle";
 
 type PageProps = {
-  params: { id?: string };
+  params: Promise<{ id: string }>;
 };
 
-export default function PageLibroDetails({ params: { id } }: PageProps) {
-  const router = useRouter();
-
-  const handleClickCancel = () => router.back();
-
-  return (
-    <>
-      <LibroView id={id} onCancel={handleClickCancel} />
-    </>
-  );
+export default async function Page({ params }: PageProps) {
+  const { id } = await params;
+  return <DetalleLibro id={id} />;
 }

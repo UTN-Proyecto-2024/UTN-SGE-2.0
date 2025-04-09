@@ -11,11 +11,11 @@ import { AdminRolesNuevoRol } from "./_components/action-button/nuevo-rol-button
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
 
 type PageProps = {
-  searchParams: ReadonlyURLSearchParams;
+  searchParams: Promise<ReadonlyURLSearchParams>;
 };
 
 export default async function Page({ searchParams }: PageProps) {
-  const filters = inputGetRoles.parse(searchParams);
+  const filters = inputGetRoles.parse(await searchParams);
 
   const filter_as_key = JSON.stringify(filters);
 

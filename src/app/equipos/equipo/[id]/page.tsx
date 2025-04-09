@@ -1,32 +1,10 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import { EquipoForm } from "./equipo-form";
-import { api } from "@/trpc/react";
+import DetalleEquipo from "./detalle";
 
 type PageProps = {
-  params: { id?: string };
+  params: Promise<{ id: string }>;
 };
 
-export default function PageEquipoDetails({ params: { id } }: PageProps) {
-  const router = useRouter();
-  const utils = api.useUtils();
-  const refreshGetAll = () => {
-    utils.equipos.getAll.invalidate().catch((err) => {
-      console.error(err);
-    });
-  };
-
-  const handleClickCancel = () => router.back();
-
-  const handleClickSave = () => {
-    refreshGetAll();
-    router.back();
-  };
-
-  return (
-    <>
-      <EquipoForm id={id} onCancel={handleClickCancel} onSubmit={handleClickSave} />
-    </>
-  );
+export default async function Page({ params }: PageProps) {
+  const { id } = await params;
+  return <DetalleEquipo id={id} />;
 }

@@ -1,20 +1,10 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import { EquipoView } from "./equipo-view";
+import DetalleEquipo from "./detalle";
 
 type PageProps = {
-  params: { id?: string };
+  params: Promise<{ id: string }>;
 };
 
-export default function PageEquipoDetails({ params: { id } }: PageProps) {
-  const router = useRouter();
-
-  const handleClickCancel = () => router.back();
-
-  return (
-    <>
-      <EquipoView id={id} onCancel={handleClickCancel} />
-    </>
-  );
+export default async function Page({ params }: PageProps) {
+  const { id } = await params;
+  return <DetalleEquipo id={id} />;
 }

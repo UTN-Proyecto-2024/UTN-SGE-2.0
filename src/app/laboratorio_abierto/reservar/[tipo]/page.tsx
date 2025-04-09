@@ -1,26 +1,11 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import { LaboratorioAbiertoForm } from "./reserva-form";
-import { LABORATORIO_ROUTE } from "@/shared/server-routes";
+import DetalleReserva from "./detalle";
 import { type LaboratorioAbiertoType } from "../_components/laboratorios";
 
 type PageProps = {
-  params: { tipo: LaboratorioAbiertoType };
+  params: Promise<{ tipo: LaboratorioAbiertoType }>;
 };
 
-const laboratorioRuta = LABORATORIO_ROUTE;
-
-export default function PageCursosDetails({ params: { tipo } }: PageProps) {
-  const router = useRouter();
-
-  const handleClickCancel = () => router.back();
-
-  const handleClickSave = () => router.push(laboratorioRuta.href);
-
-  return (
-    <>
-      <LaboratorioAbiertoForm tipo={tipo} onCancel={handleClickCancel} onSubmit={handleClickSave} />
-    </>
-  );
+export default async function Page({ params }: PageProps) {
+  const { tipo } = await params;
+  return <DetalleReserva tipo={tipo} />;
 }

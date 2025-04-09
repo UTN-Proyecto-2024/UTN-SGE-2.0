@@ -4,11 +4,11 @@ import { PantallaTableContainer } from "./_components/pantalla-container";
 import { inputGetReservasEnPntallaActivas } from "@/shared/filters/reserva-pantalla-filter.schema";
 
 type PageProps = {
-  searchParams: ReadonlyURLSearchParams;
+  searchParams: Promise<ReadonlyURLSearchParams>;
 };
 
-export default function Page({ searchParams }: PageProps) {
-  const filters = inputGetReservasEnPntallaActivas.parse(searchParams);
+export default async function Page({ searchParams }: PageProps) {
+  const filters = inputGetReservasEnPntallaActivas.parse(await searchParams);
 
   return <PantallaTableContainer filters={filters} />;
 }

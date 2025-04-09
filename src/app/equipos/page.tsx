@@ -1,7 +1,7 @@
 import { type ReadonlyURLSearchParams } from "next/navigation";
 import { ActionButtons } from "./(listado)/action-buttons";
 import EquiposTableContainer from "./(listado)/equipos-table-container";
-import { Suspense, useMemo } from "react";
+import { Suspense } from "react";
 import LoadingEquiposTable from "./(listado)/loading-equipos-table";
 import { inputGetEquipos } from "@/shared/filters/equipos-filter.schema";
 import PageLayout from "@/components/ui/template/page-template";
@@ -11,13 +11,13 @@ import { TienePermiso } from "../_components/permisos/tienePermiso";
 import { SgeNombre } from "@prisma/client";
 
 type PageProps = {
-  searchParams: ReadonlyURLSearchParams;
+  searchParams: Promise<ReadonlyURLSearchParams>;
 };
 
-export default function Page({ searchParams }: PageProps) {
-  const filters = inputGetEquipos.parse(searchParams);
+export default async function Page({ searchParams }: PageProps) {
+  const filters = inputGetEquipos.parse(await searchParams);
 
-  const filter_as_key = useMemo(() => JSON.stringify(filters), [filters]);
+  const filter_as_key = JSON.stringify(filters);
 
   return (
     <PageLayout

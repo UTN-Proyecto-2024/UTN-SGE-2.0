@@ -1,5 +1,5 @@
 import { type ReadonlyURLSearchParams } from "next/navigation";
-import { Suspense, useMemo } from "react";
+import { Suspense } from "react";
 import { ActionButtonsPrestamos } from "../(listado)/action-redirect-prestamos";
 import LoadingEquiposPrestamosTable from "../(listado)/loading-equipos-prestamos-table";
 import EquiposPrestamosTableContainer from "../prestamos/_components/prestamos-table-container";
@@ -8,13 +8,13 @@ import PageLayout from "@/components/ui/template/page-template";
 import { EQUIPOS_ROUTE } from "@/shared/server-routes";
 
 type PageProps = {
-  searchParams: ReadonlyURLSearchParams;
+  searchParams: Promise<ReadonlyURLSearchParams>;
 };
 
-export default function Page({ searchParams }: PageProps) {
-  const filters = inputGetAllPrestamosEquipos.parse(searchParams);
+export default async function Page({ searchParams }: PageProps) {
+  const filters = inputGetAllPrestamosEquipos.parse(await searchParams);
 
-  const filter_as_key = useMemo(() => JSON.stringify(filters), [filters]);
+  const filter_as_key = JSON.stringify(filters);
 
   return (
     <PageLayout route={EQUIPOS_ROUTE}>

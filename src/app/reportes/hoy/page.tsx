@@ -7,11 +7,11 @@ import { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.sch
 import { ReservasHoyTableContainer } from "./_components/table-container";
 
 type PageProps = {
-  searchParams: ReadonlyURLSearchParams;
+  searchParams: Promise<ReadonlyURLSearchParams>;
 };
 
-export default function Page({ searchParams }: PageProps) {
-  const filters = inputGetAllLaboratorios.parse(searchParams);
+export default async function Page({ searchParams }: PageProps) {
+  const filters = inputGetAllLaboratorios.parse(await searchParams);
 
   const filter_as_key = JSON.stringify(filters);
 

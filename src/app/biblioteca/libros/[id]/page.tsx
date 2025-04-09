@@ -1,22 +1,10 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import { LibroForm } from "./libro-form";
+import DetalleLibro from "./detalle";
 
 type PageProps = {
-  params: { id?: string };
+  params: Promise<{ id: string }>;
 };
 
-export default function PageLibroDetails({ params: { id } }: PageProps) {
-  const router = useRouter();
-
-  const handleClickCancel = () => router.back();
-
-  const handleClickSave = () => router.push("/biblioteca");
-
-  return (
-    <>
-      <LibroForm id={id} onCancel={handleClickCancel} onSubmit={handleClickSave} />
-    </>
-  );
+export default async function Page({ params }: PageProps) {
+  const { id } = await params;
+  return <DetalleLibro id={id} />;
 }

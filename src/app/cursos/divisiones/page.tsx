@@ -1,5 +1,5 @@
 import { type ReadonlyURLSearchParams } from "next/navigation";
-import { Suspense, useMemo } from "react";
+import { Suspense } from "react";
 import DivisionesTableContainer from "./_components/divisiones-table-container";
 import LoadingDivisionesTable from "./_components/loading-division-table";
 import { inputGetDivisiones } from "@/shared/filters/divisiones-filter.schema";
@@ -12,12 +12,12 @@ import { SgeNombre } from "@prisma/client";
 // import { ActionButtons } from "./_components/action-buttons";
 
 type PageProps = {
-  searchParams: ReadonlyURLSearchParams;
+  searchParams: Promise<ReadonlyURLSearchParams>;
 };
 
-export default function Page({ searchParams }: PageProps) {
-  const filters = inputGetDivisiones.parse(searchParams);
-  const filter_as_key = useMemo(() => JSON.stringify(filters), [filters]);
+export default async function Page({ searchParams }: PageProps) {
+  const filters = inputGetDivisiones.parse(await searchParams);
+  const filter_as_key = JSON.stringify(filters);
 
   return (
     <PageLayout

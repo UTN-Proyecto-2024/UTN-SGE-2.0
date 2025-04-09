@@ -3,6 +3,7 @@ import { INICIO_ROUTE } from "@/shared/server-routes";
 import { SgeNombre } from "@prisma/client";
 import { redirect } from "next/navigation";
 import React from "react";
+
 type LayoutProps = {
   children: React.ReactNode;
 };
