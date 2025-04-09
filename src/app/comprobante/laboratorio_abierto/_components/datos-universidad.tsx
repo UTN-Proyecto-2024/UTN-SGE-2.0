@@ -1,6 +1,6 @@
 import { env } from "@/env";
 
-const urlSGE = env.NEXT_PUBLIC_RUTA_ACTUAL ?? "";
+const urlSGE = env.NEXTAUTH_URL ?? "";
 
 export const DatosUniversidad = () => {
   return (

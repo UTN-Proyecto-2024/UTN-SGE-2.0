@@ -1,7 +1,7 @@
 import { env } from "@/env";
 import { type Metadata } from "next";
 
-const rutaActual = env.RUTA_ACTUAL;
+const rutaActual = env.NEXTAUTH_URL;
 
 export const metadataLayoutPrincipal: Metadata = {
   title: "SGE",

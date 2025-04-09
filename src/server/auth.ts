@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { getServerSession, type DefaultSession, type NextAuthOptions } from "next-auth";
 import type { Adapter, AdapterAccount } from "next-auth/adapters";
@@ -31,16 +30,17 @@ const prismaAdapter = PrismaAdapter(db);
 const CustomAdapter = {
   ...prismaAdapter,
   createUser: async (data: User) => {
-    const user = await db.$transaction(async (tx) => {
+    return await db.$transaction(async (tx) => {
+      const rolPromise = tx.rol.findUnique({ where: { nombre: "Alumno" } }); // TODO: Debería existir una columna como "esDefault" para seleccionar el rol
       const userPromise = tx.user.create({ data });
-      const rolPromise = tx.rol.findUnique({ where: { nombre: "Alumno" } });
       const [user, rolAlumno] = await Promise.all([userPromise, rolPromise]);
+
       if (rolAlumno?.id) {
         await tx.usuarioRol.create({ data: { rolId: rolAlumno.id, userId: user.id, usuarioCreadorId: user.id } });
       }
+
       return user;
     });
-    return user;
   },
   linkAccount: (account: AdapterAccount) => {
     delete account["not-before-policy"];
@@ -93,50 +93,58 @@ export const authOptions: NextAuthOptions = {
         return null;
       },
     }),
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
-    }),
-    KeycloakProvider({
-      clientId: process.env.KEYCLOAK_CLIENT_ID ?? "",
-      clientSecret: process.env.KEYCLOAK_CLIENT_SECRET ?? "",
-      issuer: process.env.KEYCLOAK_ISSUER,
-      async profile(profile: KeycloakProfile) {
-        // const documentoTipo = await db.documentoTipo.findFirst({ where: { nombre: profile.documento_tipo } });
-        // const provincia = await db.provincia.findFirst({ where: { nombre: profile.address.region } });
-        // const pais = await db.pais.findFirst({ where: { nombreEspanol: profile.address.country } });
-        return {
-          id: profile.sub,
-          name: profile.preferred_username,
-          email: profile.email,
-          emailVerified: profile.email_verified,
-          // image: profile.picture,
-          nombre: profile.given_name,
-          apellido: profile.family_name,
-          // fechaNacimiento: new Date(profile.birthdate.split("/").reverse().join("-")),
-          // legajo: profile.legajo?.replace("-", ""),
-          // direccion: profile.address.street_address,
-          // ciudad: profile.address.locality,
-          // codigoPostal: profile.address.postal_code,
-          // telefonoCelular: profile.phone_number,
-          // documentoNumero: profile.documento,
-          // esDocente: profile.es_docente === "Docente",
-          // documentoTipo: documentoTipo ? { connect: { id: documentoTipo.id } } : undefined,
-          // pais: pais ? { connect: { iso: pais.iso } } : undefined,
-          // provincia:
-          //   provincia && pais
-          //     ? {
-          //         connect: {
-          //           iso_paisIso: {
-          //             iso: provincia.iso,
-          //             paisIso: pais.iso,
-          //           },
-          //         },
-          //       }
-          //     : undefined,
-        };
-      },
-    }),
+    ...(env.DISCORD_CLIENT_ID && env.DISCORD_CLIENT_SECRET
+      ? [
+          DiscordProvider({
+            clientId: env.DISCORD_CLIENT_ID,
+            clientSecret: env.DISCORD_CLIENT_SECRET,
+          }),
+        ]
+      : []),
+    ...(process.env.KEYCLOAK_CLIENT_ID && process.env.KEYCLOAK_CLIENT_SECRET
+      ? [
+          KeycloakProvider({
+            clientId: process.env.KEYCLOAK_CLIENT_ID,
+            clientSecret: process.env.KEYCLOAK_CLIENT_SECRET,
+            issuer: process.env.KEYCLOAK_ISSUER,
+            async profile(profile: KeycloakProfile) {
+              // const documentoTipo = await db.documentoTipo.findFirst({ where: { nombre: profile.documento_tipo } });
+              // const provincia = await db.provincia.findFirst({ where: { nombre: profile.address.region } });
+              // const pais = await db.pais.findFirst({ where: { nombreEspanol: profile.address.country } });
+              return {
+                id: profile.sub,
+                name: profile.preferred_username,
+                email: profile.email,
+                emailVerified: profile.email_verified,
+                // image: profile.picture,
+                nombre: profile.given_name,
+                apellido: profile.family_name,
+                // fechaNacimiento: new Date(profile.birthdate.split("/").reverse().join("-")),
+                // legajo: profile.legajo?.replace("-", ""),
+                // direccion: profile.address.street_address,
+                // ciudad: profile.address.locality,
+                // codigoPostal: profile.address.postal_code,
+                // telefonoCelular: profile.phone_number,
+                // documentoNumero: profile.documento,
+                // esDocente: profile.es_docente === "Docente",
+                // documentoTipo: documentoTipo ? { connect: { id: documentoTipo.id } } : undefined,
+                // pais: pais ? { connect: { iso: pais.iso } } : undefined,
+                // provincia:
+                //   provincia && pais
+                //     ? {
+                //         connect: {
+                //           iso_paisIso: {
+                //             iso: provincia.iso,
+                //             paisIso: pais.iso,
+                //           },
+                //         },
+                //       }
+                //     : undefined,
+              };
+            },
+          }),
+        ]
+      : []),
     /**
      * ...add more providers here.
      *

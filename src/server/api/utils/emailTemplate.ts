@@ -1,6 +1,6 @@
 import { env } from "@/env";
 
-const hostUrl = env.RUTA_ACTUAL;
+const hostUrl = env.NEXTAUTH_URL;
 const emisor = env.SMTP_MAIL_EMISOR;
 const utnLogoRuta = hostUrl + "/utn-logo.png";
 

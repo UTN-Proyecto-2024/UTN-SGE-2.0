@@ -3,7 +3,7 @@ import { emailTemplate } from "../../utils/emailTemplate";
 import { cargarMailAuditoria } from "./auditoria";
 import { type PrismaClient } from "@prisma/client";
 
-const isLocalOrVercel = process.env.RUTA_ACTUAL?.includes("localhost") ?? process.env.RUTA_ACTUAL?.includes("vercel");
+const isLocalOrVercel = process.env.NODE_ENV !== "production" || process.env.VERCEL;
 const isTestingEmail = process.env.SMTP_TESTING === "true";
 const host = process.env.SMTP_HOST;
 const port = Number(process.env.SMTP_PORT);
@@ -15,7 +15,7 @@ const auth = isTestingEmail
     }
   : undefined;
 const emisor = process.env.SMTP_MAIL_EMISOR;
-const baseRuta = process.env.RUTA_ACTUAL;
+const baseRuta = process.env.NEXTAUTH_URL;
 
 const receptorTesting = isTestingEmail ? process.env.SMTP_TESTING_EMAIL_RECEPTOR : undefined;
 

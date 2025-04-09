@@ -6,8 +6,7 @@ import { type BuiltInProviderType } from "next-auth/providers/index";
 import { signIn, signOut, getProviders, type LiteralUnion, type ClientSafeProvider } from "next-auth/react";
 import { useEffect, useState } from "react";
 
-const RUTA_ACTUAL = env.NEXT_PUBLIC_RUTA_ACTUAL;
-const esModoPrueba = RUTA_ACTUAL?.includes("localhost") || RUTA_ACTUAL?.includes("vercel");
+const esModoPrueba = env.NEXT_PUBLIC_NODE_ENV !== "production" || process.env.VERCEL;
 
 const style = "rounded-full bg-slate-100 px-10 py-3 font-semibold no-underline transition hover:bg-slate-200";
 
