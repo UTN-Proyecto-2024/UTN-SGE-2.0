@@ -34,7 +34,7 @@ source .env
 DB_PASSWORD=$(echo "$DATABASE_URL" | awk -F':' '{print $3}' | awk -F'@' '{print $1}')
 DB_PORT=$(echo "$DATABASE_URL" | awk -F':' '{print $4}' | awk -F'\/' '{print $1}')
 
-if [ "$DB_PASSWORD" = "password1" ]; then
+if [ "$DB_PASSWORD" = "password" ]; then
   echo "You are using the default database password"
   read -p "Should we generate a random password for you? [y/N]: " -r REPLY
   if ! [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -47,9 +47,11 @@ if [ "$DB_PASSWORD" = "password1" ]; then
 fi
 
 docker run -d \
-  --name $DB_CONTAINER_NAME \
-  -e POSTGRES_USER="postgres" \
+  --name "$DB_CONTAINER_NAME" \
+  -e POSTGRES_USER=postgres \
   -e POSTGRES_PASSWORD="$DB_PASSWORD" \
   -e POSTGRES_DB=sge2 \
   -p "$DB_PORT":5432 \
-  docker.io/postgres && echo "Database container '$DB_CONTAINER_NAME' was successfully created"
+  -v ./scripts/pg_dump.sql:/docker-entrypoint-initdb.d/pg_dump.sql \
+  docker.io/postgres:alpine && \
+  echo "Database container '$DB_CONTAINER_NAME' was successfully created"
