@@ -11,6 +11,7 @@ export const UTNLogo = ({ className }: { className?: string }) => (
     width={32}
     height={32}
     color="white"
+    priority
   />
 );
 

@@ -172,7 +172,7 @@ export function DataTable<T>({
                   const headerValue = flexRender(column.columnDef.header, header.getContext());
                   return (
                     <TableHead key={header.id} className={cn("px-1", alignment)}>
-                      {index === 0 && table.getCanSomeRowsExpand() && (
+                      {index === 0 && grouping && (
                         <Button
                           variant={"default"}
                           color={"white"}
@@ -221,7 +221,7 @@ export function DataTable<T>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {data.length > 0 ? (
               table.getRowModel().rows.map((row, index) => (
                 <TableRow
                   key={row.id}

@@ -151,7 +151,7 @@ export const Autocomplete = <TType extends SelectItemAutocomplete | string, TMul
   return (
     <div className={cn("group relative", className)}>
       <Combobox
-        as={Fragment}
+        as="div"
         {...props}
         // @ts-expect-error library error
         value={multiple ? ((props.value ?? []) as ItemType<TType, TMulti>) : (props.value ?? null)}

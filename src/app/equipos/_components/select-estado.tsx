@@ -41,7 +41,7 @@ export const SelectEstadoForm = <T extends FieldValues, TType extends string>({
           <SelectTrigger
             disabled
             id="selectEstado"
-            className="h-10 transition-colors focus:border-primary focus:ring-0 group-hover:border-input-hover"
+            className="group-hover:border-input-hover h-10 transition-colors focus:border-primary focus:ring-0"
           >
             <SelectValue placeholder="Error cargando estados" />
           </SelectTrigger>

@@ -13,7 +13,14 @@ import { MobileNotificationButton, ProfilePanel } from "./profile-panel";
 import { ProfileMenuCerrarSesion } from "./cerrar-sesion";
 
 const UserIcon = ({ image, size }: { image: string | undefined | null; size: number }) => (
-  <Image alt="" src={image ?? "/default-avatar.svg"} width={size} height={size} className="rounded-full" />
+  <Image
+    alt="default-avatar"
+    src={image ?? "/default-avatar.svg"}
+    width={size}
+    height={size}
+    className="rounded-full"
+    priority
+  />
 );
 
 const MobileMenuButton = () => (
