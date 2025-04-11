@@ -6,7 +6,7 @@ node {
     }
 
     stage('Build image') {
-        app = docker.build('ext/sge2', '--pull .')
+        app = docker.build('ext/sge2', '--pull -f docker/Dockerfile .')
     }
 
     stage('Push image') {
@@ -16,11 +16,11 @@ node {
     }
 
     stage('Update images in ext-c04') {
-        sh 'docker --context ext-c04 compose -f docker-compose.yaml pull'
+        sh 'docker --context ext-c04 compose -f docker/docker-compose.yaml app pull'
     }
 
     stage('Deploy') {
-        sh 'docker --context ext-c04 compose -f docker-compose.yaml up -d'
+        sh 'docker --context ext-c04 compose -f docker/docker-compose.yaml up app -d'
     }
 
     stage('Cleanup') {

@@ -46,12 +46,31 @@ if [ "$DB_PASSWORD" = "password" ]; then
   sed -i -e "s#:password@#:$DB_PASSWORD@#" .env
 fi
 
-docker run -d \
-  --name "$DB_CONTAINER_NAME" \
+read -p "Do you have an initialization SQL script to mount? (provide full path or leave empty): " INIT_SCRIPT
+
+# If it's just a filename (no slashes), prepend './'
+if [[ -n "$INIT_SCRIPT" && "$INIT_SCRIPT" != */* ]]; then
+  INIT_SCRIPT="./$INIT_SCRIPT"
+fi
+
+DOCKER_CMD="docker run -d \
+  --name \"$DB_CONTAINER_NAME\" \
   -e POSTGRES_USER=postgres \
-  -e POSTGRES_PASSWORD="$DB_PASSWORD" \
+  -e POSTGRES_PASSWORD=\"$DB_PASSWORD\" \
   -e POSTGRES_DB=sge2 \
-  -p "$DB_PORT":5432 \
-  -v ./scripts/pg_dump.sql:/docker-entrypoint-initdb.d/pg_dump.sql \
-  docker.io/postgres:alpine && \
-  echo "Database container '$DB_CONTAINER_NAME' was successfully created"
+  -p \"$DB_PORT\":5432"
+
+if [ -n "$INIT_SCRIPT" ]; then
+  if [ -f "$INIT_SCRIPT" ]; then
+    DOCKER_CMD+=" -v \"$INIT_SCRIPT\":/docker-entrypoint-initdb.d/init.sql"
+    echo "Mounting $INIT_SCRIPT to /docker-entrypoint-initdb.d/init.sql"
+  else
+    echo "Provided script path '$INIT_SCRIPT' does not exist."
+    exit 1
+  fi
+fi
+
+DOCKER_CMD+=" postgres:17-alpine"
+
+# Run the final command
+eval "$DOCKER_CMD" && echo "Database container '$DB_CONTAINER_NAME' was successfully created"
