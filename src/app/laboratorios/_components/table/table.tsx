@@ -5,7 +5,7 @@ import { type RouterOutputs } from "@/trpc/react";
 import { ReservarLaboratorioCerradoModal } from "./reservar-laboratorio";
 import { getColumns } from "./columns";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 import { useState } from "react";
 import { type GroupingState } from "@tanstack/react-table";
 

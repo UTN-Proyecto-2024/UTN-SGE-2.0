@@ -1,4 +1,4 @@
-import { type SgeNombre } from "@prisma/client";
+import { type SgeNombre } from "@/generated/prisma";
 import { getUsuarioYPermisos } from "../../repositories/permisos/permisos.repository";
 import { protectedProcedure } from "../../trpc";
 import { APP_ROUTES, type AppRoute, ZodRuta } from "@/shared/server-routes";

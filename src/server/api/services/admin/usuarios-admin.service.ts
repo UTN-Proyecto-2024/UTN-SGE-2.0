@@ -26,7 +26,7 @@ import {
   getNumeroReservasQueNoAsistioEsteAnno,
   cambiarAsistioReserva,
 } from "../../repositories/admin/usuarios-admin.repository";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 export const getTodosLosUsuariosProcedure = protectedProcedure.input(inputGetUsuarios).query(async ({ ctx, input }) => {
   validarInput(inputGetUsuarios, input);

@@ -11,7 +11,7 @@ import {
   inputGetReservasEnPntallaActivas,
 } from "@/shared/filters/reserva-pantalla-filter.schema";
 import { validarInput } from "../helper";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 export const getReservasEnPntallaActivasProcedure = publicProcedure
   .input(inputGetReservasEnPntallaActivas)

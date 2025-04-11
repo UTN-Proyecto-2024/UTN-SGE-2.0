@@ -1,7 +1,7 @@
 import React from "react";
 import { NuevaMateria } from "./materia-new-materia";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 export const ActionButtons = () => {
   return (

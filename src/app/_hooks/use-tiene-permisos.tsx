@@ -1,6 +1,6 @@
 "use client";
 
-import { type SgeNombre } from "@prisma/client";
+import { type SgeNombre } from "@/generated/prisma";
 import { usePermisos } from "./use-context-tiene-permisos";
 import { useEffect, useState, useRef } from "react";
 

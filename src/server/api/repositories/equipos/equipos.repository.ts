@@ -7,7 +7,7 @@ import {
   type inputGetArmarios,
   type inputAgregarMarca,
 } from "@/shared/filters/equipos-filter.schema";
-import { Prisma, type PrismaClient } from "@prisma/client";
+import { Prisma, type PrismaClient } from "@/generated/prisma";
 import { type z } from "zod";
 import { generarEquipoInventarioId, getUltimoEquipoInventarioId } from "./generador-inventario-id";
 import { construirOrderByDinamico } from "@/shared/dynamic-orderby";

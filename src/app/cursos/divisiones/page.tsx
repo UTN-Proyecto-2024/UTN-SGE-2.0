@@ -8,7 +8,7 @@ import PageLayout from "@/components/ui/template/page-template";
 import { NuevaDivision } from "./_components/division-new-division";
 import { CURSOS_ROUTE } from "@/shared/server-routes";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 // import { ActionButtons } from "./_components/action-buttons";
 
 type PageProps = {

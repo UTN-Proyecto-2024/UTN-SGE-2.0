@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { INICIO_ROUTE } from "@/shared/server-routes";
 import { estaLogueadoYConPermiso } from "@/server/permisos";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 type LayoutProps = {
   children: React.ReactNode;

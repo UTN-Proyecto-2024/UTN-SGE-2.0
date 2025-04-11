@@ -8,7 +8,7 @@ import EditMateriaModal from "./edit-materia";
 import React, { useState } from "react";
 import type { GroupingState } from "@tanstack/react-table";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 type MateriaData = RouterOutputs["materia"]["getAll"];
 

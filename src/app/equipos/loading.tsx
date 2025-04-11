@@ -4,7 +4,7 @@ import PageLayout from "@/components/ui/template/page-template";
 import { EQUIPOS_ROUTE } from "@/shared/server-routes";
 import { EquiposNuevoEquipoModal } from "./(listado)/equipos-nuevo-equipo";
 import { TienePermiso } from "../_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 export default function EquiposLoading() {
   return (

@@ -1,5 +1,5 @@
 import { calcularTurnoHora } from "@/shared/get-date";
-import { type TurnoCurso } from "@prisma/client";
+import { type TurnoCurso } from "@/generated/prisma";
 
 type HoraDiaProps = {
   dia1: string;

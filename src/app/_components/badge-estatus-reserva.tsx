@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { ReservaEstatus, ReservaTipo } from "@prisma/client";
+import { ReservaEstatus, ReservaTipo } from "@/generated/prisma";
 
 export const BadgeEstatusReserva = ({ estatus }: { estatus: ReservaEstatus | "" }) => {
   return <Badge color={getStatusColor(estatus)}>{getStatusText(estatus)}</Badge>;

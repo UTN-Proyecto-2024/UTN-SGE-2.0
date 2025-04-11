@@ -12,7 +12,7 @@ import { getEquiposColumnas } from "./columns";
 import { type inputGetEquipos } from "@/shared/filters/equipos-filter.schema";
 import { VerEquipoModal } from "./ver-equipo";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 import { useTienePermisos } from "@/app/_hooks/use-tiene-permisos";
 
 type EquiposData = RouterOutputs["equipos"]["getAll"];

@@ -10,7 +10,7 @@ import { type z } from "zod";
 import { SelectLaboratorioFormConEstadoReservaForm } from "@/app/_components/select-ubicacion/select-laboratorio";
 import { api } from "@/trpc/react";
 import { FormEquipoTipoSelector } from "@/app/laboratorios/_components/filtros/equipo-tipo-selector";
-import { ReservaEstatus } from "@prisma/client";
+import { ReservaEstatus } from "@/generated/prisma";
 import { esFechaPasada } from "@/shared/get-date";
 import { getMensajeError } from "@/shared/error";
 import { AdminLaboratoriosNuevoLaboratorio } from "@/app/laboratorios/_components/alerta-rechazar";

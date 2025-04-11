@@ -4,7 +4,7 @@ import type {
   inputGetReservasEnPntallaActivas,
 } from "@/shared/filters/reserva-pantalla-filter.schema";
 import { armarFechaReserva, calcularTurnoTexto, getDateISOString } from "@/shared/get-date";
-import { ReservaEstatus, ReservaTipo, type PrismaClient } from "@prisma/client";
+import { ReservaEstatus, ReservaTipo, type PrismaClient } from "@/generated/prisma";
 import { type z } from "zod";
 import { informacionUsuario } from "../usuario-helper";
 

@@ -6,7 +6,7 @@ import { EquiposFilterTipo } from "./filtros/equipos-filter-tipo";
 import { EquiposFilterSede } from "./filtros/equipos-filter-sede";
 import { type inputGetEquipos } from "@/shared/filters/equipos-filter.schema";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 type EquiposFilters = z.infer<typeof inputGetEquipos>;
 

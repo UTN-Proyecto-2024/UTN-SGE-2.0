@@ -6,7 +6,7 @@ import { inputEditarMateria, inputAgregarMateria } from "@/shared/filters/materi
 import { type z } from "zod";
 import { useCallback, useEffect, useMemo } from "react";
 import { MateriaDropdownMultipleForm } from "@/app/_components/form/materias-dropdown-multiple";
-import { EstatusCorrelativa, MateriaDuracion, MateriaTipo } from "@prisma/client";
+import { EstatusCorrelativa, MateriaDuracion, MateriaTipo } from "@/generated/prisma";
 import { FormSelect } from "@/components/ui/autocomplete";
 import {
   getUserLabelNameForSelect,

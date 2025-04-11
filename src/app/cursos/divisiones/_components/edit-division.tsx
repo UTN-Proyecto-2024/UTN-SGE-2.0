@@ -5,7 +5,7 @@ import { DivisionForm } from "../[id]/division-form";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 import { api } from "@/trpc/react";
 
 interface EditDivisionProps {

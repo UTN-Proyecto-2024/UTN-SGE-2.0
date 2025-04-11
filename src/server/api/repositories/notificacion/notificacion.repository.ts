@@ -1,4 +1,4 @@
-import { ReservaEstatus, ReservaTipo, SgeNombre, type PrismaClient } from "@prisma/client";
+import { ReservaEstatus, ReservaTipo, SgeNombre, type PrismaClient } from "@/generated/prisma";
 import { tienePermiso } from "../../services/permisos/permisos.helper";
 
 export type Notificacion = {

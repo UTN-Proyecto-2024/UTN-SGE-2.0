@@ -1,4 +1,4 @@
-import { type SgeNombre, type PrismaClient } from "@prisma/client";
+import { type SgeNombre, type PrismaClient } from "@/generated/prisma";
 import { type z } from "zod";
 import { type inputGetUsuarioYRol } from "@/shared/filters/permisos-filter";
 

@@ -1,4 +1,4 @@
-import { type Prisma, type PrismaClient } from "@prisma/client";
+import { type Prisma, type PrismaClient } from "@/generated/prisma";
 import { type z } from "zod";
 import {
   type inputGetReservasLibroPorLibroId,

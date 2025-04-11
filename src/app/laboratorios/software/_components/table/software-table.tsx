@@ -10,7 +10,7 @@ import { type SortingState } from "@tanstack/react-table";
 import { type z } from "zod";
 import { type inputGetSoftwareFilter } from "@/shared/filters/laboratorio-filter.schema";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 type SoftwareData = RouterOutputs["software"]["getAll"];
 type SoftwareFilters = z.infer<typeof inputGetSoftwareFilter>;

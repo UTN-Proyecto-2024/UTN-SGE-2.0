@@ -4,7 +4,7 @@ import { cn } from "@/components/utils";
 import { type ReservaLaboratorioAbiertoType } from "./constants";
 import { ReservarLaboratorioAbiertoModal } from "../table/reservar-laboratorio-abierto";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 type CardProps = React.ComponentProps<typeof Card>;
 

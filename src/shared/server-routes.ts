@@ -1,4 +1,4 @@
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 import { z } from "zod";
 
 export const ZodRuta = z.object({

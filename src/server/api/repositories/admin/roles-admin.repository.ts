@@ -6,7 +6,7 @@ import {
   type inputEliminarRol,
   type inputGetRoles,
 } from "@/shared/filters/admin-roles-filter.schema";
-import { type Prisma, type PrismaClient } from "@prisma/client";
+import { type Prisma, type PrismaClient } from "@/generated/prisma";
 import { type z } from "zod";
 
 type InputGetById = z.infer<typeof inputGetRol>;

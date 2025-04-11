@@ -28,7 +28,7 @@ import {
   enviarMailReservaLaboratorioCerradoCreadaProcedure,
 } from "../mails/emailLaboratorioCerrado.service";
 import { revalidatePath } from "next/cache";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 export const getReservaLaboratorioCerradoPorUserProcedure = protectedProcedure
   .input(inputGetReservaLaboratorioPorUsuarioId)

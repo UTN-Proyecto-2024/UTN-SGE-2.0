@@ -2,7 +2,7 @@ import { ReservaDetalle } from "@/app/laboratorio_abierto/_components/info-basic
 import { ReservaAprobacion } from "@/app/laboratorio_abierto/_components/reserva-gestion";
 import { api } from "@/trpc/react";
 import { esFechaPasada } from "@/shared/get-date";
-import { ReservaEstatus } from "@prisma/client";
+import { ReservaEstatus } from "@/generated/prisma";
 import { Button, toast } from "@/components/ui";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ClockIcon } from "lucide-react";

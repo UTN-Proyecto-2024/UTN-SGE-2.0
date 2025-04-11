@@ -24,7 +24,7 @@ import {
   getAllLaboratoriosReservables,
   getAllSedesConLaboratorios,
 } from "../../repositories/admin/laboratorios-admin.repository";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 export const getTodosLosLaboratoriosProcedure = protectedProcedure
   .input(inputGetLaboratorios)

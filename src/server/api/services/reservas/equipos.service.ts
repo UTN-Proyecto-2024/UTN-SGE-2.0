@@ -21,7 +21,7 @@ import {
   enviarMailRenovarEquipoProcedure,
   enviarMailReservaEquipoProcedure,
 } from "../mails/emailEquipos.service";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 export const getTodasLasReservasProcedure = protectedProcedure
   .input(inputGetAllPrestamosEquipos)

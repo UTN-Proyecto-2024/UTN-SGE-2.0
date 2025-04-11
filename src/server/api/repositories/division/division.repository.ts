@@ -4,7 +4,7 @@ import type {
   inputEditarDivision,
   inputGetDivision,
 } from "@/shared/filters/divisiones-filter.schema";
-import { type PrismaClient } from "@prisma/client";
+import { type PrismaClient } from "@/generated/prisma";
 import { type z } from "zod";
 
 export const getAllDivisiones = async (ctx: { db: PrismaClient }) => {

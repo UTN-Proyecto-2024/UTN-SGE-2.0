@@ -1,5 +1,5 @@
 import { sendEmail } from "./email";
-import { type PrismaClient } from "@prisma/client";
+import { type PrismaClient } from "@/generated/prisma";
 import { LABORATORIO_ABIERTO_ROUTE } from "@/shared/server-routes";
 import { getReservaLaboratorioAbiertoParaEmail } from "../../repositories/reservas/laboratorioAbierto.repository";
 import { getFechaddddDDMMYYYY, getTimeISOStringSinOffset } from "@/shared/get-date";

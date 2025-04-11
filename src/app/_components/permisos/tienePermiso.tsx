@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useTienePermisos } from "@/app/_hooks/use-tiene-permisos";
-import { type SgeNombre } from "@prisma/client";
+import { type SgeNombre } from "@/generated/prisma";
 
 type TienePermisoProps = {
   permisos: SgeNombre[];

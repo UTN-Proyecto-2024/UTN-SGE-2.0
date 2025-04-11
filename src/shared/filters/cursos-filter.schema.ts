@@ -1,4 +1,4 @@
-import { CursoDia, TurnoCurso } from "@prisma/client";
+import { CursoDia, TurnoCurso } from "@/generated/prisma";
 
 import { z } from "zod";
 

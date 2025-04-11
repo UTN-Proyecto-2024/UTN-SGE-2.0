@@ -15,7 +15,7 @@ import {
   getAllRoles,
   getRolById,
 } from "../../repositories/admin/roles-admin.repository";
-import { Prisma, SgeNombre } from "@prisma/client";
+import { Prisma, SgeNombre } from "@/generated/prisma";
 
 export const getTodosLosRolesProcedure = protectedProcedure
   .input(inputGetRoles.optional())

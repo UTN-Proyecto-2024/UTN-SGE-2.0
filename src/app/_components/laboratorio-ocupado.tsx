@@ -4,7 +4,7 @@ import { getTimeISOString } from "@/shared/get-date";
 import Link from "next/link";
 import { CalendarOffIcon } from "lucide-react";
 import { LABORATORIO_ABIERTO_ROUTE, LABORATORIO_ROUTE } from "@/shared/server-routes";
-import { ReservaTipo } from "@prisma/client";
+import { ReservaTipo } from "@/generated/prisma";
 
 type Props = RouterInputs["reservas"]["laboratorioEnUso"]["obtenerReservasExistentesDeLaboratorio"];
 

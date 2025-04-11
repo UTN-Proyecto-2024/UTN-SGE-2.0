@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import { emailTemplate } from "../../utils/emailTemplate";
 import { cargarMailAuditoria } from "./auditoria";
-import { type PrismaClient } from "@prisma/client";
+import { type PrismaClient } from "@/generated/prisma";
 
 const isLocalOrVercel = process.env.NODE_ENV !== "production" || process.env.VERCEL;
 const isTestingEmail = process.env.SMTP_TESTING === "true";

@@ -13,7 +13,7 @@ import {
 } from "../../repositories/division/division.repository";
 import { createAuthorizedProcedure, protectedProcedure } from "../../trpc";
 import { validarInput } from "../helper";
-import { Prisma, SgeNombre } from "@prisma/client";
+import { Prisma, SgeNombre } from "@/generated/prisma";
 
 export const getTodasLasDivisiones = protectedProcedure.query(async ({ ctx }) => {
   return await getAllDivisiones(ctx);

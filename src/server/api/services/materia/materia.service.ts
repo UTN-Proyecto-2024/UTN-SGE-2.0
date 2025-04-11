@@ -15,7 +15,7 @@ import {
 
 import { createAuthorizedProcedure, protectedProcedure } from "../../trpc";
 import { validarInput } from "../helper";
-import { Prisma, SgeNombre } from "@prisma/client";
+import { Prisma, SgeNombre } from "@/generated/prisma";
 
 export const getAllMateriasProcedure = protectedProcedure.query(async ({ ctx }) => {
   return await getAllMaterias(ctx);

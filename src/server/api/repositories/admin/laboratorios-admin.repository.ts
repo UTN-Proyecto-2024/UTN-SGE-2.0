@@ -8,7 +8,7 @@ import type {
   inputGetLaboratorios,
   inputGetLaboratoriosConEstadoReserva,
 } from "@/shared/filters/admin-laboratorios-filter.schema";
-import { Prisma, type PrismaClient } from "@prisma/client";
+import { Prisma, type PrismaClient } from "@/generated/prisma";
 import { type z } from "zod";
 import { obtenerTodasLasReservasEnHorario } from "../reservas/laboratorioEnUso.repository";
 

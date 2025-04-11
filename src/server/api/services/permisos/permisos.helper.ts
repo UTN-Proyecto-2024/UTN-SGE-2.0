@@ -1,4 +1,4 @@
-import { type PrismaClient, type SgeNombre } from "@prisma/client";
+import { type PrismaClient, type SgeNombre } from "@/generated/prisma";
 import { verificarPermisoUsuario } from "../../repositories/permisos/permisos.repository";
 
 export const tienePermiso = async (ctx: { db: PrismaClient }, permisos: SgeNombre[], userId: string) => {

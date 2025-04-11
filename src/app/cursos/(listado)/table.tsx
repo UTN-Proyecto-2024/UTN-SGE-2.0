@@ -12,7 +12,7 @@ import { getColumns } from "./columns";
 import { type inputGetCursos } from "@/shared/filters/cursos-filter.schema";
 import { useState } from "react";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 type CursoData = RouterOutputs["cursos"]["getAll"];
 type CursosFilters = z.infer<typeof inputGetCursos>;

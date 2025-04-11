@@ -10,7 +10,7 @@ import { EditTutorModal } from "../action-buttons/edit-tutor";
 import { PencilIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 type CardProps = React.ComponentProps<typeof Card>;
 

@@ -1,6 +1,6 @@
 import { sendEmail } from "./email";
 import { BIBLIOTECA_ROUTE } from "@/shared/server-routes";
-import { type PrismaClient } from "@prisma/client";
+import { type PrismaClient } from "@/generated/prisma";
 import { getReservaParaEmail } from "../../repositories/reservas/biblioteca.repository";
 import { getDateISOString } from "@/shared/get-date";
 

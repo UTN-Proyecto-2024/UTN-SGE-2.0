@@ -7,7 +7,7 @@ import {
   type inputAgregarAutor,
   type inputAgregarEditorial,
 } from "@/shared/filters/biblioteca-filter.schema";
-import { Prisma, type PrismaClient } from "@prisma/client";
+import { Prisma, type PrismaClient } from "@/generated/prisma";
 import { type z } from "zod";
 import { generarBibliotecaInventarioId, getUltimoBibliotecaInventarioId } from "./biblioteca-inventario-id";
 import { construirOrderByDinamico } from "@/shared/dynamic-orderby";

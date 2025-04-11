@@ -8,7 +8,7 @@ import { inputGetSoftwareFilter } from "@/shared/filters/laboratorio-filter.sche
 import { type ReadonlyURLSearchParams } from "next/navigation";
 import { ActionButtons } from "./_components/filtros/action-buttons";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 type PageProps = {
   searchParams: Promise<ReadonlyURLSearchParams>;

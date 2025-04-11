@@ -5,7 +5,7 @@ import { useTienePermisos } from "@/app/_hooks/use-tiene-permisos";
 import { LaboratorioCerradoForm } from "@/app/laboratorios/_components/reserva-form";
 import { Button } from "@/components/ui";
 import { api } from "@/trpc/react";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
 

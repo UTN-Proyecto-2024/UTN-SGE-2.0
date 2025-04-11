@@ -10,6 +10,7 @@ const config = {
     "plugin:@typescript-eslint/recommended-type-checked",
     "plugin:@typescript-eslint/stylistic-type-checked",
   ],
+  ignorePatterns: ["node_modules", "src/generated/prisma"],
   rules: {
     "@typescript-eslint/prefer-optional-chain": "off",
     "@typescript-eslint/array-type": "off",

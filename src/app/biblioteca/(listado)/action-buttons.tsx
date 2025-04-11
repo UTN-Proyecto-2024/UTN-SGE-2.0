@@ -3,7 +3,7 @@ import { BibliotecaFilterMateria } from "./filtros/biblioteca-filter-materia";
 import { BibliotecaFilterText } from "./filtros/biblioteca-filter-text";
 
 import { type inputGetBooks } from "@/shared/filters/biblioteca-filter.schema";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 import { tienePermisoBack } from "@/server/permisos";
 
 type BibliotecaFilters = z.infer<typeof inputGetBooks>;

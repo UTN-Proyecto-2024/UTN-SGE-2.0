@@ -10,7 +10,7 @@ import {
   type inputCambiarAsistio,
   type inputUserId,
 } from "@/shared/filters/admin-usuarios-filter.schema";
-import { ReservaTipo, type Prisma, type PrismaClient } from "@prisma/client";
+import { ReservaTipo, type Prisma, type PrismaClient } from "@/generated/prisma";
 import { type z } from "zod";
 import { informacionUsuario } from "../usuario-helper";
 

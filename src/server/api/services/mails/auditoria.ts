@@ -1,4 +1,4 @@
-import { type PrismaClient } from "@prisma/client";
+import { type PrismaClient } from "@/generated/prisma";
 import { type EmailParams, fromEmail } from "./email";
 
 export const cargarMailAuditoria = async (ctx: { db: PrismaClient }, emailParams: EmailParams) => {

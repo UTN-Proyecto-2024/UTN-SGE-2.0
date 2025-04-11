@@ -8,7 +8,7 @@ import PageLayout from "@/components/ui/template/page-template";
 import { MATERIA_ROUTE } from "@/shared/server-routes";
 import NuevaMateria from "./_components/materia-new-materia";
 import { TienePermiso } from "../_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 type PageProps = {
   searchParams: Promise<ReadonlyURLSearchParams>;

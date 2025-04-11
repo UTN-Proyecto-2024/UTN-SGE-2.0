@@ -6,7 +6,7 @@ import { type z } from "zod";
 import { DataTablePaginationStandalone } from "@/components/ui/table/table-pagination-standalone";
 import { type GroupingState, type SortingState } from "@tanstack/react-table";
 import type { inputGetAllSolicitudesReservaLaboratorioCerrado } from "@/shared/filters/reserva-laboratorio-filter.schema";
-import { ReservaEstatus } from "@prisma/client";
+import { ReservaEstatus } from "@/generated/prisma";
 import { getColumnasReservasLaboratorioCerrado } from "./reserva-labo-cerrado-columns";
 import { useReservasLaboratorioCerradoQueryParam } from "../../_hooks/use-reserva-laboratorio-cerrado-query-param";
 import { VerReservaModal } from "../ver-reserva";

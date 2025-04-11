@@ -1,7 +1,7 @@
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
 import { AgregarAPantallaModal } from "../../pantalla/_components/actions/agregar-pantalla";
 import ReservaDiscrecionalModal from "../reserva-discrecional-form";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 export const LaboratorioActionButtonsLeft = () => {
   return (

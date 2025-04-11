@@ -1,4 +1,4 @@
-import { type ReservaEstatus } from "@prisma/client";
+import { type ReservaEstatus } from "@/generated/prisma";
 import { Badge } from "@/components/ui/badge";
 
 export const BadgeReservaPasadaLibro = ({ estatus }: { estatus: ReservaEstatus | "" }) => {

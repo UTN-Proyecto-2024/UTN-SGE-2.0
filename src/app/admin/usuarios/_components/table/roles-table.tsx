@@ -11,7 +11,7 @@ import { type inputGetUsuarios } from "@/shared/filters/admin-usuarios-filter.sc
 import { DataTablePaginationStandalone } from "@/components/ui/table/table-pagination-standalone";
 import { DetallesUsuarioPage } from "@/app/admin/usuarios/_components/table/detalles-usuario";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 type UsuariosData = RouterOutputs["admin"]["usuarios"]["getAll"];
 type AdminUsuariosFilters = z.infer<typeof inputGetUsuarios>;

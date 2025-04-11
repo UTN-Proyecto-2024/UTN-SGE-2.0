@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { AgregarCursoPantallaForm } from "../curso-pantalla-nuevo";
 import { api } from "@/trpc/react";
 import { useTienePermisos } from "@/app/_hooks/use-tiene-permisos";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 export const AgregarAPantallaModal = () => {
   const { tienePermisos, isLoading, isError } = useTienePermisos([SgeNombre.RES_LAB_ABM_PANTALLA]);

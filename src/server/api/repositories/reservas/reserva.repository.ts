@@ -1,5 +1,5 @@
 import type { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.schema";
-import type { PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "@/generated/prisma";
 import type { z } from "zod";
 import { informacionUsuario } from "../usuario-helper";
 

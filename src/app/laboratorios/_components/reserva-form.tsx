@@ -16,7 +16,7 @@ import { CursoTurno } from "@/app/_components/turno-text";
 import { Switch } from "@/components/ui/switch";
 import { FormInputPoliticas } from "@/app/_components/input-form-politicas";
 import { armarFechaReserva, esFechaPasada, getDateISOString } from "@/shared/get-date";
-import { ReservaEstatus, TurnoCurso } from "@prisma/client";
+import { ReservaEstatus, TurnoCurso } from "@/generated/prisma";
 import { ReservaDetalle } from "./info-basica-reserva";
 import CustomDatePicker from "@/components/date-picker";
 import { MotivoRechazo } from "./rechazo-alert";

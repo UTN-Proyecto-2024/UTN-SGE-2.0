@@ -2,7 +2,7 @@
 
 import { estaLogueadoYConPermiso } from "@/server/permisos";
 import { INICIO_ROUTE } from "@/shared/server-routes";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 import { redirect } from "next/navigation";
 
 type LayoutProps = {

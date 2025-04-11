@@ -7,7 +7,8 @@ import KeycloakProvider, { type KeycloakProfile } from "next-auth/providers/keyc
 import { env } from "@/env";
 import { db } from "@/server/db";
 import Credentials from "next-auth/providers/credentials";
-import type { User } from "@prisma/client";
+import type { User } from "@/generated/prisma";
+import type { PrismaClient } from "@prisma/client";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -25,7 +26,7 @@ declare module "next-auth" {
   }
 }
 
-const prismaAdapter = PrismaAdapter(db);
+const prismaAdapter = PrismaAdapter(db as PrismaClient);
 
 const CustomAdapter = {
   ...prismaAdapter,

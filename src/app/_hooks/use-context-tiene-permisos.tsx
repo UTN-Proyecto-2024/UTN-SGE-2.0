@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { api } from "@/trpc/react";
-import { type SgeNombre } from "@prisma/client";
+import { type SgeNombre } from "@/generated/prisma";
 import { type Session } from "next-auth";
 
 interface PermisosContextProps {

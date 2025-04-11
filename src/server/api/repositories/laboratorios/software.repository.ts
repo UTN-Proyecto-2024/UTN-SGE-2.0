@@ -5,44 +5,50 @@ import type {
   inputGetSoftware,
   inputGetSoftwareFilter,
 } from "@/shared/filters/laboratorio-filter.schema";
-import { Prisma, type PrismaClient } from "@prisma/client";
+import { Prisma, type PrismaClient } from "@/generated/prisma";
 import { type z } from "zod";
 
 type InputGetAll = z.infer<typeof inputGetSoftwareFilter>;
 export const getAllSoftware = async (ctx: { db: PrismaClient }, input: InputGetAll) => {
   const { searchText, sedeId } = input;
 
-  const whereText = Prisma.raw(searchText ? `s.nombre ILIKE '%${searchText}%'` : `1=1`);
+  const searchClause = searchText?.trim()
+    ? Prisma.sql`AND (s.nombre ILIKE ${`%${searchText}%`} OR s.estado ILIKE ${`%${searchText}%`})`
+    : Prisma.sql``;
+
+  const sedeClause = sedeId ? Prisma.sql`AND l."sedeId" = ${sedeId}::int` : Prisma.sql``;
+
+  const softwareQuery = Prisma.sql`
+    SELECT
+      s.id AS id,
+      s.nombre AS nombre,
+      s.version AS version,
+      s.estado AS estado,
+      s.windows AS windows,
+      s.linux AS linux,
+      json_object_agg(
+        l.id,
+        CASE WHEN sl."softwareId" IS NOT NULL THEN true ELSE false END
+      ) AS laboratorios
+    FROM "Software" s
+    INNER JOIN "SoftwareLaboratorio" sl ON s.id = sl."softwareId"
+    INNER JOIN "Laboratorio" l ON l.id = sl."laboratorioId"
+    WHERE l."incluirEnReporte" = true ${searchClause} ${sedeClause}
+    GROUP BY s.id, s.nombre
+  `;
+
+  type Software = {
+    id: number;
+    nombre: string;
+    version: string;
+    estado: string;
+    windows: boolean;
+    linux: boolean;
+    laboratorios: Record<string, boolean>;
+  };
 
   const [software, laboratorios] = await ctx.db.$transaction([
-    ctx.db.$queryRaw<
-      {
-        id: number;
-        nombre: string;
-        version: string;
-        estado: string;
-        windows: boolean;
-        linux: boolean;
-        laboratorios: Record<string, boolean>;
-      }[]
-    >`
-        SELECT
-          s.id AS id,
-          s.nombre AS nombre,
-          s.version AS version,
-          s.estado AS estado,
-          s.windows AS windows,
-          s.linux AS linux,
-          json_object_agg(
-            l.id,
-            CASE WHEN sl."softwareId" IS NOT NULL THEN true ELSE false END
-          ) AS laboratorios
-        FROM "Software" s
-        INNER JOIN "Laboratorio" l ON l."incluirEnReporte" = true AND ${Prisma.raw(sedeId ? `l."sedeId" = ${sedeId}` : `1=1`)}
-        LEFT JOIN "SoftwareLaboratorio" sl ON s.id = sl."softwareId" AND l.id = sl."laboratorioId"
-        WHERE ${whereText}
-        GROUP BY s.id, s.nombre;
-      `,
+    ctx.db.$queryRaw<Software[]>(softwareQuery),
     ctx.db.laboratorio.findMany({
       select: {
         id: true,

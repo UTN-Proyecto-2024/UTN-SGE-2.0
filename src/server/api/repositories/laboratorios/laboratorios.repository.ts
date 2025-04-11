@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import { type PrismaClient } from "@prisma/client";
+import { type PrismaClient } from "@/generated/prisma";
 import type { inputGetAllLaboratorios } from "@/shared/filters/laboratorio-filter.schema";
 import { construirFechaReservaSinOffset } from "@/shared/get-date";
 

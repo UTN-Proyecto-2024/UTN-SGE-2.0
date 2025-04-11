@@ -1,4 +1,4 @@
-import { ReservaTipo } from "@prisma/client";
+import { ReservaTipo } from "@/generated/prisma";
 import {
   getAllPendientesNotificaciones,
   type Notificacion,

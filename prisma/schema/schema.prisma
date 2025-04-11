@@ -6,6 +6,8 @@ datasource db {
 generator client {
     provider        = "prisma-client-js"
     previewFeatures = ["prismaSchemaFolder"]
+    output          = "../../src/generated/prisma"
+    binaryTargets   = ["native", "linux-musl-arm64-openssl-3.0.x"]
 }
 
 // Las propiedades y tablas que estan escritas en ingles, se utilizan por el adapter de NextAuth para el login. No cambiar el nombre de las propiedades.

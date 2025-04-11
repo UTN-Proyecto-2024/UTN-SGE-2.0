@@ -14,7 +14,7 @@ import {
   getSoftwarePorId,
   eliminarSoftware,
 } from "../../repositories/laboratorios/software.repository";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 export const getAllSoftwareProcedure = protectedProcedure
   .input(inputGetSoftwareFilter)

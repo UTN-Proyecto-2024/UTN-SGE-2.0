@@ -13,7 +13,7 @@ import { ZodError } from "zod";
 
 import { getServerAuthSession } from "@/server/auth";
 import { db } from "@/server/db";
-import { type SgeNombre } from "@prisma/client";
+import { type SgeNombre } from "@/generated/prisma";
 import { tienePermiso } from "./services/permisos/permisos.helper";
 
 /**

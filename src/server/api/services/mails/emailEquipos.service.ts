@@ -1,7 +1,7 @@
 import { sendEmail } from "./email";
 import { EQUIPOS_ROUTE } from "@/shared/server-routes";
 import { getReservaEquipoParaEmail } from "../../repositories/reservas/equipo.repository";
-import { type PrismaClient } from "@prisma/client";
+import { type PrismaClient } from "@/generated/prisma";
 import { getDateISOString } from "@/shared/get-date";
 
 export const enviarMailReservaEquipoProcedure = async (ctx: { db: PrismaClient }, reservaId: number) => {

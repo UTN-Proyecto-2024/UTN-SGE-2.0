@@ -1,7 +1,7 @@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/components/utils";
 import { EstadoAprobada } from "@/shared/estado-reserva";
-import { ReservaEstatus } from "@prisma/client";
+import { ReservaEstatus } from "@/generated/prisma";
 
 const reservaEstatus = [
   {

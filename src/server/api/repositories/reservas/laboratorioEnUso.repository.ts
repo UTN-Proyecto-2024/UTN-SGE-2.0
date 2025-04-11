@@ -1,5 +1,5 @@
-import { type PrismaClient, Prisma, ReservaEstatus } from "@prisma/client";
-import type { DefaultArgs } from "@prisma/client/runtime/library";
+import { type PrismaClient, Prisma, ReservaEstatus } from "@/generated/prisma";
+import type { DefaultArgs } from "@/generated/prisma/runtime/library";
 import { getErrorLaboratorioOcupado } from "../../services/helper";
 import { type inputGetReservasExistentesDeLaboratorio } from "@/shared/filters/laboratorio-en-uso.schema";
 import { type z } from "zod";

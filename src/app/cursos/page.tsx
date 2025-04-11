@@ -10,7 +10,7 @@ import { CURSOS_ROUTE } from "@/shared/server-routes";
 import PageLayout from "@/components/ui/template/page-template";
 import { CargarCursos } from "./(listado)/cursos-bulk-insert";
 import { TienePermiso } from "../_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 type PageProps = {
   searchParams: Promise<ReadonlyURLSearchParams>;

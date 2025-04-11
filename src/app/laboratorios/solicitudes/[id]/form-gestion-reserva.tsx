@@ -2,7 +2,7 @@ import { api } from "@/trpc/react";
 import { esFechaPasada } from "@/shared/get-date";
 import { ReservaDetalle } from "../../_components/info-basica-reserva";
 import { ReservaAprobacion } from "../../_components/reserva-gestion";
-import { ReservaEstatus } from "@prisma/client";
+import { ReservaEstatus } from "@/generated/prisma";
 import { Button, toast } from "@/components/ui";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ClockIcon } from "lucide-react";

@@ -35,7 +35,7 @@ import {
   getAllTipos,
   getTipoPorId,
 } from "../../repositories/equipos/equipos-tipos.repository";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 export const getTodosLosEquiposProcedure = protectedProcedure.input(inputGetEquipos).query(async ({ ctx, input }) => {
   validarInput(inputGetEquipos, input);

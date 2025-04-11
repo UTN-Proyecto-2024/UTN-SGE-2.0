@@ -1,5 +1,5 @@
-import { Prisma, type PrismaClient } from "@prisma/client";
-import { type DefaultArgs } from "@prisma/client/runtime/library";
+import { Prisma, type PrismaClient } from "@/generated/prisma";
+import { type DefaultArgs } from "@/generated/prisma/runtime/library";
 
 const PREFIJO_INVENTARIO_ID = "NB";
 

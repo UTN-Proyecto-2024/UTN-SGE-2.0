@@ -1,5 +1,5 @@
 import { construirOrderByDinamico } from "@/shared/dynamic-orderby";
-import type { PrismaClient, Prisma } from "@prisma/client";
+import type { PrismaClient, Prisma } from "@/generated/prisma";
 import type { z } from "zod";
 import { informacionUsuario } from "../usuario-helper";
 import type {

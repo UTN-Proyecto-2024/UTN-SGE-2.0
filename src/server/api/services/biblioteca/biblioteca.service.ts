@@ -21,7 +21,7 @@ import {
   inputGetLibro,
 } from "@/shared/filters/biblioteca-filter.schema";
 import { validarInput } from "../helper";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 export const getTodosLosLibrosProcedure = protectedProcedure.input(inputGetBooks).query(async ({ ctx, input }) => {
   validarInput(inputGetBooks, input);

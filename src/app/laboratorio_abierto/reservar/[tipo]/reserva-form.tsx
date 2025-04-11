@@ -15,7 +15,7 @@ import { type LaboratorioAbiertoType } from "../_components/laboratorios";
 import { esFechaPasada, getDateISOString, getTimeISOString } from "@/shared/get-date";
 import { SelectEspecialidadForm } from "@/app/_components/select-especialidad";
 import { FormInputPoliticas } from "@/app/_components/input-form-politicas";
-import { LaboratorioAbiertoTipo, ReservaEstatus } from "@prisma/client";
+import { LaboratorioAbiertoTipo, ReservaEstatus } from "@/generated/prisma";
 import { ReservaDetalle } from "../../_components/info-basica-reserva";
 import { FormSelect } from "@/components/ui/autocomplete";
 import { ConfirmarCambioEstadoModal } from "@/app/laboratorios/_components/modal-confirmar-reserva";

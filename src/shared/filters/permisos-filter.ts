@@ -1,4 +1,4 @@
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 import { z } from "zod";
 
 // https://github.com/colinhacks/zod?tab=readme-ov-file#native-enums

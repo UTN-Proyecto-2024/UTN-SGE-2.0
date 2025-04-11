@@ -27,7 +27,7 @@ import {
   enviarMailReservaLaboratorioAbiertoProcedure,
   enviarMailRechazoLaboratorioAbiertoProcedure,
 } from "../mails/emailLaboratorioAbierto.service";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 export const getReservaLaboratorioAbiertoPorUserProcedure = protectedProcedure
   .input(inputGetReservaLaboratorioPorUsuarioId)

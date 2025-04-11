@@ -1,4 +1,4 @@
-import { TurnoCurso } from "@prisma/client";
+import { TurnoCurso } from "@/generated/prisma";
 
 /**
  * Devuelve una fecha con el formato yyyy-MM-dd

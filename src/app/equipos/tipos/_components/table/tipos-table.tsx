@@ -11,7 +11,7 @@ import { useTiposQueryParam } from "../../_hooks/use-tipos-query-param";
 import { DataTablePaginationStandalone } from "@/components/ui/table/table-pagination-standalone";
 import { type inputGetTipos } from "@/shared/filters/equipos-tipos-filter.schema";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 
 type TiposData = RouterOutputs["equipos"]["getAllTipos"];
 type TiposFilters = z.infer<typeof inputGetTipos>;

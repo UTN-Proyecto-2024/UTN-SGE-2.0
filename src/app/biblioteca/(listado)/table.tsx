@@ -12,7 +12,7 @@ import { type SortingState } from "@tanstack/react-table";
 import { getColumns } from "./columns";
 import { VerLibroModal } from "./ver-libro";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
-import { SgeNombre } from "@prisma/client";
+import { SgeNombre } from "@/generated/prisma";
 import { useTienePermisos } from "@/app/_hooks/use-tiene-permisos";
 
 type LibroData = RouterOutputs["biblioteca"]["getAll"];

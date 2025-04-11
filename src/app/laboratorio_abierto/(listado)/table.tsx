@@ -11,7 +11,7 @@ import { getColumnasReservasLaboratorioAbierto } from "./columns-reserva";
 import { VerReservaModal } from "./ver-reserva";
 import EditarReservaModal from "./editar-reserva-modal";
 import { type inputGetAllSolicitudesReservaLaboratorioAbierto } from "@/shared/filters/reserva-laboratorio-filter.schema";
-import { ReservaEstatus } from "@prisma/client";
+import { ReservaEstatus } from "@/generated/prisma";
 import { CancelarReservaLaboratorioAbierto } from "../_components/cancelar-reserva";
 import { useState } from "react";
 import { TienePermiso } from "@/app/_components/permisos/tienePermiso";
