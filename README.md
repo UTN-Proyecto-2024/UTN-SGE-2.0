@@ -31,8 +31,7 @@ npm install
 4. Migrar la base de datos
 
 ```bash
-npm run db:deploy-migracion
-npm run db:generar-esquema
+npm run db:deploy
 ```
 
 5. Build
