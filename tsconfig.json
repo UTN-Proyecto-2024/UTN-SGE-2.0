@@ -30,6 +30,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "./*.ts", "./*.cjs", "./*.js", ".eslintrc.cjs", ".next/types/**/*.ts"],
+  "include": ["src/**/*", "*.ts", "*.cjs", "*.js", ".eslintrc.cjs", ".next/types/**/*.ts"],
   "exclude": ["node_modules", "src/generated/prisma"]
 }
