@@ -138,6 +138,6 @@
     "initVersion": "7.34.0"
   },
   "prisma": {
-    "schema": "prisma/schema"
+    "schema": "prisma"
   }
 }
