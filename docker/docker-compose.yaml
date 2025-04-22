@@ -9,17 +9,17 @@ services:
       retries: 5
       start_period: 3s
     env_file:
-      - ../.env
+      - .env
     volumes:
-      - ../data:/var/lib/postgresql/data
-      - ../dump.sql:/docker-entrypoint-initdb.d/init.sql
+      - data:/var/lib/postgresql/data
+      - ./dump.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - sge2
 
   app:
-    image: registry.frba.utn.edu.ar/ext/sge2
+    image: sge
     env_file:
-      - ../.env
+      - .env
     hostname: app
     networks:
       - sge2
@@ -40,3 +40,6 @@ services:
 
 networks:
   sge2:
+
+volumes:
+  data:
