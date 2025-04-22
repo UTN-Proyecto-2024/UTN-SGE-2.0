@@ -3,7 +3,7 @@
 docker
 
 # Scripts
-scripts
+start-database.sh
 
 # Next
 .next
@@ -27,5 +27,5 @@ node_modules
 README.md
 
 # CI/CD
-github
+.github
 Jenkinsfile.tst
