@@ -16,7 +16,7 @@ node {
     }
 
     stage('Update images in ext-c04') {
-        sh 'docker --context ext-c04 compose -f docker/docker-compose.yaml app pull'
+        sh 'docker --context ext-c04 compose -f docker/docker-compose.yaml pull app'
     }
 
     stage('Deploy') {
