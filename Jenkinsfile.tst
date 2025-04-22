@@ -16,13 +16,7 @@ node {
     }
 
     stage('Update images in ext-c04') {
-        withCredentials([file(credentialsId: 'sge2-env', variable: 'ENV_FILE')]) {
-            sh '''
-                cp "$ENV_FILE" .env
-                docker --context ext-c04 compose -f docker/docker-compose.yaml pull
-                rm .env
-            '''
-        }
+        sh 'docker --context ext-c04 compose -f docker/docker-compose.yaml pull'
     }
 
     stage('Deploy') {
