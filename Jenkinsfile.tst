@@ -20,7 +20,7 @@ node {
     }
 
     stage('Deploy') {
-        sh 'docker --context ext-c04 compose -f docker/docker-compose.yaml up app -d'
+        sh 'docker --context ext-c04 compose -f docker/docker-compose.yaml up -d'
     }
 
     stage('Cleanup') {
