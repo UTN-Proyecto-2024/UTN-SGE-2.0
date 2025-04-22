@@ -16,8 +16,13 @@ node {
     }
 
     stage('Update images in ext-c04') {
-        sh 'ls -la "/var/lib/jenkins/workspace/EXT - Electronica - SGE NEW - TST"'
-        sh 'docker --context ext-c04 compose -f docker/docker-compose.yaml pull'
+        withCredentials([file(credentialsId: 'sge2-env', variable: 'ENV_FILE')]) {
+            sh '''
+                cp "$ENV_FILE" .env
+                docker --context ext-c04 compose -f docker/docker-compose.yaml pull
+                rm .env
+            '''
+        }
     }
 
     stage('Deploy') {
