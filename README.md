@@ -82,7 +82,7 @@ Luego se procede a realizar los siguientes pasos:
 - Query Nested: [Relation queries \(Concepts\) | Prisma Documentation](https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries)
 - Keycloack login issue: [Signout does not logout user when session is being requested simultaneously · Issue \#4612 · nextauthjs/next-auth](https://github.com/nextauthjs/next-auth/issues/4612)
 - NextJs Keycloak tutorial: [NextJS, NextAuth with App Router and Keycloak \(Demo part 3/3\)](https://www.youtube.com/watch?v=-HsldaBdIPQ)
-- [ ] NextJs official guide: [Learn Next.js: Mutating Data](https://nextjs.org/learn/dashboard-app/mutating-data)
+- NextJs official guide: [Learn Next.js: Mutating Data](https://nextjs.org/learn/dashboard-app/mutating-data)
 - DER generator: [Prisma ERD](https://prisma-erd.simonknott.de/)
 - Sonner Toaster: [Toast\(\) – Sonner](https://sonner.emilkowal.ski/toast)
 - Tailwind CSS: [Background Position](https://tailwindcss.com/docs/background-position)
