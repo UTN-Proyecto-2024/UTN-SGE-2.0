@@ -10,7 +10,7 @@ services:
     env_file:
       - .env
     volumes:
-      - data:/var/lib/postgresql/data
+      - /opt/sge2/data:/var/lib/postgresql/data
       - /opt/sge2/dump.sql:/docker-entrypoint-initdb.d/init.sql
 
   app:
@@ -29,6 +29,3 @@ services:
       - "8000:80"
     depends_on:
       - app
-
-volumes:
-  data:
