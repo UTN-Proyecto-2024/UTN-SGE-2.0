@@ -3,7 +3,6 @@ name: sge2
 services:
   db:
     image: postgres:17.4-alpine3.21
-    hostname: db
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 2s
@@ -19,7 +18,6 @@ services:
 
   app:
     image: registry.frba.utn.edu.ar/ext/sge2
-    hostname: app
     env_file: .env
     restart: unless-stopped
     depends_on:
